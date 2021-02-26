@@ -1,9 +1,11 @@
 # CS-306 Software Development Project 
 
 ## Application idea 
-
+See [pitch](doc/proposal_template.md) 
 ### Description
-_add project description here_
+We are planning to build an AR (Augmented Reality) app. Using this app the user could get additional information about the surrounding mountains using 
+its smartphone camera. The info such as the peak name, its height and the distance between the user and the mountain would be displayed on the camera preview. 
+The app would also implement some user accounts to create a ranking between users. This ranking would be based on the peaks the user scans (more points for higher peaks or "rare" peaks for instance).  
 
 The following image gives an idea of the camera preview with AR that we are aiming to develop 
 ![image](doc/peaklens_inspiration.png)
