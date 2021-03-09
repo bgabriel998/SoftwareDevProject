@@ -20,6 +20,24 @@ android {
         testFunctionalTest true
     }
 
+    signingConfigs {
+        debug {
+            /* This is a temporary keystore in order to make sign API work on every device. In case we decide to publish the app
+            this must be changed
+            */
+            storeFile file('keystore/google_sign.keystore')
+            storePassword "Pwq@#!"
+            keyAlias "google_sign"
+            keyPassword "w-Qrz##"
+        }
+        release {
+            storeFile file('keystore/google_sign.keystore')
+            storePassword "Pwq@#!"
+            keyAlias "google_sign"
+            keyPassword "w-Qrz##"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -48,15 +66,17 @@ dependencies {
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'com.google.android.gms:play-services:7.8.0'
-
     implementation 'com.github.MKergall:osmbonuspack:6.6.0'
-
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     androidTestImplementation 'androidx.test:runner:1.3.0'
     androidTestImplementation 'androidx.test:rules:1.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.3.0'
+
+    implementation 'com.github.MKergall:osmbonuspack:6.6.0'
+
 }
 
 tasks.withType(Test) {
