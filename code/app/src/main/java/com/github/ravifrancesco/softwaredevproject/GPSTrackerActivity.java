@@ -3,6 +3,7 @@ package com.github.ravifrancesco.softwaredevproject;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,7 +13,7 @@ import androidx.core.content.ContextCompat;
 import com.github.bgabriel998.softwaredevproject.MainActivity;
 import com.github.bgabriel998.softwaredevproject.R;
 
-public class GPSTrackerActivity extends AppCompatActivity {
+public class GPSTrackerActivity extends AppCompatActivity implements View.OnClickListener {
 
     private GPSTracker gpsTracker;
 
@@ -20,6 +21,8 @@ public class GPSTrackerActivity extends AppCompatActivity {
     TextView longitudeTV;
     TextView altitudeTV;
     TextView accuracyTV;
+
+    Button getLocationButton;
 
 
     @Override
@@ -32,6 +35,10 @@ public class GPSTrackerActivity extends AppCompatActivity {
         altitudeTV = (TextView)findViewById(R.id.AltitudePlainText);
         accuracyTV = (TextView)findViewById(R.id.AccuracyPlainText);
 
+        getLocationButton = (Button)findViewById(R.id.GetLocationButton);
+
+        getLocationButton.setOnClickListener(this);
+
         try {
             if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
@@ -41,7 +48,7 @@ public class GPSTrackerActivity extends AppCompatActivity {
         }
     }
 
-    public void getLocation(View view){
+    private void getLocation() {
         gpsTracker = new GPSTracker(GPSTrackerActivity.this);
         if(gpsTracker.canGetLocation()){
             double latitude = gpsTracker.getLatitude();
@@ -57,4 +64,8 @@ public class GPSTrackerActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onClick(View v) {
+        getLocation();
+    }
 }
