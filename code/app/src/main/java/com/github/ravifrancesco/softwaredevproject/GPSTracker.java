@@ -149,6 +149,15 @@ public class GPSTracker extends Service implements LocationListener {
         return getAltitude();
     }
 
+    public double getAccuracy() {
+        if(location != null){
+            longitude = location.getAccuracy();
+        }
+
+        // return accuracy
+        return getAccuracy();
+    }
+
 
     @Override
     public void onLocationChanged(Location location) {
