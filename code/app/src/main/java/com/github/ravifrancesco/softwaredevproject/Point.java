@@ -28,7 +28,7 @@ public class Point {
         rOther = earthRadius + other.altitude;
 
         // computing distance in spherical polar coordinates
-        squaredDistance = Math.pow(rThis, 2) + Math.pow(rOther, 2) +
+        squaredDistance = Math.pow(rThis, 2) + Math.pow(rOther, 2) -
                 2*rThis*rOther*(
                         Math.cos(latitude)*Math.cos(other.latitude)*Math.cos(longitude - other.longitude) +
                         Math.sin(latitude)*Math.sin(other.latitude)
