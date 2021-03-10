@@ -65,7 +65,7 @@ public class Button7Activity extends AppCompatActivity implements View.OnClickLi
             altitudeTV.setText(altitude + " m");
             accuracyTV.setText(accuracy + " m");
         }else{
-            gpsTracker.showSettingsAlert();
+            // display some message
         }
     }
 
