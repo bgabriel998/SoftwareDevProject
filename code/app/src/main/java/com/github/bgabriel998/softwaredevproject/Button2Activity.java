@@ -2,10 +2,9 @@ package com.github.bgabriel998.softwaredevproject;
 
 
 
+
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -13,22 +12,24 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.github.giommok.softwaredevproject.GoogleAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
+import java.util.concurrent.ExecutionException;
 
 
 public class Button2Activity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int RC_SIGN_IN = 1;
-
     private GoogleSignInClient mGoogleSignInClient;
     private TextView mStatusTextView;
+    private GoogleAccount account;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,48 +49,40 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        // [START customize_button]
         // Set the dimensions of the sign-in button.
         SignInButton signInButton = findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setColorScheme(SignInButton.COLOR_LIGHT);
-        // [END customize_button]
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
-        // Check for existing Google Sign In account, if the user is already signed in
-        // the GoogleSignInAccount will be non-null.
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        updateUI(account);
+        account = GoogleAccount.getAccount(this);
+        updateUI();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_in_button:
-                signIn();
+                googleSignIn();
                 break;
             case R.id.sign_out_button:
-                signOut();
+                googleSignOut();
+                updateUI();
                 break;
         }
     }
 
-    private void signIn() {
+    /* The following three methods are necessary in order to let the user sign in */
+    /* This is the public method to call in order to authenticate the user */
+    public void googleSignIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
+        //if(!account.signedIn()) System.exit(1);
 
-    private void signOut() {
-        mGoogleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                updateUI(null);
-            }
-        });
     }
 
     @Override
@@ -101,28 +94,29 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
             // The Task returned from this call is always completed, no need to attach
             // a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
+            try {
+                account.setGoogleAccount(task.getResult(ApiException.class));
+                updateUI();
+            } catch (ApiException e) {
+                // The ApiException status code indicates the detailed failure reason.
+                // Please refer to the GoogleSignInStatusCodes class reference for more information.
+                Log.w("Google Sign API", "signInResult:failed code=" + e.getStatusCode());
+            }
         }
     }
 
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
-            // Signed in successfully, show authenticated UI.
-            updateUI(account);
 
-        } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-
-            Log.w("Google Sign API", "signInResult:failed code=" + e.getStatusCode());
-            updateUI(null);
-        }
+    /* This is the public method to call in order to let the user sign out */
+    public void googleSignOut() {
+        mGoogleSignInClient.signOut();
+        account.setGoogleAccount(null);
     }
 
-    private void updateUI(@Nullable GoogleSignInAccount account) {
-        if (account != null) {
+    /* This method contains the necessary UI updates after a sign in or a sign out */
+    private void updateUI() {
+        /* If an account is logged */
+        if (account.isSignedIn()) {
             mStatusTextView.setText("Your name: " + account.getDisplayName() + "\nYour e-mail: " + account.getEmail() + "\nYour family name: " + account.getFamilyName());
 
             /* resizing signed_out_layout */
