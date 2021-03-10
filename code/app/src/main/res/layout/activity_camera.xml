@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CameraActivity">
+
+    <!-- Temp Camera, TODO Replace with real camera -->
+    <ImageView
+        android:id="@+id/tempCamera"
+        android:layout_width="938dp"
+        android:layout_height="1106dp"
+        android:layout_marginEnd="50dp"
+        android:rotation="90"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/temp_camera" />
+
+    <!-- Back Icon button -->
+    <ImageButton
+        android:id="@+id/goBackButton"
+        style="@style/IconButton"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:onClick="backButton"
+        android:rotation="90"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_back" />
+
+    <!-- Map Icon Button -->
+    <ImageButton
+        android:id="@+id/mapButton"
+        style="@style/IconButton"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:onClick="mapButton"
+        android:rotation="90"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_map" />
+
+    <!-- Camera button -->
+    <ImageButton
+        android:id="@+id/cameraBottom"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="40dp"
+        android:onClick="cameraButton"
+        android:rotation="90"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/iconcircle"
+        app:srcCompat="@drawable/ic_camera" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

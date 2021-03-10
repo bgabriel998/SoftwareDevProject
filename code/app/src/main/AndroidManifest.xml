@@ -2,9 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.github.bgabriel998.softwaredevproject">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -14,6 +16,16 @@
         android:theme="@style/AppTheme"
         android:networkSecurityConfig="@xml/network_security_config"
         tools:remove="android:appComponentFactory">
+
+        <activity android:name=".MountainActivity" />
+        <activity android:name=".CollectionActivity" />
+        <activity android:name=".RankingsActivity" />
+        <activity android:name=".MapActivity" />
+        <activity android:name=".CameraActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".SignInActivity" />
+        <activity android:name=".MainActivity" />
         <activity android:name=".Button8Activity" />
         <activity android:name=".Button7Activity" />
         <activity android:name=".Button6Activity" />
@@ -22,7 +34,7 @@
         <activity android:name=".Button3Activity" />
         <activity android:name=".Button2Activity" />
         <activity android:name=".Button1Activity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainMenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
