@@ -1,8 +1,4 @@
 package com.github.bgabriel998.softwaredevproject;
-
-
-
-
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,6 +26,9 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
     private GoogleSignInClient mGoogleSignInClient;
     private TextView mStatusTextView;
     private GoogleAccount account;
+
+    private Thread thread;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,3 +140,5 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
         }
     }
 }
+
+
