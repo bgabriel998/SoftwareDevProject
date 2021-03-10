@@ -2,6 +2,7 @@ package com.github.bgabriel998.softwaredevproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 public class Button8Activity extends AppCompatActivity {
@@ -10,5 +11,8 @@ public class Button8Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_button8);
+
+        Intent intent = new Intent(this, SignInActivity.class);
+        startActivity(intent);
     }
 }

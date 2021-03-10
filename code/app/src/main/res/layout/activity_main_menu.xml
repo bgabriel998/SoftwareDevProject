@@ -28,7 +28,7 @@
 
         <!-- Start Peak AR button -->
         <Button
-            android:id="@+id/startButton"
+            android:id="@+id/startCameraButton"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_marginTop="45dp"
@@ -48,7 +48,7 @@
 
         <!-- Ranking button -->
         <Button
-            android:id="@+id/rankingButton"
+            android:id="@+id/rankingsButton"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_marginTop="45dp"
