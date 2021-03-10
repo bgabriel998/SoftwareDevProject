@@ -3,9 +3,17 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+
     <color name="blue_grey_500">#607D8B</color>
     <color name="blue_grey_600">#546E7A</color>
     <color name="blue_grey_700">#455A64</color>
     <color name="blue_grey_800">#37474F</color>
     <color name="blue_grey_900">#263238</color>
+
+    <!-- Own Colors switch with primary etc. later -->
+    <color name="LightGrey">#EAE3F2</color>
+    <color name="DarkGreen">#4A7279</color>
+    <color name="LightBlue">#BDB2F2</color>
+    <color name="Blue">#9C9AF1</color>
+    <color name="LightGreen">#B9E3CF</color>
 </resources>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/boxInsetLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context=".MainMenuActivity">
+
+    <!-- Container for menu -->
+    <LinearLayout
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="96dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Mountain Icon -->
+        <ImageView
+            android:id="@+id/mountainIcon"
+            android:layout_width="152dp"
+            android:layout_height="170dp"
+            android:src="@drawable/ic_mountain" />
+
+        <!-- Start Peak AR button -->
+        <Button
+            android:id="@+id/startCameraButton"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginTop="45dp"
+            style="@style/ButtonGrey"
+            android:text="@string/start_button"
+            android:onClick="cameraButton" />
+
+        <!-- Collection button -->
+        <Button
+            android:id="@+id/collectionButton"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginTop="45dp"
+            style="@style/ButtonGrey"
+            android:text="@string/collection_button"
+            android:onClick="collectionButton" />
+
+        <!-- Ranking button -->
+        <Button
+            android:id="@+id/rankingsButton"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginTop="45dp"
+            style="@style/ButtonGrey"
+            android:text="@string/ranking_button"
+            android:onClick="rankingsButton" />
+
+    </LinearLayout>
+
+    <!-- Profile Icon Button -->
+    <ImageButton
+        android:id="@+id/profileButton"
+        style="@style/IconButton"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_user"
+        android:onClick="profileButton" />
+
+    <!-- Settings Icon Button -->
+    <ImageButton
+        android:id="@+id/settingsButton"
+        style="@style/IconButton"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_settings"
+        android:onClick="settingsButton" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

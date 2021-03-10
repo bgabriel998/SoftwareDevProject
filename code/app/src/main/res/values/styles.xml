@@ -1,6 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -11,6 +11,78 @@
     <style name="ThemeOverlay.MyDarkButton" parent="ThemeOverlay.AppCompat.Dark">
         <item name="colorButtonNormal">@color/blue_grey_500</item>
         <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <!-- ===== BUTTONS ===== -->
+    <!-- Grey Button -->
+    <style name="ButtonGrey" parent="android:style/Widget.Button">
+        <item name="android:background">@drawable/button_light_grey</item>
+        <item name="android:textColor">@color/DarkGreen</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <!-- Light green button -->
+    <style name="ButtonLightGreen" parent="android:style/Widget.Button">
+        <item name="android:background">@drawable/button_light_green</item>
+        <item name="android:textColor">@color/DarkGreen</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <!-- Dark green button -->
+    <style name="ButtonDarkGreen" parent="android:style/Widget.Button">
+        <item name="android:background">@drawable/button_dark_green</item>
+        <item name="android:textColor">@color/LightGreen</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <!-- Icon button -->
+    <style name="IconButton" parent="android:style/Widget.Button">
+        <item name="android:layout_width">30dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <!-- ===== TEXTs ===== -->
+    <!-- Standard Dark Green Text -->
+    <style name="DarkGreenText" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/DarkGreen</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <!-- Standard Light Grey Text -->
+    <style name="LightGreyText" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/LightGrey</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <!-- Standard Light Blue Text -->
+    <style name="LightBlueText" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/LightBlue</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <!-- Large Light Grey Text -->
+    <style name = "LargeLightGreyText" parent="android:style/Widget.Toolbar">
+        <item name="android:textColor">@color/LightGrey</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
+    <!-- Large Dark Green Text -->
+    <style name = "LargeDarkGreenText" parent="android:style/Widget.Toolbar">
+        <item name="android:textColor">@color/DarkGreen</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
+    <!-- Small Light Grey Text -->
+    <style name="SmallLightGreyText" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/LightGrey</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <!-- Small Light Blue Text -->
+    <style name="SmallLightBlueText" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/LightBlue</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
 </resources>
