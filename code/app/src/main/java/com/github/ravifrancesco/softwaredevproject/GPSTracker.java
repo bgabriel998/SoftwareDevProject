@@ -34,6 +34,8 @@ public class GPSTracker extends Service implements LocationListener {
     Location location; // location
     double latitude; // latitude
     double longitude; // longitude
+    double altitude; // altitude
+    double accuracy; // accuracy
 
     // The minimum distance to change Updates in meters
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 5; // 5 meters
@@ -81,6 +83,8 @@ public class GPSTracker extends Service implements LocationListener {
                         if (location != null) {
                             latitude = location.getLatitude();
                             longitude = location.getLongitude();
+                            altitude = location.getAltitude();
+                            accuracy = location.getAccuracy();
                         }
                     }
                 }
@@ -99,12 +103,13 @@ public class GPSTracker extends Service implements LocationListener {
 
                         Log.d("GPS Enabled", "GPS Enabled");
                         if (locationManager != null) {
-                            location = locationManager
-                                    .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
                             if (location != null) {
                                 latitude = location.getLatitude();
                                 longitude = location.getLongitude();
+                                altitude = location.getAltitude();
+                                accuracy = location.getAccuracy();
                             }
                         }
                     }
@@ -149,7 +154,7 @@ public class GPSTracker extends Service implements LocationListener {
         }
 
         // return altitude
-        return getAltitude();
+        return altitude;
     }
 
     public double getAccuracy() {
@@ -158,7 +163,7 @@ public class GPSTracker extends Service implements LocationListener {
         }
 
         // return accuracy
-        return getAccuracy();
+        return accuracy;
     }
 
     public boolean canGetLocation() {

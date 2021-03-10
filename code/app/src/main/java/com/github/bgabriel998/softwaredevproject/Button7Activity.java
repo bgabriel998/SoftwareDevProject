@@ -34,7 +34,7 @@ public class Button7Activity extends AppCompatActivity implements View.OnClickLi
         altitudeTV = findViewById(R.id.AltitudePlainText);
         accuracyTV = findViewById(R.id.AccuracyPlainText);
 
-        getLocationButton = (Button)findViewById(R.id.GetLocationButton);
+        getLocationButton = findViewById(R.id.GetLocationButton);
 
         getLocationButton.setOnClickListener(this);
 
@@ -56,10 +56,10 @@ public class Button7Activity extends AppCompatActivity implements View.OnClickLi
             double longitude = gpsTracker.getLongitude();
             double altitude = gpsTracker.getAltitude();
             double accuracy = gpsTracker.getAccuracy();
-            latitudeTV.setText(String.valueOf(latitude));
-            longitudeTV.setText(String.valueOf(longitude));
-            altitudeTV.setText(String.valueOf(altitude));
-            accuracyTV.setText(String.valueOf(accuracy));
+            latitudeTV.setText(latitude + "°");
+            longitudeTV.setText(longitude + "°");
+            altitudeTV.setText(altitude + " m");
+            accuracyTV.setText(accuracy + " m");
         }else{
             gpsTracker.showSettingsAlert();
         }
