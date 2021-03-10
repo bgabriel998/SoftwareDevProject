@@ -12,11 +12,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="101dp"
         android:text="Longitude:"
-        app:layout_constraintBottom_toTopOf="@+id/LongitudePlainText"
+        app:layout_constraintBottom_toTopOf="@+id/LongitudeTextView"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/AccuracyPlainText"
+        android:id="@+id/AccuracyTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="74dp"
@@ -29,16 +29,36 @@
 
     <Button
         android:id="@+id/GetLocationButton"
-        android:layout_width="203dp"
-        android:layout_height="84dp"
-        android:layout_marginStart="105dp"
-        android:layout_marginBottom="100dp"
+        android:layout_width="92dp"
+        android:layout_height="63dp"
+        android:layout_marginStart="156dp"
+        android:layout_marginBottom="108dp"
         android:text="Get Location"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <Button
+        android:id="@+id/StartTrackingButton"
+        android:layout_width="92dp"
+        android:layout_height="63dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginBottom="108dp"
+        android:text="Start Tracking"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/StopTrackingButton"
+        android:layout_width="92dp"
+        android:layout_height="63dp"
+        android:layout_marginStart="284dp"
+        android:layout_marginBottom="108dp"
+        android:text="Stop Tracking"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <TextView
-        android:id="@+id/LongitudePlainText"
+        android:id="@+id/LongitudeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="19dp"
@@ -50,7 +70,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/LatitudePlainText"
+        android:id="@+id/LatitudeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="17dp"
@@ -62,7 +82,19 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/AltitudePlainText"
+        android:id="@+id/DistanceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="108dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/AltitudeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
@@ -79,7 +111,16 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="101dp"
         android:text="Latitude:"
-        app:layout_constraintBottom_toTopOf="@+id/LatitudePlainText"
+        app:layout_constraintBottom_toTopOf="@+id/LatitudeTextView"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="101dp"
+        android:text="Distance From 0,0,0"
+        app:layout_constraintBottom_toTopOf="@+id/DistanceTextView"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -88,7 +129,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="101dp"
         android:text="Altitude"
-        app:layout_constraintBottom_toTopOf="@+id/AltitudePlainText"
+        app:layout_constraintBottom_toTopOf="@+id/AltitudeTextView"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -97,6 +138,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="101dp"
         android:text="Accuracy"
-        app:layout_constraintBottom_toTopOf="@+id/AccuracyPlainText"
+        app:layout_constraintBottom_toTopOf="@+id/AccuracyTextView"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

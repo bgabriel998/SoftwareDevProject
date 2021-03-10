@@ -1,19 +1,16 @@
 package com.github.ravifrancesco.softwaredevproject;
 
 import android.content.Context;
+import android.os.Looper;
+import android.util.Log;
 
-import com.github.bgabriel998.softwaredevproject.Button7Activity;
-
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Observable;
-import java.util.Observer;
 
 public class UserLocationHandler extends Observable {
 
-    private int updateInterval = 1000; // update interval in ms
+    private int updateInterval = 10000; // update interval in ms
 
-    private boolean running = false;
+    private boolean tracking = false;
 
     private final Context mContext;
 
@@ -30,12 +27,16 @@ public class UserLocationHandler extends Observable {
 
     public void startTracking() {
 
-        running = true;
+        tracking = true;
 
         new Thread(() -> {
-            while(running) {
-                synchronized (this) {
-                    requestLocation();
+            Looper.prepare();
+            while(tracking) {
+                requestLocation();
+                try {
+                    Thread.sleep(updateInterval);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }).start();
@@ -43,10 +44,10 @@ public class UserLocationHandler extends Observable {
     }
 
     public void stopTracking() {
-        running = false;
+        tracking = false;
     }
 
-    private void requestLocation() {
+    public synchronized void requestLocation() {
 
         gpsTracker = new GPSTracker(mContext);
 
@@ -55,9 +56,7 @@ public class UserLocationHandler extends Observable {
         updateAltitude(gpsTracker.getAltitude());
         updateAccuracy(gpsTracker.getAccuracy());
 
-
-
-        notifyObservers(this);
+        notifyObservers();
 
     }
 
@@ -65,7 +64,7 @@ public class UserLocationHandler extends Observable {
 
         if(tempLatitude != latitude) {
             latitude = tempLatitude;
-            hasChanged();
+            setChanged();
         }
 
     }
@@ -73,8 +72,8 @@ public class UserLocationHandler extends Observable {
     private void updateLongitude(double tempLongitude) {
 
         if(tempLongitude != longitude) {
-            latitude = tempLongitude;
-            hasChanged();
+            longitude = tempLongitude;
+            setChanged();
         }
 
     }
@@ -83,7 +82,7 @@ public class UserLocationHandler extends Observable {
 
         if(tempAltitude != tempAltitude) {
             altitude = tempAltitude;
-            hasChanged();
+            setChanged();
         }
 
     }
@@ -92,7 +91,7 @@ public class UserLocationHandler extends Observable {
 
         if(tempAccuracy != accuracy) {
             accuracy = tempAccuracy;
-            hasChanged();
+            setChanged();
         }
 
     }
@@ -101,20 +100,28 @@ public class UserLocationHandler extends Observable {
         this.updateInterval = updateInterval;
     }
 
-    public double getLatitude() {
+    public synchronized double getLatitude() {
         return latitude;
     }
 
-    public double getLongitude() {
+    public synchronized double getLongitude() {
         return longitude;
     }
 
-    public double getAltitude() {
+    public synchronized double getAltitude() {
         return altitude;
     }
 
-    public double getAccuracy() {
+    public synchronized double getAccuracy() {
         return accuracy;
+    }
+
+    public boolean isTracking() {
+        return tracking;
+    }
+
+    public boolean canGetLocation() {
+        return  gpsTracker.canGetLocation();
     }
 
 }

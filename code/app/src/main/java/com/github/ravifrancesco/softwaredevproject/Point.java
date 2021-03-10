@@ -1,5 +1,7 @@
 package com.github.ravifrancesco.softwaredevproject;
 
+import android.util.Log;
+
 public class Point {
 
     static double earthRadius = 6378137.0; // value in meters
@@ -37,15 +39,13 @@ public class Point {
         return Math.sqrt(squaredDistance);
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
+    public void setLatitude(double latitude) { this.latitude = latitude; }
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
-    public void setHeight(double altitude) {
+    public void setAltitude(double altitude) {
         this.altitude = altitude;
     }
 
@@ -57,7 +57,7 @@ public class Point {
         return longitude;
     }
 
-    public double getHeight() {
+    public double getAltitude() {
         return altitude;
     }
 
