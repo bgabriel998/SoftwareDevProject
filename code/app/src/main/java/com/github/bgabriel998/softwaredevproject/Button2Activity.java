@@ -1,34 +1,31 @@
 package com.github.bgabriel998.softwaredevproject;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.github.giommok.softwaredevproject.GoogleAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-/**
- * Activity to demonstrate basic retrieval of the Google user's ID, email address, and basic
- * profile.
- */
-public class Button2Activity extends AppCompatActivity implements
-        View.OnClickListener {
+import java.util.concurrent.ExecutionException;
 
-    private static final String TAG = "SignInActivity";
-    private static final int RC_SIGN_IN = 9001;
 
+public class Button2Activity extends AppCompatActivity implements View.OnClickListener {
+
+    private static final int RC_SIGN_IN = 1;
     private GoogleSignInClient mGoogleSignInClient;
     private TextView mStatusTextView;
+    private GoogleAccount account;
 
     private Thread thread;
 
@@ -44,42 +41,49 @@ public class Button2Activity extends AppCompatActivity implements
         // Button listeners
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         findViewById(R.id.sign_out_button).setOnClickListener(this);
-        findViewById(R.id.disconnect_button).setOnClickListener(this);
 
-        // [START configure_signin]
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        // [END configure_signin]
+        // Sign in options (argument for getClient method)
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
 
-        // [START build_client]
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        // [END build_client]
 
-        // [START customize_button]
         // Set the dimensions of the sign-in button.
         SignInButton signInButton = findViewById(R.id.sign_in_button);
-        signInButton.setSize(SignInButton.SIZE_STANDARD);
+        signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setColorScheme(SignInButton.COLOR_LIGHT);
-        // [END customize_button]
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
-        // [START on_start_sign_in]
-        // Check for existing Google Sign In account, if the user is already signed in
-        // the GoogleSignInAccount will be non-null.
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        updateUI(account);
-        // [END on_start_sign_in]
+        account = GoogleAccount.getAccount(this);
+        updateUI();
     }
 
-    // [START onActivityResult]
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.sign_in_button:
+                googleSignIn();
+                break;
+            case R.id.sign_out_button:
+                googleSignOut();
+                updateUI();
+                break;
+        }
+    }
+
+    /* The following three methods are necessary in order to let the user sign in */
+    /* This is the public method to call in order to authenticate the user */
+    public void googleSignIn() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+        //if(!account.signedIn()) System.exit(1);
+
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -89,90 +93,50 @@ public class Button2Activity extends AppCompatActivity implements
             // The Task returned from this call is always completed, no need to attach
             // a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
+            try {
+                account.setGoogleAccount(task.getResult(ApiException.class));
+                updateUI();
+            } catch (ApiException e) {
+                // The ApiException status code indicates the detailed failure reason.
+                // Please refer to the GoogleSignInStatusCodes class reference for more information.
+                Log.w("Google Sign API", "signInResult:failed code=" + e.getStatusCode());
+            }
         }
     }
-    // [END onActivityResult]
 
-    // [START handleSignInResult]
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
-            // Signed in successfully, show authenticated UI.
-            updateUI(account);
 
-        } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            //System.exit(1);
-            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-            updateUI(null);
-        }
+    /* This is the public method to call in order to let the user sign out */
+    public void googleSignOut() {
+        mGoogleSignInClient.signOut();
+        account.setGoogleAccount(null);
     }
-    // [END handleSignInResult]
 
-    // [START signIn]
-    private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-    // [END signIn]
+    /* This method contains the necessary UI updates after a sign in or a sign out */
+    private void updateUI() {
+        /* If an account is logged */
+        if (account.isSignedIn()) {
+            mStatusTextView.setText("Your name: " + account.getDisplayName() + "\nYour e-mail: " + account.getEmail() + "\nYour family name: " + account.getFamilyName());
 
-    // [START signOut]
-    private void signOut() {
-        mGoogleSignInClient.signOut()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        // [START_EXCLUDE]
-                        updateUI(null);
-                        // [END_EXCLUDE]
-                    }
-                });
-    }
-    // [END signOut]
+            /* resizing signed_out_layout */
+            LinearLayout layout = findViewById(R.id.signed_out_layout);
+            layout.getLayoutParams().height = 0;
 
-    // [START revokeAccess]
-    private void revokeAccess() {
-        mGoogleSignInClient.revokeAccess()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        // [START_EXCLUDE]
-                        updateUI(null);
-                        // [END_EXCLUDE]
-                    }
-                });
-    }
-    // [END revokeAccess]
-
-    private void updateUI(@Nullable GoogleSignInAccount account) {
-        if (account != null) {
-            mStatusTextView.setText(getString(R.string.signed_in_fmt, account.getDisplayName()));
-
+            findViewById(R.id.signed_in_layout).setVisibility(View.VISIBLE);
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
-            findViewById(R.id.sign_out_and_disconnect).setVisibility(View.VISIBLE);
+            findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
+            findViewById(R.id.sign_in_status).setVisibility(View.VISIBLE);
         } else {
-            mStatusTextView.setText(R.string.signed_out);
 
+            mStatusTextView.setVisibility(View.GONE);
+
+            /* resizing signed_out_layout */
+            LinearLayout layout = findViewById(R.id.signed_out_layout);
+            layout.getLayoutParams().height = RelativeLayout.LayoutParams.MATCH_PARENT;
+
+            findViewById(R.id.signed_in_layout).setVisibility(View.GONE);
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
-            findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.sign_in_button:
-                signIn();
-                break;
-            case R.id.sign_out_button:
-                signOut();
-                break;
-            case R.id.disconnect_button:
-                revokeAccess();
-                break;
+            findViewById(R.id.sign_out_button).setVisibility(View.GONE);
         }
     }
 }
