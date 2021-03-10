@@ -1,9 +1,12 @@
 package com.github.bgabriel998.softwaredevproject;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
@@ -22,6 +25,8 @@ public class Button7Activity extends AppCompatActivity implements View.OnClickLi
     TextView accuracyTV;
 
     Button getLocationButton;
+
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
 
     @Override
@@ -46,11 +51,10 @@ public class Button7Activity extends AppCompatActivity implements View.OnClickLi
             e.printStackTrace();
         }
 
-        gpsTracker = new GPSTracker(Button7Activity.this);
-
     }
 
     private void getLocation(View view){
+        gpsTracker = new GPSTracker(Button7Activity.this);
         if(gpsTracker.canGetLocation()){
             double latitude = gpsTracker.getLatitude();
             double longitude = gpsTracker.getLongitude();
