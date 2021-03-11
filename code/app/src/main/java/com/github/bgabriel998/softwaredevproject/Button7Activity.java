@@ -46,9 +46,6 @@ public class Button7Activity extends AppCompatActivity implements View.OnClickLi
 
         getLocationButton = findViewById(R.id.GetLocationButton);
 
-        startTrackingButton = findViewById(R.id.StartTrackingButton);
-        stopTrackingButton = findViewById(R.id.StopTrackingButton);
-
         getLocationButton.setOnClickListener(this);
 
         startTrackingButton.setOnClickListener(this);
