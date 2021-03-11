@@ -11,11 +11,10 @@ import java.util.ArrayList;
 
 public class GeonamesHandler {
 
-    private static final int GET_POI_MAX_RESULTS        =          200;     //Maximum result for function GetPOI
-    private static final double GET_POI_MAX_RANGE       =         19.9;     //Maximum range to get Poi
-
+    private ArrayList<POI> POIs;
     private final GeoNamesPOIProvider poiProvider;
     private Thread queryThread;
+
 
     /**
      * Initializes provider
@@ -25,6 +24,7 @@ public class GeonamesHandler {
         if(username == null || username.isEmpty())
             throw new IllegalArgumentException("GeonamesHandler username provider can't be null");
         poiProvider = new GeoNamesPOIProvider(username);
+        POIs = new ArrayList<>();
     }
 
     /**
@@ -33,13 +33,13 @@ public class GeonamesHandler {
      * @param userLocation user location as GeoPoint
      * @return List of point of interest near user location
      */
-    private ArrayList<POI> getPOI(GeoPoint userLocation){
+    private ArrayList<POI> getPOI(GeoPoint userLocation, int poiMaxResult, int poiMaxRange){
         if(userLocation == null)
             throw new IllegalArgumentException("userLocation can't be null");
         //List containing all POIs around userLocation
         ArrayList<POI> results = new ArrayList<>();
         //Search POI close to the given location, using a limit of results and a given range
-        results = poiProvider.getPOICloseTo(userLocation,GET_POI_MAX_RESULTS,GET_POI_MAX_RANGE);
+        results = poiProvider.getPOICloseTo(userLocation,poiMaxResult,poiMaxRange);
         return results;
     }
 
@@ -65,19 +65,16 @@ public class GeonamesHandler {
      * getSurroundingPeaks: returns a list of geopoints corresponding to the mountains
      * around user location
      * @param userLocation Geopoint corresponding to user Location
-     * @return List of mountains around user location
+     * @param poiMaxResult max number of POI returned
+     * @param poiMaxRange max range for the POI request in km
      * @throws InterruptedException interrupt exception occurs if thread is interrupted
      */
-    public ArrayList<POI> getSurroundingPeaks(GeoPoint userLocation) throws InterruptedException {
-        final ArrayList<POI>[] pois = new ArrayList[]{new ArrayList<POI>()};
-        final ArrayList<POI>[] filtered = new ArrayList[]{new ArrayList<POI>()};
+    public void startGetSurroundingPeaks(GeoPoint userLocation,int poiMaxResult, int poiMaxRange){
         queryThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try{
-                    GeonamesHandler handler = new GeonamesHandler("bgabrie1");
-                    pois[0] = handler.getPOI(userLocation);
-                    filtered[0] = handler.filterPOI(pois[0]);
+                    POIs = getPOI(userLocation, poiMaxResult, poiMaxRange);
                 }
                 catch (Exception e){
                     Log.e("GeonamesHandler", e.toString());
@@ -85,8 +82,18 @@ public class GeonamesHandler {
             }
         });
         queryThread.start();
-        queryThread.join();
-        return filtered[0];
     }
-    
+
+    /**
+     * getSurroundingPeaksResult read the result of the query startGetSurroundingPeaks
+     * @return filtered list of POI, containing only mountain
+     */
+    public ArrayList<POI> getSurroundingPeaksResult() throws InterruptedException {
+        if(queryThread == null)
+            throw new IllegalArgumentException("Can't call getSurroundingPeaksResult,please call startGetSurroundingPeaks first");
+        if(queryThread.isAlive())
+            queryThread.join();
+        return filterPOI(POIs);
+    }
+
 }
