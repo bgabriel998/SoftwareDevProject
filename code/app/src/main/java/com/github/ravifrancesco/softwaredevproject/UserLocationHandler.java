@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.util.Observable;
 
+@Deprecated
 public class UserLocationHandler extends Observable {
 
     private int updateInterval = 10000; // update interval in ms
@@ -49,7 +50,7 @@ public class UserLocationHandler extends Observable {
 
     public synchronized void requestLocation() {
 
-        gpsTracker = new GPSTracker(mContext);
+        //gpsTracker = new GPSTracker(mContext);
 
         updateLatitude(gpsTracker.getLatitude());
         updateLongitude(gpsTracker.getLongitude());

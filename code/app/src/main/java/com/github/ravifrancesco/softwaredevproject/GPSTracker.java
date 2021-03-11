@@ -28,14 +28,14 @@ public class GPSTracker extends Service implements LocationListener {
     // flag for GPS status
     private boolean canGetLocation = false;
 
-    Location location; // location
+    protected  Location location; // location
     private double latitude; // latitude
     private double longitude; // longitude
     private double altitude; // altitude
     private double accuracy; // accuracy
 
     // The minimum distance to change Updates in meters
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 5; // 5 meters
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 0; // 1 meter
 
     // The minimum time between updates in milliseconds
     private static final long MIN_TIME_BW_UPDATES = 1; // 1 second
@@ -43,10 +43,14 @@ public class GPSTracker extends Service implements LocationListener {
     // Declaring a Location Manager
     protected LocationManager locationManager;
 
-    public GPSTracker(Context mContext) {
+    public GPSTracker(Context mContext, UserPoint userPoint) {
         this.mContext = mContext;
+        this.userPoint = userPoint;
         getLocation();
     }
+
+    // User Point
+    UserPoint userPoint;
 
     // checks the permits and requests location through android.location.LocationManager;
     public Location getLocation() {
@@ -77,13 +81,10 @@ public class GPSTracker extends Service implements LocationListener {
                     Log.d("Network", "Network");
                     if (locationManager != null) {
                         location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    }
 
-                        if (location != null) {
-                            latitude = location.getLatitude();
-                            longitude = location.getLongitude();
-                            altitude = location.getAltitude();
-                            accuracy = location.getAccuracy();
-                        }
+                    if (locationManager != null) {
+                        location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                     }
                 }
 
@@ -102,13 +103,10 @@ public class GPSTracker extends Service implements LocationListener {
                         Log.d("GPS Enabled", "GPS Enabled");
                         if (locationManager != null) {
                             location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        }
 
-                            if (location != null) {
-                                latitude = location.getLatitude();
-                                longitude = location.getLongitude();
-                                altitude = location.getAltitude();
-                                accuracy = location.getAccuracy();
-                            }
+                        if (locationManager != null) {
+                            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                         }
                     }
                 }
@@ -148,7 +146,7 @@ public class GPSTracker extends Service implements LocationListener {
 
     public double getAltitude(){
         if(location != null){
-            longitude = location.getAltitude();
+            altitude = location.getAltitude();
         }
 
         // return altitude
@@ -157,7 +155,7 @@ public class GPSTracker extends Service implements LocationListener {
 
     public double getAccuracy() {
         if(location != null){
-            longitude = location.getAccuracy();
+            accuracy = location.getAccuracy();
         }
 
         // return accuracy
@@ -171,18 +169,25 @@ public class GPSTracker extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
+        getLocation();
+        userPoint.update();
     }
 
     @Override
     public void onProviderDisabled(String provider) {
+        // print some error
     }
 
     @Override
     public void onProviderEnabled(String provider) {
+        getLocation();
+        userPoint.update();
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
+        getLocation();
+        userPoint.update();
     }
 
     @Override

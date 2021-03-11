@@ -40,8 +40,6 @@ public class Point {
                         Math.sin(latThis)*Math.sin(latOther)
                 );
 
-        System.out.println(squaredDistance);
-
         return Math.sqrt(squaredDistance);
 
     }

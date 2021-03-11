@@ -67,7 +67,7 @@ public class Button7Activity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void getLocation(View view){
-        if(userPoint.isTracking() && userPoint.canGetLocation()){
+        if(userPoint.canGetLocation()){
             double latitude = userPoint.getLatitude();
             double longitude = userPoint.getLongitude();
             double altitude = userPoint.getAltitude();
@@ -84,11 +84,11 @@ public class Button7Activity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void startTracking() {
-        userPoint.startTracking();
+        //userPoint.startTracking();
     }
 
     private void stopTracking() {
-        userPoint.stopTracking();
+        //userPoint.stopTracking();
     }
 
     @Override
