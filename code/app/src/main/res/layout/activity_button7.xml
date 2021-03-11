@@ -37,26 +37,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/StartTrackingButton"
-        android:layout_width="92dp"
-        android:layout_height="63dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginBottom="108dp"
-        android:text="Start Tracking"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/StopTrackingButton"
-        android:layout_width="92dp"
-        android:layout_height="63dp"
-        android:layout_marginStart="284dp"
-        android:layout_marginBottom="108dp"
-        android:text="Stop Tracking"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <TextView
         android:id="@+id/LongitudeTextView"
         android:layout_width="wrap_content"
