@@ -4,7 +4,7 @@ import android.util.Log;
 
 public class Point {
 
-    static double earthRadius = 6378137; // value in meters
+    final static double EARTH_RADIUS = 6378137; // value in meters
 
     private double latitude;
     private double longitude;
@@ -24,8 +24,8 @@ public class Point {
 
         double squaredDistance;
 
-        double rThis = earthRadius + this.altitude;;
-        double rOther = earthRadius + other.altitude;;
+        double rThis = EARTH_RADIUS + this.altitude;
+        double rOther = EARTH_RADIUS + other.altitude;
 
         double latThis = Math.toRadians(this.latitude);
         double lonThis = Math.toRadians(this.longitude);
