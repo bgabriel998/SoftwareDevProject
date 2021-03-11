@@ -1,8 +1,10 @@
 package com.github.ravifrancesco.softwaredevproject;
 
+import android.util.Log;
+
 public class Point {
 
-    static double earthRadius = 6378137.0; // value in meters
+    final static double EARTH_RADIUS = 6378137; // value in meters
 
     private double latitude;
     private double longitude;
@@ -21,31 +23,34 @@ public class Point {
     public double computeDistance(Point other) {
 
         double squaredDistance;
-        double rThis;
-        double rOther;
 
-        rThis = earthRadius + altitude;
-        rOther = earthRadius + other.altitude;
+        double rThis = EARTH_RADIUS + this.altitude;
+        double rOther = EARTH_RADIUS + other.altitude;
+
+        double latThis = Math.toRadians(this.latitude);
+        double lonThis = Math.toRadians(this.longitude);
+
+        double latOther = Math.toRadians(other.latitude);
+        double lonOther = Math.toRadians(other.longitude);
 
         // computing distance in spherical polar coordinates
         squaredDistance = Math.pow(rThis, 2) + Math.pow(rOther, 2) -
                 2*rThis*rOther*(
-                        Math.cos(latitude)*Math.cos(other.latitude)*Math.cos(longitude - other.longitude) +
-                        Math.sin(latitude)*Math.sin(other.latitude)
+                        Math.cos(latThis)*Math.cos(latOther)*Math.cos(lonThis - lonOther) +
+                        Math.sin(latThis)*Math.sin(latOther)
                 );
 
         return Math.sqrt(squaredDistance);
+
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
+    public void setLatitude(double latitude) { this.latitude = latitude; }
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
-    public void setHeight(double altitude) {
+    public void setAltitude(double altitude) {
         this.altitude = altitude;
     }
 
@@ -57,7 +62,7 @@ public class Point {
         return longitude;
     }
 
-    public double getHeight() {
+    public double getAltitude() {
         return altitude;
     }
 
