@@ -48,9 +48,6 @@ public class Button7Activity extends AppCompatActivity implements View.OnClickLi
 
         getLocationButton.setOnClickListener(this);
 
-        startTrackingButton.setOnClickListener(this);
-        stopTrackingButton.setOnClickListener(this);
-
         userPoint = new UserPoint(Button7Activity.this);
 
         try {
