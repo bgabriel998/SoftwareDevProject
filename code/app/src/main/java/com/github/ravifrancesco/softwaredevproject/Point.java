@@ -4,7 +4,7 @@ import android.util.Log;
 
 public class Point {
 
-    static double earthRadius = 6378137.0; // value in meters
+    static double earthRadius = 6378137; // value in meters
 
     private double latitude;
     private double longitude;
@@ -23,20 +23,27 @@ public class Point {
     public double computeDistance(Point other) {
 
         double squaredDistance;
-        double rThis;
-        double rOther;
 
-        rThis = earthRadius + altitude;
-        rOther = earthRadius + other.altitude;
+        double rThis = earthRadius + this.altitude;;
+        double rOther = earthRadius + other.altitude;;
+
+        double latThis = Math.toRadians(this.latitude);
+        double lonThis = Math.toRadians(this.longitude);
+
+        double latOther = Math.toRadians(other.latitude);
+        double lonOther = Math.toRadians(other.longitude);
 
         // computing distance in spherical polar coordinates
         squaredDistance = Math.pow(rThis, 2) + Math.pow(rOther, 2) -
                 2*rThis*rOther*(
-                        Math.cos(latitude)*Math.cos(other.latitude)*Math.cos(longitude - other.longitude) +
-                        Math.sin(latitude)*Math.sin(other.latitude)
+                        Math.cos(latThis)*Math.cos(latOther)*Math.cos(lonThis - lonOther) +
+                        Math.sin(latThis)*Math.sin(latOther)
                 );
 
+        System.out.println(squaredDistance);
+
         return Math.sqrt(squaredDistance);
+
     }
 
     public void setLatitude(double latitude) { this.latitude = latitude; }

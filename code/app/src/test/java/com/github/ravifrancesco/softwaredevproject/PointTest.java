@@ -48,4 +48,17 @@ public class PointTest {
 
     }
 
+    @Test
+    public void testDistance() {
+
+        Point point1 = new Point(0.0, 0.0, 0.0);
+        Point point2 = new Point(0.5, 0.5, 0.0);
+
+        double expected = 79000.0;
+        double delta = 500.0;
+
+        assertEquals(expected, point1.computeDistance(point2), delta);
+
+    }
+
 }
