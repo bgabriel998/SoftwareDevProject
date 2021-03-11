@@ -2,7 +2,6 @@
     <string name="app_name">SoftwareDevProject</string>
 
     <!-- Google -->
-    <string name="default_web_client_id">514173627735-s41c8cvuss53q9jps3vglb5tl0hl43li.apps.googleusercontent.com</string>
     <!-- Sign-in status messages -->
     <string name="signed_out">Signed out</string>
     <!-- Sign-in button labels and other strings -->
