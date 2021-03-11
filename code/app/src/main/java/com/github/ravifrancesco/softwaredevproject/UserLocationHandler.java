@@ -80,7 +80,7 @@ public class UserLocationHandler extends Observable {
 
     private void updateAltitude(double tempAltitude) {
 
-        if(tempAltitude != tempAltitude) {
+        if(tempAltitude != altitude) {
             altitude = tempAltitude;
             setChanged();
         }

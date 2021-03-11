@@ -72,7 +72,7 @@ public class Button7Activity extends AppCompatActivity implements View.OnClickLi
             double longitude = userPoint.getLongitude();
             double altitude = userPoint.getAltitude();
             double accuracy = userPoint.getAccuracy();
-            double distance = userPoint.computeDistance(new Point(0,0,0));
+            double distance = userPoint.computeDistance(new Point(0.0,0.0,0.0));
             latitudeTV.setText(latitude + "°");
             longitudeTV.setText(longitude + "°");
             altitudeTV.setText(altitude + " m");
