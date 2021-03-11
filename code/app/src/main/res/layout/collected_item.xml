@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:layout_marginTop="16dp"
+    android:layout_gravity="center">
+
+    <Button
+        android:id="@+id/collected"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/button_light_green">
+    </Button>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:elevation="3dp">
+
+        <!-- Mountain Name -->
+        <TextView
+            android:id="@+id/collected_name"
+            style="@style/DarkGreenText"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:paddingStart="54dp"
+            android:paddingEnd="0dp"
+            android:text="Diablerets" />
+
+        <!-- Points -->
+        <TextView
+            android:id="@+id/collected_points"
+            style="@style/DarkGreenText"
+            android:layout_width="85dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="128" />
+    </LinearLayout>
+</RelativeLayout>
+
