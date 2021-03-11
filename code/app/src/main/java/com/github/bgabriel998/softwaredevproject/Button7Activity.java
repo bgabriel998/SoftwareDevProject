@@ -83,26 +83,8 @@ public class Button7Activity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    private void startTracking() {
-        //userPoint.startTracking();
-    }
-
-    private void stopTracking() {
-        //userPoint.stopTracking();
-    }
-
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.GetLocationButton:
-                getLocation(view);
-                break;
-            case R.id.StartTrackingButton:
-                startTracking();
-                break;
-            case R.id.StopTrackingButton:
-                stopTracking();
-                break;
-        }
+        getLocation(view);
     }
 }
