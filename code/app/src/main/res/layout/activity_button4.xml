@@ -6,4 +6,37 @@
     android:layout_height="match_parent"
     tools:context=".Button4Activity">
 
+    <Button
+        android:id="@+id/button9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Get surrounding peaks"
+        tools:layout_editor_absoluteX="21dp"
+        app:layout_constraintBottom_toTopOf="@+id/positionTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        tools:layout_editor_absoluteY="31dp"
+        />
+
+    <TextView
+        android:id="@+id/positionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="608dp"
+
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@id/querryResultTextView"
+        app:layout_constraintStart_toStartOf="@id/button9" />
+
+    <TextView
+        android:id="@+id/querryResultTextView"
+        android:layout_width="329dp"
+        android:layout_height="557dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints" />
 </androidx.constraintlayout.widget.ConstraintLayout>
