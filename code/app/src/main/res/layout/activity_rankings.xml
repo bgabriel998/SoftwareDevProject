@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context=".RankingsActivity">
+
+    <!-- Toolbar -->
+    <include layout="@layout/toolbar" />
+
+    <!-- Rankings Container -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="80dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- HEADER -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@color/LightBlue">
+
+            <!-- Position -->
+            <TextView
+                android:id="@+id/header_position"
+                style="@style/SmallLightGreyText"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/header_position" />
+
+            <!-- Username -->
+            <TextView
+                android:id="@+id/header_points"
+                style="@style/SmallLightGreyText"
+                android:layout_width="261dp"
+                android:layout_height="wrap_content"
+                android:paddingStart="20dp"
+                android:paddingEnd="0dp"
+                android:text="@string/header_username" />
+
+            <!-- Points -->
+            <TextView
+                android:id="@+id/header_username"
+                style="@style/SmallLightGreyText"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/header_points" />
+        </LinearLayout>
+
+        <!-- TODO Fill ranking list dynamically -->
+        <include layout="@layout/ranking_item" />
+        <include layout="@layout/ranking_item_self" />
+
+    </LinearLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

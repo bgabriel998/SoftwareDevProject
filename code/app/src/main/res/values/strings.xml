@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">SoftwareDevProject</string>
+
+    <!-- Google -->
+    <!-- Sign-in status messages -->
+    <string name="signed_out">Signed out</string>
+    <!-- Sign-in button labels and other strings -->
+    <string name="sign_out">Sign Out</string>
+
+
+    <string name="title_activity_main_menu">MainMenuActivity</string>
+
+    <!-- BUTTON TITLES -->
+    <string name="start_button">Start Peak AR</string>
+    <string name="collection_button">Collection</string>
+    <string name="ranking_button">Ranking</string>
+    <string name="sign_in_button">Sign In</string>
+    <string name="sign_out_button">Sign Out</string>
+    <string name="sign_up_button">Sign Up</string>
+
+    <!-- RANKINGS HEADER -->
+    <string name="header_position">Pos</string>
+    <string name="header_username">Username</string>
+    <string name="header_points">Points</string>
+
+    <!-- COLLECTION SEPARATOR -->
+    <string name="separator">Uncollected</string>
 </resources>
