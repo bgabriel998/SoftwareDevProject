@@ -16,7 +16,6 @@ import android.util.Size;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-import java.util.concurrent.ExecutionException;
 
 public class Button1Activity extends AppCompatActivity {
 
@@ -34,7 +33,7 @@ public class Button1Activity extends AppCompatActivity {
             try {
                 ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
                 bindImageAnalysis(cameraProvider);
-            } catch (ExecutionException | InterruptedException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }, ContextCompat.getMainExecutor(this));
