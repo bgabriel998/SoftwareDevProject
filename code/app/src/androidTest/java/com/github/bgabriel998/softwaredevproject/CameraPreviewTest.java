@@ -42,7 +42,7 @@ import java.util.function.Consumer;
 
 
 @RunWith(AndroidJUnit4.class)
-public class CameraActivityTest implements LifecycleOwner, ImageReader.OnImageAvailableListener, Consumer<SurfaceRequest.Result> {
+public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAvailableListener, Consumer<SurfaceRequest.Result> {
     @Rule
     public ActivityScenarioRule<Button1Activity> testRule = new ActivityScenarioRule<>(Button1Activity.class);
     @Rule
