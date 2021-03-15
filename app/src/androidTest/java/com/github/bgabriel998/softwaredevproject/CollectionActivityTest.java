@@ -8,6 +8,8 @@ import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,10 +25,20 @@ public class CollectionActivityTest {
     @Rule
     public ActivityScenarioRule<CollectionActivity> testRule = new ActivityScenarioRule<>(CollectionActivity.class);
 
+    @Before
+    public void setup(){
+        Intents.init();
+    }
+
+    @After
+    public void cleanUp(){
+        Intents.release();
+    }
+
     /* Test that the toolbar title is set as expected */
     @Test
     public void TestToolbarTitle(){
-        String TOOLBAR_TITLE = "Collection";
+        String TOOLBAR_TITLE = "Collections";
         ViewInteraction greetingText = Espresso.onView(withId(R.id.toolbarTitle));
         greetingText.check(matches(withText(TOOLBAR_TITLE)));
     }
@@ -34,11 +46,11 @@ public class CollectionActivityTest {
     /* Test that pressing the collected item the view changes to MountainActivity */
     @Test
     public void TestCollectedItem(){
-        Intents.init();
+        //Intents.init();
         ViewInteraction button = Espresso.onView(withId(R.id.collected));
         button.perform(ViewActions.click());
         // Catch intent
         intended(IntentMatchers.hasComponent(MountainActivity.class.getName()));
-        Intents.release();
+        //Intents.release();
     }
 }

@@ -11,7 +11,7 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-        testApplicationId "com.github.bgabriel998.softwaredevproject"
+        //testApplicationId "com.github.bgabriel998.softwaredevproject"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testHandleProfiling true
         testFunctionalTest true

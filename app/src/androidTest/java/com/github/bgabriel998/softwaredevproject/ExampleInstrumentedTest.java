@@ -29,19 +29,4 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         assertEquals("com.github.bgabriel998.softwaredevproject", appContext.getPackageName());
     }
-
-    @Test
-    public void testGetSurroundingPeaks(){
-        GeonamesHandler handler = new GeonamesHandler("bgabrie1");
-        GeoPoint point = new GeoPoint(45.9258378624377, 6.878492964884342);
-        ArrayList<POI> result = null;
-        try {
-            result = handler.getSurroundingPeaks(point);
-            assertThat(result.size(), greaterThan(10));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-
 }

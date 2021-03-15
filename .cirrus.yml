@@ -15,19 +15,19 @@ check_android_task:
   start_emulator_background_script:
     $ANDROID_SDK_ROOT/emulator/emulator -avd test -no-window -gpu swiftshader_indirect -no-snapshot -no-audio -no-boot-anim -camera-back none
   build_script: |
-    chmod +x gradlew
+    chmod +x gradlew 
     ./gradlew assembleDebugAndroidTest
   wait_for_emulator_script: |
     adb wait-for-device
     adb shell input keyevent 82
   disable_animations_script: |
-    prepare_codeclimate_script: |
-    curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-    chmod +x ./cc-test-reporter
-    ./cc-test-reporter before-build
     adb shell settings put global window_animation_scale 0.0
     adb shell settings put global transition_animation_scale 0.0
     adb shell settings put global animator_duration_scale 0.0
+  prepare_codeclimate_script: |
+    curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+    chmod +x ./cc-test-reporter
+    ./cc-test-reporter before-build
   check_script:
     ./gradlew check connectedCheck
   report_codeclimate_script: |
