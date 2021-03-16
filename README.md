@@ -3,6 +3,10 @@ ___
 ## Badges
 [![Build Status](https://api.cirrus-ci.com/github/bgabriel998/SoftwareDevProject.svg)](https://cirrus-ci.com/github/bgabriel998/SoftwareDevProject)
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/7d9f8d866811a3ea3fa1/maintainability)](https://codeclimate.com/github/bgabriel998/SoftwareDevProject/maintainability)
+
+[![Test Coverage](https://api.codeclimate.com/v1/badges/7d9f8d866811a3ea3fa1/test_coverage)](https://codeclimate.com/github/bgabriel998/SoftwareDevProject/test_coverage)
+
 ## Application idea 
 See [pitch](doc/proposal_template.md) 
 ### Description
