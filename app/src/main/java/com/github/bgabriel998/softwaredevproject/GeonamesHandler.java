@@ -51,11 +51,11 @@ public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> impl
         if(userLocation == null)
             throw new IllegalArgumentException("UserPoint user location can't be null");
         this.userLocation = userLocation;
-        poiProvider = new OverpassAPIProvider();
-        POIs = new ArrayList<POI>();
-        rangeInKm = DEFAULT_RANGE_IN_KM;
-        queryMaxResults = DEFAULT_QUERY_MAX_RESULT;
-        queryTimeout = DEFAULT_QUERY_TIMEOUT;
+        this.poiProvider = new OverpassAPIProvider();
+        this.POIs = new ArrayList<POI>();
+        this.rangeInKm = DEFAULT_RANGE_IN_KM;
+        this.queryMaxResults = DEFAULT_QUERY_MAX_RESULT;
+        this.queryTimeout = DEFAULT_QUERY_TIMEOUT;
     }
 
     /**
@@ -64,19 +64,25 @@ public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> impl
      * Initialises result array list
      * @param userLocation user location (center of the query bounding box)
      * @param boundingBoxRangeKm range around the user location to compute the bounding box
-     * @param queryMaxResults max results that the query should return (do not exceed 500)
+     * @param queryMaxResults max results that the query should return (please do not exceed 500)
      * @param queryTimeout query timeout
      */
     public GeonamesHandler(UserPoint userLocation, double boundingBoxRangeKm, int queryMaxResults, int queryTimeout){
         if(userLocation == null)
             throw new IllegalArgumentException("UserPoint user location can't be null");
+        if(boundingBoxRangeKm <= 0.1)
+            throw new IllegalArgumentException("BoundingBoxRangeKm can't be null or negative (also not under 100m)");
+        if(queryMaxResults < 1)
+            throw new IllegalArgumentException("QueryMaxResult parameter can't be less than 1");
+        if(queryTimeout <= 1)
+            throw new IllegalArgumentException("QueryTimeout parameter can't be less than 1 sec");
 
         this.userLocation = userLocation;
         this.rangeInKm = boundingBoxRangeKm;
         this.queryMaxResults = queryMaxResults;
         this.queryTimeout = queryTimeout;
-        poiProvider = new OverpassAPIProvider();
-        POIs = new ArrayList<POI>();
+        this.poiProvider = new OverpassAPIProvider();
+        this.POIs = new ArrayList<POI>();
     }
 
 
@@ -117,10 +123,7 @@ public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> impl
     private ArrayList<POI> getPOIsFromUrl(String url){
         Log.d(BonusPackHelper.LOG_TAG, "OverpassAPIProvider:getPOIsFromUrl:"+url);
         String jString = BonusPackHelper.requestStringFromUrl(url);
-        if (jString == null) {
-            Log.e(BonusPackHelper.LOG_TAG, "OverpassAPIProvider: request failed.");
-            return null;
-        }
+
         try {
             //parse JSON and build POIs
             JsonParser parser = new JsonParser();
@@ -156,19 +159,10 @@ public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> impl
                     //TODO: try to set a relevant thumbnail image, according to key/value tags.
                     //We could try to replicate Nominatim/lib/lib.php/getClassTypes(), but it sounds crazy for the added value.
                     poi.mUrl = tagValueFromJson("website", jTags);
-                    if (poi.mUrl != null){
-                        //normalize the url (often needed):
-                        if (!poi.mUrl.startsWith("http://") && !poi.mUrl.startsWith("https://"))
-                            poi.mUrl = "http://" + poi.mUrl;
-                    }
+
                 }
                 if ("node".equals(poi.mCategory)){
                     poi.mLocation = geoPointFromJson(jo);
-                } else {
-                    if (jo.has("center")){
-                        JsonObject jCenter = jo.get("center").getAsJsonObject();
-                        poi.mLocation = geoPointFromJson(jCenter);
-                    }
                 }
                 if (poi.mLocation != null)
                     pois.add(poi);
