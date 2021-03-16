@@ -11,7 +11,7 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-        testApplicationId "com.github.bgabriel998.softwaredevproject"
+        //testApplicationId "com.github.bgabriel998.softwaredevproject"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testHandleProfiling true
         testFunctionalTest true
@@ -68,7 +68,7 @@ dependencies {
     implementation "androidx.camera:camera-core:1.1.0-alpha02"
     implementation "androidx.camera:camera-lifecycle:1.1.0-alpha02"
     implementation 'androidx.camera:camera-view:1.0.0-alpha22'
-    implementation 'com.google.android.gms:play-services:7.8.0'
+    implementation 'com.google.android.gms:play-services:12.0.1'
     implementation 'com.github.MKergall:osmbonuspack:6.6.0'
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
     implementation 'com.google.firebase:firebase-auth:20.0.3'
