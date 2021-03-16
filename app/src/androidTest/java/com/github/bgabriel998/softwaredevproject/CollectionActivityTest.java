@@ -25,11 +25,13 @@ public class CollectionActivityTest {
     @Rule
     public ActivityScenarioRule<CollectionActivity> testRule = new ActivityScenarioRule<>(CollectionActivity.class);
 
+    /* Create Intent */
     @Before
     public void setup(){
         Intents.init();
     }
 
+    /* Release Intent */
     @After
     public void cleanUp(){
         Intents.release();
@@ -46,11 +48,9 @@ public class CollectionActivityTest {
     /* Test that pressing the collected item the view changes to MountainActivity */
     @Test
     public void TestCollectedItem(){
-        //Intents.init();
         ViewInteraction button = Espresso.onView(withId(R.id.collected));
         button.perform(ViewActions.click());
         // Catch intent
         intended(IntentMatchers.hasComponent(MountainActivity.class.getName()));
-        //Intents.release();
     }
 }

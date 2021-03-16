@@ -12,7 +12,6 @@
         android:layout_width="938dp"
         android:layout_height="1106dp"
         android:layout_marginEnd="50dp"
-        android:rotation="90"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,10 +23,9 @@
         android:id="@+id/goBackButton"
         style="@style/IconButton"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:onClick="backButton"
-        android:rotation="90"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_back" />
 
@@ -35,25 +33,23 @@
     <ImageButton
         android:id="@+id/mapButton"
         style="@style/IconButton"
-        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:onClick="mapButton"
-        android:rotation="90"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_map" />
 
     <!-- Camera button -->
     <ImageButton
-        android:id="@+id/cameraBottom"
+        android:id="@+id/cameraButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginEnd="40dp"
         android:onClick="cameraButton"
-        android:rotation="90"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         android:background="@drawable/iconcircle"
         app:srcCompat="@drawable/ic_camera" />
 

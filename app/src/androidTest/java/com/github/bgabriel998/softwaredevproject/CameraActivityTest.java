@@ -25,24 +25,25 @@ public class CameraActivityTest {
     @Rule
     public ActivityScenarioRule<CameraActivity> testRule = new ActivityScenarioRule<>(CameraActivity.class);
 
+    /* Create Intent */
     @Before
     public void setup(){
         Intents.init();
     }
 
+    /* Release Intent */
     @After
     public void cleanUp(){
         Intents.release();
     }
 
+
     /* Test that pressing the map icon button changes view to MapActivity */
     @Test
     public void TestMapIconButton(){
-        //Intents.init();
         ViewInteraction button = Espresso.onView(withId(R.id.mapButton));
-        //button.perform(ViewActions.click());
+        button.perform(ViewActions.click());
         // Catch intent
-        //intended(IntentMatchers.hasComponent(MapActivity.class.getName()));
-        //Intents.release();
+        intended(IntentMatchers.hasComponent(MapActivity.class.getName()));
     }
 }
