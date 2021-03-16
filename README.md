@@ -1,4 +1,7 @@
 # CS-306 Software Development Project 
+___
+## Badges
+[![Build Status](https://api.cirrus-ci.com/github/bgabriel998/SoftwareDevProject.svg)](https://cirrus-ci.com/github/bgabriel998/SoftwareDevProject)
 
 ## Application idea 
 See [pitch](doc/proposal_template.md) 
@@ -23,7 +26,6 @@ ___
 [Java Documentation](https://docs.oracle.com/en/java/)
 
 [Android Studio Documentation](https://developer.android.com/docs)
-
 
 ___
 ## Devs
