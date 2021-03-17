@@ -52,8 +52,10 @@ public class GPSTracker extends Service implements LocationListener {
     // User Point
     UserPoint userPoint;
 
+
     // checks the permits and requests location through android.location.LocationManager;
     public Location getLocation() {
+
         try {
             locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
 

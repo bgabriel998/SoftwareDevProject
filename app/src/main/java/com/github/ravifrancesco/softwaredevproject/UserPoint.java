@@ -20,15 +20,19 @@ public class UserPoint extends Point {
 
     public UserPoint(Context mContext) {
         super(0, 0, 0);
-        //gpsTracker = new GPSTracker(mContext, this);
+        gpsTracker = new GPSTracker(mContext, this);
     }
 
 
     public void update() {
-        super.setLatitude(46.519251915333676);
-        super.setLongitude(6.558563221333525);
-        super.setAltitude(220);
-        //accuracy = gpsTracker.getAccuracy();
+        //super.setLatitude(46.519251915333676);
+        //super.setLongitude(6.558563221333525);
+        //super.setAltitude(220);
+
+        super.setAltitude(gpsTracker.getAltitude());
+        super.setLatitude(gpsTracker.getLatitude());
+        super.setLongitude(gpsTracker.getLongitude());
+        accuracy = gpsTracker.getAccuracy();
     }
 
     public double getAccuracy() {
