@@ -1,5 +1,7 @@
 package com.github.bgabriel998.softwaredevproject;
 
+import android.app.Activity;
+
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
@@ -16,6 +18,7 @@ import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -51,6 +54,6 @@ public class CameraActivityTest {
     public void TestBackButton(){
         ViewInteraction button = Espresso.onView(withId(R.id.cameraBackButton));
         button.perform(ViewActions.click());
-        testRule.getScenario().onActivity(activity -> assertTrue(activity.isFinishing()));
+        assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
     }
 }

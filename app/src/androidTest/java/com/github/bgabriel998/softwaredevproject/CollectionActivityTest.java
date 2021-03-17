@@ -1,5 +1,7 @@
 package com.github.bgabriel998.softwaredevproject;
 
+import android.app.Activity;
+
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
@@ -20,6 +22,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -52,7 +55,7 @@ public class CollectionActivityTest {
     @Test
     public void TestToolbarBackButton(){
         onView(withId(R.id.toolbarBackButton)).perform(click());
-        testRule.getScenario().onActivity(activity -> assertTrue(activity.isFinishing()));
+        assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
     }
 
     /* Test that pressing the collected item the view changes to MountainActivity */
