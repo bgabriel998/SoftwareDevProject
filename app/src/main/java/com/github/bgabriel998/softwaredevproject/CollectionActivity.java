@@ -17,7 +17,7 @@ public class CollectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collection);
-        SetupToolbar();
+        ToolbarHandler.SetupToolbar(this, TOOLBAR_TITLE);
 
         Button collectedButton = findViewById(R.id.collected);
         collectedButton.setOnClickListener(new View.OnClickListener() {
@@ -26,15 +26,6 @@ public class CollectionActivity extends AppCompatActivity {
                 collectedButton(v);
             }
         });
-    }
-
-    /* Adds a finish as a listener to toolbar back button.
-     Sets the toolbar title. */
-    private void SetupToolbar(){
-        ImageButton backToolbarButton = findViewById(R.id.toolbarBackButton);
-        backToolbarButton.setOnClickListener(v -> finish());
-        TextView toolbarTitle = findViewById(R.id.toolbarTitle);
-        toolbarTitle.setText(TOOLBAR_TITLE);
     }
 
     /* Changes view to MountainActivity */

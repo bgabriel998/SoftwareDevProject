@@ -23,7 +23,8 @@
             android:id="@+id/mountainIcon"
             android:layout_width="152dp"
             android:layout_height="170dp"
-            android:src="@drawable/ic_mountain" />
+            android:src="@drawable/ic_mountain"
+            android:contentDescription="@string/description_icon"/>
 
         <!-- Start Peak AR button -->
         <Button
@@ -66,7 +67,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_user"
-        android:onClick="profileButton" />
+        android:onClick="profileButton"
+        android:contentDescription="@string/description_profile_button"/>
 
     <!-- Settings Icon Button -->
     <ImageButton
@@ -77,6 +79,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_settings"
-        android:onClick="settingsButton" />
+        android:onClick="settingsButton"
+        android:contentDescription="@string/description_settings_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

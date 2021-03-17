@@ -19,7 +19,8 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_height="310dp"
         android:layout_width="match_parent"
-        app:srcCompat="@drawable/temp_diablerets" />
+        app:srcCompat="@drawable/temp_diablerets"
+        android:contentDescription="@string/description_collected_image" />
 
     <!-- Info text container -->
     <LinearLayout

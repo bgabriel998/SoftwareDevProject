@@ -16,7 +16,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/temp_camera" />
+        app:srcCompat="@drawable/temp_camera"
+        android:contentDescription="@null" />
 
     <!-- Back Icon button -->
     <ImageButton
@@ -27,7 +28,8 @@
         android:onClick="backButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_back" />
+        app:srcCompat="@drawable/ic_back"
+        android:contentDescription="@string/description_back_button" />
 
     <!-- Map Icon Button -->
     <ImageButton
@@ -38,7 +40,8 @@
         android:onClick="mapButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_map" />
+        app:srcCompat="@drawable/ic_map"
+        android:contentDescription="@string/description_map_button"/>
 
     <!-- Camera button -->
     <ImageButton
@@ -51,6 +54,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@drawable/iconcircle"
-        app:srcCompat="@drawable/ic_camera" />
+        app:srcCompat="@drawable/ic_camera"
+        android:contentDescription="@string/description_camera_button"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

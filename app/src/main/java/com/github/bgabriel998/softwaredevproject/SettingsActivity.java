@@ -15,15 +15,6 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        SetupToolbar();
-    }
-
-    /* Adds a finish as a listener to toolbar back button.
-     Sets the toolbar title. */
-    private void SetupToolbar(){
-        ImageButton backToolbarButton = findViewById(R.id.toolbarBackButton);
-        backToolbarButton.setOnClickListener(v -> finish());
-        TextView toolbarTitle = findViewById(R.id.toolbarTitle);
-        toolbarTitle.setText(TOOLBAR_TITLE);
+        ToolbarHandler.SetupToolbar(this, TOOLBAR_TITLE);
     }
 }
