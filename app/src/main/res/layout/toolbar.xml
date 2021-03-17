@@ -8,7 +8,7 @@
 
     <!-- Go back button -->
     <ImageButton
-        android:id="@+id/goBackButton"
+        android:id="@+id/toolbarBackButton"
         style="@style/IconButton"
         android:layout_marginStart="15dp"
         app:layout_constraintStart_toStartOf="parent"

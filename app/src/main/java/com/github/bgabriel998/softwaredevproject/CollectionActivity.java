@@ -31,13 +31,8 @@ public class CollectionActivity extends AppCompatActivity {
     /* Adds a finish as a listener to toolbar back button.
      Sets the toolbar title. */
     private void SetupToolbar(){
-        ImageButton backToolbarButton = findViewById(R.id.goBackButton);
-        backToolbarButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        ImageButton backToolbarButton = findViewById(R.id.toolbarBackButton);
+        backToolbarButton.setOnClickListener(v -> finish());
         TextView toolbarTitle = findViewById(R.id.toolbarTitle);
         toolbarTitle.setText(TOOLBAR_TITLE);
     }

@@ -1,9 +1,7 @@
 package com.github.bgabriel998.softwaredevproject;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -23,13 +21,8 @@ public class SettingsActivity extends AppCompatActivity {
     /* Adds a finish as a listener to toolbar back button.
      Sets the toolbar title. */
     private void SetupToolbar(){
-        ImageButton backToolbarButton = findViewById(R.id.goBackButton);
-        backToolbarButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        ImageButton backToolbarButton = findViewById(R.id.toolbarBackButton);
+        backToolbarButton.setOnClickListener(v -> finish());
         TextView toolbarTitle = findViewById(R.id.toolbarTitle);
         toolbarTitle.setText(TOOLBAR_TITLE);
     }

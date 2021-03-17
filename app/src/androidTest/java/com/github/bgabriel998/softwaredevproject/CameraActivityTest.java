@@ -18,6 +18,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class CameraActivityTest {
@@ -45,5 +46,13 @@ public class CameraActivityTest {
         button.perform(ViewActions.click());
         // Catch intent
         intended(IntentMatchers.hasComponent(MapActivity.class.getName()));
+    }
+
+    /* Test that pressing the back button finish the activity */
+    @Test
+    public void TestBackButton(){
+        ViewInteraction button = Espresso.onView(withId(R.id.cameraBackButton));
+        button.perform(ViewActions.click());
+        testRule.getScenario().onActivity(activity -> assertTrue(activity.isFinishing()));
     }
 }

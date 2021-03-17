@@ -20,7 +20,7 @@
 
     <!-- Back Icon button -->
     <ImageButton
-        android:id="@+id/goBackButton"
+        android:id="@+id/cameraBackButton"
         style="@style/IconButton"
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
