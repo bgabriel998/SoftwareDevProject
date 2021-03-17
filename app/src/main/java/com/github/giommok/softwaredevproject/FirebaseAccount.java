@@ -22,16 +22,11 @@ import static androidx.core.app.ActivityCompat.startActivityForResult;
 /* Singleton class containing the only possible account connected */
 public class FirebaseAccount implements Account {
     private static FirebaseAccount account = null;
-    private Activity signInActivity;
 
 
-    private FirebaseAccount(Activity currentActivity) {
-        signInActivity = currentActivity;
-    }
-
-    public static FirebaseAccount getAccount(Activity currentActivity) {
+    public static FirebaseAccount getAccount() {
         if (account == null)
-            account = new FirebaseAccount(currentActivity);
+            account = new FirebaseAccount();
 
         return account;
     }
@@ -45,27 +40,32 @@ public class FirebaseAccount implements Account {
 
     @Override
     public String getProviderId() {
-        return FirebaseAuth.getInstance().getCurrentUser().getProviderId();
+        if(isSignedIn()) return FirebaseAuth.getInstance().getCurrentUser().getProviderId();
+        return "null";
     }
 
     @Override
     public String getDisplayName() {
-        return FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        if(isSignedIn()) return FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        return "null";
     }
 
     @Override
     public String getEmail() {
-        return FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        if(isSignedIn()) return FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        return "null";
     }
 
     @Override
     public String getId() {
-        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if(isSignedIn()) return FirebaseAuth.getInstance().getCurrentUser().getUid();
+        return "null";
     }
 
     @Override
     public Uri getPhotoUrl() {
-        return FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
+        if(isSignedIn()) return FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
+        return Uri.EMPTY;
     }
 
 }

@@ -73,7 +73,7 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onStart() {
         super.onStart();
-        account = FirebaseAccount.getAccount(this);
+        account = FirebaseAccount.getAccount();
         updateUI();
     }
 

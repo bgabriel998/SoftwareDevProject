@@ -24,9 +24,11 @@ public class DatabaseTest {
 
 
     @BeforeClass
-    public static void init() {
+    public static void init() throws InterruptedException {
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         FirebaseApp.initializeApp(context);
+        Database.setChild("users/test", Arrays.asList("username"), Arrays.asList("usernameTest"));
+        Thread.sleep(2000);
     }
 
 
@@ -42,19 +44,19 @@ public class DatabaseTest {
     @Test
     public void setChildTest() throws InterruptedException {
         Database.isPresent("users", "username", "testingValue", Assert::fail, () -> assertTrue("Correct behavior", true));
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         Database.setChild("users/test", Arrays.asList("username"), Arrays.asList("testingValue"));
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         Database.isPresent("users", "username", "testingValue", () -> assertTrue("Correct behavior", true), Assert::fail);
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         Database.setChild("users/test", Arrays.asList("username"), Arrays.asList("usernameTest"));
-        Thread.sleep(1000);
+        Thread.sleep(2000);
     }
 
     @Test(expected = DatabaseException.class)
     public void differentSizes_SetChildTest() throws InterruptedException {
         Database.setChild("users/notexists", Arrays.asList("username", "error"), Arrays.asList("testingValue"));
-        Thread.sleep(1000);
+        Thread.sleep(2000);
     }
 
 

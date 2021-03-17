@@ -5,14 +5,14 @@ import android.net.Uri;
 
 public interface Account {
 
+
     /**
      * Returns the reference to the user account
-     * @param currentActivity
      * @return
      */
-    public static Account getAccount(Activity currentActivity) {
+    public static Account getAccount() {
         // as FirebaseAccount is the only account, getAccount will return FirebaseAccount.getAccount
-        return FirebaseAccount.getAccount(currentActivity);
+        return FirebaseAccount.getAccount();
     }
 
     /**
