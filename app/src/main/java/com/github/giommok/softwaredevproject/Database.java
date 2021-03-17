@@ -18,7 +18,7 @@ class DatabaseException extends RuntimeException {
 
 public class Database {
     // This is a reference to the database root
-    private static final DatabaseReference refRoot = FirebaseDatabase.getInstance("https://peakar-default-rtdb.europe-west1.firebasedatabase.app/").getReference();
+    public static final DatabaseReference refRoot = FirebaseDatabase.getInstance("https://peakar-default-rtdb.europe-west1.firebasedatabase.app/").getReference();
 
     /**
      * Sets the childKeys fields of the desired database path with the given values
@@ -64,7 +64,7 @@ public class Database {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                throw new DatabaseException();
             }
 
         });
