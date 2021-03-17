@@ -8,6 +8,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.firebase.ui.auth.AuthUI;
+import com.github.giommok.softwaredevproject.Account;
 import com.github.giommok.softwaredevproject.FirebaseAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -34,8 +36,6 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
     private TextView mStatusTextView;
     private FirebaseAccount account;
 
-    private Thread thread;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,14 +60,14 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
         signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setColorScheme(SignInButton.COLOR_LIGHT);
         FirebaseApp.initializeApp(this);
-        account = FirebaseAccount.getAccount(this);
+
 
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
+        account = FirebaseAccount.getAccount(this);
         updateUI();
     }
 
@@ -75,22 +75,19 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_in_button:
-                googleSignIn();
+                signIn();
                 break;
             case R.id.sign_out_button:
-                googleSignOut();
-                updateUI();
+                signOut();
                 break;
         }
     }
 
     /* The following three methods are necessary in order to let the user sign in */
     /* This is the public method to call in order to authenticate the user */
-    public void googleSignIn() {
+    public void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
-        //if(!account.signedIn()) System.exit(1);
-
     }
 
     @Override
@@ -103,8 +100,8 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
             // a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                account.setGoogleAccount(task.getResult(ApiException.class));
-                firebaseAuthWithGoogle();
+                //account.setGoogleAccount(task.getResult(ApiException.class));
+                firebaseAuthWithGoogle(task.getResult(ApiException.class).getIdToken());
             } catch (ApiException e) {
                 // The ApiException status code indicates the detailed failure reason.
                 // Please refer to the GoogleSignInStatusCodes class reference for more information.
@@ -113,20 +110,18 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    private void firebaseAuthWithGoogle() {
-        AuthCredential credential = GoogleAuthProvider.getCredential(account.getGoogleIdToken(), null);
-        account.getFirebaseAuth().signInWithCredential(credential)
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        FirebaseAuth.getInstance().signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     public void onComplete(Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Firebase AUTH", "signInWithCredential:success");
-                            account.updateFirebaseUser();
+                            if(task.getResult().getAdditionalUserInfo().isNewUser()) registerUser();
                             updateUI();
                         } else {
-                            // If sign in fails, display a message to the user.
                             Log.w("Firebase AUTH", "signInWithCredential:failure", task.getException());
-                            //Snackbar.make(mBinding.mainLayout, "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
                             updateUI();
                         }
 
@@ -135,21 +130,26 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
                 });
     }
 
+    private void registerUser() {
+
+    }
 
 
     /* This is the public method to call in order to let the user sign out */
-    public void googleSignOut() {
-        mGoogleSignInClient.signOut();
-        FirebaseAuth.getInstance().signOut();
-        account.updateFirebaseUser();
-        account.setGoogleAccount(null);
+    public void signOut() {
+        AuthUI.getInstance().signOut(this)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                public void onComplete(Task<Void> task) {
+                                    updateUI();
+                                }
+                            });
     }
 
     /* This method contains the necessary UI updates after a sign in or a sign out */
     private void updateUI() {
         /* If an account is logged */
         if (account.isSignedIn()) {
-            mStatusTextView.setText("Your name: " + account.getDisplayName() + "\nYour e-mail: " + account.getEmail() + "\nYour family name: " + account.getFamilyName());
+            mStatusTextView.setText("Your name: " + account.getDisplayName() + "\nYour e-mail: " + account.getEmail() + "\n");
 
             /* resizing signed_out_layout */
             LinearLayout layout = findViewById(R.id.signed_out_layout);
@@ -159,6 +159,7 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
             findViewById(R.id.sign_in_status).setVisibility(View.VISIBLE);
+
         } else {
 
             mStatusTextView.setVisibility(View.GONE);
