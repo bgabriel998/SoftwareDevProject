@@ -15,18 +15,6 @@ public class MapActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        SetupToolbar();
-    }
-
-    /* Adds a finish as a listener to toolbar back button.
-     Sets the toolbar title. */
-    private void SetupToolbar(){
-        ImageButton backToolbarButton = findViewById(R.id.goBackButton);
-        backToolbarButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) { finish(); }
-        });
-        TextView toolbarTitle = findViewById(R.id.toolbarTitle);
-        toolbarTitle.setText(TOOLBAR_TITLE);
+        ToolbarHandler.SetupToolbar(this, TOOLBAR_TITLE);
     }
 }
