@@ -1,7 +1,16 @@
 package com.github.ravifrancesco.softwaredevproject;
 
-import android.util.Log;
-
+/**
+ * Point is a class that represents a general point on earth.
+ * A point is described by three components:
+ * <ul>
+ * <li>Latitude
+ * <li>Longitude
+ * <li>Altitude
+ * </ul>
+ * <p>
+ * This class contains a method to comput distance in meters between two points.
+ */
 public class Point {
 
     final static double EARTH_RADIUS = 6378137; // value in meters
@@ -11,6 +20,13 @@ public class Point {
 
     private double altitude;
 
+    /**
+     * Constructor for the Point class.
+     *
+     * @param latitude  latitude of the point (in degrees)
+     * @param longitude longitude of the point (in degrees)
+     * @param altitude  altitude of the point (in meters)
+     */
     public Point(double latitude, double longitude, double altitude) {
         this.latitude = latitude;
         this.longitude = longitude;
@@ -18,7 +34,10 @@ public class Point {
     }
 
     /**
-     * Computes distance between this Point and other Point
+     * Method for computing distance between two point as the crow flies.
+     *
+     * @param other the other point to compute the distance
+     * @return      a value in meters representing the distance
      */
     public double computeDistance(Point other) {
 
@@ -44,24 +63,48 @@ public class Point {
 
     }
 
+    /**
+     *
+     * @param latitude  latitude to set (in degrees)
+     */
     public void setLatitude(double latitude) { this.latitude = latitude; }
 
+    /**
+     *
+     * @param longitude longitude to set (in degrees)
+     */
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
+    /**
+     *
+     * @param altitude altitude to set (in meters)
+     */
     public void setAltitude(double altitude) {
         this.altitude = altitude;
     }
 
+    /**
+     *
+     * @return point latitude (in degrees)
+     */
     public double getLatitude() {
         return latitude;
     }
 
+    /**
+     *
+     * @return point longitude (in degrees)
+     */
     public double getLongitude() {
         return longitude;
     }
 
+    /**
+     *
+     * @return point altitude (in meters)
+     */
     public double getAltitude() {
         return altitude;
     }
