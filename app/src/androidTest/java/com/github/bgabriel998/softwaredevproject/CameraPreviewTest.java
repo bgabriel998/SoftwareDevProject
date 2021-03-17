@@ -120,9 +120,9 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
 
     @UiThreadTest
     @Test
-    public void checkPreviewUseCase() throws CameraInfoUnavailableException, InterruptedException {}
-        /*
-        // life cycle owner
+    public void checkPreviewUseCase() throws CameraInfoUnavailableException, InterruptedException {
+
+        //life cycle owner
         registry.setCurrentState(Lifecycle.State.STARTED);
 
         // select Back camera
@@ -155,7 +155,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         }
         Assert.assertNotEquals(0, counter.get());
     }
-*/
+
     @NonNull
     @Override
     public Lifecycle getLifecycle() {
