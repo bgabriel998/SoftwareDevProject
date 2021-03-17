@@ -23,7 +23,8 @@
             android:id="@+id/mountainIcon"
             android:layout_width="152dp"
             android:layout_height="170dp"
-            android:src="@drawable/ic_mountain" />
+            android:src="@drawable/ic_mountain"
+            android:contentDescription="@string/description_icon"/>
 
         <!-- Sign In Button -->
         <Button
