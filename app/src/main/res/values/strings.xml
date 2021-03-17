@@ -25,4 +25,13 @@
 
     <!-- COLLECTION SEPARATOR -->
     <string name="separator">Uncollected</string>
+
+    <!-- Image Descriptions -->
+    <string name="description_back_button">Back Button</string>
+    <string name="description_map_button">Map Button</string>
+    <string name="description_camera_button">Camera Button</string>
+    <string name="description_profile_button">Profile Button</string>
+    <string name="description_settings_button">Settings Button</string>
+    <string name="description_icon">Peak AR Icon</string>
+    <string name="description_collected_image">Photo over collected mountain</string>
 </resources>
