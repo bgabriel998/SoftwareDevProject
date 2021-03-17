@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
 import com.github.giommok.softwaredevproject.Account;
+import com.github.giommok.softwaredevproject.Database;
 import com.github.giommok.softwaredevproject.FirebaseAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -25,7 +26,12 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
@@ -34,7 +40,7 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
     private static final int RC_SIGN_IN = 1;
     private GoogleSignInClient mGoogleSignInClient;
     private TextView mStatusTextView;
-    private FirebaseAccount account;
+    private Account account;
 
 
     @Override
@@ -118,7 +124,7 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Firebase AUTH", "signInWithCredential:success");
-                            if(task.getResult().getAdditionalUserInfo().isNewUser()) registerUser();
+                            if(task.getResult().getAdditionalUserInfo().isNewUser()) registerUser(account.getEmail().substring(0, account.getEmail().indexOf('@')));
                             updateUI();
                         } else {
                             Log.w("Firebase AUTH", "signInWithCredential:failure", task.getException());
@@ -130,8 +136,8 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
                 });
     }
 
-    private void registerUser() {
-
+    private void registerUser(String username) {
+        Database.setChild(Arrays.asList("users", username), Arrays.asList("email"), Arrays.asList(account.getEmail()));
     }
 
 
