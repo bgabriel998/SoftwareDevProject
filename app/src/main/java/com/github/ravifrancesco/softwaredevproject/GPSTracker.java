@@ -15,6 +15,19 @@ import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 
+/**
+ * GPSTracker is a class that provides update on the user location for the UserPoint class.
+ * It is observed by userPoint.
+ * It incapsulates the state information needed for retrieving the user location.
+ * It extends Service and implements LocationListener, that allow for the UserPoint to get
+ * notified and update when a  change in location is detected
+ *
+ * <ul>
+ * <li> MIN_DISTANCE_CHANGE_FOR_UPDATES is the minimum delta in meters that can be detected
+ * <li> MIN_TIME_BW_UPDATES is the minimum time in seconds to pass to request a new location
+ * </ul>
+ * <p>
+ */
 public class GPSTracker extends Service implements LocationListener {
 
     private final Context mContext;
@@ -29,10 +42,6 @@ public class GPSTracker extends Service implements LocationListener {
     private boolean canGetLocation = false;
 
     protected  Location location; // location
-    private double latitude; // latitude
-    private double longitude; // longitude
-    private double altitude; // altitude
-    private double accuracy; // accuracy
 
     // The minimum distance to change Updates in meters
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 0; // 1 meter
@@ -43,71 +52,45 @@ public class GPSTracker extends Service implements LocationListener {
     // Declaring a Location Manager
     protected LocationManager locationManager;
 
+    // User Point
+    UserPoint userPoint;
+
+    /**
+     * Constructor for GPSTracker class
+     *
+     * @param mContext current context of the application
+     * @param userPoint observer UserPoint
+     */
     public GPSTracker(Context mContext, UserPoint userPoint) {
         this.mContext = mContext;
         this.userPoint = userPoint;
         getLocation();
     }
 
-    // User Point
-    UserPoint userPoint;
-
-    // checks the permits and requests location through android.location.LocationManager;
-    public Location getLocation() {
+    /**
+     * Method used to get updates on the location. Once called it will request a new location to the
+     * location manager and update the location.
+     * Before requesting the location the method will check if the requisites are satisfied, and
+     * will request a new location via NETWORK_PROVIDER if it is available, otherwise it will request
+     * it through the GPS_PROVIDER (less precise)
+     *
+     * In case it fails to do so it will stop the program and print the stack strace of the error
+     */
+    private void getLocation() {
         try {
-            locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
 
-            // getting GPS status
-            isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-            // getting network status
-            isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
+            checkLocationManagerStatus();
             if (!isGPSEnabled && !isNetworkEnabled) {
                 // display some errors
             } else {
                 this.canGetLocation = true;
-                // First get location from Network Provider
-                if (isNetworkEnabled) {
-                    //check the network permission
-                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions((Activity) mContext, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
-                    }
-                    locationManager.requestLocationUpdates(
-                            LocationManager.NETWORK_PROVIDER,
-                            MIN_TIME_BW_UPDATES,
-                            MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-
-                    Log.d("Network", "Network");
-                    if (locationManager != null) {
-                        location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                    }
-
-                    if (locationManager != null) {
-                        location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                    }
-                }
-
-                // if GPS Enabled get lat/long using GPS Services
-                if (isGPSEnabled) {
+                if (isNetworkEnabled) { // First get location from Network Provider
+                    setLocation(LocationManager.NETWORK_PROVIDER);
+                    Log.d("Provider", "Network");
+                } else if (isGPSEnabled) { // if GPS Enabled get lat/long using GPS Services
                     if (location == null) {
-                        //check the network permission
-                        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions((Activity) mContext, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
-                        }
-                        locationManager.requestLocationUpdates(
-                                LocationManager.GPS_PROVIDER,
-                                MIN_TIME_BW_UPDATES,
-                                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-
-                        Log.d("GPS Enabled", "GPS Enabled");
-                        if (locationManager != null) {
-                            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                        }
-
-                        if (locationManager != null) {
-                            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                        }
+                        setLocation(LocationManager.GPS_PROVIDER);
+                        Log.d("Provider", "GPS Enabled");
                     }
                 }
             }
@@ -116,17 +99,53 @@ public class GPSTracker extends Service implements LocationListener {
             e.printStackTrace();
         }
 
-        return location;
     }
 
-    // stop the GPS in the app
-    public void stopUsingGPS(){
-        if(locationManager != null){
-            locationManager.removeUpdates(GPSTracker.this);
+    /**
+     * Method that checks which providers are enabled for requesting location are satisfied.
+     * It will update class variable isNetworkEnabled and isGPSEnabled accordingly
+     */
+    private void checkLocationManagerStatus() {
+        locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
+
+        // getting network status
+        isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        // getting GPS status
+        isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
+    /**
+     * This method handles the request to update the location.
+     * First it checks if the app has the proper permissions, then it will request a new location
+     * through the location manager
+     *
+     * @param selectedProvider  string indicating the chosen provider for requesting location
+     */
+    private void setLocation(String selectedProvider) {
+        //check the permission
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) mContext, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
+        }
+        // request location
+        locationManager.requestLocationUpdates(
+                selectedProvider,
+                MIN_TIME_BW_UPDATES,
+                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+        // set new location
+        if (locationManager != null) {
+            location = locationManager.getLastKnownLocation(selectedProvider);
         }
     }
 
+    /**
+     *
+     * @return latitude (in degrees)
+     */
     public double getLatitude(){
+
+        double latitude = 0;
+
         if(location != null){
             latitude = location.getLatitude();
         }
@@ -135,7 +154,14 @@ public class GPSTracker extends Service implements LocationListener {
         return latitude;
     }
 
+    /**
+     *
+     * @return longitude (in degrees)
+     */
     public double getLongitude(){
+
+        double longitude = 0;
+
         if(location != null){
             longitude = location.getLongitude();
         }
@@ -144,7 +170,14 @@ public class GPSTracker extends Service implements LocationListener {
         return longitude;
     }
 
+    /**
+     *
+     * @return altitude (in meters)
+     */
     public double getAltitude(){
+
+        double altitude = 0;
+
         if(location != null){
             altitude = location.getAltitude();
         }
@@ -153,43 +186,92 @@ public class GPSTracker extends Service implements LocationListener {
         return altitude;
     }
 
+    /**
+     *
+     * @return accuracy (in meters)
+     */
     public double getAccuracy() {
+
+        double accuracy = 0;
+
         if(location != null){
             accuracy = location.getAccuracy();
         }
 
         // return accuracy
         return accuracy;
+
     }
 
-    // returns a boolean that indicates if the permits for accessing location are ok
+
+    /**
+     *
+     * @return  <code>true</code> if is able to get the current location;
+     *          <code>false</code> otherwise.
+     */
     public boolean canGetLocation() {
         return this.canGetLocation;
     }
 
+    /**
+     * Method from interface LocationListener.
+     * Called when the location has changed and locations are being delivered in batches.
+     * Once called it will update the UserPoint that is observing this object.
+     *
+     * @param location current location
+     */
     @Override
     public void onLocationChanged(Location location) {
         getLocation();
         userPoint.update();
     }
 
+    /**
+     * Method from interface LocationListener.
+     * Called when the provider this listener is registered with becomes disabled.
+     * Throws an error.
+     *
+     * @param provider current provider
+     */
     @Override
     public void onProviderDisabled(String provider) {
         // print some error
     }
 
+    /**
+     * Method from interface LocationListener.
+     * Called when a provider this listener is registered with becomes enabled.
+     * Once called it will update the UserPoint that is observing this object.
+     *
+     * @param provider current provider
+     */
     @Override
     public void onProviderEnabled(String provider) {
         getLocation();
         userPoint.update();
     }
 
+    /**
+     * Method from interface LocationListener.
+     * This method was deprecated in API level 29. This callback will never be invoked on Android Q and above.
+     *  Once called it will update the UserPoint that is observing this object.
+     *
+     * @param provider current provider
+     * @param status current status
+     * @param extras extras
+     */
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
         getLocation();
         userPoint.update();
     }
 
+    /**
+     * Method from class Service
+     *
+     * @param arg0 intent
+     * @return the communication channel to the service.
+     */
     @Override
     public IBinder onBind(Intent arg0) {
         return null;
