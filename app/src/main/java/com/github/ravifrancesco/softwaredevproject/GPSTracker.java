@@ -143,15 +143,7 @@ public class GPSTracker extends Service implements LocationListener {
      * @return latitude (in degrees)
      */
     public double getLatitude(){
-
-        double latitude = 0;
-
-        if(location != null){
-            latitude = location.getLatitude();
-        }
-
-        // return latitude
-        return latitude;
+        return location != null ? location.getLatitude() : 0.0;
     }
 
     /**
@@ -159,15 +151,7 @@ public class GPSTracker extends Service implements LocationListener {
      * @return longitude (in degrees)
      */
     public double getLongitude(){
-
-        double longitude = 0;
-
-        if(location != null){
-            longitude = location.getLongitude();
-        }
-
-        // return longitude
-        return longitude;
+        return location != null ? location.getLongitude() : 0.0;
     }
 
     /**
@@ -175,15 +159,7 @@ public class GPSTracker extends Service implements LocationListener {
      * @return altitude (in meters)
      */
     public double getAltitude(){
-
-        double altitude = 0;
-
-        if(location != null){
-            altitude = location.getAltitude();
-        }
-
-        // return altitude
-        return altitude;
+        return location != null ? location.getAltitude() : 0.0;
     }
 
     /**
@@ -191,16 +167,7 @@ public class GPSTracker extends Service implements LocationListener {
      * @return accuracy (in meters)
      */
     public double getAccuracy() {
-
-        double accuracy = 0;
-
-        if(location != null){
-            accuracy = location.getAccuracy();
-        }
-
-        // return accuracy
-        return accuracy;
-
+        return location != null ? location.getAccuracy() : 0.0;
     }
 
 
