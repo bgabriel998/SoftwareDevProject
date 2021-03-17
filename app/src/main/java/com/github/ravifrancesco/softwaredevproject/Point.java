@@ -9,7 +9,7 @@ package com.github.ravifrancesco.softwaredevproject;
  * <li>Altitude
  * </ul>
  * <p>
- * This class contains a method to comput distance in meters between two points.
+ * This class contains a method to compute distance in meters between two points.
  */
 public class Point {
 

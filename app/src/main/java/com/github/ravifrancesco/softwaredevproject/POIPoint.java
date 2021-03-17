@@ -5,12 +5,12 @@ import org.osmdroid.util.GeoPoint;
 /**
  * POIPoint is a class that extends Point.java and represents a POI in the map.
  *
- * It provides a constructor to build a POIPoint from a org.osmdroid.util.GeoPoint
+ * It provides a constructor to build a POIPoint from a org.osmdroid.util.GeoPoint.
  */
 public class POIPoint extends Point {
 
     /**
-     * Constructor for POIPoint
+     * Constructor for POIPoint.
      *
      * @param geoPoint GEOPoint from org.osmdroid.util.GeoPoint
      */
