@@ -102,7 +102,7 @@ public class GPSTracker extends Service implements LocationListener {
     }
 
     /**
-     * Method that checks which providers are enabled for requesting location are satisfied.
+     * Method that checks which providers are enabled for requesting location
      * It will update class variable isNetworkEnabled and isGPSEnabled accordingly
      */
     private void checkLocationManagerStatus() {
