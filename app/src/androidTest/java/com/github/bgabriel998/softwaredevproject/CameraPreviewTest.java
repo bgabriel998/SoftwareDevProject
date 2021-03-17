@@ -140,11 +140,11 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         provider.unbindAll();
         //Camera camera = provider.bindToLifecycle((LifecycleOwner) this, selectorBuilder.build(), preview);
         //Assert.assertNotNull(camera);
-        preview.setSurfaceProvider(executor, request -> {
-            Surface surface = reader.getSurface();
-            Log.i("CameraPreviewTest", String.format("providing: %s", surface));
-            request.provideSurface(surface, executor, this::accept);
-        });
+//        preview.setSurfaceProvider(executor, request -> {
+//            Surface surface = reader.getSurface();
+//            Log.i("CameraPreviewTest", String.format("providing: %s", surface));
+//            request.provideSurface(surface, executor, this::accept);
+//        });
 
         // wait until onImageAvailable is invoked. retry several times
 //        for (int repeat=5; repeat>=0; repeat--) {
