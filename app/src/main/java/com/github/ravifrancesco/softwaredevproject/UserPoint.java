@@ -31,7 +31,7 @@ public class UserPoint extends Point {
     }
 
     /**
-     * Method that is used to get updates on the current user location.
+     * Method that is used to update the current user location.
      */
     public void update() {
         super.setLatitude(gpsTracker.getLatitude());
