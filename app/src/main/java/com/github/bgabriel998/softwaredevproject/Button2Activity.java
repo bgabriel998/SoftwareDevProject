@@ -106,7 +106,6 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
             // a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                //account.setGoogleAccount(task.getResult(ApiException.class));
                 firebaseAuthWithGoogle(task.getResult(ApiException.class).getIdToken());
             } catch (ApiException e) {
                 // The ApiException status code indicates the detailed failure reason.
@@ -124,22 +123,40 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Firebase AUTH", "signInWithCredential:success");
-                            if(task.getResult().getAdditionalUserInfo().isNewUser()) registerUser(account.getEmail().substring(0, account.getEmail().indexOf('@')));
+                            if(task.getResult().getAdditionalUserInfo().isNewUser()) {
+                                isUsernameUsed(account.getEmail().substring(0, account.getEmail().indexOf('@')).replaceAll(".", ""));
+                            }
                             updateUI();
                         } else {
                             Log.w("Firebase AUTH", "signInWithCredential:failure", task.getException());
                             updateUI();
                         }
 
-                        // ...
                     }
                 });
     }
 
     private void registerUser(String username) {
-        Database.setChild(Arrays.asList("users", username), Arrays.asList("email"), Arrays.asList(account.getEmail()));
+        Database.setChild("users/" + account.getId(), Arrays.asList("email", "username"), Arrays.asList(account.getEmail(), username));
     }
 
+    private void isUsernameUsed(String username) {
+        Database.isPresent("users", "username", username, () -> usernameAlreadyPresent() , () -> registerUser(username));
+    }
+
+    private void usernameAlreadyPresent() {
+        // Notify the user that the chosen username is already used
+
+        // Debug message
+        Log.d("Database isPresent", "Username exists");
+
+        // Let the user choose a new username
+        chooseUsername();
+    }
+
+    private void chooseUsername() {
+        // Let the user choose a username
+    }
 
     /* This is the public method to call in order to let the user sign out */
     public void signOut() {
