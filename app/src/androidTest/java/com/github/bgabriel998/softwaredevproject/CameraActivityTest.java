@@ -1,5 +1,7 @@
 package com.github.bgabriel998.softwaredevproject;
 
+import android.app.Activity;
+
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
@@ -14,10 +16,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class CameraActivityTest {
@@ -25,24 +27,33 @@ public class CameraActivityTest {
     @Rule
     public ActivityScenarioRule<CameraActivity> testRule = new ActivityScenarioRule<>(CameraActivity.class);
 
+    /* Create Intent */
     @Before
     public void setup(){
         Intents.init();
     }
 
+    /* Release Intent */
     @After
     public void cleanUp(){
         Intents.release();
     }
 
+
     /* Test that pressing the map icon button changes view to MapActivity */
     @Test
     public void TestMapIconButton(){
-        //Intents.init();
         ViewInteraction button = Espresso.onView(withId(R.id.mapButton));
-        //button.perform(ViewActions.click());
+        button.perform(ViewActions.click());
         // Catch intent
-        //intended(IntentMatchers.hasComponent(MapActivity.class.getName()));
-        //Intents.release();
+        intended(IntentMatchers.hasComponent(MapActivity.class.getName()));
+    }
+
+    /* Test that pressing the back button finish the activity */
+    @Test
+    public void TestBackButton(){
+        ViewInteraction button = Espresso.onView(withId(R.id.cameraBackButton));
+        button.perform(ViewActions.click());
+        assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
     }
 }
