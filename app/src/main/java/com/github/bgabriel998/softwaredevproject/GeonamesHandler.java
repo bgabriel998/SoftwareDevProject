@@ -46,6 +46,7 @@ public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> impl
 
     /**
      * Initializes provider
+     * @param userLocation UserPoint containing user location inforamtions
      */
     public GeonamesHandler(UserPoint userLocation) {
         if(userLocation == null)
@@ -100,8 +101,8 @@ public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> impl
     }
 
     /**
-     *
-     * @param o Object (not used)
+     * See onPostExecute comments
+     * @param o
      */
     @Override
     protected void onPostExecute(Object o) {
@@ -114,12 +115,25 @@ public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> impl
         else onResponseReceived(null);
     }
 
+    /**
+     * See doInBackground comments
+     * @param objects nothing
+     * @return list of POI
+     */
     @Override
     protected Object doInBackground(Object[] objects) {
         return getPOIsFromUrl(queryUrl);
     }
 
 
+    /**
+     * Search for POI.
+     * @param url full URL request, built with #urlForPOISearch or equivalent.
+     * Main requirements: <br>
+     * - Content must be in JSON format<br>
+     * - ways and relations must contain the "center" element. <br>
+     * @return elements as a list of POI
+     */
     private ArrayList<POI> getPOIsFromUrl(String url){
         Log.d(BonusPackHelper.LOG_TAG, "OverpassAPIProvider:getPOIsFromUrl:"+url);
         String jString = BonusPackHelper.requestStringFromUrl(url);
@@ -156,7 +170,6 @@ public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> impl
                     //remove first "," (quite ugly, I know)
                     if (poi.mDescription.length()>0)
                         poi.mDescription = poi.mDescription.substring(1);
-                    //TODO: try to set a relevant thumbnail image, according to key/value tags.
                     //We could try to replicate Nominatim/lib/lib.php/getClassTypes(), but it sounds crazy for the added value.
                     poi.mUrl = tagValueFromJson("website", jTags);
 
@@ -174,6 +187,12 @@ public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> impl
         }
     }
 
+    /**
+     * Extract value identified by key of JSON
+     * @param key key tag for value extraction
+     * @param jTags JSON object containing tags
+     * @return Value
+     */
     private String tagValueFromJson(String key, JsonObject jTags){
         JsonElement jTag = jTags.get(key);
         if (jTag == null)
@@ -182,11 +201,22 @@ public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> impl
             return jTag.getAsString();
     }
 
+    /**
+     * Extract value identified by key of JSON with null handling
+     * @param key key tag for value extraction
+     * @param jTags JSON object containing tags
+     * @return Value
+     */
     private String tagValueFromJsonNotNull(String key, JsonObject jTags){
         String v = tagValueFromJson(key, jTags);
         return (v != null ? ","+v : "");
     }
 
+    /**
+     * Create location Geopoint ot of Json
+     * @param jLatLon JSON object containing lat and long
+     * @return Location of POI
+     */
     private GeoPoint geoPointFromJson(JsonObject jLatLon){
         double lat = jLatLon.get("lat").getAsDouble();
         double lon = jLatLon.get("lon").getAsDouble();
@@ -197,5 +227,9 @@ public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> impl
         return new GeoPoint(lat, lon,alt);
     }
 
+    /**
+     * Callback function called when POI list is received
+     * @param result ArrayList containing POI
+     */
     public abstract void onResponseReceived(Object result);
 }
