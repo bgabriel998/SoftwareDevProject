@@ -25,14 +25,21 @@ public class UserPoint extends Point {
 
 
     public void update() {
-        //super.setLatitude(46.519251915333676);
-        //super.setLongitude(6.558563221333525);
-        //super.setAltitude(220);
-
         super.setAltitude(gpsTracker.getAltitude());
         super.setLatitude(gpsTracker.getLatitude());
         super.setLongitude(gpsTracker.getLongitude());
         accuracy = gpsTracker.getAccuracy();
+    }
+
+    /**
+     * Update latitude and longitude for testing purposes
+     * This function is there to test the geonames file
+     * PLEASE DO NOT USE THIS FUNCTION IN CODE !!!
+     */
+    public void updateMock(){
+        super.setLatitude(46.519251915333676);
+        super.setLongitude(6.558563221333525);
+        super.setAltitude(220);
     }
 
     public double getAccuracy() {
