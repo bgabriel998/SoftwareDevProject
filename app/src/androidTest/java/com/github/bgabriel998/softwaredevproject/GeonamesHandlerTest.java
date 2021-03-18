@@ -44,6 +44,8 @@ public class GeonamesHandlerTest {
     private static final int GIVEN_QUERY_MAX_RESULT = 30;
     private static final int GIVEN_QUERY_TIMEOUT = 10;
 
+
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -69,7 +71,7 @@ public class GeonamesHandlerTest {
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
         UserPoint userPoint = new UserPoint(context);
-        userPoint.update();
+        userPoint.updateMock();
         new GeonamesHandler(userPoint) {
             @Override
             public void onResponseReceived(Object result) {
@@ -89,7 +91,7 @@ public class GeonamesHandlerTest {
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
         UserPoint userPoint = new UserPoint(context);
-        userPoint.update();
+        userPoint.updateMock();
         new GeonamesHandler(userPoint) {
             @Override
             public void onResponseReceived(Object result) {
@@ -115,7 +117,7 @@ public class GeonamesHandlerTest {
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
         UserPoint userPoint = new UserPoint(context);
-        userPoint.update();
+        userPoint.updateMock();
         new GeonamesHandler(userPoint) {
             @Override
             public void onResponseReceived(Object result) {
@@ -139,7 +141,7 @@ public class GeonamesHandlerTest {
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
         UserPoint userPoint = new UserPoint(context);
-        userPoint.update();
+        userPoint.updateMock();
         new GeonamesHandler(userPoint) {
             @Override
             public void onResponseReceived(Object result) {
@@ -162,7 +164,7 @@ public class GeonamesHandlerTest {
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
         UserPoint userPoint = new UserPoint(context);
-        userPoint.update();
+        userPoint.updateMock();
         new GeonamesHandler(userPoint) {
             @Override
             public void onResponseReceived(Object result) {
@@ -186,7 +188,7 @@ public class GeonamesHandlerTest {
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
         UserPoint userPoint = new UserPoint(context);
-        userPoint.update();
+        userPoint.updateMock();
 
         long startTimeMs = System.currentTimeMillis();
         new GeonamesHandler(userPoint) {
@@ -256,7 +258,7 @@ public class GeonamesHandlerTest {
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
         UserPoint userPoint = new UserPoint(context);
-        userPoint.update();
+        userPoint.updateMock();
 
         new GeonamesHandler(userPoint,
                 0.01,
@@ -282,7 +284,7 @@ public class GeonamesHandlerTest {
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
         UserPoint userPoint = new UserPoint(context);
-        userPoint.update();
+        userPoint.updateMock();
         new GeonamesHandler(userPoint,
                 GIVEN_RANGE_IN_KM,
                 0,
@@ -305,7 +307,7 @@ public class GeonamesHandlerTest {
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
         UserPoint userPoint = new UserPoint(context);
-        userPoint.update();
+        userPoint.updateMock();
         new GeonamesHandler(userPoint,
                 GIVEN_RANGE_IN_KM,
                 GIVEN_QUERY_MAX_RESULT,
