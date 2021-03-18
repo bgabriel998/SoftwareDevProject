@@ -14,8 +14,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
@@ -25,11 +23,13 @@ public class SignInActivityTest {
     @Rule
     public ActivityScenarioRule<SignInActivity> testRule = new ActivityScenarioRule<>(SignInActivity.class);
 
+    /* Create Intent */
     @Before
     public void setup(){
         Intents.init();
     }
 
+    /* Release Intent */
     @After
     public void cleanUp(){
         Intents.release();
@@ -38,11 +38,9 @@ public class SignInActivityTest {
     /* Test that pressing the sign in button changes view to MainMenuActivity */
     @Test
     public void TestProfileButton(){
-        //Intents.init();
         ViewInteraction button = Espresso.onView(withId(R.id.signInButton));
         button.perform(ViewActions.click());
         // Catch intent
         intended(IntentMatchers.hasComponent(MainMenuActivity.class.getName()));
-        //Intents.release();
     }
 }
