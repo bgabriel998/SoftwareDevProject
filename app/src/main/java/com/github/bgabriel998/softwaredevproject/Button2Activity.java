@@ -8,6 +8,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.firebase.ui.auth.AuthUI;
+import com.github.giommok.softwaredevproject.Account;
+import com.github.giommok.softwaredevproject.Database;
 import com.github.giommok.softwaredevproject.FirebaseAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -23,7 +26,12 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
@@ -32,9 +40,7 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
     private static final int RC_SIGN_IN = 1;
     private GoogleSignInClient mGoogleSignInClient;
     private TextView mStatusTextView;
-    private FirebaseAccount account;
-
-    private Thread thread;
+    private Account account;
 
 
     @Override
@@ -60,14 +66,14 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
         signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setColorScheme(SignInButton.COLOR_LIGHT);
         FirebaseApp.initializeApp(this);
-        account = FirebaseAccount.getAccount(this);
+
 
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
+        account = FirebaseAccount.getAccount();
         updateUI();
     }
 
@@ -75,22 +81,21 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_in_button:
-                googleSignIn();
+                signIn();
                 break;
             case R.id.sign_out_button:
-                googleSignOut();
-                updateUI();
+                signOut();
                 break;
         }
     }
 
-    /* The following three methods are necessary in order to let the user sign in */
-    /* This is the public method to call in order to authenticate the user */
-    public void googleSignIn() {
+
+    /**
+     * This is the public method to call in order to authenticate the user 
+     */
+    public void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
-        //if(!account.signedIn()) System.exit(1);
-
     }
 
     @Override
@@ -103,8 +108,7 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
             // a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                account.setGoogleAccount(task.getResult(ApiException.class));
-                firebaseAuthWithGoogle();
+                firebaseAuthWithGoogle(task.getResult(ApiException.class).getIdToken());
             } catch (ApiException e) {
                 // The ApiException status code indicates the detailed failure reason.
                 // Please refer to the GoogleSignInStatusCodes class reference for more information.
@@ -113,43 +117,87 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    private void firebaseAuthWithGoogle() {
-        AuthCredential credential = GoogleAuthProvider.getCredential(account.getGoogleIdToken(), null);
-        account.getFirebaseAuth().signInWithCredential(credential)
+    /**
+     * This method is called during the sign-in to perform the connection with Firebase
+     * @param idToken
+     */
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        FirebaseAuth.getInstance().signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     public void onComplete(Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Firebase AUTH", "signInWithCredential:success");
-                            account.updateFirebaseUser();
+                            if(task.getResult().getAdditionalUserInfo().isNewUser()) {
+                                chooseUsername();
+                                isUsernameUsed(account.getEmail().substring(0, account.getEmail().indexOf('@')).replaceAll(".", ""));
+                            }
                             updateUI();
                         } else {
-                            // If sign in fails, display a message to the user.
                             Log.w("Firebase AUTH", "signInWithCredential:failure", task.getException());
-                            //Snackbar.make(mBinding.mainLayout, "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
                             updateUI();
                         }
 
-                        // ...
                     }
                 });
     }
 
-
-
-    /* This is the public method to call in order to let the user sign out */
-    public void googleSignOut() {
-        mGoogleSignInClient.signOut();
-        FirebaseAuth.getInstance().signOut();
-        account.updateFirebaseUser();
-        account.setGoogleAccount(null);
+    /**
+     * This method is called when the user correctly ended the registration phase
+     * @param username
+     */
+    private void registerUser(String username) {
+        Database.setChild("users/" + account.getId(), Arrays.asList("email", "username"), Arrays.asList(account.getEmail(), username));
     }
 
-    /* This method contains the necessary UI updates after a sign in or a sign out */
+    /**
+     * This method is called when the user submits his username, in order to check if it's still free
+     * @param username
+     */
+    private void isUsernameUsed(String username) {
+        Database.isPresent("users", "username", username, () -> usernameAlreadyPresent() , () -> registerUser(username));
+    }
+
+    /**
+     * This method is called when the desired username is already present
+      */
+    private void usernameAlreadyPresent() {
+        // Notify the user that the chosen username is already used
+
+        // Debug message
+        Log.d("Database isPresent", "Username exists");
+
+        // Let the user choose a new username
+        chooseUsername();
+    }
+
+    /**
+     * This method is called after the first Firebase authentication in order to let the user choose his username
+     */
+    private void chooseUsername() {
+        // Let the user choose a username
+    }
+
+    /**
+     * This is the method to call to let the user sign out
+     */
+    public void signOut() {
+        AuthUI.getInstance().signOut(this)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                public void onComplete(Task<Void> task) {
+                                    updateUI();
+                                }
+                            });
+    }
+
+    /**
+     * This method updates the UI after an operation is performed
+     */
     private void updateUI() {
         /* If an account is logged */
         if (account.isSignedIn()) {
-            mStatusTextView.setText("Your name: " + account.getDisplayName() + "\nYour e-mail: " + account.getEmail() + "\nYour family name: " + account.getFamilyName());
+            mStatusTextView.setText("Your name: " + account.getDisplayName() + "\nYour e-mail: " + account.getEmail() + "\n");
 
             /* resizing signed_out_layout */
             LinearLayout layout = findViewById(R.id.signed_out_layout);
@@ -159,6 +207,7 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
             findViewById(R.id.sign_in_status).setVisibility(View.VISIBLE);
+
         } else {
 
             mStatusTextView.setVisibility(View.GONE);
