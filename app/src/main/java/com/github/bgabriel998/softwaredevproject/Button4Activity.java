@@ -54,9 +54,12 @@ public class Button4Activity extends AppCompatActivity {
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) 1000,
                 1.0F, (android.location.LocationListener) mLocationListener, null);
 
-        /*
+        //Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        //Log.v("","");
+
         UserPoint userLocation = new UserPoint(this);
         userLocation.update();
+
 
         GeonamesHandler handler = new GeonamesHandler(userLocation,20,4000,40) {
             @Override
@@ -74,9 +77,7 @@ public class Button4Activity extends AppCompatActivity {
         Log.v("GEONAMES","Start Get");
         start = System.currentTimeMillis();
         handler.execute();
-*/
+
     }
-
-
 
 }
