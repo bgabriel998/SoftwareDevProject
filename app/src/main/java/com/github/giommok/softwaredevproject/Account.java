@@ -45,6 +45,10 @@ public interface Account {
      */
     public String getId();
 
+    /**
+     * Returns the URL of the user profile image
+     * @return
+     */
     public Uri getPhotoUrl();
 
 }

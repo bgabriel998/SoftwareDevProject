@@ -89,8 +89,10 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    /* The following three methods are necessary in order to let the user sign in */
-    /* This is the public method to call in order to authenticate the user */
+
+    /**
+     * This is the public method to call in order to authenticate the user 
+     */
     public void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
@@ -115,6 +117,10 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    /**
+     * This method is called during the sign-in to perform the connection with Firebase
+     * @param idToken
+     */
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         FirebaseAuth.getInstance().signInWithCredential(credential)
@@ -124,6 +130,7 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Firebase AUTH", "signInWithCredential:success");
                             if(task.getResult().getAdditionalUserInfo().isNewUser()) {
+                                chooseUsername();
                                 isUsernameUsed(account.getEmail().substring(0, account.getEmail().indexOf('@')).replaceAll(".", ""));
                             }
                             updateUI();
@@ -136,14 +143,25 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
                 });
     }
 
+    /**
+     * This method is called when the user correctly ended the registration phase
+     * @param username
+     */
     private void registerUser(String username) {
         Database.setChild("users/" + account.getId(), Arrays.asList("email", "username"), Arrays.asList(account.getEmail(), username));
     }
 
+    /**
+     * This method is called when the user submits his username, in order to check if it's still free
+     * @param username
+     */
     private void isUsernameUsed(String username) {
         Database.isPresent("users", "username", username, () -> usernameAlreadyPresent() , () -> registerUser(username));
     }
 
+    /**
+     * This method is called when the desired username is already present
+      */
     private void usernameAlreadyPresent() {
         // Notify the user that the chosen username is already used
 
@@ -154,11 +172,16 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
         chooseUsername();
     }
 
+    /**
+     * This method is called after the first Firebase authentication in order to let the user choose his username
+     */
     private void chooseUsername() {
         // Let the user choose a username
     }
 
-    /* This is the public method to call in order to let the user sign out */
+    /**
+     * This is the method to call to let the user sign out
+     */
     public void signOut() {
         AuthUI.getInstance().signOut(this)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -168,7 +191,9 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
                             });
     }
 
-    /* This method contains the necessary UI updates after a sign in or a sign out */
+    /**
+     * This method updates the UI after an operation is performed
+     */
     private void updateUI() {
         /* If an account is logged */
         if (account.isSignedIn()) {
