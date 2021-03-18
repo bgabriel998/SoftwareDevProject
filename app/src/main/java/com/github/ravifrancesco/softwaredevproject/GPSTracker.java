@@ -24,7 +24,7 @@ import androidx.core.app.ActivityCompat;
  *
  * <ul>
  * <li> MIN_DISTANCE_CHANGE_FOR_UPDATES is the minimum delta in meters that can be detected
- * <li> MIN_TIME_BW_UPDATES is the minimum time in seconds to pass to request a new location
+ * <li> MIN_TIME_BW_UPDATES is the minimum time in milliseconds to pass to request a new location
  * </ul>
  * <p>
  */
@@ -87,7 +87,9 @@ public class GPSTracker extends Service implements LocationListener {
                 if (isNetworkEnabled) { // First get location from Network Provider
                     setLocation(LocationManager.NETWORK_PROVIDER);
                     Log.d("Provider", "Network");
-                } else if (isGPSEnabled) { // if GPS Enabled get lat/long using GPS Services
+                }
+
+                if (isGPSEnabled) { // if GPS Enabled get lat/long using GPS Services
                     if (location == null) {
                         setLocation(LocationManager.GPS_PROVIDER);
                         Log.d("Provider", "GPS Enabled");
