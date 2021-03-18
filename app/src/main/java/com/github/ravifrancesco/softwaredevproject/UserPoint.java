@@ -64,7 +64,7 @@ public class UserPoint extends Point {
         super.setAltitude(220);
     }
 
-
+    /*
      *
      * @return accuracy of the current location (in meters)
      */
