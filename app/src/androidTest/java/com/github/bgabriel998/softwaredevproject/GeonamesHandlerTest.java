@@ -181,7 +181,7 @@ public class GeonamesHandlerTest {
 
     /**
      * Check GeonamesHandler creation without valid parameters
-     * Checking userPoint parameter here
+     * With userPoint as null
      */
     @Test
     public void testGeonamesObjCreationExceptionUserPointNull() throws IllegalArgumentException{
