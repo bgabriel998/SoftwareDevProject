@@ -134,10 +134,14 @@ public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> impl
      * - ways and relations must contain the "center" element. <br>
      * @return elements as a list of POI
      */
+
     private ArrayList<POI> getPOIsFromUrl(String url){
         Log.d(BonusPackHelper.LOG_TAG, "OverpassAPIProvider:getPOIsFromUrl:"+url);
         String jString = BonusPackHelper.requestStringFromUrl(url);
-
+        if (jString == null) {
+            Log.e(BonusPackHelper.LOG_TAG, "OverpassAPIProvider: request failed.");
+            return null;
+        }
         try {
             //parse JSON and build POIs
             JsonParser parser = new JsonParser();
@@ -154,19 +158,19 @@ public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> impl
                     JsonObject jTags = jo.get("tags").getAsJsonObject();
                     poi.mType = tagValueFromJson("name", jTags);
                     //Try to set a relevant POI type by searching for an OSM commonly used tag key, and getting its value:
-                    poi.mDescription = tagValueFromJsonNotNull("amenity", jTags)
-                            + tagValueFromJsonNotNull("boundary", jTags)
+                    poi.mDescription = //tagValueFromJsonNotNull("amenity", jTags)
+                            /*+ tagValueFromJsonNotNull("boundary", jTags)
                             + tagValueFromJsonNotNull("building", jTags)
                             + tagValueFromJsonNotNull("craft", jTags)
                             + tagValueFromJsonNotNull("emergency", jTags)
                             + tagValueFromJsonNotNull("highway", jTags)
                             + tagValueFromJsonNotNull("historic", jTags)
                             + tagValueFromJsonNotNull("landuse", jTags)
-                            + tagValueFromJsonNotNull("leisure", jTags)
-                            + tagValueFromJsonNotNull("natural", jTags)
-                            + tagValueFromJsonNotNull("shop", jTags)
+                            + tagValueFromJsonNotNull("leisure", jTags)*/
+                             tagValueFromJsonNotNull("natural", jTags);
+                            /*+ tagValueFromJsonNotNull("shop", jTags)
                             + tagValueFromJsonNotNull("sport", jTags)
-                            + tagValueFromJsonNotNull("tourism", jTags);
+                            + tagValueFromJsonNotNull("tourism", jTags);*/
                     //remove first "," (quite ugly, I know)
                     if (poi.mDescription.length()>0)
                         poi.mDescription = poi.mDescription.substring(1);
