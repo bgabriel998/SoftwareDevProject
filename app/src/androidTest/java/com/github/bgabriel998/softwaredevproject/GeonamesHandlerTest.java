@@ -242,7 +242,7 @@ public class GeonamesHandlerTest {
      * With query max as zero
      */
     @Test
-    public void testGeonamesObjCreationExceptionCustom_Arg_3() throws IllegalArgumentException{
+    public void testGeonamesObjCreationExceptionQueeryMaxAsZero() throws IllegalArgumentException{
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("QueryMaxResult parameter can't be less than 1");
 
