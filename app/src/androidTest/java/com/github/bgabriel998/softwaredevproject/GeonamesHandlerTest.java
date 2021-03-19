@@ -239,7 +239,7 @@ public class GeonamesHandlerTest {
 
     /**
      * Check GeonamesHandler creation without valid parameters
-     * Checking Query max result parameter here
+     * With query max as zero
      */
     @Test
     public void testGeonamesObjCreationExceptionCustom_Arg_3() throws IllegalArgumentException{
