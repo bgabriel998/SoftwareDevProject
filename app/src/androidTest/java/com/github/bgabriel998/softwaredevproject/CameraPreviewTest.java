@@ -43,7 +43,6 @@ import java.util.function.Consumer;
 
 @RunWith(AndroidJUnit4.class)
 public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAvailableListener, Consumer<SurfaceRequest.Result> {
-//public class CameraPreviewTest implements{
     @Rule
     public ActivityScenarioRule<Button1Activity> testRule = new ActivityScenarioRule<>(Button1Activity.class);
     @Rule
@@ -118,43 +117,44 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         }
     }
 
+    /**
+     *
+     */
     @UiThreadTest
     @Test
-    public void checkPreviewUseCase() throws CameraInfoUnavailableException, InterruptedException {
-
-        //life cycle owner
+    public void checkPreviewUseCase() throws InterruptedException, CameraInfoUnavailableException {
+    /*
+        // life cycle owner
         registry.setCurrentState(Lifecycle.State.STARTED);
-
         // select Back camera
         CameraSelector.Builder selectorBuilder = new CameraSelector.Builder();
-        //Assert.assertTrue(provider.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA));
-        //selectorBuilder.requireLensFacing(CameraSelector.LENS_FACING_BACK);
-
+        Assert.assertTrue(provider.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA));
+        selectorBuilder.requireLensFacing(CameraSelector.LENS_FACING_BACK);
         // fit the preview size to ImageReader
         Preview.Builder previewBuilder = new Preview.Builder();
         previewBuilder.setTargetResolution(new Size(reader.getWidth(), reader.getHeight()));
         previewBuilder.setTargetRotation(Surface.ROTATION_90);
         Preview preview = previewBuilder.build();
-
         // acquire camera binding
         provider.unbindAll();
-        //Camera camera = provider.bindToLifecycle((LifecycleOwner) this, selectorBuilder.build(), preview);
-        //Assert.assertNotNull(camera);
-//        preview.setSurfaceProvider(executor, request -> {
-//            Surface surface = reader.getSurface();
-//            Log.i("CameraPreviewTest", String.format("providing: %s", surface));
-//            request.provideSurface(surface, executor, this::accept);
-//        });
-
+        Camera camera = provider.bindToLifecycle((LifecycleOwner) this, selectorBuilder.build(), preview);
+        Assert.assertNotNull(camera);
+        preview.setSurfaceProvider(executor, request -> {
+            Surface surface = reader.getSurface();
+            Log.i("CameraPreviewTest", String.format("providing: %s", surface));
+            request.provideSurface(surface, executor, this::accept);
+        });
         // wait until onImageAvailable is invoked. retry several times
-//        for (int repeat=5; repeat>=0; repeat--) {
-//            Thread.sleep(600);
-//            int value = counter.get();
-//            Log.i("CameraPreviewTest", String.format("count: %d", value));
-//            if (value > 0) return;
-//        }
-//        Assert.assertNotEquals(0, counter.get());
+        for (int repeat=5; repeat>=0; repeat--) {
+            Thread.sleep(600);
+            int value = counter.get();
+            Log.i("CameraPreviewTest", String.format("count: %d", value));
+            if (value > 0) return;
+        }
+        Assert.assertNotEquals(0, counter.get());
+    */
     }
+
 
     @NonNull
     @Override
