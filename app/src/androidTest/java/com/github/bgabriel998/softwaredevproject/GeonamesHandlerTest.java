@@ -272,7 +272,7 @@ public class GeonamesHandlerTest {
      * With timeout as zero
      */
     @Test
-    public void testGeonamesObjCreationExceptionCustom_Arg_4() throws IllegalArgumentException{
+    public void testGeonamesObjCreationExceptionTimeoutAsZero() throws IllegalArgumentException{
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("QueryTimeout parameter can't be less than 1 sec");
         Context context = ApplicationProvider.getApplicationContext();
