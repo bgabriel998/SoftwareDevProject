@@ -68,10 +68,12 @@ dependencies {
     implementation "androidx.camera:camera-core:1.1.0-alpha02"
     implementation "androidx.camera:camera-lifecycle:1.1.0-alpha02"
     implementation 'androidx.camera:camera-view:1.0.0-alpha22'
-    implementation 'com.google.android.gms:play-services:12.0.1'
     implementation 'com.github.MKergall:osmbonuspack:6.6.0'
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
     implementation 'com.google.firebase:firebase-auth:20.0.3'
+    implementation 'com.google.firebase:firebase-database:19.7.0'
+    implementation 'com.google.firebase:firebase-core:18.0.2'
+    implementation 'com.firebaseui:firebase-ui-auth:6.4.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
