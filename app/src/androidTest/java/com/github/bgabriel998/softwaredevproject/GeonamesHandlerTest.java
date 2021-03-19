@@ -213,7 +213,7 @@ public class GeonamesHandlerTest {
      *  With too short range in km
      */
     @Test
-    public void testGeonamesObjCreationExceptionCustom_Arg_2() throws IllegalArgumentException{
+    public void testGeonamesObjCreationExceptionShortRange() throws IllegalArgumentException{
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("BoundingBoxRangeKm can't be null or negative (also not under 100m)");
         Context context = ApplicationProvider.getApplicationContext();
