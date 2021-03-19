@@ -42,6 +42,10 @@ public class UserPoint extends Point {
         gpsTracker = new GPSTracker(mContext, this);
     }
 
+    public UserPoint(double lat, double lon, double alt){
+        super(lat,lon,alt);
+    }
+
     /**
      * Method that is used to update the current user location.
      */

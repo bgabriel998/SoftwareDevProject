@@ -1,6 +1,7 @@
 package com.github.bgabriel998.softwaredevproject;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -10,6 +11,8 @@ import com.github.ravifrancesco.softwaredevproject.UserPoint;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -23,17 +26,22 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 
 @RunWith(AndroidJUnit4.class)
 
 public class GeonamesHandlerTest {
 
-    private ArrayList<POI> resultPOI;
+    private static ArrayList<POI> resultPOI;
 
-    private double queryTimeS;
+    private static long startTimeMs;
+    private static double queryTimeS;
+
 
     private static final int MILLI_SEC_TO_SEC = 1000;
 
@@ -49,37 +57,37 @@ public class GeonamesHandlerTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    @Before
-    public void setup(){
-        // Application context
+    /**
+     * Create and send query to the API
+     */
+    @BeforeClass
+    public static void setup(){
+        Context context = ApplicationProvider.getApplicationContext();
+        Assert.assertNotNull(context);
+        startTimeMs = System.currentTimeMillis();
+        UserPoint userPoint = new UserPoint(46.519251915333676, 6.558563221333525, 220);
+        new GeonamesHandler(userPoint) {
+            @Override
+            public void onResponseReceived(Object result) {
+                resultPOI = (ArrayList<POI>) result;
+                queryTimeS = ((double)System.currentTimeMillis() - startTimeMs)/ MILLI_SEC_TO_SEC;
+            }
+        }.execute();
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            fail("testResultType failed");
+        }
     }
-
-
-
-    @After
-    public void cleanUp(){
-
-    }
-
 
     /**
      * Checks that the result array list contains POI
      */
     @Test
     public void testResultsQuantity(){
-        //Geonames Handler API Helper
-        Context context = ApplicationProvider.getApplicationContext();
-        Assert.assertNotNull(context);
-        UserPoint userPoint = new UserPoint(context);
-        userPoint.updateMock();
-        new GeonamesHandler(userPoint) {
-            @Override
-            public void onResponseReceived(Object result) {
-                resultPOI = (ArrayList<POI>) result;
-                assertThat(resultPOI.size(), greaterThan(0));
-            }
-        };
-
+        if (resultPOI == null) fail("testResultsQuantity failed");
+        assertThat(resultPOI.size(), greaterThan(0));
     }
 
     /**
@@ -88,21 +96,11 @@ public class GeonamesHandlerTest {
      */
     @Test
     public void testResultType(){
-        Context context = ApplicationProvider.getApplicationContext();
-        Assert.assertNotNull(context);
-        UserPoint userPoint = new UserPoint(context);
-        userPoint.updateMock();
-        new GeonamesHandler(userPoint) {
-            @Override
-            public void onResponseReceived(Object result) {
-                resultPOI = (ArrayList<POI>) result;
-                for(POI point : resultPOI){
-                    assertEquals(point.mDescription,"peak");
-                }
-
-            }
-        };
-
+        if (resultPOI == null) fail("testResultType failed");
+        for(POI point : resultPOI){
+            assertEquals(point.mDescription,"peak");
+            Log.v("GEONAMES","Descr: "+ point.mDescription);
+        }
     }
 
 
@@ -114,21 +112,10 @@ public class GeonamesHandlerTest {
      */
     @Test
     public void testResultNameNonNull(){
-        Context context = ApplicationProvider.getApplicationContext();
-        Assert.assertNotNull(context);
-        UserPoint userPoint = new UserPoint(context);
-        userPoint.updateMock();
-        new GeonamesHandler(userPoint) {
-            @Override
-            public void onResponseReceived(Object result) {
-                resultPOI = (ArrayList<POI>) result;
-                for(POI point : resultPOI){
-                    assertNotEquals(point.mType,isEmptyOrNullString());
-                }
-
-            }
-        };
-
+        if (resultPOI == null) fail("testResultNameNonNull failed");
+        for(POI point : resultPOI){
+            assertNotEquals(point.mType,isEmptyOrNullString());
+        }
     }
 
     /**
@@ -138,20 +125,10 @@ public class GeonamesHandlerTest {
      */
     @Test
     public void testResultHeightNonNull(){
-        Context context = ApplicationProvider.getApplicationContext();
-        Assert.assertNotNull(context);
-        UserPoint userPoint = new UserPoint(context);
-        userPoint.updateMock();
-        new GeonamesHandler(userPoint) {
-            @Override
-            public void onResponseReceived(Object result) {
-                resultPOI = (ArrayList<POI>) result;
-                for(POI point : resultPOI){
-                    assertNotEquals(point.mLocation.getAltitude(),0.0F);
-                }
-
-            }
-        };
+        if (resultPOI == null) fail("testResultHeightNonNull failed");
+        for(POI point : resultPOI){
+            assertNotEquals(point.mLocation.getAltitude(),0.0F);
+        }
     }
 
     /**
@@ -161,21 +138,10 @@ public class GeonamesHandlerTest {
      */
     @Test
     public void testResultListNotExceedLimit(){
-        Context context = ApplicationProvider.getApplicationContext();
-        Assert.assertNotNull(context);
-        UserPoint userPoint = new UserPoint(context);
-        userPoint.updateMock();
-        new GeonamesHandler(userPoint) {
-            @Override
-            public void onResponseReceived(Object result) {
-                resultPOI = (ArrayList<POI>) result;
-                for(POI point : resultPOI){
-                    assertThat(resultPOI.size(),lessThanOrEqualTo(DEFAULT_QUERY_MAX_RESULT));
-                }
-
-            }
-        };
-
+        if (resultPOI == null) fail("testResultListNotExceedLimit failed");
+        for(POI point : resultPOI){
+            assertThat(resultPOI.size(),lessThanOrEqualTo(DEFAULT_QUERY_MAX_RESULT));
+        }
     }
 
     /**
@@ -184,23 +150,8 @@ public class GeonamesHandlerTest {
      */
     @Test
     public void testResultListNotExceedTimeLimit(){
-
-        Context context = ApplicationProvider.getApplicationContext();
-        Assert.assertNotNull(context);
-        UserPoint userPoint = new UserPoint(context);
-        userPoint.updateMock();
-
-        long startTimeMs = System.currentTimeMillis();
-        new GeonamesHandler(userPoint) {
-            @Override
-            public void onResponseReceived(Object result) {
-                resultPOI = (ArrayList<POI>) result;
-                queryTimeS = ((double)System.currentTimeMillis() - startTimeMs)/ MILLI_SEC_TO_SEC;
-                assertThat(queryTimeS, lessThanOrEqualTo((double)DEFAULT_QUERY_TIMEOUT));
-                assertNotNull(resultPOI);
-            }
-        };
-
+        assertThat(queryTimeS, lessThanOrEqualTo((double)DEFAULT_QUERY_TIMEOUT));
+        assertNotNull(resultPOI);
     }
 
     /**
@@ -218,9 +169,14 @@ public class GeonamesHandlerTest {
         new GeonamesHandler(userPoint) {
             @Override
             public void onResponseReceived(Object result) {
-
             }
-        };
+        }.execute();
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            fail("testGeonamesObjCreationException failed");
+        }
     }
 
     /**
@@ -242,9 +198,14 @@ public class GeonamesHandlerTest {
                 GIVEN_QUERY_TIMEOUT) {
             @Override
             public void onResponseReceived(Object result) {
-
             }
-        };
+        }.execute();
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            fail("testGeonamesObjCreationExceptionCustom_Arg_1 failed");
+        }
     }
 
     /**
@@ -257,9 +218,7 @@ public class GeonamesHandlerTest {
         thrown.expectMessage("BoundingBoxRangeKm can't be null or negative (also not under 100m)");
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
-        UserPoint userPoint = new UserPoint(context);
-        userPoint.updateMock();
-
+        UserPoint userPoint = new UserPoint(46.519251915333676,6.558563221333525,220);
         new GeonamesHandler(userPoint,
                 0.01,
                 GIVEN_QUERY_MAX_RESULT,
@@ -268,7 +227,13 @@ public class GeonamesHandlerTest {
             public void onResponseReceived(Object result) {
 
             }
-        };
+        }.execute();
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            fail("testGeonamesObjCreationExceptionCustom_Arg_2 failed");
+        }
     }
 
 
@@ -283,8 +248,8 @@ public class GeonamesHandlerTest {
 
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
-        UserPoint userPoint = new UserPoint(context);
-        userPoint.updateMock();
+        UserPoint userPoint = new UserPoint(46.519251915333676,6.558563221333525,220);
+
         new GeonamesHandler(userPoint,
                 GIVEN_RANGE_IN_KM,
                 0,
@@ -293,7 +258,13 @@ public class GeonamesHandlerTest {
             public void onResponseReceived(Object result) {
 
             }
-        };
+        }.execute();
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            fail("testGeonamesObjCreationExceptionCustom_Arg_3 failed");
+        }
     }
 
     /**
@@ -306,8 +277,8 @@ public class GeonamesHandlerTest {
         thrown.expectMessage("QueryTimeout parameter can't be less than 1 sec");
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
-        UserPoint userPoint = new UserPoint(context);
-        userPoint.updateMock();
+        UserPoint userPoint = new UserPoint(46.519251915333676,6.558563221333525,220);
+
         new GeonamesHandler(userPoint,
                 GIVEN_RANGE_IN_KM,
                 GIVEN_QUERY_MAX_RESULT,
@@ -316,8 +287,12 @@ public class GeonamesHandlerTest {
             public void onResponseReceived(Object result) {
 
             }
-        };
+        }.execute();
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            fail("testGeonamesObjCreationExceptionCustom_Arg_4 failed");
+        }
     }
-
-
 }
