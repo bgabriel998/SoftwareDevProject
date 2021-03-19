@@ -181,10 +181,10 @@ public class GeonamesHandlerTest {
 
     /**
      * Check GeonamesHandler creation without valid parameters
-     * Checking userPoint parameter here
+     * With userPoint as null
      */
     @Test
-    public void testGeonamesObjCreationExceptionCustom_Arg_1() throws IllegalArgumentException{
+    public void testGeonamesObjCreationExceptionUserPointNull() throws IllegalArgumentException{
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("UserPoint user location can't be null");
 
@@ -210,10 +210,10 @@ public class GeonamesHandlerTest {
 
     /**
      * Check GeonamesHandler creation without valid parameters
-     * Checking Query max result parameter here
+     *  With too short range in km
      */
     @Test
-    public void testGeonamesObjCreationExceptionCustom_Arg_2() throws IllegalArgumentException{
+    public void testGeonamesObjCreationExceptionShortRange() throws IllegalArgumentException{
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("BoundingBoxRangeKm can't be null or negative (also not under 100m)");
         Context context = ApplicationProvider.getApplicationContext();
@@ -239,10 +239,10 @@ public class GeonamesHandlerTest {
 
     /**
      * Check GeonamesHandler creation without valid parameters
-     * Checking Query max result parameter here
+     * With query max as zero
      */
     @Test
-    public void testGeonamesObjCreationExceptionCustom_Arg_3() throws IllegalArgumentException{
+    public void testGeonamesObjCreationExceptionQueeryMaxAsZero() throws IllegalArgumentException{
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("QueryMaxResult parameter can't be less than 1");
 
@@ -269,10 +269,10 @@ public class GeonamesHandlerTest {
 
     /**
      * Check GeonamesHandler creation without valid parameters
-     * Checking query timeout parameter here
+     * With timeout as zero
      */
     @Test
-    public void testGeonamesObjCreationExceptionCustom_Arg_4() throws IllegalArgumentException{
+    public void testGeonamesObjCreationExceptionTimeoutAsZero() throws IllegalArgumentException{
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("QueryTimeout parameter can't be less than 1 sec");
         Context context = ApplicationProvider.getApplicationContext();
