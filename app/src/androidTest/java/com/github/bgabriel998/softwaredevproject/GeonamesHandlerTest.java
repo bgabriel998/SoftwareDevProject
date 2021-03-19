@@ -269,7 +269,7 @@ public class GeonamesHandlerTest {
 
     /**
      * Check GeonamesHandler creation without valid parameters
-     * Checking query timeout parameter here
+     * With timeout as zero
      */
     @Test
     public void testGeonamesObjCreationExceptionCustom_Arg_4() throws IllegalArgumentException{
