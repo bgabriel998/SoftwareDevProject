@@ -184,7 +184,7 @@ public class GeonamesHandlerTest {
      * Checking userPoint parameter here
      */
     @Test
-    public void testGeonamesObjCreationExceptionCustom_Arg_1() throws IllegalArgumentException{
+    public void testGeonamesObjCreationExceptionUserPointNull() throws IllegalArgumentException{
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("UserPoint user location can't be null");
 
