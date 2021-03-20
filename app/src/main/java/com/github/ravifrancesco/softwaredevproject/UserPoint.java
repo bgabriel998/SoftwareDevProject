@@ -4,9 +4,10 @@ import android.content.Context;
 
 /**
  * UserPoint is a class that represents a general point on earth.
- * It adds a component to represent the accuracy of the user's location:
+ * It adds a component to represent the accuracy of the user's location and customLocation:
  * <ul>
- * <li>accuracy
+ * <li>accuracy accuracy in meters of the user location
+ * <li>customLocation if true, the userPoint location is not updated by the GPS tracker
  * </ul>
  * <p>
  * It provides a constructor that takes a GPSTracker as an input.
@@ -20,6 +21,8 @@ public class UserPoint extends Point {
 
     private double accuracy;
 
+    private boolean customLocation;
+
     /**
      * Constructor for the UserPoint.
      *
@@ -28,16 +31,19 @@ public class UserPoint extends Point {
     public UserPoint(Context mContext) {
         super(GPSTracker.DEFAULT_LAT, GPSTracker.DEFAULT_LON, GPSTracker.DEFAULT_ALT);
         gpsTracker = new GPSTracker(mContext, this);
+        customLocation = false;
     }
 
     /**
      * Method that is used to update the current user location.
      */
     public void update() {
-        super.setLatitude(gpsTracker.getLatitude());
-        super.setLongitude(gpsTracker.getLongitude());
-        super.setAltitude(gpsTracker.getAltitude());
-        accuracy = gpsTracker.getAccuracy();
+        if (!customLocation) {
+            super.setLatitude(gpsTracker.getLatitude());
+            super.setLongitude(gpsTracker.getLongitude());
+            super.setAltitude(gpsTracker.getAltitude());
+            accuracy = gpsTracker.getAccuracy();
+        }
     }
 
     /**
@@ -66,10 +72,15 @@ public class UserPoint extends Point {
      * @param acc user accuracy (in meters)
      */
     public void setLocation(double lat, double lon, double alt, double acc) {
+        customLocation = true;
         super.latitude = lat;
         super.longitude = lon;
         super.altitude = alt;
         this.accuracy = acc;
+    }
+
+    public void switchToRealLocation() {
+        customLocation = false;
     }
 
 }
