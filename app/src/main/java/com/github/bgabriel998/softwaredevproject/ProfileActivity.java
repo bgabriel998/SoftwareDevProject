@@ -19,9 +19,11 @@ public class ProfileActivity extends AppCompatActivity {
         ToolbarHandler.SetupToolbar(this, TOOLBAR_TITLE);
     }
 
-    /* Changes view to SignInActivity */
+    public void signInButton(View view) {
+
+    }
+
     public void signOutButton(View view) {
-        Intent intent = new Intent(this, SignInActivity.class);
-        startActivity(intent);
+
     }
 }
