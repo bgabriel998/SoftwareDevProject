@@ -57,4 +57,19 @@ public class UserPoint extends Point {
         return gpsTracker.canGetLocation();
     }
 
+    /**
+     * Method used to set custom user location
+     *
+     * @param lat user latitude (in degrees)
+     * @param lon user longitude (in degrees)
+     * @param alt user altitude (in meters)
+     * @param acc user accuracy (in meters)
+     */
+    public void setLocation(double lat, double lon, double alt, double acc) {
+        super.latitude = lat;
+        super.longitude = lon;
+        super.altitude = alt;
+        this.accuracy = acc;
+    }
+
 }

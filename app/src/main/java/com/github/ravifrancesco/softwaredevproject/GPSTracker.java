@@ -54,7 +54,7 @@ public class GPSTracker extends Service implements LocationListener {
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 0; // 1 meter
 
     // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1; // 1 second
+    private static final long MIN_TIME_BW_UPDATES = 1000; // 1 second
 
     // Declaring a Location Manager
     protected LocationManager locationManager;
@@ -85,27 +85,30 @@ public class GPSTracker extends Service implements LocationListener {
      */
     private void getLocation() {
         try {
-
             checkLocationManagerStatus();
-            if (!isGPSEnabled && !isNetworkEnabled) {
-                // display some errors
-            } else {
+            if (isNetworkEnabled) { // First get location from Network Provider
                 this.canGetLocation = true;
-                if (isNetworkEnabled) { // First get location from Network Provider
-                    setLocation(LocationManager.NETWORK_PROVIDER);
-                    Log.d("Provider", "Network");
-                }
+                setLocation(LocationManager.NETWORK_PROVIDER);
+                Log.d("Provider", "Network");
+            }
 
-                if (isGPSEnabled) { // if GPS Enabled get lat/long using GPS Services
-                    if (location == null) {
-                        setLocation(LocationManager.GPS_PROVIDER);
-                        Log.d("Provider", "GPS Enabled");
-                    }
+            if (isGPSEnabled) { // if GPS Enabled get lat/long using GPS Services
+                if (location == null) {
+                    this.canGetLocation = true;
+                    setLocation(LocationManager.GPS_PROVIDER);
+                    Log.d("Provider", "GPS Enabled");
                 }
             }
 
+            if (!isNetworkEnabled && !isGPSEnabled) { Log.d("No provider enabled", "Using default coordinates"); }
+            if (location == null) {
+                setDefaultLocation();
+                Log.d("Unable to retrieve location", "Using default coordinates");
+            }
+
         } catch (Exception e) {
-            Log.d("GPS ERROR: ", e.getStackTrace().toString());
+            Log.d("GPS ERROR", "read stack trace");
+            e.printStackTrace();
         }
 
     }
@@ -145,6 +148,16 @@ public class GPSTracker extends Service implements LocationListener {
         if (locationManager != null) {
             location = locationManager.getLastKnownLocation(selectedProvider);
         }
+    }
+
+    /**
+     * Set the default location
+     */
+    private void setDefaultLocation() {
+        location.setLatitude(DEFAULT_LAT);
+        location.setLongitude(DEFAULT_LON);
+        location.setAltitude(DEFAULT_ALT);
+        location.setAccuracy((float)DEFAULT_ACC);
     }
 
     /**
