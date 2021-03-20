@@ -26,7 +26,7 @@ public class UserPoint extends Point {
      * @param mContext  the current context of the app
      */
     public UserPoint(Context mContext) {
-        super(0, 0, 0);
+        super(GPSTracker.DEFAULT_LAT, GPSTracker.DEFAULT_LON, GPSTracker.DEFAULT_ALT);
         gpsTracker = new GPSTracker(mContext, this);
     }
 
