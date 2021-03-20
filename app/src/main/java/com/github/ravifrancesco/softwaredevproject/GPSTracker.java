@@ -30,6 +30,13 @@ import androidx.core.app.ActivityCompat;
  */
 public class GPSTracker extends Service implements LocationListener {
 
+    // fixed coordinates
+    static final double DEFAULT_LAT = 27.988056;
+    static final double DEFAULT_LON = 86.925278;
+    static final double DEFAULT_ALT = 8848.86;
+    static final double DEFAULT_ACC = 0.0;
+
+    // current app context
     private final Context mContext;
 
     // flag for GPS status
@@ -98,7 +105,7 @@ public class GPSTracker extends Service implements LocationListener {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.d("GPS ERROR: ", e.getStackTrace().toString());
         }
 
     }
@@ -145,7 +152,7 @@ public class GPSTracker extends Service implements LocationListener {
      * @return latitude (in degrees)
      */
     public double getLatitude(){
-        return location != null ? location.getLatitude() : 0.0;
+        return location != null ? location.getLatitude() : DEFAULT_LAT;
     }
 
     /**
@@ -153,7 +160,7 @@ public class GPSTracker extends Service implements LocationListener {
      * @return longitude (in degrees)
      */
     public double getLongitude(){
-        return location != null ? location.getLongitude() : 0.0;
+        return location != null ? location.getLongitude() : DEFAULT_LON;
     }
 
     /**
@@ -161,7 +168,7 @@ public class GPSTracker extends Service implements LocationListener {
      * @return altitude (in meters)
      */
     public double getAltitude(){
-        return location != null ? location.getAltitude() : 0.0;
+        return location != null ? location.getAltitude() : DEFAULT_ALT;
     }
 
     /**
@@ -169,7 +176,7 @@ public class GPSTracker extends Service implements LocationListener {
      * @return accuracy (in meters)
      */
     public double getAccuracy() {
-        return location != null ? location.getAccuracy() : 0.0;
+        return location != null ? location.getAccuracy() : DEFAULT_ACC;
     }
 
 
