@@ -20,7 +20,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         style="@style/ButtonLightGreen"
-        android:text="@string/sign_in_button" />
+        android:text="@string/sign_in_button"
+        android:onClick="signInButton" />
 
     <!-- Sign out button -->
     <Button

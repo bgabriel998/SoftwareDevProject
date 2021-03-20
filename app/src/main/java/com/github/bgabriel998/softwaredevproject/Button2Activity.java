@@ -66,8 +66,6 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
         signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setColorScheme(SignInButton.COLOR_LIGHT);
         FirebaseApp.initializeApp(this);
-
-
     }
 
     @Override
