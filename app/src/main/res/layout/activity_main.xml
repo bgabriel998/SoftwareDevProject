@@ -23,7 +23,7 @@
             android:id="@+id/button2"
             android:layout_width="180dp"
             android:layout_height="wrap_content"
-            android:text="Sign in via Google"
+            android:text="Button2"
             android:onClick="button2"/>
 
         <Button
