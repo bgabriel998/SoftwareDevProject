@@ -22,10 +22,9 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <!-- HEADER -->
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:orientation="horizontal"
             android:gravity="center_vertical"
             android:background="@color/LightBlue">
 
@@ -40,23 +39,23 @@
 
             <!-- Username -->
             <TextView
-                android:id="@+id/header_points"
+                android:id="@+id/header_username"
                 style="@style/SmallLightGreyText"
-                android:layout_width="261dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingStart="20dp"
-                android:paddingEnd="0dp"
+                android:layout_marginStart="70dp"
                 android:text="@string/header_username" />
 
             <!-- Points -->
             <TextView
-                android:id="@+id/header_username"
+                android:id="@+id/header_points"
                 style="@style/SmallLightGreyText"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:layout_alignParentEnd="true"
                 android:text="@string/header_points" />
-        </LinearLayout>
+        </RelativeLayout>
 
         <!-- TODO Fill ranking list dynamically -->
         <include layout="@layout/ranking_item" />

@@ -12,7 +12,7 @@
         android:background="@drawable/button_light_green">
     </Button>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
@@ -23,10 +23,9 @@
         <TextView
             android:id="@+id/collected_name"
             style="@style/DarkGreenText"
-            android:layout_width="300dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="54dp"
-            android:paddingEnd="0dp"
+            android:layout_marginStart="54dp"
             android:text="Diablerets" />
 
         <!-- Points -->
@@ -36,7 +35,8 @@
             android:layout_width="85dp"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:layout_alignParentEnd="true"
             android:text="128" />
-    </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>
 
