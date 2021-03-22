@@ -67,6 +67,7 @@ public class GPSTracker extends Service implements LocationListener {
         getLocation();
     }
 
+
     /**
      * Method used to get updates on the location. Once called it will request a new location to the
      * location manager and update the location.
