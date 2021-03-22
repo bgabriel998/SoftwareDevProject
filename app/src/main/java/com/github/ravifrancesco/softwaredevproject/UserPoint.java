@@ -17,7 +17,7 @@ import android.content.Context;
  */
 public class UserPoint extends Point {
 
-    private GPSTracker gpsTracker;
+    private final GPSTracker gpsTracker;
 
     private double accuracy;
 

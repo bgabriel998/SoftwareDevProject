@@ -1,21 +1,13 @@
 package com.github.ravifrancesco.softwaredevproject;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
-
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
 import androidx.test.rule.ServiceTestRule;
-
-import com.github.bgabriel998.softwaredevproject.MainActivity;
-
-import org.junit.Before;
 
 import org.junit.Rule;
 import org.junit.Test;
