@@ -25,8 +25,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:gravity="center_vertical"
-            android:background="@color/LightBlue">
+            android:background="@color/LightBlue"
+            android:gravity="center_vertical">
 
             <!-- Position -->
             <TextView
@@ -52,14 +52,20 @@
                 style="@style/SmallLightGreyText"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_alignParentEnd="true"
+                android:gravity="center"
                 android:text="@string/header_points" />
+
         </RelativeLayout>
 
-        <!-- TODO Fill ranking list dynamically -->
+        <ListView
+            android:id="@+id/rankings_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- TODO Fill ranking list dynamically
         <include layout="@layout/ranking_item" />
-        <include layout="@layout/ranking_item_self" />
+        <include layout="@layout/ranking_item_self" /> -->
 
     </LinearLayout>
 
