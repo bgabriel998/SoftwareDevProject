@@ -1,6 +1,7 @@
 package com.github.giommok.softwaredevproject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 
 public interface Account {
@@ -10,9 +11,9 @@ public interface Account {
      * Returns the reference to the user account
      * @return
      */
-    public static Account getAccount() {
+    public static Account getAccount(Context context) {
         // as FirebaseAccount is the only account, getAccount will return FirebaseAccount.getAccount
-        return FirebaseAccount.getAccount();
+        return FirebaseAccount.getAccount(context);
     }
 
     /**
