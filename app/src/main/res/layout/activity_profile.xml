@@ -10,6 +10,19 @@
     <!-- Toolbar -->
     <include layout="@layout/toolbar"/>
 
+    <!-- Sign in Button -->
+    <Button
+        android:id="@+id/signInButton"
+        android:layout_height="70dp"
+        android:layout_width="300dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        style="@style/ButtonLightGreen"
+        android:text="@string/sign_in_button"
+        android:onClick="signInButton" />
+
     <!-- Sign out button -->
     <Button
         android:id="@+id/signOutButton"
