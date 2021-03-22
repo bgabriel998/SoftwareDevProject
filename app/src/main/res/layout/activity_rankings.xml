@@ -63,10 +63,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <!-- TODO Fill ranking list dynamically
-        <include layout="@layout/ranking_item" />
-        <include layout="@layout/ranking_item_self" /> -->
-
     </LinearLayout>
 
 

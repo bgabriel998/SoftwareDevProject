@@ -40,7 +40,7 @@ public class RankingListAdapter extends ArrayAdapter<RankingItem> {
             convertView = vi.inflate(resourceLayout, parent, false);
         }
 
-        setRankingsItemTexts(convertView, getItem(position), position +1);
+        setupRankingsItem(convertView, getItem(position), position);
 
         return convertView;
     }
@@ -49,25 +49,64 @@ public class RankingListAdapter extends ArrayAdapter<RankingItem> {
      * Sets the text of a ranking list item.
      * @param view the view to text views.
      * @param item the item to take the data from
-     * @param place the place the item has in the list.
+     * @param position the position the item has in the list.
      */
-    private void setRankingsItemTexts(View view, RankingItem item, int place) {
+    private void setupRankingsItem(View view, RankingItem item, int position) {
         if (item != null) {
             TextView positionText = (TextView) view.findViewById(R.id.ranking_item_position);
             TextView usernameText = (TextView) view.findViewById(R.id.ranking_item_username);
             TextView pointsText = (TextView) view.findViewById(R.id.ranking_item_points);
 
-            if (positionText != null) {
-                positionText.setText(String.format(Locale.getDefault(), "%d.", place));
-            }
+            setItemColor(view, new TextView[]{positionText, usernameText, pointsText}, item);
+            setItemText(positionText, usernameText, pointsText, item, position+1);
+        }
+    }
 
-            if (usernameText != null) {
-                usernameText.setText(item.username);
+    /**
+     * Sets the colors rankings item
+     * based on if the item represents the user.
+     * @param view item view
+     * @param textViews all text views
+     * @param item the item
+     */
+    private void setItemColor(View view, TextView[] textViews, RankingItem item){
+        // TODO Check for actual username
+        if (item.username.equals("Username2")) {
+            view.setBackgroundResource(R.color.DarkGreen);
+            for (TextView v: textViews) {
+                v.setTextAppearance(R.style.LightGreyText);
             }
+        }
+        else {
+            view.setBackgroundResource(R.color.LightGrey);
+            for (TextView v: textViews) {
+                v.setTextAppearance(R.style.DarkGreenText);
+            }
+        }
+    }
 
-            if (pointsText != null) {
-                pointsText.setText(String.format(Locale.getDefault(), "%d", item.points));
-            }
+    /**
+     * Sets text on list item
+     * @param positionText text view for position
+     * @param usernameText text view for username
+     * @param pointsText text view for points
+     * @param item the item
+     * @param position the position in ranking.
+     */
+    private void setItemText(TextView positionText,
+                             TextView usernameText,
+                             TextView pointsText,
+                             RankingItem item, int position) {
+        if (positionText != null) {
+            positionText.setText(String.format(Locale.getDefault(), "%d.", position));
+        }
+
+        if (usernameText != null) {
+            usernameText.setText(item.username);
+        }
+
+        if (pointsText != null) {
+            pointsText.setText(String.format(Locale.getDefault(), "%d", item.points));
         }
     }
 }
