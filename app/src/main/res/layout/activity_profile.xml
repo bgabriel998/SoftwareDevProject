@@ -45,7 +45,7 @@
         android:layout_marginBottom="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        style="@style/ButtonGrey"
+        style="@style/ButtonDarkGreen"
         android:text="Submit"
         android:onClick="submitUsernameButton" />
 
@@ -74,7 +74,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:hint="Insert your username here"
-        style="@style/ButtonDarkGreen" />
+        style="@style/ButtonGrey" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
