@@ -37,7 +37,6 @@ public class Button1Activity extends AppCompatActivity {
 
         //Wait for the view to be properly laid out and then setup the camera
         previewView.post(this::setUpCamera);
-
     }
 
     /**

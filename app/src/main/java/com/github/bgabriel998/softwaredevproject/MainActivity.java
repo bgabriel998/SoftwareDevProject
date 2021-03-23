@@ -33,44 +33,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Checks if the camera permission was already granted
-     */
-    private boolean hasCameraPermission() {
-        return ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-        ) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    /**
-     * Creates an AlertDialog to explain why the permission is required and requests the permission
-     */
-    private void requestCameraPermission() {
-        //Create AlertDialog builder
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-
-        //Set title and message
-        builder.setTitle("Camera permission required!");
-        builder.setMessage("Camera permission is required to be able to use the camera-preview.");
-
-        //Set positive button and opens the permission request on button click
-        builder.setPositiveButton("Ok", (dialog, which) -> {
-            //Request permission after user clicked on Ok
-            ActivityCompat.requestPermissions(
-                MainActivity.this,
-                CAMERA_PERMISSION,
-                CAMERA_REQUEST_CODE
-            );
-        });
-
-        //Create alertDialog
-        AlertDialog alertDialog = builder.create();
-
-        //Make alertDialog appear on screen
-        alertDialog.show();
-    }
-
     public void button2(View view) {
         Intent intent = new Intent(this, Button2Activity.class);
         startActivity(intent);
@@ -104,6 +66,44 @@ public class MainActivity extends AppCompatActivity {
     public void button8(View view) {
         Intent intent = new Intent(this, Button8Activity.class);
         startActivity(intent);
+    }
+
+    /**
+     * Checks if the camera permission was already granted
+     */
+    private boolean hasCameraPermission() {
+        return ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    /**
+     * Creates an AlertDialog to explain why the permission is required and requests the permission
+     */
+    private void requestCameraPermission() {
+        //Create AlertDialog builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+        //Set title and message
+        builder.setTitle("Camera permission required!");
+        builder.setMessage("Camera permission is required to be able to use the camera-preview.");
+
+        //Set positive button and opens the permission request on button click
+        builder.setPositiveButton("Ok", (dialog, which) -> {
+            //Request permission after user clicked on Ok
+            ActivityCompat.requestPermissions(
+                    MainActivity.this,
+                    CAMERA_PERMISSION,
+                    CAMERA_REQUEST_CODE
+            );
+        });
+
+        //Create alertDialog
+        AlertDialog alertDialog = builder.create();
+
+        //Make alertDialog appear on screen
+        alertDialog.show();
     }
 
     /**
