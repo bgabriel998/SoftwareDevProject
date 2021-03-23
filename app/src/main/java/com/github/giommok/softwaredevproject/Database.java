@@ -1,7 +1,5 @@
 package com.github.giommok.softwaredevproject;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.google.firebase.database.DataSnapshot;
@@ -67,7 +65,7 @@ public class Database {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
-            
+
         });
     }
 }
