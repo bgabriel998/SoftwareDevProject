@@ -3,7 +3,6 @@ package com.github.bgabriel998.softwaredevproject;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.AspectRatio;
 import androidx.camera.core.CameraSelector;
@@ -77,7 +76,7 @@ public class Button1Activity extends AppCompatActivity {
      * Declare and bind preview and analysis use cases
      * @param cameraProvider used to bind the lifecycle of the camera
      */
-    private void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
+    private void bindPreview(ProcessCameraProvider cameraProvider) {
         //Get screen metrics
         DisplayMetrics displayMetrics = new DisplayMetrics();
         previewView.getDisplay().getRealMetrics(displayMetrics);
@@ -123,14 +122,13 @@ public class Button1Activity extends AppCompatActivity {
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
     }
 
-
     /**
-     * Calculate the aspect ration of the display in function of the width and height of the screen
+     * Calculate the aspect ratio of the display in function of the width and height of the screen
      * @param width width of the preview in Pixels
      * @param height height of the preview in Pixels
      * @return Aspect ratio of the phone
      */
-    private int aspectRatio(int width, int height){
+    int aspectRatio(int width, int height){
         double previewRatio = (double)Math.max(width, height)/Math.min(width, height);
         double RATIO_16_9_VALUE = 16.0 / 9.0;
         double RATIO_4_3_VALUE = 4.0 / 3.0;

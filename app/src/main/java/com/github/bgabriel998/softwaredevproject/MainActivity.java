@@ -7,7 +7,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -45,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Creates AlertDialog to explain why the permission is required and requests the permission
+     * Creates an AlertDialog to explain why the permission is required and requests the permission
      */
     private void requestCameraPermission() {
         //Create AlertDialog builder
@@ -55,8 +54,9 @@ public class MainActivity extends AppCompatActivity {
         builder.setTitle("Camera permission required!");
         builder.setMessage("Camera permission is required to be able to use the camera-preview.");
 
+        //Set positive button and opens the permission request on button click
         builder.setPositiveButton("Ok", (dialog, which) -> {
-            // Request permission after user clicked on Ok
+            //Request permission after user clicked on Ok
             ActivityCompat.requestPermissions(
                 MainActivity.this,
                 CAMERA_PERMISSION,
@@ -64,8 +64,10 @@ public class MainActivity extends AppCompatActivity {
             );
         });
 
+        //Create alertDialog
         AlertDialog alertDialog = builder.create();
 
+        //Make alertDialog appear on screen
         alertDialog.show();
     }
 
@@ -105,7 +107,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Use onRequestPermissionsResult to open activity as soon as the permission was granted
+     * Callback for the result from requesting permissions.
+     * Used to open activities as soon as the permission is granted
      * @param requestCode Indicates the permission code
      * @param permissions List of permissions
      * @param grantResults Indicates if permission is granted or not

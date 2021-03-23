@@ -41,20 +41,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 
+
 @RunWith(AndroidJUnit4.class)
 public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAvailableListener, Consumer<SurfaceRequest.Result> {
     @Rule
     public ActivityScenarioRule<Button1Activity> testRule = new ActivityScenarioRule<>(Button1Activity.class);
-    //@Rule
-    //public GrantPermissionRule grantCameraPermissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
+    @Rule
+    public GrantPermissionRule grantCameraPermissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
 
     private final LifecycleRegistry registry = new LifecycleRegistry(this);
     private final HandlerThread thread = new HandlerThread("CameraPreviewTest");
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private ProcessCameraProvider provider;
-
-
 
     @Before
     public void setup() throws ExecutionException, InterruptedException {
@@ -77,7 +76,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
     @Before
     public void setupImageReader() {
         thread.start();
-        reader.setOnImageAvailableListener((ImageReader.OnImageAvailableListener) this,new Handler(thread.getLooper()));
+        reader.setOnImageAvailableListener(this,new Handler(thread.getLooper()));
     }
 
     @After
@@ -133,7 +132,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         Preview preview = previewBuilder.build();
         // acquire camera binding
         provider.unbindAll();
-        Camera camera = provider.bindToLifecycle((LifecycleOwner) this, selectorBuilder.build(), preview);
+        Camera camera = provider.bindToLifecycle(this, selectorBuilder.build(), preview);
         Assert.assertNotNull(camera);
         preview.setSurfaceProvider(executor, request -> {
             Surface surface = reader.getSurface();
@@ -149,7 +148,6 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         }
         Assert.assertNotEquals(0, counter.get());
     }
-
 
     @NonNull
     @Override
