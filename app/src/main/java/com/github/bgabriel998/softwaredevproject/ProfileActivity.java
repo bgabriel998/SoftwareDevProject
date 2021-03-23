@@ -60,7 +60,6 @@ public class ProfileActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         account = FirebaseAccount.getAccount();
-        //account.synchronizeUsername();
         if(!account.isSignedIn()) setUI();
         else {
             account.synchronizeUsername();
