@@ -16,16 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class GeonamesHandlerUnitTest {
-    @Test
-    public void init_handler_correct() {
-        GeonamesHandler handler = new GeonamesHandler("bgabrie1");
-        assertNotNull(handler);
-    }
 
-    @Test
-    public void init_handler_incorrect() {
+    public void method(){
         assertThrows(IllegalArgumentException.class, () -> {
-            GeonamesHandler handler = new GeonamesHandler("");
+            throw new IllegalArgumentException();
         });
     }
 

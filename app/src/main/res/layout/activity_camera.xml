@@ -12,49 +12,49 @@
         android:layout_width="938dp"
         android:layout_height="1106dp"
         android:layout_marginEnd="50dp"
-        android:rotation="90"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/temp_camera" />
+        app:srcCompat="@drawable/temp_camera"
+        android:contentDescription="@null" />
 
     <!-- Back Icon button -->
     <ImageButton
-        android:id="@+id/goBackButton"
+        android:id="@+id/cameraBackButton"
         style="@style/IconButton"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:onClick="backButton"
-        android:rotation="90"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_back" />
+        app:srcCompat="@drawable/ic_back"
+        android:contentDescription="@string/description_back_button" />
 
     <!-- Map Icon Button -->
     <ImageButton
         android:id="@+id/mapButton"
         style="@style/IconButton"
-        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:onClick="mapButton"
-        android:rotation="90"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/ic_map" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_map"
+        android:contentDescription="@string/description_map_button"/>
 
     <!-- Camera button -->
     <ImageButton
-        android:id="@+id/cameraBottom"
+        android:id="@+id/cameraButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginEnd="40dp"
         android:onClick="cameraButton"
-        android:rotation="90"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         android:background="@drawable/iconcircle"
-        app:srcCompat="@drawable/ic_camera" />
+        app:srcCompat="@drawable/ic_camera"
+        android:contentDescription="@string/description_camera_button"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
