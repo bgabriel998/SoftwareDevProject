@@ -72,13 +72,13 @@ public class RankingListAdapter extends ArrayAdapter<RankingItem> {
     private void setItemColor(View view, TextView[] textViews, RankingItem item){
         // TODO Check for actual username
         if (item.username.equals("Username2")) {
-            view.setBackgroundResource(R.color.DarkGreen);
+            view.findViewById(R.id.ranking_item_container).setBackgroundResource(R.color.DarkGreen);
             for (TextView v: textViews) {
                 v.setTextAppearance(R.style.LightGreyText);
             }
         }
         else {
-            view.setBackgroundResource(R.color.LightGrey);
+            view.findViewById(R.id.ranking_item_container).setBackgroundResource(R.color.LightGrey);
             for (TextView v: textViews) {
                 v.setTextAppearance(R.style.DarkGreenText);
             }
