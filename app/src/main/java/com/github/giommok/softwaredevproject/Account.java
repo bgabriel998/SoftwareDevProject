@@ -5,10 +5,8 @@ import android.net.Uri;
 
 public interface Account {
 
-
     /**
-     * Returns the reference to the user account
-     * @return
+     * @return the reference to the user account
      */
     public static Account getAccount() {
         // as FirebaseAccount is the only account, getAccount will return FirebaseAccount.getAccount
@@ -16,39 +14,42 @@ public interface Account {
     }
 
     /**
-     * Returns true if the account is signed in and false otherwise
-     * @return
+     * @return true if the account is signed in and false otherwise
      */
     public boolean isSignedIn();
 
     /**
-     * Returns the provider of the Firebase account
-     * @return
+     * @return the provider of the Firebase account
      */
     public String getProviderId();
 
     /**
-     * Returns the main display name of the user or null if no account is signed in
-     * @return
+     * @return the main display name of the user or null if no account is signed in
      */
     public String getDisplayName();
 
     /**
-     * Returns the e-mail of the user or null if no account is signed in
-     * @return
+     * @return the e-mail of the user or null if no account is signed in
      */
     public String getEmail();
 
     /**
-     * Returns the ID of the user or null if no account is signed in
-     * @return
+     * @return the ID of the user or null if no account is signed in
      */
     public String getId();
 
     /**
-     * Returns the URL of the user profile image
-     * @return
+     * @return the URL of the user profile image
      */
     public Uri getPhotoUrl();
 
+    /**
+     * @return the username of the current account or null if no account is signed in
+     */
+    public String getUsername();
+
+    /**
+     * This method updates the username of the current account
+     */
+    public void synchronizeUsername();
 }
