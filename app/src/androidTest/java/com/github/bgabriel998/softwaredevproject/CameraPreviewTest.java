@@ -45,8 +45,8 @@ import java.util.function.Consumer;
 public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAvailableListener, Consumer<SurfaceRequest.Result> {
     @Rule
     public ActivityScenarioRule<Button1Activity> testRule = new ActivityScenarioRule<>(Button1Activity.class);
-    @Rule
-    public GrantPermissionRule grantCameraPermissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
+    //@Rule
+    //public GrantPermissionRule grantCameraPermissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
 
     private final LifecycleRegistry registry = new LifecycleRegistry(this);
     private final HandlerThread thread = new HandlerThread("CameraPreviewTest");

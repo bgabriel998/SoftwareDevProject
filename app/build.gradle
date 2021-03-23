@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 30
@@ -15,6 +16,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testHandleProfiling true
         testFunctionalTest true
+        testInstrumentationRunnerArguments clearPackageData: 'true'
     }
 
     signingConfigs {
@@ -56,6 +58,12 @@ android {
 
 }
 
+task revokeCameraPermissions(type: Exec) {
+    def revokeLocationPermission = ['adb', 'shell', 'pm', 'revoke', 'com.github.bgabriel998.softwaredevproject' , 'android.permission.CAMERA']
+    commandLine revokeLocationPermission
+    outputs.upToDateWhen { false }
+}
+
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.2'
@@ -77,10 +85,10 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     androidTestImplementation 'androidx.test:runner:1.3.0'
     androidTestImplementation 'androidx.test:rules:1.3.0'
+    androidTestImplementation 'androidx.test:core:1.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.3.0'
+    androidTestImplementation('com.schibsted.spain:barista:3.8.0')
 }
-
-apply plugin: 'com.google.gms.google-services'
 
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true

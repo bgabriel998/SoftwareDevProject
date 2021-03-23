@@ -1,11 +1,13 @@
 package com.github.bgabriel998.softwaredevproject;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -32,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Checks if the camera permission was already granted
+     */
     private boolean hasCameraPermission() {
         return ContextCompat.checkSelfPermission(
                 this,
@@ -39,12 +44,29 @@ public class MainActivity extends AppCompatActivity {
         ) == PackageManager.PERMISSION_GRANTED;
     }
 
+    /**
+     * Creates AlertDialog to explain why the permission is required and requests the permission
+     */
     private void requestCameraPermission() {
-        ActivityCompat.requestPermissions(
-                this,
+        //Create AlertDialog builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+        //Set title and message
+        builder.setTitle("Camera permission required!");
+        builder.setMessage("Camera permission is required to be able to use the camera-preview.");
+
+        builder.setPositiveButton("Ok", (dialog, which) -> {
+            // Request permission after user clicked on Ok
+            ActivityCompat.requestPermissions(
+                MainActivity.this,
                 CAMERA_PERMISSION,
                 CAMERA_REQUEST_CODE
-        );
+            );
+        });
+
+        AlertDialog alertDialog = builder.create();
+
+        alertDialog.show();
     }
 
     public void button2(View view) {
@@ -83,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Use onRequestPermissionsResult to open activity as soon as as camera permission was granted
+     * Use onRequestPermissionsResult to open activity as soon as the permission was granted
      * @param requestCode Indicates the permission code
      * @param permissions List of permissions
      * @param grantResults Indicates if permission is granted or not
