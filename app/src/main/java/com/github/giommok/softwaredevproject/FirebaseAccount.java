@@ -1,28 +1,13 @@
 package com.github.giommok.softwaredevproject;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
-import androidx.annotation.Nullable;
-
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import static androidx.core.app.ActivityCompat.startActivityForResult;
 
 
 /* Singleton class containing the only possible account connected */
@@ -87,16 +72,14 @@ public class FirebaseAccount implements Account {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 username = dataSnapshot.getValue(String.class);
+                if(username == null) username = "null1";
                 Log.d("SYNCHRONIZE_USERNAME", "onDataChange");
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                username = "null";
-                Log.d("SYNCHRONIZE_USERNAME", "onCancelled");
             }
         };
         dbRef.addValueEventListener(usernameListener);
     }
-
 }
