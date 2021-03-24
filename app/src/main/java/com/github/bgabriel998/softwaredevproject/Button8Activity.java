@@ -12,7 +12,7 @@ public class Button8Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_button8);
 
-        Intent intent = new Intent(this, SignInActivity.class);
+        Intent intent = new Intent(this, MainMenuActivity.class);
         startActivity(intent);
     }
 }

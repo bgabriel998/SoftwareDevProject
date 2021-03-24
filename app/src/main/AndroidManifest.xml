@@ -26,7 +26,6 @@
         <activity android:name=".MapActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".SignInActivity" />
         <activity android:name=".MainMenuActivity" />
         <activity android:name=".Button8Activity" />
         <activity android:name=".Button7Activity" />

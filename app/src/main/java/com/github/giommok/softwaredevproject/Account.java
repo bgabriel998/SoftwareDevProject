@@ -11,9 +11,9 @@ public interface Account {
      * Returns the reference to the user account
      * @return
      */
-    public static Account getAccount(Context context) {
+    public static Account getAccount() {
         // as FirebaseAccount is the only account, getAccount will return FirebaseAccount.getAccount
-        return FirebaseAccount.getAccount(context);
+        return FirebaseAccount.getAccount();
     }
 
     /**

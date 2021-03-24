@@ -19,14 +19,10 @@ import java.util.List;
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     private static final String TABLE = "countryHighPoint";
-
-    private static String DB_PATH = "/data/data/com.github.bgabriel998.softwaredevproject/databases/";
-
-    //replace this with name of your db file which you copied into asset folder
-    private static String DB_NAME = "CountryHighPoints.db";
+    private static final String DB_PATH = "/data/data/com.github.bgabriel998.softwaredevproject/databases/";
+    private static final String DB_NAME = "CountryHighPoints.db";
 
     private SQLiteDatabase myDataBase;
-
     private final Context myContext;
 
     /**
@@ -44,51 +40,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      * Creates a empty database on the system and rewrites it with your own database.
      * */
     public void createDataBase(){
-        try {
-            boolean dbExist = checkDataBase();
 
-            if(dbExist){
-                //do nothing - database already exist
-            }else{
-                //By calling this method and empty database will be created into the default system path
-                //of your application so we are gonna be able to overwrite that database with our database.
-                this.getReadableDatabase();
+        //Copy content of the database (from file)
+        this.getReadableDatabase();
+        copyDataBase();
 
 
-                copyDataBase();
-
-            }
-        }
-        catch (Exception e) {
-
-        }
-    }
-
-    /**
-     * Check if the database already exist to avoid re-copying the file each time you open the application.
-     * @return true if it exists, false if it doesn't
-     */
-    private boolean checkDataBase(){
-
-        SQLiteDatabase checkDB = null;
-
-        try{
-            String myPath = DB_PATH + DB_NAME;
-            checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
-
-        }catch(SQLiteException e){
-
-            //database does't exist yet.
-
-        }
-
-        if(checkDB != null){
-
-            checkDB.close();
-
-        }
-
-        return checkDB != null ? true : false;
     }
 
     /**
@@ -126,7 +83,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     public SQLiteDatabase openDataBase() throws SQLException {
-
         //Open the database
         String myPath = DB_PATH + DB_NAME;
         myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);

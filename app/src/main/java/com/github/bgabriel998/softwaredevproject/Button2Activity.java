@@ -13,6 +13,7 @@ import com.firebase.ui.auth.data.model.User;
 import com.github.giommok.softwaredevproject.Account;
 import com.github.giommok.softwaredevproject.Database;
 import com.github.giommok.softwaredevproject.FirebaseAccount;
+import com.github.ravifrancesco.softwaredevproject.POIPoint;
 import com.github.ravifrancesco.softwaredevproject.UserPoint;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -31,7 +32,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.osmdroid.util.GeoPoint;
+import org.osmdroid.bonuspack.location.POI;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,10 +78,8 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onStart() {
         super.onStart();
-        account = FirebaseAccount.getAccount(this);
+        account = FirebaseAccount.getAccount();
         updateUI();
-        UserPoint userLocation = new UserPoint(45.89187429594282, 6.857962768922471);
-        GeonamesHandler handler = new GeonamesHandler("bgabrie1");
     }
 
     @Override
@@ -167,7 +166,7 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
 
     /**
      * This method is called when the desired username is already present
-      */
+     */
     private void usernameAlreadyPresent() {
         // Notify the user that the chosen username is already used
 
@@ -190,11 +189,11 @@ public class Button2Activity extends AppCompatActivity implements View.OnClickLi
      */
     public void signOut() {
         AuthUI.getInstance().signOut(this)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                public void onComplete(Task<Void> task) {
-                                    updateUI();
-                                }
-                            });
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    public void onComplete(Task<Void> task) {
+                        updateUI();
+                    }
+                });
     }
 
     /**
