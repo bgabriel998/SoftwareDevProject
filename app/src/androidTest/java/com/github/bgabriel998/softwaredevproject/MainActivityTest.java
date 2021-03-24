@@ -55,6 +55,12 @@ public class MainActivityTest {
         Intents.intended(IntentMatchers.hasComponent(Button1Activity.class.getName()));
     }
 
+    /**
+     * Test that the AlertDialog pops up and that the cameraPermission gets requested when the method
+     * requestCameraPermission is executed.
+     * @Note I was not able to test permissions at runtime with espresso so I have to execute the method
+     * that gets called when the permission is not granted directly.
+     */
     @Test
     public void cameraPermissionRequested() throws NoSuchMethodException {
         //Call directly method that is called to request the camera permission
@@ -73,6 +79,10 @@ public class MainActivityTest {
         onView(withId(android.R.id.button1)).perform(click());
     }
 
+    /**
+     * Tests that when the camera permission gets granted and onRequestPermissionsResult is called,
+     * the camera-preview opens without clicking on the button again.
+     */
     @Test
     public void cameraPermissionGrantedAfterRequest() throws NoSuchMethodException {
         Method method = MainActivity.class.getDeclaredMethod("onRequestPermissionsResult", int.class, String[].class, int[].class);

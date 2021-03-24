@@ -70,6 +70,11 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         executor.shutdown();
     }
 
+    /**
+     * In checkPreviewUseCase, ImageReader will provide a Surface for camera preview test.
+     * When each ImageProxy is acquired, the AtomicInteger will be incremented.
+     * By doing so we can ensure the camera binding is working as expected.
+     */
     private final ImageReader reader = ImageReader.newInstance(1440, 1080, ImageFormat.YUV_420_888, 30);
     private final AtomicInteger counter = new AtomicInteger(0);
 
@@ -116,20 +121,27 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         }
     }
 
+    /**
+     * Check that camera use cases are correctly set and that the camera is correctly binded
+     * See https://github.com/android/camera-samples/tree/main/CameraXBasic
+     */
     @UiThreadTest
     @Test
     public void checkPreviewUseCase() throws InterruptedException, CameraInfoUnavailableException {
         // life cycle owner
         registry.setCurrentState(Lifecycle.State.STARTED);
+
         // select Back camera
         CameraSelector.Builder selectorBuilder = new CameraSelector.Builder();
         Assert.assertTrue(provider.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA));
         selectorBuilder.requireLensFacing(CameraSelector.LENS_FACING_BACK);
+
         // fit the preview size to ImageReader
         Preview.Builder previewBuilder = new Preview.Builder();
         previewBuilder.setTargetResolution(new Size(reader.getWidth(), reader.getHeight()));
         previewBuilder.setTargetRotation(Surface.ROTATION_90);
         Preview preview = previewBuilder.build();
+
         // acquire camera binding
         provider.unbindAll();
         Camera camera = provider.bindToLifecycle(this, selectorBuilder.build(), preview);
