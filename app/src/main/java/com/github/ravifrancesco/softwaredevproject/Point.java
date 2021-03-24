@@ -64,6 +64,37 @@ public class Point {
     }
 
     /**
+     * Method for computing distance between two point as the crow flies,
+     * without taking in account the altitude of the two points
+     *
+     * @param other the other point to compute the distance
+     * @return      a value in meters representing the distance
+     */
+    public double computeFlatDistance(Point other) {
+
+        double squaredDistance;
+
+        double rThis = EARTH_RADIUS;
+        double rOther = EARTH_RADIUS;
+
+        double latThis = Math.toRadians(this.latitude);
+        double lonThis = Math.toRadians(this.longitude);
+
+        double latOther = Math.toRadians(other.latitude);
+        double lonOther = Math.toRadians(other.longitude);
+
+        // computing distance in spherical polar coordinates
+        squaredDistance = Math.pow(rThis, 2) + Math.pow(rOther, 2) -
+                2*rThis*rOther*(
+                        Math.cos(latThis)*Math.cos(latOther)*Math.cos(lonThis - lonOther) +
+                                Math.sin(latThis)*Math.sin(latOther)
+                );
+
+        return Math.sqrt(squaredDistance);
+
+    }
+
+    /**
      *
      * @param latitude  latitude to set (in degrees)
      */
