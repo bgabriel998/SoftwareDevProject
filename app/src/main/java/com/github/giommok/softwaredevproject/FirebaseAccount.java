@@ -1,14 +1,8 @@
 package com.github.giommok.softwaredevproject;
-
-import android.content.Context;
-
 import android.net.Uri;
 
 
 import com.google.firebase.auth.FirebaseAuth;
-
-
-
 
 /* Singleton class containing the only possible account connected */
 public class FirebaseAccount implements Account {
