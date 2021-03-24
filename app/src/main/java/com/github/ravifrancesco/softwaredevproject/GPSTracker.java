@@ -87,21 +87,15 @@ public class GPSTracker extends Service implements LocationListener {
     private void getLocation() {
         try {
             checkLocationManagerStatus();
-            if (isNetworkEnabled) { // First get location from Network Provider
-                this.canGetLocation = true;
-                setLocation(LocationManager.NETWORK_PROVIDER);
-                Log.d("Provider", "Network");
-            }
+            // First get location from Network Provider
+            if (isNetworkEnabled) { setLocationProvider(LocationManager.NETWORK_PROVIDER, "Network"); }
+            // Then set location from GPS Provider
+            if (isGPSEnabled && location == null) { setLocationProvider(LocationManager.GPS_PROVIDER, "GPS"); }
 
-            if (isGPSEnabled) { // if GPS Enabled get lat/long using GPS Services
-                if (location == null) {
-                    this.canGetLocation = true;
-                    setLocation(LocationManager.GPS_PROVIDER);
-                    Log.d("Provider", "GPS Enabled");
-                }
-            }
-
+            // handle case were no provider is enabled
             if (!isNetworkEnabled && !isGPSEnabled) { Log.d("No provider enabled", "Using default coordinates"); }
+
+            //handle null location, set default location
             if (location == null) {
                 setDefaultLocation();
                 Log.d("Unable to retrieve location", "Using default coordinates");
@@ -126,6 +120,18 @@ public class GPSTracker extends Service implements LocationListener {
 
         // getting GPS status
         isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
+    /**
+     * Sets the provider for the location manager
+     *
+     * @param locationManagerProvider   selected provider
+     * @param logMessage                message to log (name of the provider)
+     */
+    private void setLocationProvider(String locationManagerProvider, String logMessage) {
+        this.canGetLocation = true;
+        setLocation(locationManagerProvider);
+        Log.d("Provider", logMessage);
     }
 
     /**

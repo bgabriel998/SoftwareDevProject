@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 @MediumTest
-public class GPSTest {
+public class GPSTrackerTest {
 
     @Rule
     public final ServiceTestRule serviceRule = new ServiceTestRule();
