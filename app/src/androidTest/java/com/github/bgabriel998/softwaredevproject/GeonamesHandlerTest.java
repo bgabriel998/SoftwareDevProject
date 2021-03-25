@@ -29,6 +29,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -44,13 +45,18 @@ public class GeonamesHandlerTest {
 
 
     private static final int MILLI_SEC_TO_SEC = 1000;
-
+ 
     private static final int DEFAULT_QUERY_MAX_RESULT = 300;
     private static final int DEFAULT_QUERY_TIMEOUT = 10;
 
     private static final int GIVEN_RANGE_IN_KM = 20;
     private static final int GIVEN_QUERY_MAX_RESULT = 30;
     private static final int GIVEN_QUERY_TIMEOUT = 10;
+
+    private static final double MOCK_LOCATION_LAT_LAUSANNE = 46.519251915333676;
+    private static final double MOCK_LOCATION_LON_LAUSANNE = 6.558563221333525;
+    private static final double MOCK_LOCATION_ALT_LAUSANNE = 220;
+
 
 
 
@@ -61,24 +67,21 @@ public class GeonamesHandlerTest {
      * Create and send query to the API
      */
     @BeforeClass
-    public static void setup(){
+    public static void setup() throws InterruptedException {
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
+        UserPoint userPoint = new UserPoint(MOCK_LOCATION_LAT_LAUSANNE,
+                                            MOCK_LOCATION_LON_LAUSANNE,
+                                            MOCK_LOCATION_ALT_LAUSANNE);
         startTimeMs = System.currentTimeMillis();
-        UserPoint userPoint = new UserPoint(46.519251915333676, 6.558563221333525, 220);
         new GeonamesHandler(userPoint) {
             @Override
             public void onResponseReceived(Object result) {
                 resultPOI = (ArrayList<POI>) result;
-                queryTimeS = ((double)System.currentTimeMillis() - startTimeMs)/ MILLI_SEC_TO_SEC;
+                queryTimeS = ((double) System.currentTimeMillis() - startTimeMs) / MILLI_SEC_TO_SEC;
             }
         }.execute();
-        try {
-            Thread.sleep(4000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            fail("testResultType failed");
-        }
+        Thread.sleep(DEFAULT_QUERY_TIMEOUT*MILLI_SEC_TO_SEC);
     }
 
     /**
@@ -86,8 +89,8 @@ public class GeonamesHandlerTest {
      */
     @Test
     public void testResultsQuantity(){
-//        if (resultPOI == null) fail("testResultsQuantity failed");
-//        assertThat(resultPOI.size(), greaterThan(0));
+        assertNotNull("testResultsQuantity failed. Acquired POI List is empty...", resultPOI);
+        assertThat(resultPOI.size(), greaterThan(0));
     }
 
     /**
@@ -96,11 +99,10 @@ public class GeonamesHandlerTest {
      */
     @Test
     public void testResultType(){
-//        if (resultPOI == null) fail("testResultType failed");
-//        for(POI point : resultPOI){
-//            assertEquals(point.mDescription,"peak");
-//            Log.v("GEONAMES","Descr: "+ point.mDescription);
-//        }
+        assertNotNull("testResultType failed. Acquired POI List is empty...", resultPOI);
+        for(POI point : resultPOI){
+            assertEquals(point.mDescription,"peak");
+        }
     }
 
 
@@ -112,10 +114,10 @@ public class GeonamesHandlerTest {
      */
     @Test
     public void testResultNameNonNull(){
-//        if (resultPOI == null) fail("testResultNameNonNull failed");
-//        for(POI point : resultPOI){
-//            assertNotEquals(point.mType,isEmptyOrNullString());
-//        }
+        assertNotNull("testResultNameNonNull failed. Acquired POI List is empty...", resultPOI);
+        for(POI point : resultPOI){
+            assertNotEquals(point.mType,isEmptyOrNullString());
+        }
     }
 
     /**
@@ -125,10 +127,11 @@ public class GeonamesHandlerTest {
      */
     @Test
     public void testResultHeightNonNull(){
-//        if (resultPOI == null) fail("testResultHeightNonNull failed");
-//        for(POI point : resultPOI){
-//            assertNotEquals(point.mLocation.getAltitude(),0.0F);
-//        }
+
+        assertNotNull("testResultHeightNonNull failed. Acquired POI List is empty...", resultPOI);
+        for(POI point : resultPOI){
+            assertNotEquals(point.mLocation.getAltitude(),0.0F);
+        }
     }
 
     /**
@@ -138,10 +141,10 @@ public class GeonamesHandlerTest {
      */
     @Test
     public void testResultListNotExceedLimit(){
-//        if (resultPOI == null) fail("testResultListNotExceedLimit failed");
-//        for(POI point : resultPOI){
-//            assertThat(resultPOI.size(),lessThanOrEqualTo(DEFAULT_QUERY_MAX_RESULT));
-//        }
+        assertNotNull("testResultListNotExceedLimit failed. Acquired POI List is empty...", resultPOI);
+        for(POI point : resultPOI){
+            assertThat(resultPOI.size(),lessThanOrEqualTo(DEFAULT_QUERY_MAX_RESULT));
+        }
     }
 
     /**
@@ -172,7 +175,7 @@ public class GeonamesHandlerTest {
             }
         }.execute();
         try {
-            Thread.sleep(4000);
+            Thread.sleep(DEFAULT_QUERY_TIMEOUT*MILLI_SEC_TO_SEC);
         } catch (InterruptedException e) {
             e.printStackTrace();
             fail("testGeonamesObjCreationException failed");
@@ -201,7 +204,7 @@ public class GeonamesHandlerTest {
             }
         }.execute();
         try {
-            Thread.sleep(4000);
+            Thread.sleep(GIVEN_QUERY_TIMEOUT*MILLI_SEC_TO_SEC);
         } catch (InterruptedException e) {
             e.printStackTrace();
             fail("testGeonamesObjCreationExceptionCustom_Arg_1 failed");
@@ -229,7 +232,7 @@ public class GeonamesHandlerTest {
             }
         }.execute();
         try {
-            Thread.sleep(4000);
+            Thread.sleep(GIVEN_QUERY_TIMEOUT*MILLI_SEC_TO_SEC);
         } catch (InterruptedException e) {
             e.printStackTrace();
             fail("testGeonamesObjCreationExceptionCustom_Arg_2 failed");
