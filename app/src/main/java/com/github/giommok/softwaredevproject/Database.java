@@ -64,11 +64,7 @@ public class Database {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                throw new DatabaseException();
             }
-
         });
     }
-
-
 }
