@@ -90,7 +90,7 @@ public class ProfileActivityTest {
 
     /* Test that the username choice UI is correct */
     @Test
-    public void ChangeUsernameUITest() {
+    public void TestChangeUsernameUI() {
         testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
         Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
         Espresso.onView(withId(R.id.signOutButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
