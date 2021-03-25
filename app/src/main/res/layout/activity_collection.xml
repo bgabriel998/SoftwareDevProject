@@ -21,9 +21,11 @@
 
         <!-- Collected Collection Container -->
         <LinearLayout
-            android:layout_width="380dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="80dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
@@ -62,8 +64,10 @@
 
         <!-- Uncollected Collection Container -->
         <LinearLayout
-            android:layout_width="380dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
