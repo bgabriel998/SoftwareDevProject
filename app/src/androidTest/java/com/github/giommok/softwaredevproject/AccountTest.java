@@ -14,6 +14,9 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public class AccountTest {
 
+    /**
+     * Testing the output are not null but actual strings with no account
+     */
     @Test
     public void noAccountTest() {
         Account account = Account.getAccount();
@@ -26,6 +29,10 @@ public class AccountTest {
         assertEquals(account.getPhotoUrl(), Uri.EMPTY);
     }
 
+    /**
+     * Testing that synchronizeUsername works fine
+     * @throws InterruptedException
+     */
     @Test
     public void synchronizeUsernameTest() throws InterruptedException {
         Database.setChild("users/null", Arrays.asList("username"), Arrays.asList("usernameTest3"));

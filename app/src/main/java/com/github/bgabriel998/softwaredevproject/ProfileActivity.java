@@ -67,15 +67,27 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * On sign-in button click
+     * @param view
+     */
     public void signInButton(View view) {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    /**
+     * On change username button click
+     * @param view
+     */
     public void changeUsernameButton(View view) {
         setUsernameChoiceUI();
     }
 
+    /**
+     * On submit of change username UI button click
+     * @param view
+     */
     public void submitUsernameButton(View view) {
         String username = ((EditText)findViewById(R.id.editTextUsername)).getText().toString();
         String currentUsername = account.getUsername();
@@ -88,6 +100,10 @@ public class ProfileActivity extends AppCompatActivity {
         else Database.isPresent("users", "username", username, () -> usernameAlreadyPresent(username) , () -> registerUser(username));
     }
 
+    /**
+     * On sign-out button click
+     * @param view
+     */
     public void signOutButton(View view) {
         AuthUI.getInstance().signOut(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -171,6 +187,9 @@ public class ProfileActivity extends AppCompatActivity {
         findViewById(R.id.editTextUsername).setVisibility(View.GONE);
     }
 
+    /**
+     * Sets what is visible on UI after a username change is requested or required
+     */
     private void setUsernameChoiceUI() {
         findViewById(R.id.signInButton).setVisibility(View.GONE);
         findViewById(R.id.signOutButton).setVisibility(View.GONE);
