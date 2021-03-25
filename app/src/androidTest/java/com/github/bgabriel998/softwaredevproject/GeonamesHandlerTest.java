@@ -52,6 +52,12 @@ public class GeonamesHandlerTest {
     private static final int GIVEN_QUERY_MAX_RESULT = 30;
     private static final int GIVEN_QUERY_TIMEOUT = 10;
 
+    private static final double MOCK_LOCATION_LAT_LAUSANNE = 46.519251915333676;
+    private static final double MOCK_LOCATION_LON_LAUSANNE = 6.558563221333525;
+    private static final double MOCK_LOCATION_ALT_LAUSANNE = 220;
+
+    private static final int MS_TO_SEC = 1000;
+
 
 
     @Rule
@@ -61,23 +67,21 @@ public class GeonamesHandlerTest {
      * Create and send query to the API
      */
     @BeforeClass
-    public static void setup(){
+    public static void setup() throws InterruptedException {
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
-        UserPoint userPoint = new UserPoint(46.519251915333676, 6.558563221333525, 220);
-        final boolean[] dataAcquired = {false};
-        while(!dataAcquired[0]) {
-            startTimeMs = System.currentTimeMillis();
-            new GeonamesHandler(userPoint) {
-                @Override
-                public void onResponseReceived(Object result) {
-                    resultPOI = (ArrayList<POI>) result;
-                    queryTimeS = ((double) System.currentTimeMillis() - startTimeMs) / MILLI_SEC_TO_SEC;
-                    if(resultPOI !=null)
-                        dataAcquired[0] = true;
-                }
-            }.execute();
-        }
+        UserPoint userPoint = new UserPoint(MOCK_LOCATION_LAT_LAUSANNE,
+                                            MOCK_LOCATION_LON_LAUSANNE,
+                                            MOCK_LOCATION_ALT_LAUSANNE);
+        startTimeMs = System.currentTimeMillis();
+        new GeonamesHandler(userPoint) {
+            @Override
+            public void onResponseReceived(Object result) {
+                resultPOI = (ArrayList<POI>) result;
+                queryTimeS = ((double) System.currentTimeMillis() - startTimeMs) / MILLI_SEC_TO_SEC;
+            }
+        }.execute();
+        Thread.sleep(DEFAULT_QUERY_TIMEOUT*MS_TO_SEC);
     }
 
     /**
