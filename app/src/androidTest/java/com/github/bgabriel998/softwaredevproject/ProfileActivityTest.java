@@ -12,8 +12,12 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.github.giommok.softwaredevproject.Account;
+import com.github.giommok.softwaredevproject.Database;
+
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,26 +35,6 @@ import static org.junit.Assert.assertSame;
 
 @RunWith(AndroidJUnit4.class)
 public class ProfileActivityTest {
-
-    /* auxiliary class to check toasts */
-    public class ToastMatcher extends TypeSafeMatcher<Root> {
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("is toast");
-        }
-
-        @Override
-        public boolean matchesSafely(Root root) {
-            int type = root.getWindowLayoutParams().get().type;
-            if ((type == WindowManager.LayoutParams.TYPE_TOAST)) {
-                IBinder windowToken = root.getDecorView().getWindowToken();
-                IBinder appToken = root.getDecorView().getApplicationWindowToken();
-                if (windowToken == appToken) return true;
-            }
-            return false;
-        }
-    }
 
     @Rule
     public ActivityScenarioRule<ProfileActivity> testRule = new ActivityScenarioRule<>(ProfileActivity.class);
@@ -115,7 +99,7 @@ public class ProfileActivityTest {
     }
 
     /* Test that if the username has changed the correct message is displayed */
-    /* No account is created with this test as rules will not allow it */
+    /* The account created is then removed */
     @Test
     public void TestRegisterUser() throws InterruptedException {
         final String username = "i3gn4u39n4t34o";
@@ -124,9 +108,10 @@ public class ProfileActivityTest {
         onView(withId(R.id.editTextUsername)).perform(typeText(username));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitUsernameButton)).perform(click());
-        Thread.sleep(500);
+        Thread.sleep(1000);
+        Database.refRoot.child("users").child("null").removeValue();
         onView(withText(message)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        Thread.sleep(500);
+        Thread.sleep(1000);
         Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
@@ -139,9 +124,9 @@ public class ProfileActivityTest {
         onView(withId(R.id.editTextUsername)).perform(typeText(username));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitUsernameButton)).perform(click());
-        Thread.sleep(500);
+        Thread.sleep(1000);
         onView(withText(message)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        Thread.sleep(500);
+        Thread.sleep(1000);
         Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
     }
 }

@@ -42,9 +42,9 @@ public class AccountTest {
         account.synchronizeUsername();
         Thread.sleep(1000);
         assertEquals(account.getUsername(), "usernameTest3");
-        // Now it will test that if no data is present it produces a "null1" username
-        Database.refRoot.child("users/null").child("username").removeValue();
+        // Now it will test that if no data is present it produces a "null" username
+        Database.refRoot.child("users").child("null").removeValue();
         Thread.sleep(1000);
-        assertEquals(account.getUsername(), "null1");
+        assertEquals(account.getUsername(), "null");
     }
 }
