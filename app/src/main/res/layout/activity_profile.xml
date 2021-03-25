@@ -15,11 +15,13 @@
     <Button
         android:id="@+id/signInButton"
         android:layout_height="70dp"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="55dp"
+        android:layout_marginEnd="55dp"
         style="@style/ButtonLightGreen"
         android:text="@string/sign_in_button"
         android:onClick="signInButton" />
@@ -52,12 +54,14 @@
     <!-- Sign out button -->
     <Button
         android:id="@+id/signOutButton"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="70dp"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="55dp"
+        android:layout_marginEnd="55dp"
         style="@style/ButtonDarkGreen"
         android:text="@string/sign_out_button"
         android:onClick="signOutButton" />
