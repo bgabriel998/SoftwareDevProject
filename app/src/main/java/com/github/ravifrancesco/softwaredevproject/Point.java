@@ -15,10 +15,10 @@ public class Point {
 
     final static double EARTH_RADIUS = 6378137; // value in meters
 
-    private double latitude;
-    private double longitude;
+    protected double latitude;
+    protected double longitude;
 
-    private double altitude;
+    protected double altitude;
 
     /**
      * Constructor for the Point class.

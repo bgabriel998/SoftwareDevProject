@@ -30,6 +30,13 @@ import androidx.core.app.ActivityCompat;
  */
 public class GPSTracker extends Service implements LocationListener {
 
+    // fixed coordinates
+    static final double DEFAULT_LAT = 27.988056;
+    static final double DEFAULT_LON = 86.925278;
+    static final double DEFAULT_ALT = 8848.86;
+    static final double DEFAULT_ACC = 0.0;
+
+    // current app context
     private final Context mContext;
 
     // flag for GPS status
@@ -47,7 +54,7 @@ public class GPSTracker extends Service implements LocationListener {
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 0; // 1 meter
 
     // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1; // 1 second
+    private static final long MIN_TIME_BW_UPDATES = 1000; // 1 second
 
     // Declaring a Location Manager
     protected LocationManager locationManager;
@@ -79,26 +86,23 @@ public class GPSTracker extends Service implements LocationListener {
      */
     private void getLocation() {
         try {
-
             checkLocationManagerStatus();
-            if (!isGPSEnabled && !isNetworkEnabled) {
-                // display some errors
-            } else {
-                this.canGetLocation = true;
-                if (isNetworkEnabled) { // First get location from Network Provider
-                    setLocation(LocationManager.NETWORK_PROVIDER);
-                    Log.d("Provider", "Network");
-                }
+            // First get location from Network Provider
+            if (isNetworkEnabled) { setLocationProvider(LocationManager.NETWORK_PROVIDER, "Network"); }
+            // Then set location from GPS Provider
+            if (isGPSEnabled && location == null) { setLocationProvider(LocationManager.GPS_PROVIDER, "GPS"); }
 
-                if (isGPSEnabled) { // if GPS Enabled get lat/long using GPS Services
-                    if (location == null) {
-                        setLocation(LocationManager.GPS_PROVIDER);
-                        Log.d("Provider", "GPS Enabled");
-                    }
-                }
+            // handle case were no provider is enabled
+            if (!isNetworkEnabled && !isGPSEnabled) { Log.d("No provider enabled", "Using default coordinates"); }
+
+            //handle null location, set default location
+            if (location == null) {
+                setDefaultLocation();
+                Log.d("Unable to retrieve location", "Using default coordinates");
             }
 
         } catch (Exception e) {
+            Log.d("GPS ERROR", "read stack trace");
             e.printStackTrace();
         }
 
@@ -116,6 +120,18 @@ public class GPSTracker extends Service implements LocationListener {
 
         // getting GPS status
         isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
+    /**
+     * Sets the provider for the location manager
+     *
+     * @param locationManagerProvider   selected provider
+     * @param logMessage                message to log (name of the provider)
+     */
+    private void setLocationProvider(String locationManagerProvider, String logMessage) {
+        this.canGetLocation = true;
+        setLocation(locationManagerProvider);
+        Log.d("Provider", logMessage);
     }
 
     /**
@@ -142,11 +158,21 @@ public class GPSTracker extends Service implements LocationListener {
     }
 
     /**
+     * Set the default location
+     */
+    private void setDefaultLocation() {
+        location.setLatitude(DEFAULT_LAT);
+        location.setLongitude(DEFAULT_LON);
+        location.setAltitude(DEFAULT_ALT);
+        location.setAccuracy((float)DEFAULT_ACC);
+    }
+
+    /**
      *
      * @return latitude (in degrees)
      */
     public double getLatitude(){
-        return location != null ? location.getLatitude() : 0.0;
+        return location != null ? location.getLatitude() : DEFAULT_LAT;
     }
 
     /**
@@ -154,7 +180,7 @@ public class GPSTracker extends Service implements LocationListener {
      * @return longitude (in degrees)
      */
     public double getLongitude(){
-        return location != null ? location.getLongitude() : 0.0;
+        return location != null ? location.getLongitude() : DEFAULT_LON;
     }
 
     /**
@@ -162,7 +188,7 @@ public class GPSTracker extends Service implements LocationListener {
      * @return altitude (in meters)
      */
     public double getAltitude(){
-        return location != null ? location.getAltitude() : 0.0;
+        return location != null ? location.getAltitude() : DEFAULT_ALT;
     }
 
     /**
@@ -170,7 +196,7 @@ public class GPSTracker extends Service implements LocationListener {
      * @return accuracy (in meters)
      */
     public double getAccuracy() {
-        return location != null ? location.getAccuracy() : 0.0;
+        return location != null ? location.getAccuracy() : DEFAULT_ACC;
     }
 
 
