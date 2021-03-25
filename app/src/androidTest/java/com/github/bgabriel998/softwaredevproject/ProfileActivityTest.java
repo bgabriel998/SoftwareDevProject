@@ -102,6 +102,9 @@ public class ProfileActivityTest {
     /* The account created is then removed */
     @Test
     public void TestRegisterUser() throws InterruptedException {
+        // To be sure that null user does not exists
+        Database.refRoot.child("users").child("null").removeValue();
+        Thread.sleep(1000);
         final String username = "i3gn4u39n4t34o";
         final String message = "Your username has changed!";
         testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
