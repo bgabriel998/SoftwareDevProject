@@ -1,33 +1,25 @@
 package com.github.giommok.softwaredevproject;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 
-import androidx.annotation.Nullable;
-
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
-
-import static androidx.core.app.ActivityCompat.startActivityForResult;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 
 /* Singleton class containing the only possible account connected */
 public class FirebaseAccount implements Account {
+    private static String username = "null";
     private static FirebaseAccount account = null;
 
 
     public static FirebaseAccount getAccount() {
-        if (account == null)
+        if (account == null) {
             account = new FirebaseAccount();
-
+        }
         return account;
     }
 
@@ -68,4 +60,26 @@ public class FirebaseAccount implements Account {
         return Uri.EMPTY;
     }
 
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public void synchronizeUsername() {
+        DatabaseReference dbRef = Database.refRoot.child("users/" + getId() + "/username");
+        ValueEventListener usernameListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                username = dataSnapshot.getValue(String.class);
+                if(username == null) username = "null1";
+                Log.d("SYNCHRONIZE_USERNAME", "onDataChange");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        };
+        dbRef.addValueEventListener(usernameListener);
+    }
 }
