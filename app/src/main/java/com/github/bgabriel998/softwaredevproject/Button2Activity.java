@@ -1,5 +1,4 @@
 package com.github.bgabriel998.softwaredevproject;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +14,10 @@ import com.github.ravifrancesco.softwaredevproject.POIPoint;
 import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
+
+import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 
 public class Button2Activity extends AppCompatActivity {

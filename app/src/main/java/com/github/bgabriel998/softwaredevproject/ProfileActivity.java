@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.github.giommok.softwaredevproject.Account;
@@ -58,14 +60,50 @@ public class ProfileActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         account = FirebaseAccount.getAccount();
-        setUI();
+        if(!account.isSignedIn()) setUI();
+        else {
+            account.synchronizeUsername();
+            Database.isPresent("users", "email", account.getEmail(), this::setUI, this::setUsernameChoiceUI);
+        }
     }
 
+    /**
+     * On sign-in button click
+     * @param view
+     */
     public void signInButton(View view) {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    /**
+     * On change username button click
+     * @param view
+     */
+    public void changeUsernameButton(View view) {
+        setUsernameChoiceUI();
+    }
+
+    /**
+     * On submit of change username UI button click
+     * @param view
+     */
+    public void submitUsernameButton(View view) {
+        String username = ((EditText)findViewById(R.id.editTextUsername)).getText().toString();
+        String currentUsername = account.getUsername();
+        Log.d("CURRENT_USERNAME", "onSubmit: " + currentUsername);
+        if(username.equals(currentUsername)) {
+            Log.d("CURRENT_USERNAME", "onSubmit: EQUAL_CASE");
+            Toast toast = Toast.makeText(getApplicationContext(), "You can't choose the username you already have!", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+        else Database.isPresent("users", "username", username, () -> usernameAlreadyPresent(username) , () -> registerUser(username));
+    }
+
+    /**
+     * On sign-out button click
+     * @param view
+     */
     public void signOutButton(View view) {
         AuthUI.getInstance().signOut(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -106,14 +144,10 @@ public class ProfileActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Firebase AUTH", "signInWithCredential:success");
-                            if(task.getResult().getAdditionalUserInfo().isNewUser()) {
-                                chooseUsername();
-                                isUsernameUsed(account.getEmail().substring(0, account.getEmail().indexOf('@')).replaceAll(".", ""));
-                            }
-                            setUI();
+                            // Check if the user is already registered on the database
+                            Database.isPresent("users", "email", account.getEmail(), () -> setUI(), () -> setUsernameChoiceUI());
                         } else {
                             Log.w("Firebase AUTH", "signInWithCredential:failure", task.getException());
-                            setUI();
                         }
 
                     }
@@ -125,35 +159,21 @@ public class ProfileActivity extends AppCompatActivity {
      * @param username
      */
     private void registerUser(String username) {
+        // Notify the user that the username has changed
         Database.setChild("users/" + account.getId(), Arrays.asList("email", "username"), Arrays.asList(account.getEmail(), username));
-    }
-
-    /**
-     * This method is called when the user submits his username, in order to check if it's still free
-     * @param username
-     */
-    private void isUsernameUsed(String username) {
-        Database.isPresent("users", "username", username, () -> usernameAlreadyPresent() , () -> registerUser(username));
+        Toast toast = Toast.makeText(getApplicationContext(), "Your username has changed!", Toast.LENGTH_SHORT);
+        toast.show();
+        account.synchronizeUsername();
+        setUI();
     }
 
     /**
      * This method is called when the desired username is already present
      */
-    private void usernameAlreadyPresent() {
+    private void usernameAlreadyPresent(String username) {
         // Notify the user that the chosen username is already used
-
-        // Debug message
-        Log.d("Database isPresent", "Username exists");
-
-        // Let the user choose a new username
-        chooseUsername();
-    }
-
-    /**
-     * This method is called after the first Firebase authentication in order to let the user choose his username
-     */
-    private void chooseUsername() {
-        // Let the user choose a username
+        Toast toast = Toast.makeText(getApplicationContext(), "The username " + username + " is already used by another user. Choose a new one.", Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     /**
@@ -162,5 +182,19 @@ public class ProfileActivity extends AppCompatActivity {
     private void setUI(){
         findViewById(R.id.signInButton).setVisibility(account.isSignedIn() ? View.GONE : View.VISIBLE);
         findViewById(R.id.signOutButton).setVisibility(account.isSignedIn() ? View.VISIBLE : View.GONE);
+        findViewById(R.id.changeUsernameButton).setVisibility(account.isSignedIn() ? View.VISIBLE : View.GONE);
+        findViewById(R.id.submitUsernameButton).setVisibility(View.GONE);
+        findViewById(R.id.editTextUsername).setVisibility(View.GONE);
+    }
+
+    /**
+     * Sets what is visible on UI after a username change is requested or required
+     */
+    private void setUsernameChoiceUI() {
+        findViewById(R.id.signInButton).setVisibility(View.GONE);
+        findViewById(R.id.signOutButton).setVisibility(View.GONE);
+        findViewById(R.id.changeUsernameButton).setVisibility(View.GONE);
+        findViewById(R.id.submitUsernameButton).setVisibility(View.VISIBLE);
+        findViewById(R.id.editTextUsername).setVisibility(View.VISIBLE);
     }
 }
