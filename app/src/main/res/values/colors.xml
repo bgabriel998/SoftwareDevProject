@@ -16,4 +16,6 @@
     <color name="LightBlue">#BDB2F2</color>
     <color name="Blue">#9C9AF1</color>
     <color name="LightGreen">#B9E3CF</color>
+    <color name="Transparent">#00000000</color>
+    <color name="Black">#000000</color>
 </resources>
