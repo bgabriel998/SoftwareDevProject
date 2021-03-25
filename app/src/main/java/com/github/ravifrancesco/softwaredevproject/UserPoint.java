@@ -107,8 +107,21 @@ public class UserPoint extends Point {
         this.accuracy = acc;
     }
 
+    /**
+     * Sets customLocation to false
+     */
     public void switchToRealLocation() {
         customLocation = false;
+    }
+
+    /**
+     * To check if the custom location is on
+     *
+     * @return  <code>true</code> if customLocation is enabled;
+     *          <code>false</code> otherwise.
+     */
+    public boolean isCustomLocation() {
+        return customLocation;
     }
 
     /**

@@ -38,6 +38,8 @@ public class GPSTrackerTest {
         UserPoint userPoint = new UserPoint(mContext);
         GPSTracker mGpsTracker = new GPSTracker(mContext, userPoint);
 
+        // if the gps tracker is able to get the location, the test passes, otherwise
+        // it will check if the default location is returned correctly
         if (mGpsTracker.canGetLocation()) {
             return;
         } else {
