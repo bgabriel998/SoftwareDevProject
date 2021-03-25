@@ -56,7 +56,6 @@ public class GeonamesHandlerTest {
     private static final double MOCK_LOCATION_LON_LAUSANNE = 6.558563221333525;
     private static final double MOCK_LOCATION_ALT_LAUSANNE = 220;
 
-    private static final int MS_TO_SEC = 1000;
 
 
 
@@ -81,7 +80,7 @@ public class GeonamesHandlerTest {
                 queryTimeS = ((double) System.currentTimeMillis() - startTimeMs) / MILLI_SEC_TO_SEC;
             }
         }.execute();
-        Thread.sleep(DEFAULT_QUERY_TIMEOUT*MS_TO_SEC);
+        Thread.sleep(DEFAULT_QUERY_TIMEOUT*MILLI_SEC_TO_SEC);
     }
 
     /**
