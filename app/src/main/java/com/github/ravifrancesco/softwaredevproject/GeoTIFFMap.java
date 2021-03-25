@@ -41,15 +41,19 @@ public class GeoTIFFMap {
         }
     }
 
-    private boolean updateBoundingBox() {
+    public Bitmap getTopographyMapBitmap() {
+
+        updateBoundingBox();
+        return topographyMapBitmap;
+
+    }
+
+    private void updateBoundingBox() {
 
         POIPoint oldBoundingCenter = new POIPoint(boundingBox.getCenterWithDateLine());
 
         if (userPoint.computeFlatDistance(oldBoundingCenter) > MINIMUM_DISTANCE_FOR_UPDATE) {
             downloadTopographyMap();
-            return true;
-        } else {
-            return false;
         }
 
     }
@@ -75,7 +79,6 @@ public class GeoTIFFMap {
         }
 
     }
-
 
 
 
