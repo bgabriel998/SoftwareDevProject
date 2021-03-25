@@ -16,29 +16,22 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/sign_in_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
-            tools:visibility="gone" />
-
-
 
         <TextView
-            android:id="@+id/sign_in_status"
+            android:id="@+id/mountainInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/signed_out"
+            android:text="@string/mountain_info"
             android:textColor="@android:color/white"
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/sign_in_detail"
+            android:id="@+id/scoreDetail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fadeScrollbars="true"
             android:gravity="center"
+            android:text="Current Score : 0"
             android:maxLines="5"
             android:padding="10dp"
             android:scrollbars="vertical"
@@ -59,16 +52,15 @@
 
 
         <Button
-            android:id="@+id/sign_out_button"
+            android:id="@+id/compute_user_score_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/sign_out"
+            android:text="@string/compute_user_score"
             android:orientation="horizontal"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:theme="@style/ThemeOverlay.MyDarkButton"
-            android:visibility="gone"
             tools:visibility="visible" />
 
 
