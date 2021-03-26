@@ -2,12 +2,16 @@ package com.github.ravifrancesco.softwaredevproject;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -29,12 +33,19 @@ public class GeoTIFFMap {
 
     public GeoTIFFMap(UserPoint userPoint) {
         this.userPoint = userPoint;
+        this.boundingBox = userPoint.computeBoundingBox(BOUNDING_BOX_RANGE);
+        //downloadTopographyMap();
     }
 
     private void downloadTopographyMap() {
         URL url = generateURL();
         try {
-            topographyMapBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+            HttpURLConnection connection = (HttpURLConnection) url
+                    .openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            topographyMapBitmap = BitmapFactory.decodeStream(input);
         } catch (IOException e) {
             Log.d("3D MAP DOWNLOAD", "Failed");
             e.printStackTrace();
@@ -53,12 +64,14 @@ public class GeoTIFFMap {
         POIPoint oldBoundingCenter = new POIPoint(boundingBox.getCenterWithDateLine());
 
         if (userPoint.computeFlatDistance(oldBoundingCenter) > MINIMUM_DISTANCE_FOR_UPDATE) {
+            boundingBox = userPoint.computeBoundingBox(BOUNDING_BOX_RANGE);
             downloadTopographyMap();
         }
 
     }
 
-    private URL generateURL() {
+    // TODO change it back to private
+    public URL generateURL() {
 
         String south = String.valueOf(boundingBox.getLatSouth());
         String north = String.valueOf(boundingBox.getLatNorth());
@@ -66,23 +79,20 @@ public class GeoTIFFMap {
         String east = String.valueOf(boundingBox.getLonEast());
 
         try {
-            return new URL( BASE_URL + "?" +
-                            "?demtype=" + DEM_TYPE + "&" +
+            URL url = new URL( BASE_URL + "?" +
+                            "demtype=" + DEM_TYPE + "&" +
                             "south=" + south + "&" +
                             "north=" + north + "&" +
                             "west=" + west + "&" +
                             "east=" + east + "&" +
                             "outputFormat=" + OUTPUT_FORMAT);
+            Log.d("GENERATED URL", url.toString());
+            return url;
         } catch (MalformedURLException e) {
             e.printStackTrace();
             return null;
         }
 
     }
-
-
-
-
-
 
 }
