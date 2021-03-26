@@ -128,8 +128,8 @@ public class CompassView extends View {
             if (i % 90 == 0){
                 //Draw the line,
                 //startX starts with 0 at the top left corner and increases when going from left to right
-                //startY starts also increases from top to bottom
-                //-> to start at the bottom, we will use the height of the compass-view
+                //startY also increases from top to bottom -> to start at the bottom,
+                // we will use the height of the compass-view.
                 //stopX is the same as startX since we want to draw a vertical line
                 //stopY is the height of the canvas minus some height to leave enough space to write the heading above
                 canvas.drawLine(pixDeg * (i - minDegrees), height, pixDeg * (i - minDegrees), mainLineHeight, mainLinePaint);
@@ -139,7 +139,7 @@ public class CompassView extends View {
                 canvas.drawText(selectHeadingString(i), pixDeg * (i - minDegrees), textHeight, mainTextPaint);
             }
 
-            //Draw a secondary line for every 45° exclunding every 90° (45°, 135°, 225° ...)
+            //Draw a secondary line for every 45° excluding every 90° (45°, 135°, 225° ...)
             else if (i % 45 == 0){
                 canvas.drawLine(pixDeg * (i - minDegrees), height, pixDeg * (i - minDegrees), secondaryLineHeight, secondaryLinePaint);
                 canvas.drawText(selectHeadingString(i), pixDeg * (i - minDegrees), textHeight, secondaryTextPaint);

@@ -110,9 +110,8 @@ public class Compass implements SensorEventListener {
      * @param alpha factor to smooth out the sensors
      */
     private void updateValues(float [] mat, SensorEvent event, float alpha){
-        mat[0] = alpha * mat[0] + (1 - alpha) * event.values[0];
-        mat[1] = alpha * mat[1] + (1 - alpha) * event.values[1];
-        mat[2] = alpha * mat[2] + (1 - alpha) * event.values[2];
+        for(int i=0; i<3; i++)
+            mat[i] = alpha * mat[i] + (1 - alpha) * event.values[i];
     }
 
     /**
