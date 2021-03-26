@@ -72,7 +72,7 @@ public class FirebaseAccount implements Account {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 username = dataSnapshot.getValue(String.class);
-                if(username == null) username = "null1";
+                if(username == null) username = "null";
                 Log.d("SYNCHRONIZE_USERNAME", "onDataChange");
             }
 
