@@ -14,6 +14,7 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public class AccountTest {
 
+
     /**
      * Testing the output are not null but actual strings with no account
      */
@@ -35,6 +36,9 @@ public class AccountTest {
      */
     @Test
     public void synchronizeUsernameTest() throws InterruptedException {
+        // To be sure that null user does not exists
+        Database.refRoot.child("users").child("null").removeValue();
+        Thread.sleep(1000);
         Database.setChild("users/null", Arrays.asList("username"), Arrays.asList("usernameTest3"));
         Thread.sleep(1000);
         Account account = Account.getAccount();
@@ -42,9 +46,9 @@ public class AccountTest {
         account.synchronizeUsername();
         Thread.sleep(1000);
         assertEquals(account.getUsername(), "usernameTest3");
-        // Now it will test that if no data is present it produces a "null1" username
-        Database.refRoot.child("users/null").child("username").removeValue();
+        // Now it will test that if no data is present it produces a "null" username
+        Database.refRoot.child("users").child("null").removeValue();
         Thread.sleep(1000);
-        assertEquals(account.getUsername(), "null1");
+        assertEquals(account.getUsername(), "null");
     }
 }

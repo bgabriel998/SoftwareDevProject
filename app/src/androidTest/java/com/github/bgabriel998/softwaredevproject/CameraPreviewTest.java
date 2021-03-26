@@ -41,7 +41,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 
-
 @RunWith(AndroidJUnit4.class)
 public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAvailableListener, Consumer<SurfaceRequest.Result> {
     @Rule
@@ -166,5 +165,4 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
     public Lifecycle getLifecycle() {
         return registry;
     }
-
 }

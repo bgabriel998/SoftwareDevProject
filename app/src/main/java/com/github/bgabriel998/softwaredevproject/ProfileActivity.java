@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.github.giommok.softwaredevproject.Account;
@@ -19,6 +18,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -94,8 +94,8 @@ public class ProfileActivity extends AppCompatActivity {
         Log.d("CURRENT_USERNAME", "onSubmit: " + currentUsername);
         if(username.equals(currentUsername)) {
             Log.d("CURRENT_USERNAME", "onSubmit: EQUAL_CASE");
-            Toast toast = Toast.makeText(getApplicationContext(), "You can't choose the username you already have!", Toast.LENGTH_SHORT);
-            toast.show();
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "You can't choose the username you already have!" , Snackbar.LENGTH_LONG);
+            snackbar.show();
         }
         else Database.isPresent("users", "username", username, () -> usernameAlreadyPresent(username) , () -> registerUser(username));
     }
@@ -136,7 +136,7 @@ public class ProfileActivity extends AppCompatActivity {
      * This method is called during the sign-in to perform the connection with Firebase
      * @param idToken
      */
-    private void firebaseAuthWithGoogle(String idToken) {
+    public void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         FirebaseAuth.getInstance().signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -158,11 +158,11 @@ public class ProfileActivity extends AppCompatActivity {
      * This method is called when the user correctly ended the registration phase
      * @param username
      */
-    private void registerUser(String username) {
+    public void registerUser(String username) {
         // Notify the user that the username has changed
         Database.setChild("users/" + account.getId(), Arrays.asList("email", "username"), Arrays.asList(account.getEmail(), username));
-        Toast toast = Toast.makeText(getApplicationContext(), "Your username has changed!", Toast.LENGTH_SHORT);
-        toast.show();
+        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Your username has changed!" , Snackbar.LENGTH_LONG);
+        snackbar.show();
         account.synchronizeUsername();
         setUI();
     }
@@ -170,16 +170,16 @@ public class ProfileActivity extends AppCompatActivity {
     /**
      * This method is called when the desired username is already present
      */
-    private void usernameAlreadyPresent(String username) {
+    public void usernameAlreadyPresent(String username) {
         // Notify the user that the chosen username is already used
-        Toast toast = Toast.makeText(getApplicationContext(), "The username " + username + " is already used by another user. Choose a new one.", Toast.LENGTH_SHORT);
-        toast.show();
+        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "The username " + username + " is already used by another user. Choose a new one." , Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 
     /**
      * Sets what is visible on UI based on if the user is signed in or not.
      */
-    private void setUI(){
+    public void setUI(){
         findViewById(R.id.signInButton).setVisibility(account.isSignedIn() ? View.GONE : View.VISIBLE);
         findViewById(R.id.signOutButton).setVisibility(account.isSignedIn() ? View.VISIBLE : View.GONE);
         findViewById(R.id.changeUsernameButton).setVisibility(account.isSignedIn() ? View.VISIBLE : View.GONE);
@@ -190,7 +190,7 @@ public class ProfileActivity extends AppCompatActivity {
     /**
      * Sets what is visible on UI after a username change is requested or required
      */
-    private void setUsernameChoiceUI() {
+    public void setUsernameChoiceUI() {
         findViewById(R.id.signInButton).setVisibility(View.GONE);
         findViewById(R.id.signOutButton).setVisibility(View.GONE);
         findViewById(R.id.changeUsernameButton).setVisibility(View.GONE);
