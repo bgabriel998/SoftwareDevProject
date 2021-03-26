@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.ravifrancesco.softwaredevproject.GPSTracker;
+import com.github.ravifrancesco.softwaredevproject.GeoTIFFMap;
 import com.github.ravifrancesco.softwaredevproject.Point;
 import com.github.ravifrancesco.softwaredevproject.UserPoint;
 
@@ -23,6 +24,7 @@ public class Button7Activity extends AppCompatActivity implements View.OnClickLi
     TextView accuracyTV;
 
     TextView distanceTV;
+    TextView URLTV;
 
     Button getLocationButton;
 
@@ -30,6 +32,8 @@ public class Button7Activity extends AppCompatActivity implements View.OnClickLi
     Button stopTrackingButton;
 
     UserPoint userPoint;
+
+    GeoTIFFMap geoTIFFMap;
 
 
     @Override
@@ -44,11 +48,14 @@ public class Button7Activity extends AppCompatActivity implements View.OnClickLi
 
         distanceTV = findViewById(R.id.DistanceTextView);
 
+        URLTV = findViewById(R.id.URLTextView);
+
         getLocationButton = findViewById(R.id.GetLocationButton);
 
         getLocationButton.setOnClickListener(this);
 
         userPoint = new UserPoint(Button7Activity.this);
+        geoTIFFMap = new GeoTIFFMap(userPoint);
 
         try {
             if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
@@ -72,6 +79,7 @@ public class Button7Activity extends AppCompatActivity implements View.OnClickLi
             altitudeTV.setText(String.format("%.1f m", altitude));
             accuracyTV.setText(accuracy + " m");
             distanceTV.setText(String.format("%.1f km", distance/1000));
+            URLTV.setText(geoTIFFMap.generateURL().toString());
         }else{
             // display some error message
         }
