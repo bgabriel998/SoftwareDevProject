@@ -134,7 +134,7 @@ public class CameraPreview{
         double previewRatio = (double)Math.max(width, height)/Math.min(width, height);
         double RATIO_16_9_VALUE = 16.0 / 9.0;
         double RATIO_4_3_VALUE = 4.0 / 3.0;
-        if(Math.abs(previewRatio - RATIO_4_3_VALUE) <= Math.abs(previewRatio - RATIO_16_9_VALUE)){
+        return (Math.abs(previewRatio - RATIO_4_3_VALUE) <= Math.abs(previewRatio - RATIO_16_9_VALUE)) ? RATIO_4_3 : RATIO_16_9;
             return AspectRatio.RATIO_4_3;
         }
         return AspectRatio.RATIO_16_9;
