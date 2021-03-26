@@ -12,15 +12,41 @@ import android.view.View;
  */
 public class CompassView extends View {
     //Paints used to draw the lines and heading of the compass on the camera-preview
-    private Paint mainLinePaint, secondaryLinePaint, terciaryLinePaint, mainTextPaint, secondaryTextPaint;
+    private Paint mainLinePaint;
+    private Paint secondaryLinePaint;
+    private Paint terciaryLinePaint;
+    private Paint mainTextPaint;
+    private Paint secondaryTextPaint;
+
+    //Colors of the compass-view
     private int textColor;
     private int lineColor;
+
+    //Font size of the text
     private int mainTextSize;
+
+    //Heading of the user
     private float horizontalDegrees;
     private float verticalDegrees;
-    private float pixDeg, minDegrees;
+
+    //Number of pixels per degree
+    private float pixDeg;
+
+    //Range of the for-loop to draw the compass
+    private float minDegrees;
+    private float maxDegrees;
+
+    //Compass canvas
     private Canvas canvas;
-            int height;
+
+    //Heights of the compass
+    int textHeight;
+    int mainLineHeight;
+    int secondaryLineHeight;
+    int terciaryLineHeight;
+
+    //Height of the view in pixel
+    int height;
 
     /**
      * Constructor for the CompassView which initializes the widges like the font height and paints used
@@ -106,13 +132,13 @@ public class CompassView extends View {
         height = getMeasuredHeight();
         //Make the canvas take 1/5 of the screen height
         //The text is at the highest point
-        int textHeight = height - height/5;
+        textHeight = height - height/5;
         //mainLineHeight is just under the text so we add the text size
-        int mainLineHeight = textHeight + mainTextSize;
+        mainLineHeight = textHeight + mainTextSize;
         //Then increment each by mainTextSize to get the next line height
         // (the higher the result the lower the line)
-        int secondaryLineHeight = mainLineHeight + 2*mainTextSize;
-        int terciaryLineHeight = secondaryLineHeight + mainTextSize;
+        secondaryLineHeight = mainLineHeight + 2*mainTextSize;
+        terciaryLineHeight = secondaryLineHeight + mainTextSize;
 
         //Field of view of device
         //TODO get fov of device
@@ -120,11 +146,19 @@ public class CompassView extends View {
 
         //Get the starting degree and ending degree of the compass
         minDegrees = horizontalDegrees - fov/2;
-        float maxDegrees = horizontalDegrees + fov/2;
+        maxDegrees = horizontalDegrees + fov/2;
 
         //Calculate the width in pixel of one degree
         pixDeg = width/fov;
 
+        //Draws the compass
+        drawCanvas();
+    }
+
+    /**
+     * Draws the compass on the canvas
+     */
+    private void drawCanvas(){
         //Start going through the loop to draw the compass
         for(int i = (int)Math.floor(minDegrees); i <= Math.ceil(maxDegrees); i++){
 
