@@ -18,4 +18,6 @@
     <color name="LightGreen">#B9E3CF</color>
     <color name="Transparent">#00000000</color>
     <color name="Black">#000000</color>
+    <color name="White">#FFFFFF</color>
+    <color name="BabyBlue">#89CFF0</color>
 </resources>

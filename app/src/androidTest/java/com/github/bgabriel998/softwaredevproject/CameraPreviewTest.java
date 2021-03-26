@@ -165,13 +165,4 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
     public Lifecycle getLifecycle() {
         return registry;
     }
-
-//    @Test
-//    public void aspectRatioTest(){
-//        Context context = ApplicationProvider.getApplicationContext();
-//        CameraPreview preview = new CameraPreview(context);
-//        assertEquals(preview.aspectRatio(4, 3), AspectRatio.RATIO_4_3);
-//        assertEquals(preview.aspectRatio(16, 9), AspectRatio.RATIO_16_9);
-//    }
-
 }

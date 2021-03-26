@@ -6,12 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".Button1Activity">
 
+    <!-- Camera-preview -->
     <androidx.camera.view.PreviewView
         android:id="@+id/view_finder"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
     </androidx.camera.view.PreviewView>
 
+    <!-- Compass View-->
     <com.github.bgabriel998.softwaredevproject.CompassView
         android:id="@+id/compass"
         android:layout_width="match_parent"
@@ -20,5 +22,37 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <!--TextView indicates the horizontal degrees and the direction in which the user is heading-->
+    <TextView
+        android:id="@+id/headingHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:gravity="top"
+        android:textColor="@color/White"
+        android:background="@color/Black"
+        android:text=""
+        android:layout_marginStart="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <!--TextView indicates the vertical degrees-->
+    <TextView
+        android:id="@+id/headingVertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/headingHorizontal"
+        android:layout_below="@+id/headingHorizontal"
+        android:gravity="top"
+        android:textColor="@color/White"
+        android:background="@color/Black"
+        android:text=""
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/headingHorizontal"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
