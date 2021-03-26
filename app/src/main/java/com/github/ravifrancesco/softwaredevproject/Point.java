@@ -41,25 +41,10 @@ public class Point {
      */
     public double computeDistance(Point other) {
 
-        double squaredDistance;
-
         double rThis = EARTH_RADIUS + this.altitude;
         double rOther = EARTH_RADIUS + other.altitude;
 
-        double latThis = Math.toRadians(this.latitude);
-        double lonThis = Math.toRadians(this.longitude);
-
-        double latOther = Math.toRadians(other.latitude);
-        double lonOther = Math.toRadians(other.longitude);
-
-        // computing distance in spherical polar coordinates
-        squaredDistance = Math.pow(rThis, 2) + Math.pow(rOther, 2) -
-                2*rThis*rOther*(
-                        Math.cos(latThis)*Math.cos(latOther)*Math.cos(lonThis - lonOther) +
-                        Math.sin(latThis)*Math.sin(latOther)
-                );
-
-        return Math.sqrt(squaredDistance);
+        return computeSphericalDistance(other, rThis, rOther);
 
     }
 
@@ -72,10 +57,24 @@ public class Point {
      */
     public double computeFlatDistance(Point other) {
 
-        double squaredDistance;
-
         double rThis = EARTH_RADIUS;
         double rOther = EARTH_RADIUS;
+
+        return computeSphericalDistance(other, rThis, rOther);
+
+    }
+
+    /**
+     * Given the radious of the two points, it computes the distance in spherical coordinates
+     *
+     * @param other     the other point to compute the distance
+     * @param rThis     the radius of this point
+     * @param rOther    the radius of the other point
+     * @return          a value in meters representing the distance
+     */
+    private double computeSphericalDistance(Point other, double rThis, double rOther) {
+
+        double squaredDistance;
 
         double latThis = Math.toRadians(this.latitude);
         double lonThis = Math.toRadians(this.longitude);
