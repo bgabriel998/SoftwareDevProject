@@ -128,8 +128,8 @@ public class CompassView extends View {
             if (i % 90 == 0){
                 //Draw the line,
                 //startX starts with 0 at the top left corner and increases when going from left to right
-                //startY starts with 0 at the top and increases when going down
-                //-> to start at the bottom, we will use the height of the view
+                //startY starts also increases from top to bottom
+                //-> to start at the bottom, we will use the height of the compass-view
                 //stopX is the same as startX since we want to draw a vertical line
                 //stopY is the height of the canvas minus some height to leave enough space to write the heading above
                 canvas.drawLine(pixDeg * (i - minDegrees), height, pixDeg * (i - minDegrees), mainLineHeight, mainLinePaint);
@@ -159,30 +159,22 @@ public class CompassView extends View {
      */
     private String selectHeadingString(int degree){
         switch (degree){
-            case 0:
-            case 360:
+            case 0: case 360:
                 return "N";
-            case 90:
-            case 450:
+            case 90: case 450:
                 return "E";
-            case -180:
-            case 180:
+            case -180: case 180:
                 return "S";
-            case -90:
-            case 270:
+            case -90: case 270:
                 return "W";
-            case 45:
-            case 405:
+            case 45: case 405:
                 return "NE";
-            case -45:
-            case 315:
+            case -45: case 315:
                 return "NW";
-            case 135:
-            case 495:
+            case 135: case 495:
                 return "SE";
-            case -135:
-            case 225:
-                return  "SW";
+            case -135: case 225:
+                return "SW";
             default:
                 return "";
         }

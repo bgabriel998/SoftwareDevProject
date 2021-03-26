@@ -73,16 +73,12 @@ public class Compass implements SensorEventListener {
 
         //Get the accelerometer data, use filter to smooth the data
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            accMat[0] = alpha * accMat[0] + (1 - alpha) * event.values[0];
-            accMat[1] = alpha * accMat[1] + (1 - alpha) * event.values[1];
-            accMat[2] = alpha * accMat[2] + (1 - alpha) * event.values[2];
+            updateValues(accMat, event, alpha);
         }
 
         //Get the accelerometer data, use filter to smooth the data
         if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-            magMat[0] = alpha * magMat[0] + (1 - alpha) * event.values[0];
-            magMat[1] = alpha * magMat[1] + (1 - alpha) * event.values[1];
-            magMat[2] = alpha * magMat[2] + (1 - alpha) * event.values[2];
+            updateValues(magMat, event, alpha);
         }
 
         //See https://developer.android.com/reference/android/hardware/SensorManager#getRotationMatrix(float[],%20float[],%20float[],%20float[])
@@ -105,6 +101,18 @@ public class Compass implements SensorEventListener {
                 listener.onNewHeading(heading, headingV);
             }
         }
+    }
+
+    /**
+     * Update the values of the Matrices
+     * @param mat Output matrice
+     * @param event Input sensor event
+     * @param alpha factor to smooth out the sensors
+     */
+    private void updateValues(float [] mat, SensorEvent event, float alpha){
+        mat[0] = alpha * mat[0] + (1 - alpha) * event.values[0];
+        mat[1] = alpha * mat[1] + (1 - alpha) * event.values[1];
+        mat[2] = alpha * mat[2] + (1 - alpha) * event.values[2];
     }
 
     /**
