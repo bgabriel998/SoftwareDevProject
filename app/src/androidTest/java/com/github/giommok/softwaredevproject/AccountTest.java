@@ -14,6 +14,7 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public class AccountTest {
 
+
     /**
      * Testing the output are not null but actual strings with no account
      */

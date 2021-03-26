@@ -69,9 +69,9 @@ public class UserPoint extends Point {
      * PLEASE DO NOT USE THIS FUNCTION IN CODE !!!
      */
     public void updateMock(){
-        super.setLatitude(46.519251915333676);
-        super.setLongitude(6.558563221333525);
-        super.setAltitude(220);
+        super.setLatitude(45.87568373146456);
+        super.setLongitude( 6.861424540668386);
+        super.setAltitude(1300);
     }
 
     /*
