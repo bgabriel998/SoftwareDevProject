@@ -183,7 +183,7 @@ public class CompassView extends View {
                 canvas.drawText(selectHeadingString(i), pixDeg * (i - minDegrees), textHeight, secondaryTextPaint);
             }
 
-            //Draw terciary line for every 15° excluding every 45° and 90° (15, 30, 60, 75, ...)
+            //Draw tertiary line for every 15° excluding every 45° and 90° (15, 30, 60, 75, ...)
             else if (i % 15 == 0){
                 drawLine(i, terciaryLineHeight, terciaryLinePaint);
             }
