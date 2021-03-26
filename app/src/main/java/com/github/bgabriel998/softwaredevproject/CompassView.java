@@ -18,6 +18,9 @@ public class CompassView extends View {
     private int mainTextSize;
     private float horizontalDegrees;
     private float verticalDegrees;
+    private float pixDeg, minDegrees;
+    private Canvas canvas;
+            int height;
 
     /**
      * Constructor for the CompassView which initializes the widges like the font height and paints used
@@ -97,9 +100,10 @@ public class CompassView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        this.canvas = canvas;
         //Get width and height of the view in Pixels
         int width = getMeasuredWidth();
-        int height = getMeasuredHeight();
+        height = getMeasuredHeight();
         //Make the canvas take 1/5 of the screen height
         //The text is at the highest point
         int textHeight = height - height/5;
@@ -115,11 +119,11 @@ public class CompassView extends View {
         float fov = 180;
 
         //Get the starting degree and ending degree of the compass
-        float minDegrees = horizontalDegrees - fov/2;
+        minDegrees = horizontalDegrees - fov/2;
         float maxDegrees = horizontalDegrees + fov/2;
 
         //Calculate the width in pixel of one degree
-        float pixDeg = width/fov;
+        pixDeg = width/fov;
 
         //Start going through the loop to draw the compass
         for(int i = (int)Math.floor(minDegrees); i <= Math.ceil(maxDegrees); i++){
@@ -132,7 +136,7 @@ public class CompassView extends View {
                 // we will use the height of the compass-view.
                 //stopX is the same as startX since we want to draw a vertical line
                 //stopY is the height of the canvas minus some height to leave enough space to write the heading above
-                canvas.drawLine(pixDeg * (i - minDegrees), height, pixDeg * (i - minDegrees), mainLineHeight, mainLinePaint);
+                drawLine(i, mainLineHeight, mainLinePaint);
 
                 //Select the correct heading depending on the degree with selecHeadingString()
                 //Draw the heading with the mainTextPaint above the line
@@ -141,15 +145,25 @@ public class CompassView extends View {
 
             //Draw a secondary line for every 45° excluding every 90° (45°, 135°, 225° ...)
             else if (i % 45 == 0){
-                canvas.drawLine(pixDeg * (i - minDegrees), height, pixDeg * (i - minDegrees), secondaryLineHeight, secondaryLinePaint);
+                drawLine(i, secondaryLineHeight, secondaryLinePaint);
                 canvas.drawText(selectHeadingString(i), pixDeg * (i - minDegrees), textHeight, secondaryTextPaint);
             }
 
             //Draw terciary line for every 15° excluding every 45° and 90° (15, 30, 60, 75, ...)
             else if (i % 15 == 0){
-                canvas.drawLine(pixDeg * (i - minDegrees), height, pixDeg * (i - minDegrees), terciaryLineHeight, terciaryLinePaint);
+                drawLine(i, terciaryLineHeight, terciaryLinePaint);
             }
         }
+    }
+
+    /**
+     * Draws a line on the compass canvas
+     * @param degree Degree where the line needs to be drawn
+     * @param lineHeight Height of the line in pixel
+     * @param paint paint to be used
+     */
+    private void drawLine(float degree, int lineHeight, Paint paint){
+        canvas.drawLine(pixDeg * (degree - minDegrees), height, pixDeg * (degree - minDegrees), lineHeight, paint);
     }
 
     /**
