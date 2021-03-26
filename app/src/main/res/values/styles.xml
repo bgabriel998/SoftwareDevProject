@@ -85,4 +85,8 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/BabyBlue</item>
+    </style>
+
 </resources>

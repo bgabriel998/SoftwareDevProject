@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void requestCameraPermission() {
         //Create AlertDialog builder
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialogTheme);
 
         //Set title and message
         builder.setTitle("Camera permission required!");
