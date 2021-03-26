@@ -6,7 +6,7 @@
     android:layout_gravity="center"
     android:background="@drawable/button_light_grey">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
@@ -19,8 +19,7 @@
             style="@style/LightBlueText"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:paddingStart="54dp"
-            android:paddingEnd="0dp"
+            android:layout_marginStart="54dp"
             android:text="Oldenhorn" />
 
         <!-- Points -->
@@ -30,6 +29,7 @@
             android:layout_width="85dp"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:layout_alignParentEnd="true"
             android:text="90" />
-    </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>
