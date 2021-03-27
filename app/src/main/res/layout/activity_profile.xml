@@ -36,7 +36,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         style="@style/ButtonGrey"
-        android:text="Change the username"
+        android:text="@string/change_username_button"
         android:onClick="changeUsernameButton" />
 
     <Button
@@ -48,7 +48,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         style="@style/ButtonDarkGreen"
-        android:text="Submit"
+        android:text="@string/submit_username_button"
         android:onClick="submitUsernameButton" />
 
     <!-- Sign out button -->
@@ -77,7 +77,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="Insert your username here"
+        android:hint="@string/insert_username_button"
         style="@style/ButtonGrey" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -50,5 +51,16 @@ public class AccountTest {
         Database.refRoot.child("users").child("null").removeValue();
         Thread.sleep(1000);
         assertEquals(account.getUsername(), "null");
+    }
+
+    /**
+     * Testing that isValid recognizes valid strings and rejects invalid strings
+     */
+    @Test
+    public void isValidTest() {
+        List<String> invalidStrings = Arrays.asList("", null, " ", "ab", "@@@@", "1.Z" ,"....", "aaaaaaaaaaaaaaaa");
+        List<String> validStrings = Arrays.asList("abc", "null", "123", "ab_", "____", "aaaaaaaaaaaaaaa");
+        for(String s: validStrings) assertTrue(s + " is not valid.", Account.isValid(s));
+        for(String s: invalidStrings) assertFalse(s + " is valid.", Account.isValid(s));
     }
 }
