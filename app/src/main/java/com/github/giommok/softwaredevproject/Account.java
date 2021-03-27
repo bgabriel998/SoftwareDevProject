@@ -58,7 +58,6 @@ public interface Account {
      * @return true if and only if the username is valid.
      */
     public static Boolean isValid(String username) {
-        if(username == null) return false;
-        return username.matches("\\w{3,15}");
+        return username != null && username.matches("\\w{3,15}");
     }
 }

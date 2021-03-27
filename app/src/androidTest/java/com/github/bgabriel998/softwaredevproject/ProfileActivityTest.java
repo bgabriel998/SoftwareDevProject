@@ -34,7 +34,7 @@ public class ProfileActivityTest {
 
     /* Test that the toolbar title is set as expected */
     @Test
-    public void TestToolbarTitle(){
+    public void toolbarTitleTest(){
         String TOOLBAR_TITLE = "Profile";
         ViewInteraction greetingText = Espresso.onView(withId(R.id.toolbarTitle));
         greetingText.check(matches(withText(TOOLBAR_TITLE)));
@@ -42,14 +42,14 @@ public class ProfileActivityTest {
 
     /* Test that the activity finishes when the toolbar back button is pressed. */
     @Test
-    public void TestToolbarBackButton(){
+    public void toolbarBackButtonTest(){
         onView(withId(R.id.toolbarBackButton)).perform(click());
         assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
     }
 
     /* Test that if no account is signed the sign in button is visible */
     @Test
-    public void TestWithNoAccountSigned() {
+    public void withNoAccountSignedTest() {
         Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         Espresso.onView(withId(R.id.signOutButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
         Espresso.onView(withId(R.id.changeUsernameButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
@@ -59,14 +59,14 @@ public class ProfileActivityTest {
 
     /* Test that the message inviting the user to write the username in the correct box is correct */
     @Test
-    public void TestChangeUsernameText() {
+    public void changeUsernameTextTest() {
         ViewInteraction changeUsernameText = Espresso.onView(withId(R.id.editTextUsername));
         changeUsernameText.check(matches(withHint(R.string.insert_username_button)));
     }
 
     /* Test that the username choice UI is correct */
     @Test
-    public void TestChangeUsernameUI() {
+    public void changeUsernameUITest() {
         testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
         Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
         Espresso.onView(withId(R.id.signOutButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
@@ -77,7 +77,7 @@ public class ProfileActivityTest {
 
     /* Test that if the username is already present the correct message is displayed */
     @Test
-    public void TestUsernameAlreadyPresent() throws InterruptedException {
+    public void usernameAlreadyPresentTest() throws InterruptedException {
         final String usedUsername = "usernameTest";
 
         testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
@@ -93,7 +93,7 @@ public class ProfileActivityTest {
     /* Test that if the username has changed the correct message is displayed */
     /* The account created is then removed */
     @Test
-    public void TestRegisterUser() throws InterruptedException {
+    public void registerUserTest() throws InterruptedException {
         // To be sure that null user does not exists
         Database.refRoot.child("users").child("null").removeValue();
         Thread.sleep(2000);
@@ -112,7 +112,7 @@ public class ProfileActivityTest {
 
     /* Test that if the username chooses his current username the correct message is displayed */
     @Test
-    public void TestChosenCurrentUsername() throws InterruptedException {
+    public void chosenCurrentUsernameTest() throws InterruptedException {
         final String username = "null";
 
         testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
@@ -127,7 +127,7 @@ public class ProfileActivityTest {
 
     /* Test that if the username chooses an invalid username the correct message is displayed */
     @Test
-    public void TestIsNotValid() throws InterruptedException {
+    public void isNotValidTest() throws InterruptedException {
         final String username = "";
 
         testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
@@ -142,7 +142,7 @@ public class ProfileActivityTest {
 
     /* Test that UI is displayed correctly when change username button is pressed. */
     @Test
-    public void TestChangeUsernameButton() throws InterruptedException {
+    public void changeUsernameButtonTest() throws InterruptedException {
         testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
         onView(withId(R.id.changeUsernameButton)).perform(click());
         Thread.sleep(2000);
@@ -151,7 +151,7 @@ public class ProfileActivityTest {
 
     /* Test that UI is displayed correctly when sign out button is pressed. */
     @Test
-    public void TestSignOutButton() throws InterruptedException {
+    public void signOutButtonTest() throws InterruptedException {
         testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
         onView(withId(R.id.signOutButton)).perform(click());
         Thread.sleep(2000);
