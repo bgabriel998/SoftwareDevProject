@@ -10,6 +10,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.github.giommok.softwaredevproject.Database;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -83,9 +84,9 @@ public class ProfileActivityTest {
         onView(withId(R.id.editTextUsername)).perform(typeText(usedUsername));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitUsernameButton)).perform(click());
-        Thread.sleep(500);
+        Thread.sleep(2000);
         onView(withText(R.string.already_existing_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        Thread.sleep(500);
+        Thread.sleep(2000);
         Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
     }
 
@@ -95,17 +96,17 @@ public class ProfileActivityTest {
     public void TestRegisterUser() throws InterruptedException {
         // To be sure that null user does not exists
         Database.refRoot.child("users").child("null").removeValue();
-        Thread.sleep(1000);
-        final String username = "i3gn4ut34o";
+        Thread.sleep(2000);
+        final String username = "i3gn4u34o";
 
         testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
         onView(withId(R.id.editTextUsername)).perform(typeText(username));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitUsernameButton)).perform(click());
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         Database.refRoot.child("users").child("null").removeValue();
         onView(withText(R.string.available_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
@@ -118,9 +119,9 @@ public class ProfileActivityTest {
         onView(withId(R.id.editTextUsername)).perform(typeText(username));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitUsernameButton)).perform(click());
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         onView(withText(R.string.current_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
     }
 
@@ -133,9 +134,9 @@ public class ProfileActivityTest {
         onView(withId(R.id.editTextUsername)).perform(typeText(username));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitUsernameButton)).perform(click());
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         onView(withText(R.string.invalid_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
     }
 
@@ -144,7 +145,7 @@ public class ProfileActivityTest {
     public void TestChangeUsernameButton() throws InterruptedException {
         testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
         onView(withId(R.id.changeUsernameButton)).perform(click());
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         Espresso.onView(withId(R.id.submitUsernameButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
@@ -153,7 +154,7 @@ public class ProfileActivityTest {
     public void TestSignOutButton() throws InterruptedException {
         testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
         onView(withId(R.id.signOutButton)).perform(click());
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 }
