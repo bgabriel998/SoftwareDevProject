@@ -203,8 +203,7 @@ public class ProfileActivity extends AppCompatActivity {
         findViewById(R.id.signInButton).setVisibility(View.GONE);
         findViewById(R.id.signOutButton).setVisibility(View.VISIBLE);
         findViewById(R.id.changeUsernameButton).setVisibility(View.VISIBLE);
-        findViewById(R.id.submitUsernameButton).setVisibility(View.GONE);
-        findViewById(R.id.editTextUsername).setVisibility(View.GONE);
+        hideChangeUsernameButtons();
     }
 
     /**
@@ -214,6 +213,13 @@ public class ProfileActivity extends AppCompatActivity {
         findViewById(R.id.signInButton).setVisibility(View.VISIBLE);
         findViewById(R.id.signOutButton).setVisibility(View.GONE);
         findViewById(R.id.changeUsernameButton).setVisibility(View.GONE);
+        hideChangeUsernameButtons();
+    }
+
+    /**
+     * Hides the username change buttons
+     */
+    public void hideChangeUsernameButtons() {
         findViewById(R.id.submitUsernameButton).setVisibility(View.GONE);
         findViewById(R.id.editTextUsername).setVisibility(View.GONE);
     }
