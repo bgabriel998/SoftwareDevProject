@@ -188,6 +188,8 @@ public class ProfileActivity extends AppCompatActivity {
         snackbar.show();
     }
 
+    /* UI METHODS */
+
     /**
      * Sets what is visible on UI based on if the user is signed in or not.
      */
@@ -200,9 +202,7 @@ public class ProfileActivity extends AppCompatActivity {
      * Sets what is visible on UI if the user is logged
      */
     public void setLoggedUI(){
-        findViewById(R.id.signInButton).setVisibility(View.GONE);
-        findViewById(R.id.signOutButton).setVisibility(View.VISIBLE);
-        findViewById(R.id.changeUsernameButton).setVisibility(View.VISIBLE);
+        setVisibilitySignInUI(true);
         hideChangeUsernameButtons();
     }
 
@@ -210,10 +210,18 @@ public class ProfileActivity extends AppCompatActivity {
      * Sets what is visible on UI if the user is not logged
      */
     public void setNotLoggedUI(){
-        findViewById(R.id.signInButton).setVisibility(View.VISIBLE);
-        findViewById(R.id.signOutButton).setVisibility(View.GONE);
-        findViewById(R.id.changeUsernameButton).setVisibility(View.GONE);
+        setVisibilitySignInUI(false);
         hideChangeUsernameButtons();
+    }
+
+    /**
+     * Sets visibility for sign-in related buttons
+     * @param logged
+     */
+    public void setVisibilitySignInUI(Boolean logged) {
+        findViewById(R.id.signInButton).setVisibility(logged ? View.GONE : View.VISIBLE);
+        findViewById(R.id.signOutButton).setVisibility(logged ? View.VISIBLE : View.GONE);
+        findViewById(R.id.changeUsernameButton).setVisibility(logged ? View.VISIBLE : View.GONE);
     }
 
     /**
