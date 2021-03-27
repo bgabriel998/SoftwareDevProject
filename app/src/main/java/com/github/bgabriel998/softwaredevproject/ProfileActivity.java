@@ -60,6 +60,7 @@ public class ProfileActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         account = FirebaseAccount.getAccount();
+        // If the user is not logged
         if(!account.isSignedIn()) setUI();
         else {
             account.synchronizeUsername();
@@ -92,12 +93,22 @@ public class ProfileActivity extends AppCompatActivity {
         String username = ((EditText)findViewById(R.id.editTextUsername)).getText().toString();
         String currentUsername = account.getUsername();
         Log.d("CURRENT_USERNAME", "onSubmit: " + currentUsername);
-        if(username.equals(currentUsername)) {
-            Log.d("CURRENT_USERNAME", "onSubmit: EQUAL_CASE");
-            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "You can't choose the username you already have!" , Snackbar.LENGTH_LONG);
+        // First, check if the username is valid
+        if(Account.isValid(username)) {
+            // Then, check if it is already used by the user
+            if(username.equals(currentUsername)) {
+                Log.d("CURRENT_USERNAME", "onSubmit: EQUAL_CASE");
+                Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.current_username, Snackbar.LENGTH_LONG);
+                snackbar.show();
+            }
+            // Finally, check if it is available
+            else Database.isPresent("users", "username", username, () -> usernameAlreadyPresent(username), () -> registerUser(username));
+        }
+        // Display that the username is not valid
+        else {
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.invalid_username , Snackbar.LENGTH_LONG);
             snackbar.show();
         }
-        else Database.isPresent("users", "username", username, () -> usernameAlreadyPresent(username) , () -> registerUser(username));
     }
 
     /**
@@ -161,7 +172,7 @@ public class ProfileActivity extends AppCompatActivity {
     public void registerUser(String username) {
         // Notify the user that the username has changed
         Database.setChild("users/" + account.getId(), Arrays.asList("email", "username"), Arrays.asList(account.getEmail(), username));
-        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Your username has changed!" , Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.available_username , Snackbar.LENGTH_LONG);
         snackbar.show();
         account.synchronizeUsername();
         setUI();
@@ -169,20 +180,40 @@ public class ProfileActivity extends AppCompatActivity {
 
     /**
      * This method is called when the desired username is already present
+     * @param username
      */
     public void usernameAlreadyPresent(String username) {
         // Notify the user that the chosen username is already used
-        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "The username " + username + " is already used by another user. Choose a new one." , Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.already_existing_username , Snackbar.LENGTH_LONG);
         snackbar.show();
     }
 
     /**
      * Sets what is visible on UI based on if the user is signed in or not.
      */
-    public void setUI(){
-        findViewById(R.id.signInButton).setVisibility(account.isSignedIn() ? View.GONE : View.VISIBLE);
-        findViewById(R.id.signOutButton).setVisibility(account.isSignedIn() ? View.VISIBLE : View.GONE);
-        findViewById(R.id.changeUsernameButton).setVisibility(account.isSignedIn() ? View.VISIBLE : View.GONE);
+    public void setUI() {
+        if (account.isSignedIn()) setLoggedUI();
+        else setNotLoggedUI();
+    }
+
+    /**
+     * Sets what is visible on UI if the user is logged
+     */
+    public void setLoggedUI(){
+        findViewById(R.id.signInButton).setVisibility(View.GONE);
+        findViewById(R.id.signOutButton).setVisibility(View.VISIBLE);
+        findViewById(R.id.changeUsernameButton).setVisibility(View.VISIBLE);
+        findViewById(R.id.submitUsernameButton).setVisibility(View.GONE);
+        findViewById(R.id.editTextUsername).setVisibility(View.GONE);
+    }
+
+    /**
+     * Sets what is visible on UI if the user is not logged
+     */
+    public void setNotLoggedUI(){
+        findViewById(R.id.signInButton).setVisibility(View.VISIBLE);
+        findViewById(R.id.signOutButton).setVisibility(View.GONE);
+        findViewById(R.id.changeUsernameButton).setVisibility(View.GONE);
         findViewById(R.id.submitUsernameButton).setVisibility(View.GONE);
         findViewById(R.id.editTextUsername).setVisibility(View.GONE);
     }

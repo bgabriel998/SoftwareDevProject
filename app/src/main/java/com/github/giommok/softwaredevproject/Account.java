@@ -1,6 +1,5 @@
 package com.github.giommok.softwaredevproject;
 
-import android.app.Activity;
 import android.net.Uri;
 
 public interface Account {
@@ -52,4 +51,14 @@ public interface Account {
      * This method updates the username of the current account
      */
     public void synchronizeUsername();
+
+    /**
+     * Check if the username chosen by the user is valid.
+     * @param username inserted by the user.
+     * @return true if and only if the username is valid.
+     */
+    public static Boolean isValid(String username) {
+        if(username == null) return false;
+        return username.matches("\\w{3,15}");
+    }
 }
