@@ -17,10 +17,4 @@ public class RankingItem {
         this.username = username;
         this.points = points;
     }
-
-    @Override
-    public boolean equals( Object mob2) {
-        return this.username.equals( ((RankingItem) mob2).username) &&
-                this.points == ((RankingItem) mob2).points;
-    }
 }
