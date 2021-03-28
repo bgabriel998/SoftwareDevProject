@@ -2,22 +2,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="70dp"
-    android:layout_marginTop="16dp"
-    android:layout_gravity="center">
+    android:layout_gravity="center"
+    android:background="@drawable/button_light_green">
 
+
+
+    <!--
     <Button
         android:id="@+id/collected"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/button_light_green">
-    </Button>
+    </Button> -->
 
+    <!-- Container -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:elevation="3dp">
+        android:gravity="center_vertical">
 
         <!-- Mountain Name -->
         <TextView
@@ -37,6 +39,8 @@
             android:gravity="center"
             android:layout_alignParentEnd="true"
             android:text="128" />
+
     </RelativeLayout>
+
 </RelativeLayout>
 

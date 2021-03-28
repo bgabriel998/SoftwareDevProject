@@ -10,28 +10,25 @@
     <!-- Toolbar -->
     <include layout="@layout/toolbar"/>
 
-    <!-- Activity Container -->
+    <!-- Collected Collection Container -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
-        <!-- Collected Collection Container -->
-        <LinearLayout
+        <ListView
+            android:id="@+id/collection_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-            <include layout="@layout/collected_item" />
-
-        </LinearLayout>
+            android:divider="@android:color/transparent"
+            android:dividerHeight="16.0sp"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
