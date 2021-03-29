@@ -28,7 +28,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:divider="@android:color/transparent"
-            android:dividerHeight="16.0sp"/>
+            android:dividerHeight="16.0sp"
+            android:layout_marginBottom="96dp"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

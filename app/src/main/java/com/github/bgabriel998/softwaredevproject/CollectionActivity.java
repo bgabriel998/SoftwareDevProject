@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class CollectionActivity extends AppCompatActivity {
 
@@ -45,8 +46,9 @@ public class CollectionActivity extends AppCompatActivity {
     private ArrayList<CollectedItem> getCollection(){
         ArrayList<CollectedItem> collectedItems = new ArrayList<>();
 
-        collectedItems.add(new CollectedItem("TEST_Mountain", 15, 1000, 30, 60));
-        collectedItems.add(new CollectedItem("TEST_Mountain2", 12, 800, 75, 82));
+        for (int i = 0; i < 20; i++){
+            collectedItems.add(new CollectedItem(String.format(Locale.getDefault(),"TEST_Mountain%d", i), 100 - i, 1000-i, 50+i,50-i));
+        }
 
         return collectedItems;
     }

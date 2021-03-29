@@ -25,7 +25,7 @@ public class MountainActivity extends AppCompatActivity {
     }
 
     /**
-     * Setud the information on the mountain activity from data of intent.
+     * Setup the information on the mountain activity from data of intent.
      * @param intent given intent
      */
     private void setupInformation(Intent intent){
