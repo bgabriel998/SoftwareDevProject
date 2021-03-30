@@ -33,6 +33,7 @@ public class CompassView extends View {
     private float pixDeg;
 
     //Range of the for-loop to draw the compass
+    private float rangeDegrees;
     private float minDegrees;
     private float maxDegrees;
 
@@ -115,6 +116,14 @@ public class CompassView extends View {
     }
 
     /**
+     * Sets the range in degrees of the compass-view
+     * @param rangeDegrees range in degrees
+     */
+    public void setRange(float rangeDegrees) {
+        this.rangeDegrees = rangeDegrees;
+    }
+
+    /**
      * onDraw method is used to draw the compass on the screen.
      * To draw the compass, 3 different types of lines are used, mainLinePaint, secondaryLinePaint
      * and terciaryLinePaint. The compass is drawn by going through a for-loop starting from minDegree
@@ -140,16 +149,12 @@ public class CompassView extends View {
         secondaryLineHeight = mainLineHeight + 2*mainTextSize;
         terciaryLineHeight = secondaryLineHeight + mainTextSize;
 
-        //Field of view of device
-        //TODO get fov of device
-        float fov = 180;
-
         //Get the starting degree and ending degree of the compass
-        minDegrees = horizontalDegrees - fov/2;
-        maxDegrees = horizontalDegrees + fov/2;
+        minDegrees = horizontalDegrees - rangeDegrees/2;
+        maxDegrees = horizontalDegrees + rangeDegrees/2;
 
         //Calculate the width in pixel of one degree
-        pixDeg = width/fov;
+        pixDeg = width/rangeDegrees;
 
         //Draws the compass
         drawCanvas();

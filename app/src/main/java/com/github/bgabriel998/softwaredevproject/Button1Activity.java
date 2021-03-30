@@ -1,5 +1,7 @@
 package com.github.bgabriel998.softwaredevproject;
 
+import android.content.res.Configuration;
+import android.hardware.camera2.CameraAccessException;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -7,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.view.PreviewView;
+import androidx.core.util.Pair;
 
 import java.util.Locale;
 
@@ -47,12 +50,16 @@ public class Button1Activity extends AppCompatActivity {
 
         //Setup the compass
         startCompass();
+
     }
 
     /**
      * startCompass creates the compass and initializes the compass listener
      */
     public void startCompass() {
+        Pair<Float, Float> cameraFieldOfView = cameraPreview.getFieldOfView();
+        int orientation = getResources().getConfiguration().orientation;
+        compassView.setRange(orientation==Configuration.ORIENTATION_LANDSCAPE ? cameraFieldOfView.first : cameraFieldOfView.second);
         compass = new Compass(this);
         CompassListener compassListener = getCompassListener();
         compass.setListener(compassListener);
@@ -75,6 +82,8 @@ public class Button1Activity extends AppCompatActivity {
             }
         };
     }
+
+
 
     /**
      * onPause release the sensor listener from compass when user leave the application
