@@ -35,9 +35,7 @@ public class CollectionListAdapter extends ArrayAdapter<CollectedItem> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            LayoutInflater vi;
-            vi = LayoutInflater.from(mContext);
-            convertView = vi.inflate(resourceLayout, parent, false);
+            convertView = ListAdapterInflater.createLayout(resourceLayout, mContext,parent);
         }
 
         setItemText(convertView, getItem(position));
