@@ -68,6 +68,7 @@ public class CollectionActivityTest {
     /* Test that all elements in list view are at correct place and contains correct data */
     @Test
     public void TestContentOfListView(){
+        // TODO Redo test when actually using database.
         DataInteraction interaction =  onData(instanceOf(CollectedItem.class));
 
         for (int i = 0; i < 20; i++){
@@ -99,10 +100,10 @@ public class CollectionActivityTest {
 
         // Catch intent, and check information
         intended(allOf(IntentMatchers.hasComponent(MountainActivity.class.getName()),
-                        IntentMatchers.hasExtra("name", correctItem.name),
-                        IntentMatchers.hasExtra("points", correctItem.points),
-                        IntentMatchers.hasExtra("height", correctItem.height),
-                        IntentMatchers.hasExtra("longitude", correctItem.longitude),
-                        IntentMatchers.hasExtra("latitude", correctItem.latitude)));
+                        IntentMatchers.hasExtra("name", correctItem.getName()),
+                        IntentMatchers.hasExtra("points", correctItem.getPoints()),
+                        IntentMatchers.hasExtra("height", correctItem.getHeight()),
+                        IntentMatchers.hasExtra("longitude", correctItem.getLongitude()),
+                        IntentMatchers.hasExtra("latitude", correctItem.getLatitude())));
     }
 }

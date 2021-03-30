@@ -70,10 +70,10 @@ public class CollectionActivity extends AppCompatActivity {
      * @param item the given item
      */
     private void fillIntent(Intent intent, CollectedItem item) {
-        intent.putExtra("name", item.name);
-        intent.putExtra("points", item.points);
-        intent.putExtra("height", item.height);
-        intent.putExtra("longitude", item.longitude);
-        intent.putExtra("latitude", item.latitude);
+        intent.putExtra("name", item.getName());
+        intent.putExtra("points", item.getPoints());
+        intent.putExtra("height", item.getHeight());
+        intent.putExtra("longitude", item.getLongitude());
+        intent.putExtra("latitude", item.getLatitude());
     }
 }

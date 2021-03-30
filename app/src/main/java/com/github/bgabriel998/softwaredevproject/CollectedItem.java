@@ -6,11 +6,11 @@ package com.github.bgabriel998.softwaredevproject;
  * Used to fill collection list.
  */
 public class CollectedItem {
-    public String name;
-    public int points;
-    public int height;
-    public float longitude;
-    public float latitude;
+    private String name;
+    private int points;
+    private int height;
+    private float longitude;
+    private float latitude;
 
     /**
      * Constructor
@@ -26,5 +26,25 @@ public class CollectedItem {
         this.height = height;
         this.longitude = longitude;
         this.latitude = latitude;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public float getLongitude() {
+        return longitude;
+    }
+
+    public float getLatitude() {
+        return latitude;
     }
 }

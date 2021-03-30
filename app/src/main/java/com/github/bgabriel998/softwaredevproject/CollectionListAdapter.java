@@ -53,8 +53,8 @@ public class CollectionListAdapter extends ArrayAdapter<CollectedItem> {
             TextView nameText = view.findViewById(R.id.collected_name);
             TextView pointsText = view.findViewById(R.id.collected_points);
 
-            nameText.setText(item.name);
-            pointsText.setText(String.format(Locale.getDefault(), "%d", item.points));
+            nameText.setText(item.getName());
+            pointsText.setText(String.format(Locale.getDefault(), "%d", item.getPoints()));
         }
     }
 }
