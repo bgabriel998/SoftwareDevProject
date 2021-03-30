@@ -1,13 +1,14 @@
 package com.github.ravifrancesco.softwaredevproject;
 
 
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
-import androidx.test.rule.ServiceTestRule;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -22,18 +23,10 @@ import static org.junit.Assert.assertEquals;
 @MediumTest
 public class GPSTrackerTest {
 
-    @Rule
-    public final ServiceTestRule serviceRule = new ServiceTestRule();
-
     @Test
     public void testGPSTracker() throws TimeoutException {
-        serviceRule.startService(
-                new Intent(ApplicationProvider.getApplicationContext(),
-                        GPSTracker.class));
 
-        Context mContext = ApplicationProvider.getApplicationContext();
-
-        System.out.println(mContext.toString());
+        Context mContext = InstrumentationRegistry.getInstrumentation().getContext();
 
         UserPoint userPoint = new UserPoint(mContext);
         GPSTracker mGpsTracker = new GPSTracker(mContext, userPoint);

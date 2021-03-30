@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ServiceTestRule;
 
 import org.junit.Assert;
@@ -16,17 +17,10 @@ import java.util.concurrent.TimeoutException;
 
 public class UserPointTest {
 
-    @Rule
-    public final ServiceTestRule serviceRule = new ServiceTestRule();
-
     @Test
-    public void getLocationTest() throws TimeoutException {
+    public void getLocationTest() {
 
-        serviceRule.startService(
-                new Intent(ApplicationProvider.getApplicationContext(),
-                        UserPoint.class));
-
-        Context mContext = ApplicationProvider.getApplicationContext();
+        Context mContext = InstrumentationRegistry.getInstrumentation().getContext();
 
         UserPoint userPoint = new UserPoint(mContext);
 
@@ -49,11 +43,7 @@ public class UserPointTest {
     @Test
     public void setLocationTest() throws TimeoutException {
 
-        serviceRule.startService(
-                new Intent(ApplicationProvider.getApplicationContext(),
-                        UserPoint.class));
-
-        Context mContext = ApplicationProvider.getApplicationContext();
+        Context mContext = InstrumentationRegistry.getInstrumentation().getContext();
 
         UserPoint userPoint = new UserPoint(mContext);
 
