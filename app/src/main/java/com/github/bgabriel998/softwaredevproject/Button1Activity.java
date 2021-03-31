@@ -19,6 +19,8 @@ public class Button1Activity extends AppCompatActivity {
     private CompassView compassView;
     private TextView headingHorizontal;
     private TextView headingVertical;
+    private TextView fovHorizontal;
+    private TextView fovVertical;
     private Compass compass;
 
     @Override
@@ -40,6 +42,12 @@ public class Button1Activity extends AppCompatActivity {
         headingHorizontal.setVisibility(View.VISIBLE);
         headingVertical =  findViewById(R.id.headingVertical);
         headingVertical.setVisibility(View.VISIBLE);
+        // TextView that will tell the user what fov in degrees
+        // Used for demo and debug
+        fovHorizontal =  findViewById(R.id.fovHorizontal);
+        fovHorizontal.setVisibility(View.VISIBLE);
+        fovVertical =  findViewById(R.id.fovVertical);
+        fovVertical.setVisibility(View.VISIBLE);
 
         //Create compass view
         compassView = findViewById(R.id.compass);
@@ -57,6 +65,8 @@ public class Button1Activity extends AppCompatActivity {
      */
     public void startCompass() {
         Pair<Float, Float> cameraFieldOfView = cameraPreview.getFieldOfView();
+        fovHorizontal.setText(String.format(Locale.ENGLISH,"%.1f °", cameraFieldOfView.first));
+        fovVertical.setText(String.format(Locale.ENGLISH,"%.1f °", cameraFieldOfView.second));
         int orientation = getResources().getConfiguration().orientation;
         compassView.setRange(orientation==Configuration.ORIENTATION_LANDSCAPE ? cameraFieldOfView.first : cameraFieldOfView.second);
         compass = new Compass(this);
@@ -81,8 +91,6 @@ public class Button1Activity extends AppCompatActivity {
             }
         };
     }
-
-
 
     /**
      * onPause release the sensor listener from compass when user leave the application
