@@ -1,10 +1,14 @@
 package com.github.bgabriel998.softwaredevproject;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.view.Display;
+import android.view.OrientationEventListener;
+import android.view.WindowManager;
 
 public class Compass implements SensorEventListener {
 
@@ -14,6 +18,13 @@ public class Compass implements SensorEventListener {
 
     private final Sensor accelerometer;
     private final Sensor magnetometer;
+    private final Sensor rotation;
+
+    OrientationEventListener orientationEventListener;
+    private int orientation;
+
+    //Query Constants
+    private static final float ALPHA = 0.95f;
 
     //inclination Matrix
     float[] incMat = new float[9];
@@ -23,6 +34,10 @@ public class Compass implements SensorEventListener {
     private final float[] accMat = new float[3];
     //Magnetometer Matrix
     private final float[] magMat = new float[3];
+    //Quaternion matrix
+    private final float[] qMat = new float[4];
+
+
 
     /**
      * Compass constructor, initializes the device sensors and starts the compass
@@ -35,23 +50,50 @@ public class Compass implements SensorEventListener {
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         //Initialize magnetometer
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        //Initialize rotation vector
+        rotation = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
 
-        //Starts the compass
-        start();
+        //Register the listeners for the compass and the orientation
+        registerListeners(context);
     }
 
     /**
      * Register the accelerometer and magnetometer listeners
      */
-    private void start(){
-        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_FASTEST);
+    private void registerListeners(Context context){
+
+        registerOrientationListener(context);
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(this, rotation, SensorManager.SENSOR_DELAY_GAME);
+    }
+
+    private void registerOrientationListener(Context context){
+        orientationEventListener = new OrientationEventListener(context)
+        {
+            @Override
+            public void onOrientationChanged(int newOrientation){
+                if (newOrientation <= 45) {
+                    orientation = Configuration.ORIENTATION_PORTRAIT;
+                } else if (newOrientation <= 135) {
+                    orientation = Configuration.ORIENTATION_LANDSCAPE;
+                } else if (newOrientation <= 225) {
+                    orientation = Configuration.ORIENTATION_PORTRAIT;
+                } else if (newOrientation <= 315) {
+                    orientation = Configuration.ORIENTATION_LANDSCAPE;
+                } else {
+                    orientation = Configuration.ORIENTATION_PORTRAIT;
+                }
+            }
+        };
+        orientationEventListener.enable();
     }
 
     /**
      * Unregisters the sensor listener
      */
     public void stop() {
+        orientationEventListener.disable();
         sensorManager.unregisterListener(this);
     }
 
@@ -69,49 +111,100 @@ public class Compass implements SensorEventListener {
      */
     @Override
     public void onSensorChanged(SensorEvent event) {
-        final float alpha = 0.95f;
 
         //Get the accelerometer data, use filter to smooth the data
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            updateValues(accMat, event, alpha);
+            updateSensorValues(accMat, event);
         }
 
         //Get the accelerometer data, use filter to smooth the data
         if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-            updateValues(magMat, event, alpha);
+            updateSensorValues(magMat, event);
+        }
+
+        //Get the rotation vecor data
+        if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+            updateSensorValues(qMat, event);
         }
 
         //See https://developer.android.com/reference/android/hardware/SensorManager#getRotationMatrix(float[],%20float[],%20float[],%20float[])
         boolean success = SensorManager.getRotationMatrix(incMat, rotMat, accMat, magMat);
         if (success) {
-            float[] orientation = new float[3];
-            SensorManager.getOrientation(incMat, orientation);
-            float heading = (float) Math.toDegrees(orientation[0]);
-            //+90 to use the compass in landscape mode correctly
-            heading = (heading + 360 + 90) % 360;
-
-            float[] orientationVertical = new float[3];
-            SensorManager.getOrientation(rotMat, orientationVertical);
-            float headingV = (float) Math.toDegrees(orientation[2]);
-            //HeadingV to use in landscape mode correctly
-            headingV = (headingV * (-1)) % 360;
-
             //Update the horizontal and vertical heading
             if (listener != null) {
-                listener.onNewHeading(heading, headingV);
+                listener.onNewHeading(updateHeadingHorizontal(incMat, qMat), updateHeadingVertical(incMat));
             }
         }
     }
 
+    private float updateHeadingHorizontal(float[] inclinationMatrix, float[] quaternionMatrix){
+        float[] orientation = new float[3];
+        float[] quaternion = new float[4];
+        float heading;
+
+        if(this.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            SensorManager.getOrientation(inclinationMatrix, orientation);
+            heading = (float) Math.toDegrees(orientation[0]);
+            //+360 to get only positive degrees
+            //+90 to use the compass in landscape mode correctly
+            heading = (heading + 360 + 90) % 360;
+        }
+        else{
+            SensorManager.getQuaternionFromVector(quaternion, quaternionMatrix);
+            quaternionToEuler(quaternion, orientation);
+            heading = (float)Math.toDegrees(orientation[2]);
+            heading = (heading * (-1) + 360) % 360;
+        }
+        return heading;
+    }
+
+    private float updateHeadingVertical(float[] inclinationMatrix){
+        float[] orientation = new float[3];
+        float heading;
+        if(this.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            SensorManager.getOrientation(inclinationMatrix, orientation);
+            heading = (float) Math.toDegrees(orientation[2]);
+            //+360 to get only positive degrees
+            //+90 to use the compass in landscape mode correctly
+            heading = (heading * (-1));
+        }
+        else{
+            heading = (float) Math.toDegrees(SensorManager.getInclination(inclinationMatrix));
+            heading = (heading * (-1) + 360) % 360;
+        }
+        return heading;
+    }
+
+    /**
+     * Transforms a quaternion vector into Euler angles
+     * @param q float[4] quaternion vector (w, x, y, z)
+     */
+    public static void quaternionToEuler(float[] q, float[] orientation){
+        // roll (x-axis rotation)
+        double sinrCosp = 2 * (q[0] * q[1] + q[2] * q[3]);
+        double cosrCosp = 1 - 2 * (q[1] * q[1] + q[2] * q[2]);
+        orientation[0] = (float) Math.atan2(sinrCosp, cosrCosp);
+        // pitch (y-axis rotation)
+        double sinp = 2 * (q[0] * q[1] - q[2] * q[3]);
+        if (Math.abs(sinp) >= 1)
+            orientation[1] = (float) Math.copySign(Math.PI / 2, sinp); // use 90 degrees if out of range
+        else
+            orientation[1] = (float) Math.asin(sinp);
+
+        // yaw (z-axis rotation)
+        double sinyCosp = 2 * (q[0] * q[3] + q[1] * q[2]);
+        double cosyCosp = 1 - 2 * (q[2] * q[2] + q[3] * q[3]);
+        orientation[2] = (float) Math.atan2(sinyCosp, cosyCosp);
+    }
+
     /**
      * Update the values of the Matrices
-     * @param mat Output matrice
+     * @param mat Output matrix
      * @param event Input sensor event
-     * @param alpha factor to smooth out the sensors
      */
-    private void updateValues(float [] mat, SensorEvent event, float alpha){
-        for(int i=0; i<3; i++)
-            mat[i] = alpha * mat[i] + (1 - alpha) * event.values[i];
+    private void updateSensorValues(float [] mat, SensorEvent event){
+        for(int i=0; i<mat.length; i++)
+            mat[i] = ALPHA * mat[i] + (1 - ALPHA) * event.values[i];
     }
 
     /**

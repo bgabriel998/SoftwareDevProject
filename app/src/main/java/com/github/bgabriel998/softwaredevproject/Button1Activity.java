@@ -1,7 +1,6 @@
 package com.github.bgabriel998.softwaredevproject;
 
 import android.content.res.Configuration;
-import android.hardware.camera2.CameraAccessException;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
