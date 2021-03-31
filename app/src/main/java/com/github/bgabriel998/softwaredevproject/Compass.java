@@ -24,7 +24,7 @@ public class Compass implements SensorEventListener {
     private int orientation;
 
     //Query Constants
-    private static final float ALPHA = 0.95f;
+    private static final float ALPHA = 0.9f;
 
     //inclination Matrix
     float[] incMat = new float[9];
@@ -139,7 +139,7 @@ public class Compass implements SensorEventListener {
 
     private float updateHeadingHorizontal(float[] inclinationMatrix, float[] quaternionMatrix){
         float[] orientation = new float[3];
-        float[] quaternion = new float[4];
+        float[] q = new float[4];
         float heading;
 
         if(this.orientation == Configuration.ORIENTATION_LANDSCAPE){
@@ -150,9 +150,10 @@ public class Compass implements SensorEventListener {
             heading = (heading + 360 + 90) % 360;
         }
         else{
-            SensorManager.getQuaternionFromVector(quaternion, quaternionMatrix);
-            quaternionToEuler(quaternion, orientation);
-            heading = (float)Math.toDegrees(orientation[2]);
+            SensorManager.getQuaternionFromVector(q, quaternionMatrix);
+            Quaternion quaternion = new Quaternion(q);
+            EulerAngles eulerAngles = quaternion.toEulerAngles();
+            heading = (float)Math.toDegrees(eulerAngles.yaw);
             heading = (heading * (-1) + 360) % 360;
         }
         return heading;
@@ -173,28 +174,6 @@ public class Compass implements SensorEventListener {
             heading = (heading * (-1) + 360) % 360;
         }
         return heading;
-    }
-
-    /**
-     * Transforms a quaternion vector into Euler angles
-     * @param q float[4] quaternion vector (w, x, y, z)
-     */
-    public static void quaternionToEuler(float[] q, float[] orientation){
-        // roll (x-axis rotation)
-        double sinrCosp = 2 * (q[0] * q[1] + q[2] * q[3]);
-        double cosrCosp = 1 - 2 * (q[1] * q[1] + q[2] * q[2]);
-        orientation[0] = (float) Math.atan2(sinrCosp, cosrCosp);
-        // pitch (y-axis rotation)
-        double sinp = 2 * (q[0] * q[1] - q[2] * q[3]);
-        if (Math.abs(sinp) >= 1)
-            orientation[1] = (float) Math.copySign(Math.PI / 2, sinp); // use 90 degrees if out of range
-        else
-            orientation[1] = (float) Math.asin(sinp);
-
-        // yaw (z-axis rotation)
-        double sinyCosp = 2 * (q[0] * q[3] + q[1] * q[2]);
-        double cosyCosp = 1 - 2 * (q[2] * q[2] + q[3] * q[3]);
-        orientation[2] = (float) Math.atan2(sinyCosp, cosyCosp);
     }
 
     /**
