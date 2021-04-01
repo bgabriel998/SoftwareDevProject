@@ -2,8 +2,12 @@ package com.github.giommok.softwaredevproject;
 
 import android.net.Uri;
 
+import androidx.test.espresso.core.internal.deps.guava.cache.Cache;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.google.firebase.database.DatabaseReference;
+
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -13,6 +17,16 @@ import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
 public class AccountTest {
+
+
+    /**
+     * Cleanup database after testing
+     */
+    @After
+    public void cleanup(){
+        //Remove test child
+        Database.refRoot.child("users").child("null").removeValue();
+    }
 
 
     /**
@@ -51,4 +65,82 @@ public class AccountTest {
         Thread.sleep(1000);
         assertEquals(account.getUsername(), "null");
     }
+
+
+    /**
+     * Test the set and get user score method. Check if the given input is effectively
+     * written to the database
+     */
+    @Test
+    public void setAndGetUserScoreTest() throws InterruptedException{
+        Database.setChild("users/null", Arrays.asList("username"), Arrays.asList("usernameTest4"));
+        Thread.sleep(1000);
+        Account account = Account.getAccount();
+        account.setUserScore(200000);
+        Thread.sleep(1000);
+        assertEquals(account.getUserScore(),200000);
+        //Remove test child
+    }
+
+    /**
+     * test user score synchronization between database and account class
+     */
+    @Test
+    public void synchronizeUserScoreTest()throws InterruptedException{
+        // To be sure that null user does not exists
+        Database.refRoot.child("users").child("null").removeValue();
+        Thread.sleep(1000);
+        Database.setChild("users/null", Arrays.asList("username"), Arrays.asList("usernameTest3"));
+
+        //Set user score to zero
+        Account account = Account.getAccount();
+        DatabaseReference refAdd = Database.refRoot.child("users/");
+        refAdd.child(account.getId()).child("score").setValue(0);
+        Thread.sleep(1000);
+
+        account.synchronizeUserScore();
+        refAdd.child(account.getId()).child("score").setValue(200000);
+
+        Thread.sleep(4000);
+        assertEquals(account.getUserScore(), 200000);
+
+    }
+
+
+    /**
+     * Test that the set and get discovered country high points effectively writes and retrieves
+     * data to/from the database
+     */
+    @Test
+    public void setAndGetDiscoveredCountryHighPoints()throws InterruptedException{
+        Database.setChild("users/null", Arrays.asList("username"), Arrays.asList("usernameTest4"));
+        Thread.sleep(1000);
+        Account account = Account.getAccount();
+        CacheEntry newEntry = new CacheEntry("France","Mont Blanc",4810);
+        account.setDiscoveredCountryHighPoint(newEntry);
+        Thread.sleep(1000);
+        assertEquals(account.getDiscoveredCountryHighPoint().get("France").toString(),newEntry.toString());
+    }
+
+
+    @Test
+    public void synchronizeDiscoveredCountryHighPointsTest() throws InterruptedException{
+        Database.setChild("users/null", Arrays.asList("username"), Arrays.asList("usernameTest4"));
+        Thread.sleep(1000);
+        Account account = Account.getAccount();
+        CacheEntry newEntry = new CacheEntry("France","Mont Blanc",4810);
+        //Add sync call back
+        account.synchronizeDiscoveredCountryHighPoints();
+
+        Thread.sleep(1000);
+        //Set value to the database manually
+        DatabaseReference refAdd = Database.refRoot.child("users/");
+        refAdd.child("null").child("CountryHighPoint").push().setValue(newEntry);
+
+        Thread.sleep(1000);
+        String s1 = account.getDiscoveredCountryHighPoint().get("France").toString();
+        String s2 = newEntry.toString();
+        assertEquals(s1,s2);
+    }
+
 }
