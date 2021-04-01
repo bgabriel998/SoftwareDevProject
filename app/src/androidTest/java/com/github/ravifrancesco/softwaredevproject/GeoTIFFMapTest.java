@@ -3,8 +3,11 @@ package com.github.ravifrancesco.softwaredevproject;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Looper;
+import android.util.Log;
 
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ServiceTestRule;
 
 import org.junit.Assert;
@@ -15,18 +18,10 @@ import java.util.concurrent.TimeoutException;
 
 public class GeoTIFFMapTest {
 
-    /*
-
-    @Rule
-    public final ServiceTestRule serviceRule = new ServiceTestRule();
-
     @Test
     public void geoTIFFConstructorTest() throws TimeoutException {
-        serviceRule.startService(
-                new Intent(ApplicationProvider.getApplicationContext(),
-                        GPSTracker.class));
 
-        Context mContext = ApplicationProvider.getApplicationContext();
+        Context mContext = InstrumentationRegistry.getInstrumentation().getContext();
 
         UserPoint userPoint = new UserPoint(mContext);
 
@@ -38,12 +33,9 @@ public class GeoTIFFMapTest {
     }
 
     @Test
-    public void getTopographyMapBitmap() throws TimeoutException {
-        serviceRule.startService(
-                new Intent(ApplicationProvider.getApplicationContext(),
-                        GPSTracker.class));
+    public void getTopographyMapBitmap() throws TimeoutException, InterruptedException {
 
-        Context mContext = ApplicationProvider.getApplicationContext();
+        Context mContext = InstrumentationRegistry.getInstrumentation().getContext();
 
         // setting everest location
         UserPoint userPoint = new UserPoint(mContext);
@@ -59,11 +51,8 @@ public class GeoTIFFMapTest {
 
     @Test
     public void updateMapTest() throws TimeoutException {
-        serviceRule.startService(
-                new Intent(ApplicationProvider.getApplicationContext(),
-                        GPSTracker.class));
 
-        Context mContext = ApplicationProvider.getApplicationContext();
+        Context mContext = InstrumentationRegistry.getInstrumentation().getContext();
 
         UserPoint userPoint = new UserPoint(mContext);
         userPoint.setLocation(GPSTracker.DEFAULT_LAT, GPSTracker.DEFAULT_LON,GPSTracker.DEFAULT_ALT, GPSTracker.DEFAULT_ACC);
@@ -78,10 +67,8 @@ public class GeoTIFFMapTest {
 
         // checking if the map returned is the same
         Bitmap topographyMapBitmapB = geoTIFFMap.getTopographyMapBitmap();
-        Assert.assertTrue(topographyMapBitmapA.sameAs(topographyMapBitmapB));
+        Assert.assertFalse(topographyMapBitmapA.sameAs(topographyMapBitmapB));
 
     }
-
-     */
 
 }

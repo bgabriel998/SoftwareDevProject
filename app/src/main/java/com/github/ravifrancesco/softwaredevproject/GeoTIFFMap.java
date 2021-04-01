@@ -6,6 +6,8 @@ import android.media.Image;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.squareup.picasso.Picasso;
+
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
@@ -14,6 +16,9 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
 
 public class GeoTIFFMap {
 
@@ -34,20 +39,16 @@ public class GeoTIFFMap {
     public GeoTIFFMap(UserPoint userPoint) {
         this.userPoint = userPoint;
         this.boundingBox = userPoint.computeBoundingBox(BOUNDING_BOX_RANGE);
-        //downloadTopographyMap();
+        downloadTopographyMap();
     }
 
     private void downloadTopographyMap() {
         URL url = generateURL();
         try {
-            HttpURLConnection connection = (HttpURLConnection) url
-                    .openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            topographyMapBitmap = BitmapFactory.decodeStream(input);
+            Log.d("3D MAP", "Downloading");
+            topographyMapBitmap = Picasso.get().load(url.toString()).get();
         } catch (IOException e) {
-            Log.d("3D MAP DOWNLOAD", "Failed");
+            Log.d("3D MAP", "Download Failed");
             e.printStackTrace();
         }
     }
@@ -61,12 +62,17 @@ public class GeoTIFFMap {
 
     private void updateBoundingBox() {
 
+        Log.d("3D MAP",  "Updating");
         POIPoint oldBoundingCenter = new POIPoint(boundingBox.getCenterWithDateLine());
+        Log.d("3D MAP", "Distance from old bounding center: " + userPoint.computeFlatDistance(oldBoundingCenter));
 
         if (userPoint.computeFlatDistance(oldBoundingCenter) > MINIMUM_DISTANCE_FOR_UPDATE) {
+            Log.d("3D MAP",  "New Map download");
             boundingBox = userPoint.computeBoundingBox(BOUNDING_BOX_RANGE);
             downloadTopographyMap();
         }
+
+        Log.d("3D MAP",  "Finished updating");
 
     }
 
@@ -86,7 +92,7 @@ public class GeoTIFFMap {
                             "west=" + west + "&" +
                             "east=" + east + "&" +
                             "outputFormat=" + OUTPUT_FORMAT);
-            Log.d("GENERATED URL", url.toString());
+            Log.d("3D MAP", "Generated url: " + url.toString());
             return url;
         } catch (MalformedURLException e) {
             e.printStackTrace();
