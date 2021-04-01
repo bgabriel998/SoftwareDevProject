@@ -18,8 +18,13 @@ public class RankingListAdapter extends ArrayAdapter<RankingItem> {
     private final int resourceLayout;
     private final Context mContext;
 
-    public RankingListAdapter(Context context, int resource, List<RankingItem> items)
-    {
+    /**
+     * Constructor
+     * @param context the context
+     * @param resource the resource layout to create list items of
+     * @param items list items.
+     */
+    public RankingListAdapter(Context context, int resource, List<RankingItem> items) {
         super(context, resource, items);
         resourceLayout = resource;
         mContext = context;

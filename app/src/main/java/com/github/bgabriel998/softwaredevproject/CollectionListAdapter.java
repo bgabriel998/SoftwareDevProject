@@ -18,8 +18,13 @@ public class CollectionListAdapter extends ArrayAdapter<CollectedItem> {
     private final int resourceLayout;
     private final Context mContext;
 
-    public CollectionListAdapter(Context context, int resource, List<CollectedItem> items)
-    {
+    /**
+     * Constructor
+     * @param context the context
+     * @param resource the resource layout to create list items of
+     * @param items list items.
+     */
+    public CollectionListAdapter(Context context, int resource, List<CollectedItem> items) {
         super(context, resource, items);
         resourceLayout = resource;
         mContext = context;
