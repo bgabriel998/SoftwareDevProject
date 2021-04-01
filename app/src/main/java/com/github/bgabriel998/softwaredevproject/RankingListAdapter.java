@@ -75,7 +75,6 @@ public class RankingListAdapter extends ArrayAdapter<RankingItem> {
         int backgroundColor = R.color.LightGrey;
         int textStyle = R.style.DarkGreenText;
 
-        // TODO Check for actual username
         if (item.getUid().equals(Account.getAccount().getId())) {
             backgroundColor = R.color.DarkGreen;
             textStyle = R.style.LightGreyText;
