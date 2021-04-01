@@ -6,6 +6,9 @@ import android.util.Log;
 import androidx.test.core.app.ApplicationProvider;
 
 import static org.junit.Assert.assertEquals;
+
+import com.github.giommok.softwaredevproject.Database;
+import com.github.giommok.softwaredevproject.FirebaseAccount;
 import com.github.giommok.softwaredevproject.ScoringConstants;
 import com.github.giommok.softwaredevproject.UserScore;
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
@@ -30,7 +33,8 @@ public class UserScoreTest {
     public static void setup(){
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
-        userScore = new UserScore(context,USER_ID);
+        FirebaseAccount account = FirebaseAccount.getAccount();
+        userScore = new UserScore(context,account);
     }
 
     /**
@@ -62,34 +66,18 @@ public class UserScoreTest {
         inputArrayList.add(point_3);
         inputArrayList.add(point_4);
 
-        long newScore = userScore.computeUserScore(inputArrayList);
+
+        userScore.updateUserScore(inputArrayList);
         long expectedUserScore = (long)(point_1.getAltitude() * ScoringConstants.PEAK_FACTOR +
                                 point_2.getAltitude() * ScoringConstants.PEAK_FACTOR +
                                 point_3.getAltitude() * ScoringConstants.PEAK_FACTOR +
                                 point_4.getAltitude() * ScoringConstants.PEAK_FACTOR)+
                                 ScoringConstants.BONUS_COUNTRY_TALLEST_PEAK;
 
-        assertEquals(expectedUserScore,newScore);
+        assertEquals(expectedUserScore,FirebaseAccount.getAccount().getUserScore());
+        //remove child from database
+        Database.refRoot.child("users").child("null").removeValue();
     }
 
-    /**
-     * Retrieve user score from the database
-     * /!\ Not implemented yet
-     */
-    @Test
-    public void retrieveUserScoreTest(){
-        userScore.retrieveUserScore();
-        //TODO Implement this test
-    }
-
-    /**
-     * update user score in the database
-     * /!\ Not implemented yet
-     */
-    @Test
-    public void updateUserScoreTest(){
-        userScore.retrieveUserScore();
-        //TODO Implement this test
-    }
 
 }
