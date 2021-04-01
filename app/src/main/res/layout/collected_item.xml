@@ -5,6 +5,7 @@
     android:layout_gravity="center"
     android:background="@drawable/button_light_green">
 
+    <!-- TODO Remove extra layout if no test for color is needed -->
     <!-- Container -->
     <RelativeLayout
         android:layout_width="match_parent"
@@ -17,6 +18,7 @@
             style="@style/DarkGreenText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxWidth="200dp"
             android:layout_marginStart="54dp"
             android:text="" />
 
