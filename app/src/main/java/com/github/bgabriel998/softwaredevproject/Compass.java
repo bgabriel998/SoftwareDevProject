@@ -23,8 +23,6 @@ public class Compass implements SensorEventListener {
     //orientation vector
     private final float[] orientationVector = new float[4];
 
-
-
     /**
      * Compass constructor, initializes the device sensors and registers the listener
      * @param context Context of the activity
@@ -58,14 +56,14 @@ public class Compass implements SensorEventListener {
     /**
      * Handle sensor changes for the rotation type vector
      * TYPE_ROTATION_VECTOR combines the accelerometer, magnetometer and gyroscope
-     * to get the best value and eliminates the gimbal lock
+     * to get the best values and eliminates the gimbal lock
      * @param event contains the data that has changed
      */
     @Override
     public void onSensorChanged(SensorEvent event) {
         //Get the rotation vector data
         if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
-            //Filter the event.values
+            //Apply low-pass filter to the event.values
             updateSensorValues(orientationVector, event);
 
             //Matrix to cache the rotation vector

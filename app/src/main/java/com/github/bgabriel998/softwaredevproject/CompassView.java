@@ -18,6 +18,8 @@ public class CompassView extends View {
     private Paint mainTextPaint;
     private Paint secondaryTextPaint;
 
+    private final int MAX_ALPHA = 255;
+
     //Colors of the compass-view
     private int textColor;
     private int lineColor;
@@ -70,36 +72,41 @@ public class CompassView extends View {
 
         //Initialize fonts
         float screenDensity = getResources().getDisplayMetrics().scaledDensity;
-        mainTextSize = (int) (15 * screenDensity);
-        int secondaryTextSize = (int) (12 * screenDensity);
+        mainTextSize = (int) (20 * screenDensity);
+        int secondaryTextSize = (int) (15 * screenDensity);
 
         //Initialize paints
-        //Paint used for the mian text heading (N, E, S, W)
+        //Paint used for the main text heading (N, E, S, W)
         mainTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mainTextPaint.setTextAlign(Paint.Align.CENTER);
         mainTextPaint.setColor(textColor);
         mainTextPaint.setTextSize(mainTextSize);
+        mainTextPaint.setAlpha(MAX_ALPHA);
 
         //Paint used for the secondary text heading (NE, SE, SW, NW)
         secondaryTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         secondaryTextPaint.setTextAlign(Paint.Align.CENTER);
         secondaryTextPaint.setColor(textColor);
         secondaryTextPaint.setTextSize(secondaryTextSize);
+        secondaryTextPaint.setAlpha(MAX_ALPHA);
 
         //Paint used for the main lines (0°, 90°, 180°, ...)
         mainLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mainLinePaint.setStrokeWidth(8f);
+        mainLinePaint.setStrokeWidth(5*screenDensity);
         mainLinePaint.setColor(lineColor);
+        mainLinePaint.setAlpha(MAX_ALPHA);
 
         //Paint used for the secondary lines (45°, 135°, 225°, ...)
         secondaryLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        secondaryLinePaint.setStrokeWidth(6f);
+        secondaryLinePaint.setStrokeWidth(3*screenDensity);
         secondaryLinePaint.setColor(lineColor);
+        secondaryLinePaint.setAlpha(MAX_ALPHA);
 
         //Paint used for the terciary lines (15°, 30°, 60°, 75°, 105°, ...)
         terciaryLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        terciaryLinePaint.setStrokeWidth(3f);
+        terciaryLinePaint.setStrokeWidth(2*screenDensity);
         terciaryLinePaint.setColor(lineColor);
+        terciaryLinePaint.setAlpha(MAX_ALPHA);
     }
 
     /**
@@ -142,11 +149,12 @@ public class CompassView extends View {
         //Make the canvas take 1/5 of the screen height
         //The text is at the highest point
         textHeight = height - height/5;
-        //mainLineHeight is just under the text so we add the text size
-        mainLineHeight = textHeight + mainTextSize;
+        //mainLineHeight is just under the text
+        //The text is centered thus we add the textsize divided by 2
+        mainLineHeight = textHeight + mainTextSize/2;
         //Then increment each by mainTextSize to get the next line height
         // (the higher the result the lower the line)
-        secondaryLineHeight = mainLineHeight + 2*mainTextSize;
+        secondaryLineHeight = mainLineHeight + mainTextSize;
         terciaryLineHeight = secondaryLineHeight + mainTextSize;
 
         //Get the starting degree and ending degree of the compass
