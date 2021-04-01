@@ -18,8 +18,6 @@ public class CompassView extends View {
     private Paint mainTextPaint;
     private Paint secondaryTextPaint;
 
-    private final int MAX_ALPHA = 255;
-
     //Colors of the compass-view
     private int textColor;
     private int lineColor;
@@ -81,6 +79,7 @@ public class CompassView extends View {
         mainTextPaint.setTextAlign(Paint.Align.CENTER);
         mainTextPaint.setColor(textColor);
         mainTextPaint.setTextSize(mainTextSize);
+        int MAX_ALPHA = 255;
         mainTextPaint.setAlpha(MAX_ALPHA);
 
         //Paint used for the secondary text heading (NE, SE, SW, NW)

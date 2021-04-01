@@ -57,27 +57,43 @@ public class Button1Activity extends AppCompatActivity {
 
         //Setup the compass
         startCompass();
-
     }
 
     /**
      * startCompass creates the compass and initializes the compass listener
      */
     public void startCompass() {
+        //Get the fov of the camera
         Pair<Float, Float> cameraFieldOfView = cameraPreview.getFieldOfView();
+
+        //Set text for demo/debug
         fovHorizontal.setText(String.format(Locale.ENGLISH,"%.1f °", cameraFieldOfView.first));
         fovVertical.setText(String.format(Locale.ENGLISH,"%.1f °", cameraFieldOfView.second));
+
+        //Get device orientation
         int orientation = getResources().getConfiguration().orientation;
-        compassView.setRange(orientation==Configuration.ORIENTATION_LANDSCAPE ? cameraFieldOfView.first : cameraFieldOfView.second);
+
+        if(cameraFieldOfView.first != null && cameraFieldOfView.second != null){
+            //Set range depending on the camera fov
+            //Switch horizontal and vertical fov depending on the orientation
+            compassView.setRange(orientation==Configuration.ORIENTATION_LANDSCAPE ?
+                    cameraFieldOfView.first : cameraFieldOfView.second);
+        }
+
+        //Create new compass
         compass = new Compass(this);
+
+        //Create compass listener
         CompassListener compassListener = getCompassListener();
+
+        //Bind the compassListener with the compass
         compass.setListener(compassListener);
     }
 
     /**
      * getCompassListener returns a CompassListener which updates the compass view and the textviews
      * with the actual heading
-     * @return
+     * @return CompassListener for the compass
      */
     private CompassListener getCompassListener() {
         return new CompassListener() {
@@ -123,7 +139,6 @@ public class Button1Activity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         cameraPreview.destroy();
         compass.stop();
     }
