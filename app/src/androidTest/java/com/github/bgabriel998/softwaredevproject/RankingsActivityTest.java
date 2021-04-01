@@ -9,11 +9,16 @@ import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.github.giommok.softwaredevproject.Database;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.Arrays;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -35,6 +40,14 @@ public class RankingsActivityTest {
     @Rule
     public ActivityScenarioRule<RankingsActivity> testRule = new ActivityScenarioRule<>(RankingsActivity.class);
 
+    /* Make sure that mock users are not on the database after a test */
+    @After
+    public void removeTestUsers() throws InterruptedException {
+        Database.refRoot.child("users").child("null").removeValue();
+        Database.refRoot.child("users").child("test").removeValue();
+        Thread.sleep(500);
+    }
+
     /* Test that the toolbar title is set as expected */
     @Test
     public void TestToolbarTitle(){
@@ -50,57 +63,63 @@ public class RankingsActivityTest {
         assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
     }
 
-    /* Test that all elements in list view are at correct place and contains correct data */
+    /* Test that a mock user in list view is at correct place and contains correct data */
     @Test
-    public void TestContentOfListView(){
+    public void TestContentOfListView() throws InterruptedException {
+        // Set up the test
+        final Integer MAXIMUM_POINTS = Integer.MAX_VALUE;
+        final String TESTING_USERNAME = "invalid##username@";
+        final Integer FIRST_POSITION = 1;
+
+        // Add the mock user on the database
+        Database.setChild("users/null", Arrays.asList("username", "score"), Arrays.asList(TESTING_USERNAME, MAXIMUM_POINTS));
+        Thread.sleep(1000);
         DataInteraction interaction =  onData(instanceOf(RankingItem.class));
+        DataInteraction listItem = interaction.atPosition(0);
 
-        for (int i = 0; i < 20; i++){
-            DataInteraction listItem = interaction.atPosition(i);
-
-            String position = String.format("%d.", i+1);
-            String username = String.format("Username%d", i);
-            String points = String.format("%d", 100 - i);
-
-            listItem.onChildView(withId(R.id.ranking_item_position))
-                    .check(matches(withText(position)));
-            listItem.onChildView(withId(R.id.ranking_item_username))
-                    .check(matches(withText(username)));
-            listItem.onChildView(withId(R.id.ranking_item_points))
-                    .check(matches(withText(points)));
-        }
+        // Check correct data
+        listItem.onChildView(withId(R.id.ranking_item_position))
+                .check(matches(withText(String.format("%d.", FIRST_POSITION))));
+        listItem.onChildView(withId(R.id.ranking_item_username))
+                .check(matches(withText(TESTING_USERNAME)));
+        listItem.onChildView(withId(R.id.ranking_item_points))
+                .check(matches(withText(String.format("%d", MAXIMUM_POINTS))));
     }
 
     /* Test that all elements colors in list view */
     @Test
-    public void TestColorOfListView(){
+    public void TestColorOfListView() throws InterruptedException {
+        // Set up the test
+        final Integer MAXIMUM_POINTS = Integer.MAX_VALUE;
+        final String TESTING_USERNAME = "invalid##username@";
+        final Integer FIRST_POSITION = 0;
+
+        // Add the mock users on the database
+        Database.setChild("users/null", Arrays.asList("username", "score"), Arrays.asList(TESTING_USERNAME, MAXIMUM_POINTS));
+        Database.setChild("users/test", Arrays.asList("username", "score"), Arrays.asList(TESTING_USERNAME, MAXIMUM_POINTS-1));
+        Thread.sleep(1000);
         DataInteraction interaction =  onData(instanceOf(RankingItem.class));
 
-        for (int i = 0; i < 20; i++){
-            DataInteraction listItem = interaction.atPosition(i);
+        // Check correct colors on current fake user
+        DataInteraction listItem = interaction.atPosition(FIRST_POSITION);
+        listItem.onChildView(withId(R.id.ranking_item_container))
+                .check(matches(withBackgroundColor(R.color.DarkGreen)));
+        listItem.onChildView(withId(R.id.ranking_item_position))
+                .check(matches(withTextColor(R.color.LightGrey)));
+        listItem.onChildView(withId(R.id.ranking_item_username))
+                .check(matches(withTextColor(R.color.LightGrey)));
+        listItem.onChildView(withId(R.id.ranking_item_points))
+                .check(matches(withTextColor(R.color.LightGrey)));
 
-            // Test users own ranking item
-            if (i == 2) {
-                listItem.onChildView(withId(R.id.ranking_item_container))
-                        .check(matches(withBackgroundColor(R.color.DarkGreen)));
-                listItem.onChildView(withId(R.id.ranking_item_position))
-                        .check(matches(withTextColor(R.color.LightGrey)));
-                listItem.onChildView(withId(R.id.ranking_item_username))
-                        .check(matches(withTextColor(R.color.LightGrey)));
-                listItem.onChildView(withId(R.id.ranking_item_points))
-                        .check(matches(withTextColor(R.color.LightGrey)));
-            }
-            // Test all other ranking items
-            else {
-                listItem.onChildView(withId(R.id.ranking_item_container))
-                        .check(matches(withBackgroundColor(R.color.LightGrey)));
-                listItem.onChildView(withId(R.id.ranking_item_position))
-                        .check(matches(withTextColor(R.color.DarkGreen)));
-                listItem.onChildView(withId(R.id.ranking_item_username))
-                        .check(matches(withTextColor(R.color.DarkGreen)));
-                listItem.onChildView(withId(R.id.ranking_item_points))
-                        .check(matches(withTextColor(R.color.DarkGreen)));
-            }
-        }
+        // Check correct colors on other fake user
+        listItem = interaction.atPosition(FIRST_POSITION+1);
+        listItem.onChildView(withId(R.id.ranking_item_container))
+                .check(matches(withBackgroundColor(R.color.LightGrey)));
+        listItem.onChildView(withId(R.id.ranking_item_position))
+                .check(matches(withTextColor(R.color.DarkGreen)));
+        listItem.onChildView(withId(R.id.ranking_item_username))
+                .check(matches(withTextColor(R.color.DarkGreen)));
+        listItem.onChildView(withId(R.id.ranking_item_points))
+                .check(matches(withTextColor(R.color.DarkGreen)));
     }
 }
