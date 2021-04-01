@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.github.giommok.softwaredevproject.Account;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -74,7 +76,7 @@ public class RankingListAdapter extends ArrayAdapter<RankingItem> {
         int textStyle = R.style.DarkGreenText;
 
         // TODO Check for actual username
-        if (item.username.equals("Username2")) {
+        if (item.getUid().equals(Account.getAccount().getId())) {
             backgroundColor = R.color.DarkGreen;
             textStyle = R.style.LightGreyText;
         }
@@ -93,7 +95,7 @@ public class RankingListAdapter extends ArrayAdapter<RankingItem> {
      */
     private void setItemText(TextView[] textViews, RankingItem item, int position) {
         textViews[0].setText(String.format(Locale.getDefault(), "%d.", position));
-        textViews[1].setText(item.username);
-        textViews[2].setText(String.format(Locale.getDefault(), "%d", item.points));
+        textViews[1].setText(item.getUsername());
+        textViews[2].setText(String.format(Locale.getDefault(), "%d", item.getPoints()));
     }
 }
