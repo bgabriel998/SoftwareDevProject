@@ -114,7 +114,8 @@ public class AccountTest {
         account.synchronizeUserScore();
         refAdd.child(account.getId()).child("score").setValue(200000);
 
-        Thread.sleep(4000);
+        Thread.sleep(1000);
+
         assertEquals(account.getUserScore(), 200000);
 
     }
