@@ -91,7 +91,6 @@ public class AccountTest {
     @Test
     public void synchronizeUserScoreTest()throws InterruptedException{
         // To be sure that null user does not exists
-        Database.refRoot.child("users").child("null").removeValue();
         Thread.sleep(1000);
         Database.setChild("users/null", Arrays.asList("username"), Arrays.asList("usernameTest3"));
 
