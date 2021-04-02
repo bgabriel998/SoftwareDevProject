@@ -1,7 +1,10 @@
 package com.github.bgabriel998.softwaredevproject;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.widget.TextView;
 
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -10,6 +13,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.Locale;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -22,15 +27,30 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class MountainActivityTest {
 
+    private static final String testName = "TEST_NAME";
+    private static final int testPoints = 100;
+    private static final int testHeight = 1000;
+    private static final float testLongitude = 40;
+    private static final float testLatitude = 60;
+
+    static Intent intent;
+    static {
+        intent = new Intent(ApplicationProvider.getApplicationContext(), MountainActivity.class);
+        intent.putExtra("name", testName);
+        intent.putExtra("points", testPoints);
+        intent.putExtra("height", testHeight);
+        intent.putExtra("longitude", testLongitude);
+        intent.putExtra("latitude", testLatitude);
+    }
+
     @Rule
-    public ActivityScenarioRule<MountainActivity> testRule = new ActivityScenarioRule<>(MountainActivity.class);
+    public ActivityScenarioRule<MountainActivity> testRule = new ActivityScenarioRule<>(intent);
 
     /* Test that the toolbar title is set as expected */
     @Test
     public void TestToolbarTitle(){
-        String TOOLBAR_TITLE = "Diablerets";
-        ViewInteraction greetingText = Espresso.onView(withId(R.id.toolbarTitle));
-        greetingText.check(matches(withText(TOOLBAR_TITLE)));
+        ViewInteraction toolbarTitle = Espresso.onView(withId(R.id.toolbarTitle));
+        toolbarTitle.check(matches(withText(testName)));
     }
 
     /* Test that the activity finishes when the toolbar back button is pressed. */
@@ -38,5 +58,27 @@ public class MountainActivityTest {
     public void TestToolbarBackButton(){
         onView(withId(R.id.toolbarBackButton)).perform(click());
         assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
+    }
+
+    /* Test that the points text is set as expected */
+    @Test
+    public void TestPointsText(){
+        ViewInteraction pointText = Espresso.onView(withId(R.id.pointText));
+        pointText.check(matches(withText(String.format(Locale.getDefault(), " %d", testPoints))));
+    }
+
+    /* Test that the height text is set as expected */
+    @Test
+    public void TestHeightText(){
+        ViewInteraction heightText = Espresso.onView(withId(R.id.heightText));
+        heightText.check(matches(withText(String.format(Locale.getDefault(), " %d", testHeight))));
+    }
+
+    /* Test that the position text is set as expected */
+    @Test
+    public void TestPositionText(){
+        ViewInteraction positionText = Espresso.onView(withId(R.id.positionText));
+        positionText.check(matches(withText(String.format(Locale.getDefault(), " (%.2f, %.2f)",
+                                                        testLongitude, testLatitude))));
     }
 }

@@ -43,7 +43,7 @@ public class RankingsActivity extends AppCompatActivity {
      * Fetch ListView and setup it upp with a ranking item list adapter.
      */
     private void fillRankingsList(){
-        ListView rankingsListView = (ListView) findViewById(R.id.rankings_list_view);
+        ListView rankingsListView = findViewById(R.id.rankings_list_view);
 
         RankingListAdapter listAdapter = new RankingListAdapter(this,
                 R.layout.ranking_item,
@@ -56,6 +56,7 @@ public class RankingsActivity extends AppCompatActivity {
     /**
      * Update the ranking whenever the DB changes
      */
+
     public void synchronizeRanking() {
         DatabaseReference dbRef = Database.refRoot.child("users");
         ValueEventListener rankingListener = new ValueEventListener() {
@@ -80,6 +81,7 @@ public class RankingsActivity extends AppCompatActivity {
             }
         };
         dbRef.orderByChild("score").addValueEventListener(rankingListener);
+
     }
 
 }
