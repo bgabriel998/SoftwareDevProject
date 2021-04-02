@@ -27,15 +27,6 @@ public class AccountTest {
         Thread.sleep(500);
     }
 
-    /**
-     * Cleanup database after testing
-     */
-    @After
-    public void cleanup(){
-        //Remove test child
-        Database.refRoot.child("users").child("null").removeValue();
-    }
-
 
     /**
      * Testing the output are not null but actual strings with no account
@@ -78,12 +69,14 @@ public class AccountTest {
     @Test
     public void setAndGetUserScoreTest() throws InterruptedException{
         Database.setChild("users/null", Collections.singletonList("username"), Collections.singletonList("usernameTest4"));
+
         Thread.sleep(1000);
         Account account = Account.getAccount();
         account.setUserScore(200000);
         Thread.sleep(1000);
         assertEquals(account.getUserScore(),200000);
-        //Remove test child
+
+
     }
 
     /**
@@ -105,7 +98,8 @@ public class AccountTest {
         account.synchronizeUserScore();
         refAdd.child(account.getId()).child("score").setValue(200000);
 
-        Thread.sleep(4000);
+        Thread.sleep(1000);
+
         assertEquals(account.getUserScore(), 200000);
 
     }
