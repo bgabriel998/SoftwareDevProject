@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -15,6 +16,12 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public class AccountTest {
 
+    /* Make sure that mock users are not on the database after a test */
+    @After
+    public void removeTestUsers() throws InterruptedException {
+        Database.refRoot.child("users").child("null").removeValue();
+        Thread.sleep(500);
+    }
 
     /**
      * Testing the output are not null but actual strings with no account
@@ -37,16 +44,13 @@ public class AccountTest {
      */
     @Test
     public void synchronizeUsernameTest() throws InterruptedException {
-        // To be sure that null user does not exists
-        Database.refRoot.child("users").child("null").removeValue();
-        Thread.sleep(1000);
-        Database.setChild("users/null", Arrays.asList("username"), Arrays.asList("usernameTest3"));
+        Database.setChild("users/null", Arrays.asList("username"), Arrays.asList("username@Test"));
         Thread.sleep(1000);
         Account account = Account.getAccount();
         // The uid used by synchronize username will be "null", the default value returned by getId() method.
         account.synchronizeUsername();
         Thread.sleep(1000);
-        assertEquals(account.getUsername(), "usernameTest3");
+        assertEquals(account.getUsername(), "username@Test");
         // Now it will test that if no data is present it produces a "null" username
         Database.refRoot.child("users").child("null").removeValue();
         Thread.sleep(1000);
