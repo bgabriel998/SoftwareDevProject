@@ -26,7 +26,8 @@ public class AccountTest {
         Thread.sleep(500);
     }
 
-    /**
+
+
      * Cleanup database after testing
      */
     @After
