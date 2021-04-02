@@ -134,7 +134,8 @@ public class AccountTest {
 
     @Test
     public void synchronizeDiscoveredCountryHighPointsTest() throws InterruptedException{
-        Database.setChild("users/null", Arrays.asList("username"), Arrays.asList("usernameTest4"));
+        Database.setChild("users/null", Arrays.asList("username"), Arrays.asList("username@Test"));
+
         Thread.sleep(1000);
         Account account = Account.getAccount();
         CacheEntry newEntry = new CacheEntry("France","Mont Blanc",4810);
