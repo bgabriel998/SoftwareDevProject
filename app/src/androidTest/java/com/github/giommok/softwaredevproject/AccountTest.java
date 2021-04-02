@@ -35,7 +35,8 @@ public class AccountTest {
     @After
     public void cleanup(){
         //Remove test child
-        Database.refRoot.child("users").child("null").removeValue();
+
+
     }
 
 
