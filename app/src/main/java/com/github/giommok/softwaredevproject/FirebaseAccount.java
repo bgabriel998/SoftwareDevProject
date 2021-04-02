@@ -12,6 +12,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -98,8 +100,9 @@ public class FirebaseAccount implements Account {
     public void setUserScore(long newScore) {
         //set local value
         score = newScore;
-        DatabaseReference refAdd = Database.refRoot.child("users/");
-        refAdd.child(account.getId()).child("score").setValue(score);
+        Database.setChild("users/"+ getId(),
+                Collections.singletonList("score"),
+                Collections.singletonList(score));
     }
 
 
@@ -135,10 +138,11 @@ public class FirebaseAccount implements Account {
             //Put entry in the account local copy
             discoveredCountryHighPoint.put(entry.getCountryName(), entry);
 
-            //Put entry in the database
-            DatabaseReference refAdd = Database.refRoot.child("users/");
-            refAdd.child(getId()).child("CountryHighPoint")
-                    .push().setValue(entry);
+
+            Database.setChild("users/"+getId(),
+                    Collections.singletonList("CountryHighPoint"),
+                    Collections.singletonList(entry)
+                    );
         }
     }
 

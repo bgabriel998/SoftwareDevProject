@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.github.giommok.softwaredevproject.FirebaseAccount;
+import com.google.firebase.FirebaseApp;
 
 public class InitActivity extends AppCompatActivity {
 
@@ -28,6 +29,7 @@ public class InitActivity extends AppCompatActivity {
 
 
     private void initApp() {
+        FirebaseApp.initializeApp(this);
         FirebaseAccount firebaseAccount = FirebaseAccount.getAccount();
 
         firebaseAccount.synchronizeDiscoveredCountryHighPoints();

@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -76,7 +77,7 @@ public class AccountTest {
      */
     @Test
     public void setAndGetUserScoreTest() throws InterruptedException{
-        Database.setChild("users/null", Arrays.asList("username"), Arrays.asList("usernameTest4"));
+        Database.setChild("users/null", Collections.singletonList("username"), Collections.singletonList("usernameTest4"));
         Thread.sleep(1000);
         Account account = Account.getAccount();
         account.setUserScore(200000);
@@ -93,7 +94,7 @@ public class AccountTest {
         // To be sure that null user does not exists
         Database.refRoot.child("users").child("null").removeValue();
         Thread.sleep(1000);
-        Database.setChild("users/null", Arrays.asList("username"), Arrays.asList("usernameTest3"));
+        Database.setChild("users/null", Collections.singletonList("username"), Collections.singletonList("usernameTest3"));
 
         //Set user score to zero
         Account account = Account.getAccount();
@@ -116,7 +117,7 @@ public class AccountTest {
      */
     @Test
     public void setAndGetDiscoveredCountryHighPoints()throws InterruptedException{
-        Database.setChild("users/null", Arrays.asList("username"), Arrays.asList("usernameTest4"));
+        Database.setChild("users/null", Collections.singletonList("username"), Collections.singletonList("usernameTest4"));
         Thread.sleep(1000);
         Account account = Account.getAccount();
         CacheEntry newEntry = new CacheEntry("France","Mont Blanc",4810);
@@ -128,7 +129,7 @@ public class AccountTest {
 
     @Test
     public void synchronizeDiscoveredCountryHighPointsTest() throws InterruptedException{
-        Database.setChild("users/null", Arrays.asList("username"), Arrays.asList("usernameTest4"));
+        Database.setChild("users/null", Collections.singletonList("username"), Collections.singletonList("usernameTest4"));
         Thread.sleep(1000);
         Account account = Account.getAccount();
         CacheEntry newEntry = new CacheEntry("France","Mont Blanc",4810);
