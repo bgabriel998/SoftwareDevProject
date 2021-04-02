@@ -90,7 +90,8 @@ public class AccountTest {
         account.setUserScore(200000);
         Thread.sleep(1000);
         assertEquals(account.getUserScore(),200000);
-        //Remove test child
+
+
     }
 
     /**
