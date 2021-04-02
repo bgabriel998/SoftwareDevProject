@@ -25,7 +25,7 @@ public class DatabaseTest {
 
     /* Set up the environment */
     @BeforeClass
-    public static void init() throws InterruptedException {
+    public static void init() {
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         FirebaseApp.initializeApp(context);
 
