@@ -21,6 +21,15 @@
     <string name="sign_out_button">Sign Out</string>
     <string name="sign_up_button">Sign Up</string>
 
+    <!-- USERNAME CHOICE -->
+    <string name='already_existing_username'>The username is already used by another user. Choose a new one.</string>
+    <string name='invalid_username'>The username is not valid. It must contain between 3 and 15 alphanumeric characters.</string>
+    <string name='current_username'>You can\'t choose the username you already have!</string>
+    <string name='available_username'>Your username has changed!</string>
+    <string name='insert_username_button'>Insert your username here</string>
+    <string name='change_username_button'>Change the username</string>
+    <string name='submit_username_button'>Submit</string>
+
     <!-- RANKINGS HEADER -->
     <string name="header_position">Pos</string>
     <string name="header_username">Username</string>
@@ -37,10 +46,17 @@
     <string name="description_settings_button">Settings Button</string>
     <string name="description_icon">Peak AR Icon</string>
     <string name="description_collected_image">Photo over collected mountain</string>
+
     <string name="title_activity_init">initActivity</string>
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
     -->
     <string name="hello_world">Hello Square World!</string>
+
+
+    <!-- MOUNTAIN CATEGORIES -->
+    <string name="points__mountain_category">Points:</string>
+    <string name="height_mountain_category">Height:</string>
+    <string name="position_mountain_category">Position:</string>
 </resources>

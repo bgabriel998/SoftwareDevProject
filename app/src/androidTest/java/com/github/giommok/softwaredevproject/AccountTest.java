@@ -5,19 +5,26 @@ import android.net.Uri;
 import androidx.test.espresso.core.internal.deps.guava.cache.Cache;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.google.firebase.database.DatabaseReference;
 
+import com.google.firebase.database.DatabaseReference;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
 public class AccountTest {
 
+    /* Make sure that mock users are not on the database after a test */
+    @After
+    public void removeTestUsers() throws InterruptedException {
+        Database.refRoot.child("users").child("null").removeValue();
+        Thread.sleep(500);
+    }
 
     /**
      * Cleanup database after testing
@@ -50,22 +57,18 @@ public class AccountTest {
      */
     @Test
     public void synchronizeUsernameTest() throws InterruptedException {
-        // To be sure that null user does not exists
-        Database.refRoot.child("users").child("null").removeValue();
-        Thread.sleep(1000);
-        Database.setChild("users/null", Arrays.asList("username"), Arrays.asList("usernameTest3"));
+        Database.setChild("users/null", Arrays.asList("username"), Arrays.asList("username@Test"));
         Thread.sleep(1000);
         Account account = Account.getAccount();
         // The uid used by synchronize username will be "null", the default value returned by getId() method.
         account.synchronizeUsername();
         Thread.sleep(1000);
-        assertEquals(account.getUsername(), "usernameTest3");
+        assertEquals(account.getUsername(), "username@Test");
         // Now it will test that if no data is present it produces a "null" username
         Database.refRoot.child("users").child("null").removeValue();
         Thread.sleep(1000);
         assertEquals(account.getUsername(), "null");
     }
-
 
     /**
      * Test the set and get user score method. Check if the given input is effectively
@@ -141,6 +144,18 @@ public class AccountTest {
         String s1 = account.getDiscoveredCountryHighPoint().get("France").toString();
         String s2 = newEntry.toString();
         assertEquals(s1,s2);
+    }
+
+
+    /**
+     * Testing that isValid recognizes valid strings and rejects invalid strings
+     */
+    @Test
+    public void isValidTest() {
+        List<String> invalidStrings = Arrays.asList("", null, " ", "ab", "@@@@", "1.Z" ,"....", "aaaaaaaaaaaaaaaa");
+        List<String> validStrings = Arrays.asList("abc", "null", "123", "ab_", "____", "aaaaaaaaaaaaaaa");
+        for(String s: validStrings) assertTrue(s + " is not valid.", Account.isValid(s));
+        for(String s: invalidStrings) assertFalse(s + " is valid.", Account.isValid(s));
     }
 
 }

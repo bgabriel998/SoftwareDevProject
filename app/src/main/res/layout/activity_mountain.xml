@@ -10,36 +10,77 @@
     <!-- Toolbar -->
     <include layout="@layout/toolbar"/>
 
-    <!-- Photo of mountain -->
-    <ImageView
-        android:id="@+id/mountainPhoto"
-        android:layout_marginTop="80dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_height="310dp"
-        android:layout_width="match_parent"
-        app:srcCompat="@drawable/temp_diablerets"
-        android:contentDescription="@string/description_collected_image" />
-
     <!-- Info text container -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/mountainPhoto"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="8dp"
         android:layout_marginStart="16dp"
         android:orientation="vertical">
 
-        <!-- Height -->
-        <TextView
-            android:id="@+id/heightText"
-            style="@style/LargeDarkGreenText"
-            android:layout_width="wrap_content"
+        <!-- Points -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Height:  3,210m" />
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/LargeDarkGreenText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/points__mountain_category" />
+
+            <TextView
+                android:id="@+id/pointText"
+                style="@style/LargeDarkGreenText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="120" />
+        </LinearLayout>
+
+        <!-- Height -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/LargeDarkGreenText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/height_mountain_category" />
+
+            <TextView
+                android:id="@+id/heightText"
+                style="@style/LargeDarkGreenText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3,210m" />
+        </LinearLayout>
+
+        <!-- Position -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/LargeDarkGreenText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/position_mountain_category" />
+
+            <TextView
+                android:id="@+id/positionText"
+                style="@style/LargeDarkGreenText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(120, 380)" />
+        </LinearLayout>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

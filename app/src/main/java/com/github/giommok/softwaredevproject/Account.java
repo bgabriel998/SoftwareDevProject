@@ -1,6 +1,5 @@
 package com.github.giommok.softwaredevproject;
 
-import android.app.Activity;
 import android.net.Uri;
 
 import java.util.HashMap;
@@ -57,6 +56,7 @@ public interface Account {
     public void synchronizeUsername();
 
     /**
+
      * set the user score in the database
      */
     public void setUserScore(long newScore);
@@ -89,4 +89,13 @@ public interface Account {
      * @return country high points discovered by the user
      */
     public HashMap<String,CacheEntry> getDiscoveredCountryHighPoint();
+
+     * Check if the username chosen by the user is valid.
+     * @param username inserted by the user.
+     * @return true if and only if the username is valid.
+     */
+    public static Boolean isValid(String username) {
+        return username != null && username.matches("\\w{3,15}");
+    }
+
 }

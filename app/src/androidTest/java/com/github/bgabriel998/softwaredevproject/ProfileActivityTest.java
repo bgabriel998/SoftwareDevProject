@@ -1,27 +1,23 @@
 package com.github.bgabriel998.softwaredevproject;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.os.IBinder;
-import android.view.WindowManager;
 
 import androidx.test.espresso.Espresso;
-import androidx.test.espresso.Root;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.github.giommok.softwaredevproject.Account;
 import com.github.giommok.softwaredevproject.Database;
 
-import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+
+import java.util.Arrays;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -31,7 +27,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibilit
 import static androidx.test.espresso.matcher.ViewMatchers.withHint;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
 public class ProfileActivityTest {
@@ -39,9 +35,17 @@ public class ProfileActivityTest {
     @Rule
     public ActivityScenarioRule<ProfileActivity> testRule = new ActivityScenarioRule<>(ProfileActivity.class);
 
+    /* Make sure that mock users are not on the database after a test */
+    @After
+    public void removeTestUsers() throws InterruptedException {
+        Database.refRoot.child("users").child("test").removeValue();
+        Database.refRoot.child("users").child("null").removeValue();
+        Thread.sleep(500);
+    }
+
     /* Test that the toolbar title is set as expected */
     @Test
-    public void TestToolbarTitle(){
+    public void toolbarTitleTest(){
         String TOOLBAR_TITLE = "Profile";
         ViewInteraction greetingText = Espresso.onView(withId(R.id.toolbarTitle));
         greetingText.check(matches(withText(TOOLBAR_TITLE)));
@@ -49,14 +53,14 @@ public class ProfileActivityTest {
 
     /* Test that the activity finishes when the toolbar back button is pressed. */
     @Test
-    public void TestToolbarBackButton(){
+    public void toolbarBackButtonTest(){
         onView(withId(R.id.toolbarBackButton)).perform(click());
         assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
     }
 
     /* Test that if no account is signed the sign in button is visible */
     @Test
-    public void TestWithNoAccountSigned() {
+    public void withNoAccountSignedTest() {
         Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         Espresso.onView(withId(R.id.signOutButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
         Espresso.onView(withId(R.id.changeUsernameButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
@@ -66,15 +70,14 @@ public class ProfileActivityTest {
 
     /* Test that the message inviting the user to write the username in the correct box is correct */
     @Test
-    public void TestChangeUsernameText() {
-        String CHANGE_USERNAME = "Insert your username here";
+    public void changeUsernameTextTest() {
         ViewInteraction changeUsernameText = Espresso.onView(withId(R.id.editTextUsername));
-        changeUsernameText.check(matches(withHint(CHANGE_USERNAME)));
+        changeUsernameText.check(matches(withHint(R.string.insert_username_button)));
     }
 
     /* Test that the username choice UI is correct */
     @Test
-    public void TestChangeUsernameUI() {
+    public void changeUsernameUITest() {
         testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
         Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
         Espresso.onView(withId(R.id.signOutButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
@@ -85,51 +88,81 @@ public class ProfileActivityTest {
 
     /* Test that if the username is already present the correct message is displayed */
     @Test
-    public void TestUsernameAlreadyPresent() throws InterruptedException {
-        final String usedUsername = "usernameTest";
-        final String errorMessage = "The username " + usedUsername + " is already used by another user. Choose a new one.";
+    public void usernameAlreadyPresentTest() throws InterruptedException {
+        final String usedUsername = "i3gn4u34o";
+        Database.setChild("users/test", Arrays.asList("username"), Arrays.asList(usedUsername));
+
         testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
         onView(withId(R.id.editTextUsername)).perform(typeText(usedUsername));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitUsernameButton)).perform(click());
-        Thread.sleep(500);
-        onView(withText(errorMessage)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        Thread.sleep(500);
+        Thread.sleep(2000);
+        onView(withText(R.string.already_existing_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        Thread.sleep(2000);
         Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
     }
 
     /* Test that if the username has changed the correct message is displayed */
     /* The account created is then removed */
     @Test
-    public void TestRegisterUser() throws InterruptedException {
-        // To be sure that null user does not exists
-        Database.refRoot.child("users").child("null").removeValue();
-        Thread.sleep(1000);
-        final String username = "i3gn4u39n4t34o";
-        final String message = "Your username has changed!";
+    public void registerUserTest() throws InterruptedException {
+        final String username = "i3gn4u34o";
+
         testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
         onView(withId(R.id.editTextUsername)).perform(typeText(username));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitUsernameButton)).perform(click());
-        Thread.sleep(1000);
-        Database.refRoot.child("users").child("null").removeValue();
-        onView(withText(message)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        Thread.sleep(1000);
+        Thread.sleep(2000);
+        onView(withText(R.string.available_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        Thread.sleep(2000);
         Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
     /* Test that if the username chooses his current username the correct message is displayed */
     @Test
-    public void TestChosenCurrentUsername() throws InterruptedException {
+    public void chosenCurrentUsernameTest() throws InterruptedException {
         final String username = "null";
-        final String message = "You can't choose the username you already have!";
+
         testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
         onView(withId(R.id.editTextUsername)).perform(typeText(username));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitUsernameButton)).perform(click());
-        Thread.sleep(1000);
-        onView(withText(message)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        Thread.sleep(1000);
+        Thread.sleep(2000);
+        onView(withText(R.string.current_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        Thread.sleep(2000);
         Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+    }
+
+    /* Test that if the username chooses an invalid username the correct message is displayed */
+    @Test
+    public void isNotValidTest() throws InterruptedException {
+        final String username = "";
+
+        testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
+        onView(withId(R.id.editTextUsername)).perform(typeText(username));
+        Espresso.closeSoftKeyboard();
+        onView(withId(R.id.submitUsernameButton)).perform(click());
+        Thread.sleep(2000);
+        onView(withText(R.string.invalid_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        Thread.sleep(2000);
+        Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+    }
+
+    /* Test that UI is displayed correctly when change username button is pressed. */
+    @Test
+    public void changeUsernameButtonTest() throws InterruptedException {
+        testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
+        onView(withId(R.id.changeUsernameButton)).perform(click());
+        Thread.sleep(2000);
+        Espresso.onView(withId(R.id.submitUsernameButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+    }
+
+    /* Test that UI is displayed correctly when sign out button is pressed. */
+    @Test
+    public void signOutButtonTest() throws InterruptedException {
+        testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
+        onView(withId(R.id.signOutButton)).perform(click());
+        Thread.sleep(2000);
+        Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 }

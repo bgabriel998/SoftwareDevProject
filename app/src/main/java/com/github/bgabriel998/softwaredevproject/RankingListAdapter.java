@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.github.giommok.softwaredevproject.Account;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -18,8 +20,13 @@ public class RankingListAdapter extends ArrayAdapter<RankingItem> {
     private final int resourceLayout;
     private final Context mContext;
 
-    public RankingListAdapter(Context context, int resource, List<RankingItem> items)
-    {
+    /**
+     * Constructor
+     * @param context the context
+     * @param resource the resource layout to create list items of
+     * @param items list items.
+     */
+    public RankingListAdapter(Context context, int resource, List<RankingItem> items) {
         super(context, resource, items);
         resourceLayout = resource;
         mContext = context;
@@ -35,9 +42,7 @@ public class RankingListAdapter extends ArrayAdapter<RankingItem> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            LayoutInflater vi;
-            vi = LayoutInflater.from(mContext);
-            convertView = vi.inflate(resourceLayout, parent, false);
+            convertView = ListAdapterInflater.createLayout(resourceLayout, mContext,parent);
         }
 
         setupRankingsItem(convertView, getItem(position), position);
@@ -73,8 +78,7 @@ public class RankingListAdapter extends ArrayAdapter<RankingItem> {
         int backgroundColor = R.color.LightGrey;
         int textStyle = R.style.DarkGreenText;
 
-        // TODO Check for actual username
-        if (item.username.equals("Username2")) {
+        if (item.getUid().equals(Account.getAccount().getId())) {
             backgroundColor = R.color.DarkGreen;
             textStyle = R.style.LightGreyText;
         }
@@ -93,7 +97,7 @@ public class RankingListAdapter extends ArrayAdapter<RankingItem> {
      */
     private void setItemText(TextView[] textViews, RankingItem item, int position) {
         textViews[0].setText(String.format(Locale.getDefault(), "%d.", position));
-        textViews[1].setText(item.username);
-        textViews[2].setText(String.format(Locale.getDefault(), "%d", item.points));
+        textViews[1].setText(item.getUsername());
+        textViews[2].setText(String.format(Locale.getDefault(), "%d", item.getPoints()));
     }
 }
