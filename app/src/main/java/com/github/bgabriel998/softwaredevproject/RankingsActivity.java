@@ -30,7 +30,7 @@ public class RankingsActivity extends AppCompatActivity {
      * Fetch ListView and setup it upp with a ranking item list adapter.
      */
     private void fillRankingsList(){
-        ListView rankingsListView = (ListView) findViewById(R.id.rankings_list_view);
+        ListView rankingsListView = findViewById(R.id.rankings_list_view);
 
         RankingListAdapter listAdapter = new RankingListAdapter(this,
                 R.layout.ranking_item,
@@ -44,7 +44,7 @@ public class RankingsActivity extends AppCompatActivity {
      * @return array list of all ranking items.
      */
     private ArrayList<RankingItem> getRankings(){
-        ArrayList<RankingItem> rankingItems = new ArrayList<RankingItem>();
+        ArrayList<RankingItem> rankingItems = new ArrayList<>();
         for (int i = 0; i < 20; i++){
             rankingItems.add(new RankingItem(String.format("Username%d", i), 100 - i));
         }

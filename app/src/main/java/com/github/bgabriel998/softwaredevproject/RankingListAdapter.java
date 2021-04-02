@@ -18,8 +18,13 @@ public class RankingListAdapter extends ArrayAdapter<RankingItem> {
     private final int resourceLayout;
     private final Context mContext;
 
-    public RankingListAdapter(Context context, int resource, List<RankingItem> items)
-    {
+    /**
+     * Constructor
+     * @param context the context
+     * @param resource the resource layout to create list items of
+     * @param items list items.
+     */
+    public RankingListAdapter(Context context, int resource, List<RankingItem> items) {
         super(context, resource, items);
         resourceLayout = resource;
         mContext = context;
@@ -35,9 +40,7 @@ public class RankingListAdapter extends ArrayAdapter<RankingItem> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            LayoutInflater vi;
-            vi = LayoutInflater.from(mContext);
-            convertView = vi.inflate(resourceLayout, parent, false);
+            convertView = ListAdapterInflater.createLayout(resourceLayout, mContext,parent);
         }
 
         setupRankingsItem(convertView, getItem(position), position);
