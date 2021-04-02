@@ -90,6 +90,7 @@ public interface Account {
      */
     public HashMap<String,CacheEntry> getDiscoveredCountryHighPoint();
 
+    /**
      * Check if the username chosen by the user is valid.
      * @param username inserted by the user.
      * @return true if and only if the username is valid.
