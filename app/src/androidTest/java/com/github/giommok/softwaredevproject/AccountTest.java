@@ -79,7 +79,8 @@ public class AccountTest {
      */
     @Test
     public void setAndGetUserScoreTest() throws InterruptedException{
-        Database.setChild("users/null", Arrays.asList("username"), Arrays.asList("usernameTest4"));
+        Database.setChild("users/null", Arrays.asList("username"), Arrays.asList("username@Test"));
+
         Thread.sleep(1000);
         Account account = Account.getAccount();
         account.setUserScore(200000);
