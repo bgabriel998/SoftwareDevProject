@@ -24,6 +24,16 @@ public class CompassView extends View {
     //Font size of the text
     private int mainTextSize;
 
+    //Max opacity for the paints
+    private static final int MAX_ALPHA = 255;
+
+    //Factors for the sizes
+    private static final int MAIN_TEXT_FACTOR = 20;
+    private static final int SEC_TEXT_FACTOR = 15;
+    private static final int MAIN_LINE_FACTOR = 5;
+    private static final int SEC_LINE_FACTOR = 3;
+    private static final int TER_LINE_FACTOR = 2;
+
     //Heading of the user
     private float horizontalDegrees;
     private float verticalDegrees;
@@ -68,23 +78,23 @@ public class CompassView extends View {
 
         //Initialize fonts
         float screenDensity = getResources().getDisplayMetrics().scaledDensity;
-        mainTextSize = (int) (20 * screenDensity);
+        mainTextSize = (int) (MAIN_TEXT_FACTOR * screenDensity);
 
         //Initialize paints
         //Paint used for the main text heading (N, E, S, W)
         mainTextPaint = configureTextPaint(mainTextSize);
 
         //Paint used for the secondary text heading (NE, SE, SW, NW)
-        secondaryTextPaint = configureTextPaint(15*screenDensity);
+        secondaryTextPaint = configureTextPaint(SEC_TEXT_FACTOR*screenDensity);
 
         //Paint used for the main lines (0°, 90°, 180°, ...)
-        mainLinePaint = configureLinePaint(5*screenDensity);
+        mainLinePaint = configureLinePaint(MAIN_LINE_FACTOR*screenDensity);
 
         //Paint used for the secondary lines (45°, 135°, 225°, ...)
-        secondaryLinePaint = configureLinePaint(3*screenDensity);
+        secondaryLinePaint = configureLinePaint(SEC_LINE_FACTOR*screenDensity);
 
         //Paint used for the terciary lines (15°, 30°, 60°, 75°, 105°, ...)
-        terciaryLinePaint = configureLinePaint(2*screenDensity);
+        terciaryLinePaint = configureLinePaint(TER_LINE_FACTOR*screenDensity);
     }
 
     /**
@@ -93,7 +103,6 @@ public class CompassView extends View {
      * @return configured paint
      */
     private Paint configureLinePaint(float strokeWidth){
-        int MAX_ALPHA = 255;
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setStrokeWidth(strokeWidth);
         paint.setColor(compassColor);
@@ -107,7 +116,6 @@ public class CompassView extends View {
      * @return configured paint
      */
     private Paint configureTextPaint(float textSize){
-        int MAX_ALPHA = 255;
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setTextSize(textSize);
