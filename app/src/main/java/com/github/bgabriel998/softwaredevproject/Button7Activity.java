@@ -5,22 +5,16 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.ravifrancesco.softwaredevproject.GPSTracker;
 import com.github.ravifrancesco.softwaredevproject.GeoTIFFMap;
 import com.github.ravifrancesco.softwaredevproject.Point;
 import com.github.ravifrancesco.softwaredevproject.UserPoint;
-
-import java.io.InputStream;
 
 public class Button7Activity extends AppCompatActivity implements View.OnClickListener {
 
@@ -85,44 +79,9 @@ public class Button7Activity extends AppCompatActivity implements View.OnClickLi
             altitudeTV.setText(String.format("%.1f m", altitude));
             accuracyTV.setText(accuracy + " m");
             distanceTV.setText(String.format("%.1f km", distance/1000));
-            String result = geoTIFFMap.generateURL().toString();
-            URLTV.setText(result);
-
-            // show The Image in a ImageView
-            new DownloadImageTask((ImageView) findViewById(R.id.image))
-                    .execute(result);
-
+            URLTV.setText(geoTIFFMap.generateURL().toString());
         }else{
             // display some error message
-        }
-
-
-
-    }
-
-
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
         }
     }
 
