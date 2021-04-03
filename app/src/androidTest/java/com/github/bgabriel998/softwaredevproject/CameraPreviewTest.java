@@ -152,7 +152,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
             request.provideSurface(surface, executor, this::accept);
         });
         // wait until onImageAvailable is invoked. retry several times
-        for (int repeat=20; repeat>=0; repeat--) {
+        for (int repeat=30; repeat>=0; repeat--) {
             Thread.sleep(600);
             int value = counter.get();
             Log.i("CameraPreviewTest", String.format("count: %d", value));
