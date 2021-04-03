@@ -41,13 +41,13 @@ public class CompassView extends View {
     private Canvas canvas;
 
     //Heights of the compass
-    int textHeight;
-    int mainLineHeight;
-    int secondaryLineHeight;
-    int terciaryLineHeight;
+    private int textHeight;
+    private int mainLineHeight;
+    private int secondaryLineHeight;
+    private int terciaryLineHeight;
 
     //Height of the view in pixel
-    int height;
+    private int height;
 
     /**
      * Constructor for the CompassView which initializes the widges like the font height and paints used
@@ -217,7 +217,7 @@ public class CompassView extends View {
      * @param degree degree to get the string
      * @return String for the degree
      */
-    private String selectHeadingString(int degree){
+    String selectHeadingString(int degree){
         switch (degree){
             case 0: case 360:
                 return "N";
