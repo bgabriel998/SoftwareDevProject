@@ -10,11 +10,14 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.github.giommok.softwaredevproject.Database;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+
+import java.util.Arrays;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -31,6 +34,14 @@ public class ProfileActivityTest {
 
     @Rule
     public ActivityScenarioRule<ProfileActivity> testRule = new ActivityScenarioRule<>(ProfileActivity.class);
+
+    /* Make sure that mock users are not on the database after a test */
+    @After
+    public void removeTestUsers() throws InterruptedException {
+        Database.refRoot.child("users").child("test").removeValue();
+        Database.refRoot.child("users").child("null").removeValue();
+        Thread.sleep(500);
+    }
 
     /* Test that the toolbar title is set as expected */
     @Test
@@ -78,7 +89,8 @@ public class ProfileActivityTest {
     /* Test that if the username is already present the correct message is displayed */
     @Test
     public void usernameAlreadyPresentTest() throws InterruptedException {
-        final String usedUsername = "usernameTest";
+        final String usedUsername = "i3gn4u34o";
+        Database.setChild("users/test", Arrays.asList("username"), Arrays.asList(usedUsername));
 
         testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
         onView(withId(R.id.editTextUsername)).perform(typeText(usedUsername));
@@ -94,9 +106,6 @@ public class ProfileActivityTest {
     /* The account created is then removed */
     @Test
     public void registerUserTest() throws InterruptedException {
-        // To be sure that null user does not exists
-        Database.refRoot.child("users").child("null").removeValue();
-        Thread.sleep(2000);
         final String username = "i3gn4u34o";
 
         testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
@@ -104,7 +113,6 @@ public class ProfileActivityTest {
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitUsernameButton)).perform(click());
         Thread.sleep(2000);
-        Database.refRoot.child("users").child("null").removeValue();
         onView(withText(R.string.available_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         Thread.sleep(2000);
         Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));

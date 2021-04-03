@@ -46,4 +46,9 @@
     <string name="description_settings_button">Settings Button</string>
     <string name="description_icon">Peak AR Icon</string>
     <string name="description_collected_image">Photo over collected mountain</string>
+
+    <!-- MOUNTAIN CATEGORIES -->
+    <string name="points__mountain_category">Points:</string>
+    <string name="height_mountain_category">Height:</string>
+    <string name="position_mountain_category">Position:</string>
 </resources>
