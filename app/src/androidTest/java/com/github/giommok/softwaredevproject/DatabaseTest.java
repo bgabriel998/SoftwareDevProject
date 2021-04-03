@@ -25,38 +25,41 @@ public class DatabaseTest {
 
     /* Set up the environment */
     @BeforeClass
-    public static void init() {
+    public static void init() throws InterruptedException {
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         FirebaseApp.initializeApp(context);
 
+        /* Make sure that mock users are not on the database before the tests*/
+        Database.refRoot.child("users").child("null").removeValue();
+        Thread.sleep(1500);
     }
 
     /* Make sure that mock users are not on the database after a test */
     @After
     public void removeTestUsers() throws InterruptedException {
         Database.refRoot.child("users").child("null").removeValue();
-        Thread.sleep(500);
+        Thread.sleep(1500);
     }
 
     /* Test that isPresent method works */
     @Test
     public void isPresentTest() throws InterruptedException {
         Database.setChild("users/null", Arrays.asList("username"), Arrays.asList("username@Test"));
-        Thread.sleep(1000);
+        Thread.sleep(1500);
         Database.isPresent("users", "email", "dota2>lol", Assert::fail, () -> assertTrue("Correct behavior", true));
         Database.isPresent("users", "username", "username@Test", () -> assertTrue("Correct behavior", true),  Assert::fail);
-        Thread.sleep(1000);
+        Thread.sleep(1500);
     }
 
     /* Test that setChild method works */
     @Test
     public void setChildTest() throws InterruptedException {
         Database.isPresent("users", "username", "testing@Value", Assert::fail, () -> assertTrue("Correct behavior", true));
-        Thread.sleep(1000);
+        Thread.sleep(1500);
         Database.setChild("users/null", Arrays.asList("username"), Arrays.asList("testing@Value"));
-        Thread.sleep(1000);
+        Thread.sleep(1500);
         Database.isPresent("users", "username", "testing@Value", () -> assertTrue("Correct behavior", true), Assert::fail);
-        Thread.sleep(1000);
+        Thread.sleep(1500);
     }
 
     /* Test that exception is thrown if different list sizes are provided */
