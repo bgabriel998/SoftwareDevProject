@@ -83,17 +83,6 @@ public class CameraPreview{
             try {
                 cameraProvider = cameraProviderFuture.get();
                 bindPreview(cameraProvider);
-
-//                List<CameraInfo> list = cameraProvider.getAvailableCameraInfos();
-//                CameraInfo backCameraInfo = list.get(0);
-//                ExposureState state =  backCameraInfo.getExposureState();
-//                Range<Integer> range = state.getExposureCompensationRange();
-//                String type =  backCameraInfo.getImplementationType();
-//                int rot = backCameraInfo.getSensorRotationDegrees();
-//                LiveData<Integer> torch = backCameraInfo.getTorchState();
-//                LiveData<ZoomState> zoom = backCameraInfo.getZoomState();
-//                boolean flashUnit = backCameraInfo.hasFlashUnit();
-//                int n0 = 0;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -165,18 +154,23 @@ public class CameraPreview{
     }
 
     /**
-     * Get the horizontal and vertical field of view of the camera
-     * @return the horizontal and vertical field of view in degree
+     * Get the horizontal and vertical field of view of the back-facing amera
+     * @return the horizontal and vertical field of view in degrees
      */
     public Pair<Float, Float> getFieldOfView(){
+        //Create camera manager
         CameraManager cameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
+        //Initialize horiontal and vertical fov
         double horizontalAngle = 0;
         double verticalAngle = 0;
         try {
+            //Go through every camera to get the back-facing camera
             for (final String cameraId : cameraManager.getCameraIdList()) {
+                //Check if camera is back-facing
                 CameraCharacteristics characteristics = cameraManager.getCameraCharacteristics(cameraId);
-                int cOrientation = characteristics.get(CameraCharacteristics.LENS_FACING);
-                if (cOrientation == CameraCharacteristics.LENS_FACING_BACK) {
+                int lensFacing = characteristics.get(CameraCharacteristics.LENS_FACING);
+                if (lensFacing == CameraCharacteristics.LENS_FACING_BACK) {
+                    //If camera is back-facing, calculate the fov
                     float focalLength = characteristics.get(CameraCharacteristics.LENS_INFO_AVAILABLE_FOCAL_LENGTHS)[0];
                     SizeF physicalSize = characteristics.get(CameraCharacteristics.SENSOR_INFO_PHYSICAL_SIZE);
                     float width = physicalSize.getWidth();
