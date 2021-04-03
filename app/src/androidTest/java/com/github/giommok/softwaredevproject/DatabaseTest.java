@@ -25,10 +25,13 @@ public class DatabaseTest {
 
     /* Set up the environment */
     @BeforeClass
-    public static void init() {
+    public static void init() throws InterruptedException {
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         FirebaseApp.initializeApp(context);
 
+        /* Make sure that mock users are not on the database before the tests*/
+        Database.refRoot.child("users").child("null").removeValue();
+        Thread.sleep(500);
     }
 
     /* Make sure that mock users are not on the database after a test */

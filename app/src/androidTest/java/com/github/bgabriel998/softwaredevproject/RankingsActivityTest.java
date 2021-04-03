@@ -50,9 +50,16 @@ public class RankingsActivityTest {
     private static final List<Integer> mockPoints = IntStream.rangeClosed(MAXIMUM_POINTS-19, MAXIMUM_POINTS-1).boxed().collect(Collectors.toList());
     private static final List<Integer> mockPositions = IntStream.rangeClosed(2, 20).boxed().collect(Collectors.toList());
 
+    /* Set up the environment */
     @BeforeClass
-    public static void setup() {
+    public static void init() throws InterruptedException {
         Collections.reverse(mockPoints);
+        /* Make sure that mock users are not on the database before the tests*/
+        for(int i=0; i < mockPoints.size(); i++) {
+            Database.refRoot.child("users").child("test" + mockPositions.get(i)).removeValue();
+        }
+        Database.refRoot.child("users").child("null").removeValue();
+        Thread.sleep(500);
     }
 
     @Rule

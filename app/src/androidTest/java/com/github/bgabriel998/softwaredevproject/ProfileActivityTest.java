@@ -12,6 +12,7 @@ import com.github.giommok.softwaredevproject.Database;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +32,15 @@ import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
 public class ProfileActivityTest {
+
+    /* Set up the environment */
+    @BeforeClass
+    public static void init() throws InterruptedException {
+        /* Make sure that mock users are not on the database before the tests*/
+        Database.refRoot.child("users").child("test").removeValue();
+        Database.refRoot.child("users").child("null").removeValue();
+        Thread.sleep(500);
+    }
 
     @Rule
     public ActivityScenarioRule<ProfileActivity> testRule = new ActivityScenarioRule<>(ProfileActivity.class);
