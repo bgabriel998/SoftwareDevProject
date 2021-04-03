@@ -10,72 +10,26 @@
     <!-- Toolbar -->
     <include layout="@layout/toolbar"/>
 
-    <!-- Activity Container -->
+    <!-- Collected Collection Container -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
-        <!-- Collected Collection Container -->
-        <LinearLayout
+        <ListView
+            android:id="@+id/collection_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-            <include layout="@layout/collected_item" />
-
-        </LinearLayout>
-
-        <!-- Separator -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/line_top_light_grey"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingTop="4dp">
-
-            <!-- Down Arrow -->
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:rotation="-90"
-                app:srcCompat="@drawable/ic_back" />
-
-            <!-- Uncollected Text -->
-            <TextView
-                android:id="@+id/textView"
-                style="@style/SmallLightBlueText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="5dp"
-                android:paddingEnd="0dp"
-                android:text="@string/separator" />
-        </LinearLayout>
-
-        <!-- Uncollected Collection Container -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-            <include layout="@layout/uncollected_item" />
-
-        </LinearLayout>
-
-
+            android:divider="@android:color/transparent"
+            android:dividerHeight="16.0sp"
+            android:layout_marginBottom="96dp"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
