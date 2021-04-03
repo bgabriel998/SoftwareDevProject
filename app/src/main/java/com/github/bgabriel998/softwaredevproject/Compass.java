@@ -6,8 +6,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-import java.util.Arrays;
-
 public class Compass implements SensorEventListener {
     //Compass listener to update the compass heading
     private CompassListener compassListener;
