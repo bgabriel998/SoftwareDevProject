@@ -18,7 +18,7 @@ public class InitActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_init);
 
-        ProgressBar progressBar = findViewById(R.id.progressBar);
+        ProgressBar progressBar = findViewById(R.id.progressBarInitActivity);
         progressBar.setVisibility(View.VISIBLE);
         initApp();
 
@@ -35,7 +35,5 @@ public class InitActivity extends AppCompatActivity {
         firebaseAccount.synchronizeDiscoveredCountryHighPoints();
         firebaseAccount.synchronizeUserScore();
         firebaseAccount.synchronizeUsername();
-
-
     }
 }
