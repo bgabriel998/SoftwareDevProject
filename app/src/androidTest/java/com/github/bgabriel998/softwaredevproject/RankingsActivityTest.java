@@ -10,6 +10,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.github.giommok.softwaredevproject.Database;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -59,7 +60,11 @@ public class RankingsActivityTest {
             Database.refRoot.child("users").child("test" + mockPositions.get(i)).removeValue();
         }
         Database.refRoot.child("users").child("null").removeValue();
-        Thread.sleep(500);
+        Thread.sleep(1500);
+
+        /* Make sure no user is signed in before a test */
+        FirebaseAuth.getInstance().signOut();
+        Thread.sleep(1500);
     }
 
     @Rule
@@ -72,7 +77,7 @@ public class RankingsActivityTest {
             Database.refRoot.child("users").child("test" + mockPositions.get(i)).removeValue();
         }
         Database.refRoot.child("users").child("null").removeValue();
-        Thread.sleep(500);
+        Thread.sleep(1500);
     }
 
     /* Test that the toolbar title is set as expected */
@@ -98,7 +103,7 @@ public class RankingsActivityTest {
             Database.setChild("users/test" + mockPositions.get(i), Arrays.asList("username", "score"), Arrays.asList(TESTING_USERNAME + mockPositions.get(i), mockPoints.get(i)));
         }
         Database.setChild("users/null", Arrays.asList("username", "score"), Arrays.asList(TESTING_USERNAME, MAXIMUM_POINTS));
-        Thread.sleep(1000);
+        Thread.sleep(1500);
 
         // Check correct data
         DataInteraction interaction =  onData(instanceOf(RankingItem.class));
@@ -122,7 +127,7 @@ public class RankingsActivityTest {
             Database.setChild("users/test" + mockPositions.get(i), Arrays.asList("username", "score"), Arrays.asList(TESTING_USERNAME + mockPositions.get(i), mockPoints.get(i)));
         }
         Database.setChild("users/null", Arrays.asList("username", "score"), Arrays.asList(TESTING_USERNAME, MAXIMUM_POINTS));
-        Thread.sleep(1000);
+        Thread.sleep(1500);
 
         DataInteraction interaction =  onData(instanceOf(RankingItem.class));
 
