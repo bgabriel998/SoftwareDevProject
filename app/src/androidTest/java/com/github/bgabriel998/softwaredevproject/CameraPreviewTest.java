@@ -184,5 +184,6 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         assertEquals(compassView.selectHeadingString(270), "W");
         assertEquals(compassView.selectHeadingString(315), "NW");
         assertEquals(compassView.selectHeadingString(360), "N");
+        assertEquals(compassView.selectHeadingString(1), "");
     }
 }
