@@ -26,6 +26,7 @@
     <!--TextView indicates the horizontal degrees and the direction in which the user is heading-->
     <TextView
         android:id="@+id/headingHorizontal"
+        android:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
@@ -42,6 +43,7 @@
     <!--TextView indicates the vertical degrees-->
     <TextView
         android:id="@+id/headingVertical"
+        android:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/headingHorizontal"
@@ -58,6 +60,7 @@
     <!--TextView indicates the vertical degrees-->
     <TextView
         android:id="@+id/fovHorizontal"
+        android:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/headingVertical"
@@ -74,6 +77,7 @@
     <!--TextView indicates the vertical degrees-->
     <TextView
         android:id="@+id/fovVertical"
+        android:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/fovHorizontal"

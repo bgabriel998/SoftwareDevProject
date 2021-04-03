@@ -39,15 +39,11 @@ public class Button1Activity extends AppCompatActivity {
         // TextView that will tell the user what degree he's heading
         // Used for demo and debug
         headingHorizontal =  findViewById(R.id.headingHorizontal);
-        headingHorizontal.setVisibility(View.VISIBLE);
         headingVertical =  findViewById(R.id.headingVertical);
-        headingVertical.setVisibility(View.VISIBLE);
         // TextView that will tell the user what fov in degrees
         // Used for demo and debug
         fovHorizontal =  findViewById(R.id.fovHorizontal);
-        fovHorizontal.setVisibility(View.VISIBLE);
         fovVertical =  findViewById(R.id.fovVertical);
-        fovVertical.setVisibility(View.VISIBLE);
 
         //Create compass view
         compassView = findViewById(R.id.compass);
