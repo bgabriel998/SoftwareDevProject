@@ -23,6 +23,20 @@ import java.util.concurrent.Future;
 /* Singleton class containing the only possible account connected */
 public class FirebaseAccount implements Account {
 
+    private static DatabaseReference dbRefUsername = Database.refRoot.child("users/null/username");
+    private static ValueEventListener usernameListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            username = dataSnapshot.getValue(String.class);
+            if(username == null) username = "null";
+            Log.d("FireBase Data", "Username "+ username);
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+        }
+    };;
+
     private static String username = "null";
     private static long score = 0;
     private static FirebaseAccount account = null;
@@ -32,6 +46,7 @@ public class FirebaseAccount implements Account {
     public static FirebaseAccount getAccount() {
         if (account == null) {
             account = new FirebaseAccount();
+
         }
         return account;
     }
@@ -80,20 +95,9 @@ public class FirebaseAccount implements Account {
 
     @Override
     public void synchronizeUsername() {
-        DatabaseReference dbRef = Database.refRoot.child("users/" + getId() + "/username");
-        ValueEventListener usernameListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                username = dataSnapshot.getValue(String.class);
-                if(username == null) username = "null";
-                Log.d("FireBase Data", "Username "+ username);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        };
-        dbRef.addValueEventListener(usernameListener);
+        dbRefUsername.removeEventListener(usernameListener);
+        dbRefUsername = Database.refRoot.child("users/" + getId() + "/username");
+        dbRefUsername.addValueEventListener(usernameListener);
     }
 
     @Override
@@ -142,7 +146,7 @@ public class FirebaseAccount implements Account {
             Database.setChild("users/"+getId(),
                     Collections.singletonList("CountryHighPoint"),
                     Collections.singletonList(entry)
-                    );
+            );
         }
     }
 

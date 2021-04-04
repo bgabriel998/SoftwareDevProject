@@ -34,6 +34,7 @@ public class AccountTest {
 
         /* Make sure no user is signed in before a test */
         FirebaseAuth.getInstance().signOut();
+        Account.getAccount().synchronizeUsername();
         Thread.sleep(1500);
     }
 
@@ -75,7 +76,7 @@ public class AccountTest {
         assertEquals(account.getUsername(), "username@Test");
         // Now it will test that if no data is present it produces a "null" username
         Database.refRoot.child("users").child("null").removeValue();
-        Thread.sleep(1500);
+        Thread.sleep(2000);
         assertEquals(account.getUsername(), "null");
     }
 
