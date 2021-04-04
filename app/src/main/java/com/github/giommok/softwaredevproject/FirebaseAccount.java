@@ -83,7 +83,7 @@ public class FirebaseAccount implements Account {
         DatabaseReference dbRef = Database.refRoot.child("users/" + getId() + "/username");
         ValueEventListener usernameListener = new ValueEventListener() {
             @Override
-            public synchronized void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 username = dataSnapshot.getValue(String.class);
                 if(username == null) username = "null";
                 Log.d("FireBase Data", "Username "+ username);
