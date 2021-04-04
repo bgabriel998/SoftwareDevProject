@@ -1,6 +1,7 @@
 package com.github.bgabriel998.softwaredevproject;
 
 import android.content.res.Configuration;
+import android.hardware.camera2.CameraAccessException;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -60,7 +61,12 @@ public class Button1Activity extends AppCompatActivity {
      */
     public void startCompass() {
         //Get the fov of the camera
-        Pair<Float, Float> cameraFieldOfView = cameraPreview.getFieldOfView();
+        Pair<Float, Float> cameraFieldOfView = new Pair<>(0f, 0f);
+        try {
+            cameraFieldOfView = cameraPreview.getFieldOfView();
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
 
         //Set text for demo/debug
         fovHorizontal.setText(String.format(Locale.ENGLISH,"%.1f °", cameraFieldOfView.first));
