@@ -1,7 +1,9 @@
 package com.github.bgabriel998.softwaredevproject;
 
 import android.app.Activity;
+import android.widget.TextView;
 
+import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
@@ -16,12 +18,17 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Locale;
+
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
@@ -58,12 +65,45 @@ public class CollectionActivityTest {
         assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
     }
 
-    /* Test that pressing the collected item the view changes to MountainActivity */
+    /* Test that all elements in list view are at correct place and contains correct data */
     @Test
-    public void TestCollectedItem(){
-        ViewInteraction button = Espresso.onView(withId(R.id.collected));
-        button.perform(ViewActions.click());
-        // Catch intent
-        intended(IntentMatchers.hasComponent(MountainActivity.class.getName()));
+    public void TestContentOfListView(){
+        // TODO Redo test when actually using database.
+        DataInteraction interaction =  onData(instanceOf(CollectedItem.class));
+
+        for (int i = 0; i < 20; i++){
+            DataInteraction listItem = interaction.atPosition(i);
+
+            String name = String.format(Locale.getDefault(),"TEST_Mountain%d", i);
+            String points = String.format("%d", 100 - i);
+
+            listItem.onChildView(withId(R.id.collected_name))
+                    .check(matches(withText(name)));
+            listItem.onChildView(withId(R.id.collected_points))
+                    .check(matches(withText(points)));
+        }
+    }
+
+    @Test
+    public void TestPressCollected() {
+        // Item at pos 10 looks like this
+        CollectedItem correctItem = new CollectedItem(
+                String.format(Locale.getDefault(),"TEST_Mountain%d", 10),
+                100-10,
+                1000-10,
+                50+10,
+                50-10);
+
+        // Get Item at pos 10 and click.
+        DataInteraction listItem = onData(instanceOf(CollectedItem.class)).atPosition(10);
+        listItem.perform(ViewActions.click());
+
+        // Catch intent, and check information
+        intended(allOf(IntentMatchers.hasComponent(MountainActivity.class.getName()),
+                        IntentMatchers.hasExtra("name", correctItem.getName()),
+                        IntentMatchers.hasExtra("points", correctItem.getPoints()),
+                        IntentMatchers.hasExtra("height", correctItem.getHeight()),
+                        IntentMatchers.hasExtra("longitude", correctItem.getLongitude()),
+                        IntentMatchers.hasExtra("latitude", correctItem.getLatitude())));
     }
 }
