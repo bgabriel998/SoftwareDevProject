@@ -41,6 +41,7 @@ public class ElevationMap {
 
     private final UserPoint userPoint;
     private BoundingBox boundingBox;
+    private POIPoint boundingBoxCenter;
 
     private int[][] topographyMap;
 
@@ -52,6 +53,7 @@ public class ElevationMap {
     public ElevationMap(UserPoint userPoint) {
         this.userPoint = userPoint;
         this.boundingBox = userPoint.computeBoundingBox(BOUNDING_BOX_RANGE);
+        this.boundingBoxCenter = new POIPoint(this.boundingBox.getCenterWithDateLine());
         downloadTopographyMap();
     }
 
@@ -144,13 +146,13 @@ public class ElevationMap {
      */
     private void updateBoundingBox() {
 
-        Log.d("3D MAP",  "Updating");
-        POIPoint oldBoundingCenter = new POIPoint(boundingBox.getCenterWithDateLine());
-        Log.d("3D MAP", "Distance from old bounding center: " + userPoint.computeFlatDistance(oldBoundingCenter));
+        Log.d("3D MAP", "Distance from old bounding center: " + userPoint.computeFlatDistance(boundingBoxCenter));
 
-        if (userPoint.computeFlatDistance(oldBoundingCenter) > MINIMUM_DISTANCE_FOR_UPDATE) {
-            Log.d("3D MAP",  "New Map download");
+        if (userPoint.computeFlatDistance(boundingBoxCenter) > MINIMUM_DISTANCE_FOR_UPDATE) {
+            Log.d("3D MAP",  "Updating");
             boundingBox = userPoint.computeBoundingBox(BOUNDING_BOX_RANGE);
+            boundingBoxCenter = new POIPoint(boundingBox.getCenterWithDateLine());
+            Log.d("3D MAP",  "New Map download");
             downloadTopographyMap();
         }
 
