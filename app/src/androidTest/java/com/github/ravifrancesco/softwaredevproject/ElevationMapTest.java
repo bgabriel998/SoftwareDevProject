@@ -24,7 +24,9 @@ public class ElevationMapTest {
         Assert.assertTrue(true);
 
     }
-
+/**
+ * Check that getTopography method does effectively return a non-null value
+ */
     @Test
     public void getTopographyMapBitmap() {
 
