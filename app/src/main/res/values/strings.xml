@@ -17,6 +17,7 @@
     <string name="start_button">Start Peak AR</string>
     <string name="collection_button">Collection</string>
     <string name="ranking_button">Ranking</string>
+    <string name="gallery_button">Gallery</string>
     <string name="sign_in_button">Sign In</string>
     <string name="sign_out_button">Sign Out</string>
     <string name="sign_up_button">Sign Up</string>

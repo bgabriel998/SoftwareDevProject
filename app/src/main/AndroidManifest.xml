@@ -23,6 +23,7 @@
         android:theme="@style/AppTheme"
         tools:remove="android:appComponentFactory">
         <activity android:name=".MainActivity" />
+        <activity android:name=".GalleryActivity"></activity>
         <activity android:name=".CameraActivity" />
         <activity android:name=".MountainActivity" />
         <activity android:name=".CollectionActivity" />
