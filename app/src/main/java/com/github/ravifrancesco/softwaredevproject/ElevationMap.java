@@ -108,10 +108,10 @@ public class ElevationMap {
     private void buildMapGrid(int nRow, int nCol, Scanner responseObj) {
 
         // skip lines to get to first row
-        responseObj.nextLine();
-        responseObj.nextLine();
-        responseObj.nextLine();
-        responseObj.nextLine();
+        int linesToSkip = 4;
+        for (int i =0; i < linesToSkip; i++) {
+            responseObj.nextLine();
+        }
 
         // build matrix
         this.topographyMap = IntStream.range(0, nRow)

@@ -8,7 +8,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class ElevationMapTest {
-
+/**
+ * Test geoTIFF API helper class constructor
+ */
     @Test
     public void geoTIFFConstructorTest() {
 
@@ -22,7 +24,9 @@ public class ElevationMapTest {
         Assert.assertTrue(true);
 
     }
-
+/**
+ * Check that getTopography method does effectively return a non-null value
+ */
     @Test
     public void getTopographyMapBitmap() {
 
@@ -39,7 +43,10 @@ public class ElevationMapTest {
         Assert.assertFalse(topographyMap == null);
 
     }
-
+/**
+ *  Check the changing of the location to get Topography Map
+ * Check with coordinates under the treshold and above
+ */
     @Test
     public void updateMapTest() {
 

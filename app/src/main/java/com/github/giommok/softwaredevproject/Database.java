@@ -2,12 +2,14 @@ package com.github.giommok.softwaredevproject;
 
 import androidx.annotation.NonNull;
 
+import com.github.bgabriel998.softwaredevproject.RankingItem;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class DatabaseException extends RuntimeException {
@@ -26,7 +28,7 @@ public class Database {
      * @param childKeys    A list of strings containing the child keys where to put the new values
      * @param values    A list of strings containing the values to be added
      */
-    public static void setChild(String path, List<String> childKeys, List<String> values) {
+    public static void setChild(String path, List<String> childKeys, List<Object> values) {
 
         // Moving to the correct child position
         DatabaseReference refAdd = refRoot.child(path);
