@@ -8,7 +8,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class ElevationMapTest {
-
+/**
+ * Test geoTIFF API helper class constructor
+ */
     @Test
     public void geoTIFFConstructorTest() {
 
