@@ -1,38 +1,30 @@
 package com.github.bgabriel998.softwaredevproject;
 
 import android.content.Context;
-import android.graphics.Rect;
-import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
 import android.util.DisplayMetrics;
-import android.util.Range;
-import android.util.Size;
 import android.util.SizeF;
 
-
 import androidx.camera.core.AspectRatio;
-import androidx.camera.core.CameraInfo;
 import androidx.camera.core.CameraSelector;
-import androidx.camera.core.ExposureState;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
-import androidx.camera.core.TorchState;
-import androidx.camera.core.ZoomState;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LiveData;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import android.content.pm.PackageManager;
+
 
 /**
  * CameraPreview is used to display the camera-preview of the phone on a view.
@@ -158,29 +150,33 @@ public class CameraPreview{
      * @return the horizontal and vertical field of view in degrees
      */
     public Pair<Float, Float> getFieldOfView(){
-        //Create camera manager
-        CameraManager cameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
         //Initialize horiontal and vertical fov
         double horizontalAngle = 0;
         double verticalAngle = 0;
-        try {
-            //Go through every camera to get the back-facing camera
-            for (final String cameraId : cameraManager.getCameraIdList()) {
-                //Check if camera is back-facing
-                CameraCharacteristics characteristics = cameraManager.getCameraCharacteristics(cameraId);
-                int lensFacing = characteristics.get(CameraCharacteristics.LENS_FACING);
-                if (lensFacing == CameraCharacteristics.LENS_FACING_BACK) {
-                    //If camera is back-facing, calculate the fov
-                    float focalLength = characteristics.get(CameraCharacteristics.LENS_INFO_AVAILABLE_FOCAL_LENGTHS)[0];
-                    SizeF physicalSize = characteristics.get(CameraCharacteristics.SENSOR_INFO_PHYSICAL_SIZE);
-                    float width = physicalSize.getWidth();
-                    float height = physicalSize.getHeight();
-                    horizontalAngle =  2 * Math.atan(width / (2*focalLength));
-                    verticalAngle = 2 * Math.atan(height / (2*focalLength));
+        //Create package manager to check if the device has a camera
+        PackageManager pm = context.getPackageManager();
+        if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+            //Create camera manager
+            CameraManager cameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
+            try {
+                //Go through every camera to get the back-facing camera
+                for (final String cameraId : cameraManager.getCameraIdList()) {
+                    //Check if camera is back-facing
+                    CameraCharacteristics characteristics = cameraManager.getCameraCharacteristics(cameraId);
+                    int lensFacing = characteristics.get(CameraCharacteristics.LENS_FACING);
+                    if (lensFacing == CameraCharacteristics.LENS_FACING_BACK) {
+                        //If camera is back-facing, calculate the fov
+                        float focalLength = characteristics.get(CameraCharacteristics.LENS_INFO_AVAILABLE_FOCAL_LENGTHS)[0];
+                        SizeF physicalSize = characteristics.get(CameraCharacteristics.SENSOR_INFO_PHYSICAL_SIZE);
+                        float width = physicalSize.getWidth();
+                        float height = physicalSize.getHeight();
+                        horizontalAngle =  2 * Math.atan(width / (2*focalLength));
+                        verticalAngle = 2 * Math.atan(height / (2*focalLength));
+                    }
                 }
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
             }
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
         }
         return new Pair<>((float) Math.toDegrees(horizontalAngle), (float) Math.toDegrees(verticalAngle));
     }
