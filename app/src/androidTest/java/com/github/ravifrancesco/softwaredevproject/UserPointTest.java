@@ -20,8 +20,7 @@ public class UserPointTest {
     @Test
     public void getLocationTest() {
 
-        Context mContext = InstrumentationRegistry.getInstrumentation().getContext();
-
+        Context mContext = ApplicationProvider.getApplicationContext();
         UserPoint userPoint = new UserPoint(mContext);
 
         // check if customLocation is off
@@ -43,7 +42,7 @@ public class UserPointTest {
     @Test
     public void setLocationTest() throws TimeoutException {
 
-        Context mContext = InstrumentationRegistry.getInstrumentation().getContext();
+        Context mContext = ApplicationProvider.getApplicationContext();
 
         UserPoint userPoint = new UserPoint(mContext);
 

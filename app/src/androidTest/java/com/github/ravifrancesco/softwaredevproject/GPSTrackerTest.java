@@ -26,7 +26,7 @@ public class GPSTrackerTest {
     @Test
     public void testGPSTracker() throws TimeoutException {
 
-        Context mContext = InstrumentationRegistry.getInstrumentation().getContext();
+        Context mContext = ApplicationProvider.getApplicationContext();
 
         UserPoint userPoint = new UserPoint(mContext);
         GPSTracker mGpsTracker = new GPSTracker(mContext, userPoint);
