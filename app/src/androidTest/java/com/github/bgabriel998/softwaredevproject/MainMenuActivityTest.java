@@ -79,4 +79,13 @@ public class MainMenuActivityTest {
         // Catch intent
         intended(IntentMatchers.hasComponent(RankingsActivity.class.getName()));
     }
+
+    /* Test that pressing the ranking button changes view to GalleryActivity */
+    @Test
+    public void TestGalleryButton(){
+        ViewInteraction button = Espresso.onView(withId(R.id.galleryButton));
+        button.perform(ViewActions.click());
+        // Catch intent
+        intended(IntentMatchers.hasComponent(GalleryActivity.class.getName()));
+    }
 }
