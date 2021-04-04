@@ -1,10 +1,16 @@
 package com.github.bgabriel998.softwaredevproject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.github.ravifrancesco.softwaredevproject.POIPoint;
+
+import java.util.List;
 
 
 /**
@@ -47,6 +53,11 @@ public class CompassView extends View {
 
     //Height of the view in pixel
     int height;
+
+    //Marker used to display mountains on camera-preview
+    private Bitmap mountainMarker;
+
+    private List<POIPoint> POIPoints;
 
     /**
      * Constructor for the CompassView which initializes the widges like the font height and paints used
@@ -99,6 +110,8 @@ public class CompassView extends View {
         terciaryLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         terciaryLinePaint.setStrokeWidth(3f);
         terciaryLinePaint.setColor(lineColor);
+
+        mountainMarker = BitmapFactory.decodeResource(getResources(), R.drawable.mountain_marker);
     }
 
     /**
@@ -187,6 +200,11 @@ public class CompassView extends View {
             else if (i % 15 == 0){
                 drawLine(i, terciaryLineHeight, terciaryLinePaint);
             }
+
+            //Draw the mountains on the canvas
+            if(!POIPoints.isEmpty()){
+                drawPOIs(i);
+            }
         }
     }
 
@@ -198,6 +216,21 @@ public class CompassView extends View {
      */
     private void drawLine(float degree, int lineHeight, Paint paint){
         canvas.drawLine(pixDeg * (degree - minDegrees), height, pixDeg * (degree - minDegrees), lineHeight, paint);
+    }
+
+    public void setPOIs(List<POIPoint> POIPoints){
+        this.POIPoints = POIPoints;
+        invalidate();
+        requestLayout();
+    }
+
+    private void drawPOIs(int actualDegree){
+        for(POIPoint poiPoint : POIPoints){
+            //if(poiPoint.getHorizontalAngleToUser == actualDegree){
+                canvas.drawBitmap(mountainMarker, pixDeg * (actualDegree - minDegrees),
+                        pixDeg * (actualDegree - minDegrees), null);
+            //}
+        }
     }
 
     /**
