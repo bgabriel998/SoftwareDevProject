@@ -43,7 +43,10 @@ public class ElevationMapTest {
         Assert.assertFalse(topographyMap == null);
 
     }
-
+/**
+ *  Check the changing of the location to get Topography Map
+ * Check with coordinates under the treshold and above
+ */
     @Test
     public void updateMapTest() {
 
