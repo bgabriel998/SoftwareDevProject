@@ -48,6 +48,14 @@
     <string name="description_icon">Peak AR Icon</string>
     <string name="description_collected_image">Photo over collected mountain</string>
 
+    <string name="title_activity_init">initActivity</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
+
+
     <!-- MOUNTAIN CATEGORIES -->
     <string name="points__mountain_category">Points:</string>
     <string name="height_mountain_category">Height:</string>

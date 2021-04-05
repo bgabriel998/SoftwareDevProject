@@ -63,7 +63,6 @@ public class ProfileActivity extends AppCompatActivity {
         // If the user is not logged
         if(!account.isSignedIn()) setUI();
         else {
-            account.synchronizeUsername();
             Database.isPresent("users", "email", account.getEmail(), this::setUI, this::setUsernameChoiceUI);
         }
     }
@@ -119,6 +118,7 @@ public class ProfileActivity extends AppCompatActivity {
         AuthUI.getInstance().signOut(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     public void onComplete(Task<Void> task) {
+                        account.synchronizeUsername();
                         setUI();
                     }
                 });
@@ -155,6 +155,7 @@ public class ProfileActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Firebase AUTH", "signInWithCredential:success");
+                            account.synchronizeUsername();
                             // Check if the user is already registered on the database
                             Database.isPresent("users", "email", account.getEmail(), () -> setUI(), () -> setUsernameChoiceUI());
                         } else {
@@ -174,7 +175,6 @@ public class ProfileActivity extends AppCompatActivity {
         Database.setChild("users/" + account.getId(), Arrays.asList("email", "username"), Arrays.asList(account.getEmail(), username));
         Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.available_username , Snackbar.LENGTH_LONG);
         snackbar.show();
-        account.synchronizeUsername();
         setUI();
     }
 

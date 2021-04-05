@@ -9,6 +9,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.firebase.ui.auth.AuthUI;
+import com.github.giommok.softwaredevproject.Account;
 import com.github.giommok.softwaredevproject.Database;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -46,6 +47,7 @@ public class ProfileActivityTest {
 
         /* Make sure no user is signed in before a test */
         FirebaseAuth.getInstance().signOut();
+        Account.getAccount().synchronizeUsername();
         Thread.sleep(1500);
     }
 
@@ -179,7 +181,7 @@ public class ProfileActivityTest {
     public void signOutButtonTest() throws InterruptedException {
         testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
         onView(withId(R.id.signOutButton)).perform(click());
-        Thread.sleep(2000);
-        Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        Thread.sleep(4000);
+        Espresso.onView(withId(R.id.signOutButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
     }
 }
