@@ -9,6 +9,7 @@ import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.github.giommok.softwaredevproject.Account;
 import com.github.giommok.softwaredevproject.Database;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -64,6 +65,7 @@ public class RankingsActivityTest {
 
         /* Make sure no user is signed in before a test */
         FirebaseAuth.getInstance().signOut();
+        Account.getAccount().synchronizeUsername();
         Thread.sleep(1500);
     }
 

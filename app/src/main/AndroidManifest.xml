@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.github.bgabriel998.softwaredevproject">
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-feature android:name="android.hardware.type.watch" />
     <uses-feature android:name="android.hardware.camera.any" />
 
     <uses-permission android:name="android.permission.CAMERA" />
@@ -19,6 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:remove="android:appComponentFactory">
+        <activity android:name=".MainActivity" />
         <activity android:name=".GalleryActivity"></activity>
         <activity android:name=".CameraActivity" />
         <activity android:name=".MountainActivity" />
@@ -36,7 +40,7 @@
         <activity android:name=".Button3Activity" />
         <activity android:name=".Button2Activity" />
         <activity android:name=".Button1Activity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".InitActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
