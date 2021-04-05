@@ -25,11 +25,20 @@ public class CompassView extends View {
     private Paint secondaryTextPaint;
 
     //Colors of the compass-view
-    private int textColor;
-    private int lineColor;
+    private int compassColor;
 
     //Font size of the text
     private int mainTextSize;
+
+    //Max opacity for the paints
+    private static final int MAX_ALPHA = 255;
+
+    //Factors for the sizes
+    private static final int MAIN_TEXT_FACTOR = 20;
+    private static final int SEC_TEXT_FACTOR = 15;
+    private static final int MAIN_LINE_FACTOR = 5;
+    private static final int SEC_LINE_FACTOR = 3;
+    private static final int TER_LINE_FACTOR = 2;
 
     //Heading of the user
     private float horizontalDegrees;
@@ -39,6 +48,7 @@ public class CompassView extends View {
     private float pixDeg;
 
     //Range of the for-loop to draw the compass
+    private float rangeDegrees;
     private float minDegrees;
     private float maxDegrees;
 
@@ -46,13 +56,13 @@ public class CompassView extends View {
     private Canvas canvas;
 
     //Heights of the compass
-    int textHeight;
-    int mainLineHeight;
-    int secondaryLineHeight;
-    int terciaryLineHeight;
+    private int textHeight;
+    private int mainLineHeight;
+    private int secondaryLineHeight;
+    private int terciaryLineHeight;
 
     //Height of the view in pixel
-    int height;
+    private int height;
 
     //Marker used to display mountains on camera-preview
     private Bitmap mountainMarker;
@@ -71,47 +81,58 @@ public class CompassView extends View {
     }
 
     /**
-     * Initializes all needed widgets like paint variables
+     * Initializes all needed widgets for the compass like paint variables
      */
     private void widgetInit(){
         //Initialize colors
-        textColor = R.color.Black;
-        lineColor = R.color.Black;
+        compassColor = R.color.Black;
 
         //Initialize fonts
         float screenDensity = getResources().getDisplayMetrics().scaledDensity;
-        mainTextSize = (int) (15 * screenDensity);
-        int secondaryTextSize = (int) (12 * screenDensity);
+        mainTextSize = (int) (MAIN_TEXT_FACTOR * screenDensity);
 
         //Initialize paints
-        //Paint used for the mian text heading (N, E, S, W)
-        mainTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mainTextPaint.setTextAlign(Paint.Align.CENTER);
-        mainTextPaint.setColor(textColor);
-        mainTextPaint.setTextSize(mainTextSize);
+        //Paint used for the main text heading (N, E, S, W)
+        mainTextPaint = configureTextPaint(mainTextSize);
 
         //Paint used for the secondary text heading (NE, SE, SW, NW)
-        secondaryTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        secondaryTextPaint.setTextAlign(Paint.Align.CENTER);
-        secondaryTextPaint.setColor(textColor);
-        secondaryTextPaint.setTextSize(secondaryTextSize);
+        secondaryTextPaint = configureTextPaint(SEC_TEXT_FACTOR*screenDensity);
 
         //Paint used for the main lines (0°, 90°, 180°, ...)
-        mainLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mainLinePaint.setStrokeWidth(8f);
-        mainLinePaint.setColor(lineColor);
+        mainLinePaint = configureLinePaint(MAIN_LINE_FACTOR*screenDensity);
 
         //Paint used for the secondary lines (45°, 135°, 225°, ...)
-        secondaryLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        secondaryLinePaint.setStrokeWidth(6f);
-        secondaryLinePaint.setColor(lineColor);
+        secondaryLinePaint = configureLinePaint(SEC_LINE_FACTOR*screenDensity);
 
         //Paint used for the terciary lines (15°, 30°, 60°, 75°, 105°, ...)
-        terciaryLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        terciaryLinePaint.setStrokeWidth(3f);
-        terciaryLinePaint.setColor(lineColor);
+        terciaryLinePaint = configureLinePaint(TER_LINE_FACTOR*screenDensity);
+    }
 
-        mountainMarker = BitmapFactory.decodeResource(getResources(), R.drawable.mountain_marker);
+    /**
+     * Method to create the line paints for the compass
+     * @param strokeWidth width of the lines
+     * @return configured paint
+     */
+    private Paint configureLinePaint(float strokeWidth){
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setStrokeWidth(strokeWidth);
+        paint.setColor(compassColor);
+        paint.setAlpha(MAX_ALPHA);
+        return paint;
+    }
+
+    /**
+     * Method to create the text paints for the compass
+     * @param textSize size of the text
+     * @return configured paint
+     */
+    private Paint configureTextPaint(float textSize){
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setTextSize(textSize);
+        paint.setColor(compassColor);
+        paint.setAlpha(MAX_ALPHA);
+        return paint;
     }
 
     /**
@@ -125,6 +146,14 @@ public class CompassView extends View {
         this.verticalDegrees = verticalDegrees;
         invalidate();
         requestLayout();
+    }
+
+    /**
+     * Sets the range in degrees of the compass-view
+     * @param rangeDegrees range in degrees
+     */
+    public void setRange(float rangeDegrees) {
+        this.rangeDegrees = rangeDegrees;
     }
 
     /**
@@ -146,23 +175,20 @@ public class CompassView extends View {
         //Make the canvas take 1/5 of the screen height
         //The text is at the highest point
         textHeight = height - height/5;
-        //mainLineHeight is just under the text so we add the text size
-        mainLineHeight = textHeight + mainTextSize;
+        //mainLineHeight is just under the text
+        //The text is centered thus we add the textsize divided by 2
+        mainLineHeight = textHeight + mainTextSize/2;
         //Then increment each by mainTextSize to get the next line height
         // (the higher the result the lower the line)
-        secondaryLineHeight = mainLineHeight + 2*mainTextSize;
+        secondaryLineHeight = mainLineHeight + mainTextSize;
         terciaryLineHeight = secondaryLineHeight + mainTextSize;
 
-        //Field of view of device
-        //TODO get fov of device
-        float fov = 180;
-
         //Get the starting degree and ending degree of the compass
-        minDegrees = horizontalDegrees - fov/2;
-        maxDegrees = horizontalDegrees + fov/2;
+        minDegrees = horizontalDegrees - rangeDegrees/2;
+        maxDegrees = horizontalDegrees + rangeDegrees/2;
 
         //Calculate the width in pixel of one degree
-        pixDeg = width/fov;
+        pixDeg = width/rangeDegrees;
 
         //Draws the compass
         drawCanvas();
@@ -202,7 +228,7 @@ public class CompassView extends View {
             }
 
             //Draw the mountains on the canvas
-            if(!POIPoints.isEmpty()){
+            if(POIPoints != null && !POIPoints.isEmpty()){
                 drawPOIs(i);
             }
         }
@@ -238,7 +264,7 @@ public class CompassView extends View {
      * @param degree degree to get the string
      * @return String for the degree
      */
-    private String selectHeadingString(int degree){
+    String selectHeadingString(int degree){
         switch (degree){
             case 0: case 360:
                 return "N";

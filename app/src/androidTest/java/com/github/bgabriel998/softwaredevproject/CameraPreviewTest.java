@@ -40,6 +40,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
+import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAvailableListener, Consumer<SurfaceRequest.Result> {
@@ -151,7 +152,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
             request.provideSurface(surface, executor, this::accept);
         });
         // wait until onImageAvailable is invoked. retry several times
-        for (int repeat=20; repeat>=0; repeat--) {
+        for (int repeat=50; repeat>=0; repeat--) {
             Thread.sleep(600);
             int value = counter.get();
             Log.i("CameraPreviewTest", String.format("count: %d", value));
@@ -164,5 +165,25 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
     @Override
     public Lifecycle getLifecycle() {
         return registry;
+    }
+
+    /**
+     * Check if the correct orientation string is returned
+     */
+    @Test
+    public void getCorrectOrientationString(){
+        Context context = ApplicationProvider.getApplicationContext();
+        Assert.assertNotNull(context);
+        CompassView compassView = new CompassView(context, null);
+        assertEquals(compassView.selectHeadingString(0), "N");
+        assertEquals(compassView.selectHeadingString(45), "NE");
+        assertEquals(compassView.selectHeadingString(90), "E");
+        assertEquals(compassView.selectHeadingString(135), "SE");
+        assertEquals(compassView.selectHeadingString(180), "S");
+        assertEquals(compassView.selectHeadingString(225), "SW");
+        assertEquals(compassView.selectHeadingString(270), "W");
+        assertEquals(compassView.selectHeadingString(315), "NW");
+        assertEquals(compassView.selectHeadingString(360), "N");
+        assertEquals(compassView.selectHeadingString(1), "");
     }
 }

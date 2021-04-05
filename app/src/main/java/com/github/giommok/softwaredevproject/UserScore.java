@@ -10,16 +10,16 @@ import com.github.ravifrancesco.softwaredevproject.POIPoint;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
 public class UserScore {
 
-    private ArrayList<String> discoveredCountryHighestPeaks = null;
-    private ArrayList<Integer> discoveredHeights = null;
+
     private HashMap<String,CacheEntry> databaseCache = null;
     private DataBaseHelper dataBaseHelper = null;
-    private final int userID;
+    private final FirebaseAccount fireBaseAccount;
 
     private final Context mContext;
 
@@ -30,11 +30,9 @@ public class UserScore {
      * initialises countryHighPoint database
      * initialises cache
      */
-    public UserScore(Context context, int userID){
+    public UserScore(Context context, FirebaseAccount fireBaseAccount){
         this.mContext = context;
-        this.userID = userID;
-        discoveredCountryHighestPeaks = retrieveDiscoveredCountryHighPoints();
-        discoveredHeights = retrieveDiscoveredHeights();
+        this.fireBaseAccount = fireBaseAccount;
 
         databaseCache = new HashMap<String,CacheEntry>();
         if(dataBaseHelper == null){
@@ -63,9 +61,11 @@ public class UserScore {
                 databaseCache.put(country,countryInfo);
             }
             //Check if the current peak is one country high point
-            if(comparePeakNameWithCacheData(countryInfo, poiPoint))
+            if(comparePeakNameWithCacheData(countryInfo, poiPoint) && !countryHighPointAlreadyDiscovered(poiPoint,country)) {
                 retValue += ScoringConstants.BONUS_COUNTRY_TALLEST_PEAK;
-                updateUserHighestPeaksCountryDiscovered(countryInfo.getCountryHighPoint());
+                countryInfo.setCountryName(country);
+                fireBaseAccount.setDiscoveredCountryHighPoint(countryInfo);
+            }
         }
         dataBaseHelper.close();
         return retValue;
@@ -78,15 +78,28 @@ public class UserScore {
      * @return true if the comparison matches
      */
     private boolean comparePeakNameWithCacheData(CacheEntry countryInfo, POIPoint poiPoint){
-        if((countryInfo.getCountryHighPoint().contains(poiPoint.getName()) ||
+        return (countryInfo.getCountryHighPoint().contains(poiPoint.getName()) ||
                 poiPoint.getName().contains(countryInfo.getCountryHighPoint()))
-                && Math.abs(poiPoint.getAltitude() - countryInfo.getHighPointHeight()) < COUNTRY_HIGHEST_PEAK_DETECTION_TOLERANCE)
-            return true;
-        else return false;
+                && Math.abs(poiPoint.getAltitude() - countryInfo.getHighPointHeight()) < COUNTRY_HIGHEST_PEAK_DETECTION_TOLERANCE;
     }
 
     /**
-     * getDataFromCache try to get data from cache. If entry is not present
+     * Check in the database if the user has already discovered this country
+     * highest point
+     * @param poiPoint new discovered peak
+     * @param country country in which the new discovered peak is located
+     * @return true if the
+     */
+    private boolean countryHighPointAlreadyDiscovered(POIPoint poiPoint, String country){
+        HashMap<String,CacheEntry> countryHighPointDiscovered = fireBaseAccount.getDiscoveredCountryHighPoint();
+        if(countryHighPointDiscovered == null) return false;
+        if(countryHighPointDiscovered.containsKey(country))
+            return countryHighPointDiscovered.get(country).getCountryHighPoint().contains(poiPoint.getName());
+        return false;
+    }
+
+    /**
+     * getDataFromCache try to get country HighPoint from cache. If entry is not present
      * in the cache, the function returns null
      * @param country country name to get its highest point
      * @return CacheEntry containing
@@ -104,9 +117,9 @@ public class UserScore {
      * @param scannedPeaks peaks the user scanned
      * @return new user Score
      */
-    public long computeUserScore(ArrayList<POIPoint> scannedPeaks){
+    private long computeUserScore(ArrayList<POIPoint> scannedPeaks){
         //Get previous score from user database
-        long userScore = retrieveUserScore();
+        long userScore = fireBaseAccount.getUserScore();
         //Foreach loop over all scanned peaks
         for(POIPoint poiPoint : scannedPeaks){
             /*Add classical amount of points*/
@@ -116,42 +129,16 @@ public class UserScore {
         return userScore;
     }
 
-    /**
-     * Retrieve previous score from user database
-     * @return user score
-     */
-    public long retrieveUserScore(){
-        //TODO : implement this method
-        return 0;
-    }
 
 
     /**
      * Updates user score in the database
-     * @param userScore new user score
      */
-    public void updateUserScore( long userScore){
-        //TODO Update the user score in the database
+    public void updateUserScore(ArrayList<POIPoint> scannedPeaks){
+        long userScore = computeUserScore(scannedPeaks);
+        fireBaseAccount.setUserScore(userScore);
     }
 
-    /**
-     * Updates the user database with the newly discovered highpoint
-     * @param PeakName name of the peak that is the highest of the country
-     */
-    public void updateUserHighestPeaksCountryDiscovered(String PeakName){
-        //TODO Update the user score in the database
-    }
-
-
-    /**
-     * Function that queries the user database. This function returns which
-     * country highest point the use has discovered
-     * @return Array List containing country High Points Names
-     */
-    private ArrayList<String> retrieveDiscoveredCountryHighPoints(){
-        //TODO Query the database and retrieve user info
-        return null;
-    }
 
     /**
      * Function that queries the user database. This function returns which
@@ -160,7 +147,8 @@ public class UserScore {
      * @return Array list of integers containing the above listed tags
      */
     private ArrayList<Integer> retrieveDiscoveredHeights(){
-        //TODO Query the database and retrieve user info
+        //TODO : move this method to firebase account class and implement
+        //TODO : functionality
         return null;
     }
 

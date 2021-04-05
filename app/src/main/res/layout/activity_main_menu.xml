@@ -33,7 +33,7 @@
             android:id="@+id/startCameraButton"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:layout_marginTop="45dp"
+            android:layout_marginTop="15dp"
             style="@style/ButtonGrey"
             android:text="@string/start_button"
             android:onClick="cameraButton" />
@@ -43,7 +43,7 @@
             android:id="@+id/collectionButton"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:layout_marginTop="45dp"
+            android:layout_marginTop="15dp"
             style="@style/ButtonGrey"
             android:text="@string/collection_button"
             android:onClick="collectionButton" />
@@ -53,10 +53,20 @@
             android:id="@+id/rankingsButton"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:layout_marginTop="45dp"
+            android:layout_marginTop="15dp"
             style="@style/ButtonGrey"
             android:text="@string/ranking_button"
             android:onClick="rankingsButton" />
+
+        <!-- Gallery button -->
+        <Button
+            android:id="@+id/galleryButton"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginTop="15dp"
+            style="@style/ButtonGrey"
+            android:text="@string/gallery_button"
+            android:onClick="galleryButton" />
 
     </LinearLayout>
 

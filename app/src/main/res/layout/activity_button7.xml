@@ -140,4 +140,17 @@
         android:text="Link for 3dMap"
         app:layout_constraintBottom_toTopOf="@+id/URLTextView"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="176dp"
+        android:layout_height="89dp"
+        android:scaleType="center"
+        tools:layout_editor_absoluteX="123dp"
+        tools:layout_editor_absoluteY="642dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

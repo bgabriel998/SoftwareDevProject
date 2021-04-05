@@ -8,10 +8,16 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.firebase.ui.auth.AuthUI;
+import com.github.giommok.softwaredevproject.Account;
 import com.github.giommok.softwaredevproject.Database;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +38,19 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public class ProfileActivityTest {
 
+    /* Set up the environment */
+    @BeforeClass
+    public static void init() throws InterruptedException {
+        /* Make sure that mock users are not on the database before the tests*/
+        Database.refRoot.child("users").child("test").removeValue();
+        Database.refRoot.child("users").child("null").removeValue();
+
+        /* Make sure no user is signed in before a test */
+        FirebaseAuth.getInstance().signOut();
+        Account.getAccount().synchronizeUsername();
+        Thread.sleep(1500);
+    }
+
     @Rule
     public ActivityScenarioRule<ProfileActivity> testRule = new ActivityScenarioRule<>(ProfileActivity.class);
 
@@ -40,7 +59,7 @@ public class ProfileActivityTest {
     public void removeTestUsers() throws InterruptedException {
         Database.refRoot.child("users").child("test").removeValue();
         Database.refRoot.child("users").child("null").removeValue();
-        Thread.sleep(500);
+        Thread.sleep(1500);
     }
 
     /* Test that the toolbar title is set as expected */
@@ -162,7 +181,7 @@ public class ProfileActivityTest {
     public void signOutButtonTest() throws InterruptedException {
         testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
         onView(withId(R.id.signOutButton)).perform(click());
-        Thread.sleep(2000);
-        Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        Thread.sleep(4000);
+        Espresso.onView(withId(R.id.signOutButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
     }
 }

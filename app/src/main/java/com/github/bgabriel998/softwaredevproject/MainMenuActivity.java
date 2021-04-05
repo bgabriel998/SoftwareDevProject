@@ -43,4 +43,10 @@ public class MainMenuActivity extends AppCompatActivity {
         Intent intent = new Intent(this, RankingsActivity.class);
         startActivity(intent);
     }
+
+    /** Changes view to GalleryActivity */
+    public void galleryButton(View view) {
+        Intent intent = new Intent(this, GalleryActivity.class);
+        startActivity(intent);
+    }
 }
