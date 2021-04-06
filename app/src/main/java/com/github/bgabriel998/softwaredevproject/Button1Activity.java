@@ -1,12 +1,16 @@
 package com.github.bgabriel998.softwaredevproject;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.hardware.camera2.CameraAccessException;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +19,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.util.Pair;
 
+import java.io.File;
 import java.util.Locale;
 
 public class Button1Activity extends AppCompatActivity {
@@ -150,6 +155,10 @@ public class Button1Activity extends AppCompatActivity {
         compass.stop();
     }
 
+    /**
+     * Handle orientation changes
+     * @param newConfig new device configuration
+     */
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -182,5 +191,23 @@ public class Button1Activity extends AppCompatActivity {
 
         //Change the constraints of the button
         takePictureButton.setLayoutParams(params);
+    }
+
+    public void takePicture(View view) {
+        cameraPreview.takePicture();
+    }
+
+    /**
+     * Returns outpudirectory to store images. Use externel media if it is available, our app's
+     * file directory otherwise
+     * @param context app context
+     * @return outputdirectory as a File
+     */
+    public static File getOutputDirectory(Context context){
+        Context appContext = context.getApplicationContext();
+        File mediaDir;
+        File[] mediaDirs = context.getExternalMediaDirs();
+        mediaDir = mediaDirs != null ? mediaDirs[0] : null;
+        return (mediaDir!=null && mediaDir.exists()) ? mediaDir : appContext.getFilesDir();
     }
 }
