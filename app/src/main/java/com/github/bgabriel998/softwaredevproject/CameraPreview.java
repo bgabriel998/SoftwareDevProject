@@ -1,36 +1,20 @@
 package com.github.bgabriel998.softwaredevproject;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
-import android.telecom.Call;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.SizeF;
-import android.view.PixelCopy;
-import android.view.SurfaceView;
-import android.view.View;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.camera.core.AspectRatio;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
@@ -40,7 +24,6 @@ import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
@@ -49,17 +32,8 @@ import androidx.lifecycle.LifecycleOwner;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URI;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * CameraPreview is used to display the camera-preview of the phone on a view.
