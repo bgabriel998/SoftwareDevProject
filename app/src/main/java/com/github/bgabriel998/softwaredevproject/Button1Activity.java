@@ -1,5 +1,7 @@
 package com.github.bgabriel998.softwaredevproject;
 
+import android.content.res.Configuration;
+import android.hardware.camera2.CameraAccessException;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -7,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.view.PreviewView;
+import androidx.core.util.Pair;
 
 import java.util.Locale;
 
@@ -17,6 +20,8 @@ public class Button1Activity extends AppCompatActivity {
     private CompassView compassView;
     private TextView headingHorizontal;
     private TextView headingVertical;
+    private TextView fovHorizontal;
+    private TextView fovVertical;
     private Compass compass;
 
     @Override
@@ -35,9 +40,11 @@ public class Button1Activity extends AppCompatActivity {
         // TextView that will tell the user what degree he's heading
         // Used for demo and debug
         headingHorizontal =  findViewById(R.id.headingHorizontal);
-        headingHorizontal.setVisibility(View.VISIBLE);
         headingVertical =  findViewById(R.id.headingVertical);
-        headingVertical.setVisibility(View.VISIBLE);
+        // TextView that will tell the user what fov in degrees
+        // Used for demo and debug
+        fovHorizontal =  findViewById(R.id.fovHorizontal);
+        fovVertical =  findViewById(R.id.fovVertical);
 
         //Create compass view
         compassView = findViewById(R.id.compass);
@@ -53,15 +60,42 @@ public class Button1Activity extends AppCompatActivity {
      * startCompass creates the compass and initializes the compass listener
      */
     public void startCompass() {
+        //Get the fov of the camera
+        Pair<Float, Float> cameraFieldOfView = new Pair<>(0f, 0f);
+        try {
+            cameraFieldOfView = cameraPreview.getFieldOfView();
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+
+        //Set text for demo/debug
+        fovHorizontal.setText(String.format(Locale.ENGLISH,"%.1f °", cameraFieldOfView.first));
+        fovVertical.setText(String.format(Locale.ENGLISH,"%.1f °", cameraFieldOfView.second));
+
+        //Get device orientation
+        int orientation = getResources().getConfiguration().orientation;
+
+        if(cameraFieldOfView.first != null && cameraFieldOfView.second != null){
+            //Set range depending on the camera fov
+            //Switch horizontal and vertical fov depending on the orientation
+            compassView.setRange(orientation==Configuration.ORIENTATION_LANDSCAPE ?
+                    cameraFieldOfView.first : cameraFieldOfView.second);
+        }
+
+        //Create new compass
         compass = new Compass(this);
+
+        //Create compass listener
         CompassListener compassListener = getCompassListener();
+
+        //Bind the compassListener with the compass
         compass.setListener(compassListener);
     }
 
     /**
      * getCompassListener returns a CompassListener which updates the compass view and the textviews
      * with the actual heading
-     * @return
+     * @return CompassListener for the compass
      */
     private CompassListener getCompassListener() {
         return new CompassListener() {
@@ -107,7 +141,6 @@ public class Button1Activity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         cameraPreview.destroy();
         compass.stop();
     }
