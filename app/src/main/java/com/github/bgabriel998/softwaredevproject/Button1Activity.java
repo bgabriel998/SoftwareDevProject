@@ -1,11 +1,18 @@
 package com.github.bgabriel998.softwaredevproject;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.hardware.camera2.CameraAccessException;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -13,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.view.PreviewView;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -20,8 +28,12 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.util.Pair;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.UUID;
+import java.util.concurrent.ExecutorService;
 
 public class Button1Activity extends AppCompatActivity {
 
@@ -34,10 +46,19 @@ public class Button1Activity extends AppCompatActivity {
     private TextView fovHorizontal;
     private TextView fovVertical;
     private Compass compass;
+    private Context context;
+
+
+    private File outputDirectory;
+
+    private final String FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS";
+    private final String PHOTO_EXTENSION = ".jpg";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        context = this;
 
         //Hide status-bar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -65,6 +86,8 @@ public class Button1Activity extends AppCompatActivity {
 
         //Setup the compass
         startCompass();
+
+        outputDirectory = getOutputDirectory(this);
     }
 
     /**
@@ -172,6 +195,7 @@ public class Button1Activity extends AppCompatActivity {
 
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) takePictureButton.getLayoutParams();
 
+        //Change constraints of the ImageButton depending on the orientation
         if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
             params.rightToRight = R.id.cameraLayout;
             params.topToTop = R.id.cameraLayout;
@@ -194,15 +218,67 @@ public class Button1Activity extends AppCompatActivity {
         takePictureButton.setLayoutParams(params);
     }
 
+    /**
+     * Callback for the takePicture ImageButton takes two pictures, one of the camera and one with the UI
+     * @param view ImageButton
+     * @throws IOException if the bitmap could not be stored
+     */
     public void takePicture(View view) throws IOException {
-        //cameraPreview.takePicture();
-        cameraPreview.takeScreenshot();
+        //Takes a picture without the UI
+        cameraPreview.takePicture();
+
+        //Create a bitmap of the camera preview
+        Bitmap cameraBitmap = cameraPreview.getBitmap();
+        //Create a bitmap of the compass-view
+        Bitmap compassBitmap = compassView.getBitmap();
+        //Combine the two bitmaps
+        Bitmap bitmap = overlay(cameraBitmap, compassBitmap);
+        //Store the bitmap on the user device
+        storeBitmap(bitmap);
+    }
+
+    /**
+     * Combines two bitmaps into one
+     * @param base first bitmap
+     * @param overlay second bitmap that is drawn on first bitmap
+     * @return A bitmap that combine the two bitmaps
+     */
+    private Bitmap overlay(Bitmap base, Bitmap overlay) {
+        Bitmap bitmap = Bitmap.createBitmap(base.getWidth(), base.getHeight(), base.getConfig());
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawBitmap(base, new Matrix(), null);
+        canvas.drawBitmap(overlay, new Matrix(), null);
+        return bitmap;
+    }
+
+    /**
+     * Stores the bitmap on the device.
+     * @param bitmap Bitmap that is to be stored
+     * @throws IOException thrown when bitmap could not be stores
+     */
+    private void storeBitmap(Bitmap bitmap) throws IOException {
+        //Create the file
+        File screenshotFile = createFile(context, FILENAME, PHOTO_EXTENSION);
+        FileOutputStream outputStream = new FileOutputStream(screenshotFile);
+        int quality = 100;
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+        outputStream.flush();
+        outputStream.close();
+    }
+
+    /**
+     * Creates a file which will be used to store the bitmaps
+     * @param format Format of file name
+     * @param extension File extension
+     * @return A file with the
+     */
+    static File createFile(Context context, String format, String extension){
+        return new File(getOutputDirectory(context), new SimpleDateFormat(format, Locale.ENGLISH).format(System.currentTimeMillis()) + extension);
     }
 
     /**
      * Returns outpudirectory to store images. Use externel media if it is available, our app's
      * file directory otherwise
-     * @param context app context
      * @return outputdirectory as a File
      */
     public static File getOutputDirectory(Context context){

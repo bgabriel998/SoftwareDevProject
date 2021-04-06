@@ -1,6 +1,7 @@
 package com.github.bgabriel998.softwaredevproject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
@@ -254,5 +255,18 @@ public class CompassView extends View {
             default:
                 return "";
         }
+    }
+
+    /**
+     * Get a bitmap of the compass-view
+     * @return a bitmap of the compass-view
+     */
+    public Bitmap getBitmap(){
+        CompassView compassView = (CompassView) findViewById(R.id.compass);
+        compassView.setDrawingCacheEnabled(true);
+        compassView.buildDrawingCache();
+        Bitmap bitmap = Bitmap.createBitmap(compassView.getDrawingCache());
+        compassView.setDrawingCacheEnabled(false);
+        return bitmap;
     }
 }
