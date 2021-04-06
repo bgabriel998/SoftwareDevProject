@@ -20,6 +20,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.util.Pair;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 
 public class Button1Activity extends AppCompatActivity {
@@ -193,8 +194,9 @@ public class Button1Activity extends AppCompatActivity {
         takePictureButton.setLayoutParams(params);
     }
 
-    public void takePicture(View view) {
-        cameraPreview.takePicture();
+    public void takePicture(View view) throws IOException {
+        //cameraPreview.takePicture();
+        cameraPreview.takeScreenshot();
     }
 
     /**

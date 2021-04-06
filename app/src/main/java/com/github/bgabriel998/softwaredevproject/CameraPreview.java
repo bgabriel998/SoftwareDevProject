@@ -1,8 +1,11 @@
 package com.github.bgabriel998.softwaredevproject;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
@@ -13,6 +16,7 @@ import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SizeF;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -35,9 +39,12 @@ import androidx.lifecycle.LifecycleOwner;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -267,7 +274,38 @@ public class CameraPreview extends Fragment{
         });
     }
 
+    public void takeScreenshot() throws IOException {
+        //Create the file
+        File screenshotFile = createFile(outputDirectory, FILENAME, PHOTO_EXTENSION);
+
+        //create bitmap screen capture
+        Activity activity = (Activity) context;
+        View cameraPreview = activity.getWindow().getDecorView().getRootView();
+        cameraPreview.setDrawingCacheEnabled(true);
+        //Bitmap bitmap = Bitmap.createBitmap(cameraPreview.getDrawingCache());
+        Bitmap bitmap = screenShot(cameraPreview);
+        cameraPreview.setDrawingCacheEnabled(false);
+
+        File imageFile = new File(String.valueOf(screenshotFile));
+
+        FileOutputStream outputStream = new FileOutputStream(imageFile);
+        int quality = 100;
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+        outputStream.flush();
+        outputStream.close();
+    }
+
+    private Bitmap screenShot(View view) {
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),
+                view.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        view.draw(canvas);
+        return bitmap;
+    }
+
     private File createFile(File baseFolder, String format, String extension){
         return new File(baseFolder, new SimpleDateFormat(format, Locale.ENGLISH).format(System.currentTimeMillis()) + extension);
     }
+
+
 }
