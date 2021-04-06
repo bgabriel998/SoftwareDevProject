@@ -1,24 +1,19 @@
 package com.github.bgabriel998.softwaredevproject;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 public class GalleryActivity extends AppCompatActivity {
 
     private static final String  TOOLBAR_TITLE = "Gallery";
-    private static final int  COLUMN_SIZE = 3;
+    private static final int COLUMNS = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +35,12 @@ public class GalleryActivity extends AppCompatActivity {
         List<Integer> images = getImages();
 
         GalleryAdapter galleryAdapter = new GalleryAdapter(this, images, image -> {
-            // Do something with photo.
+            Intent intent = new Intent(this, ImageActivity.class);
+            intent.putExtra("image", image);
+            startActivity(intent);
         });
 
-        recyclerView.setLayoutManager(new GridLayoutManager(this, COLUMN_SIZE));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, COLUMNS));
         recyclerView.setAdapter(galleryAdapter);
     }
 
@@ -56,7 +53,7 @@ public class GalleryActivity extends AppCompatActivity {
         int numberOfTempImages = 20;
         List<Integer> images = new ArrayList<>();
         for (int i = 0; i < numberOfTempImages; i++) {
-            images.add(R.drawable.temp_diablerets);
+            images.add(R.drawable.temp_camera);
         }
 
         return images;
