@@ -11,6 +11,7 @@ import android.util.SizeF;
 import androidx.camera.core.AspectRatio;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
+import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
@@ -108,6 +109,15 @@ public class CameraPreview{
                 .setTargetRotation(rotation)
                 .build();
 
+        // ImageCapture
+        ImageCapture imageCapture = new ImageCapture.Builder()
+                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                // Set aspect ratio, let cameraX handle the resolution
+                .setTargetAspectRatio(screenAspectRatio)
+                // Set rotation
+                .setTargetRotation(rotation)
+                .build();
+
         //ImageAnalysis
         //Only deliver latest image to the analyzer
         ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
@@ -123,7 +133,7 @@ public class CameraPreview{
         cameraProvider.unbindAll();
 
         //Bind use cases to camera
-        cameraProvider.bindToLifecycle((LifecycleOwner) context, cameraSelector, preview, imageAnalysis);
+        cameraProvider.bindToLifecycle((LifecycleOwner) context, cameraSelector, preview, imageCapture, imageAnalysis);
 
         //Attach the viewfinder's surface provider to preview
         preview.setSurfaceProvider(previewView.getSurfaceProvider());

@@ -5,10 +5,14 @@ import android.hardware.camera2.CameraAccessException;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.view.PreviewView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.util.Pair;
 
 import java.util.Locale;
@@ -16,6 +20,7 @@ import java.util.Locale;
 public class Button1Activity extends AppCompatActivity {
 
     //Widgets
+    private PreviewView previewView;
     private CameraPreview cameraPreview;
     private CompassView compassView;
     private TextView headingHorizontal;
@@ -35,7 +40,7 @@ public class Button1Activity extends AppCompatActivity {
         setContentView(R.layout.activity_button1);
 
         //Camera-view
-        PreviewView previewView = findViewById(R.id.view_finder);
+        previewView = findViewById(R.id.cameraPreview);
 
         // TextView that will tell the user what degree he's heading
         // Used for demo and debug
@@ -143,5 +148,39 @@ public class Button1Activity extends AppCompatActivity {
         super.onDestroy();
         cameraPreview.destroy();
         compass.stop();
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        //Restart camera preview after orientation change
+        cameraPreview.destroy();
+        cameraPreview = new CameraPreview(this, previewView);
+
+        ImageButton takePictureButton = findViewById(R.id.takePicture);
+
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) takePictureButton.getLayoutParams();
+
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            params.rightToRight = R.id.cameraLayout;
+            params.topToTop = R.id.cameraLayout;
+            params.bottomToBottom = R.id.cameraLayout;
+            params.endToEnd = -1;
+            params.startToStart = -1;
+            params.rightMargin = 10;
+
+        }
+        else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            params.rightToRight = -1;
+            params.topToTop = -1;
+            params.endToEnd = R.id.cameraLayout;
+            params.startToStart = R.id.cameraLayout;
+            params.bottomToBottom = R.id.compass;
+            params.rightMargin = 0;
+        }
+
+        //Change the constraints of the button
+        takePictureButton.setLayoutParams(params);
     }
 }
