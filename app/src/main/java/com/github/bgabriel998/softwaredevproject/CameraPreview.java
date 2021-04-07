@@ -329,7 +329,16 @@ public class CameraPreview extends Fragment{
                 photoFile).build();
 
         //Take the picture
-        imageCapture.takePicture(outputOptions, cameraExecutor, new ImageCapture.OnImageSavedCallback() {
+        imageCapture.takePicture(outputOptions, cameraExecutor, onImageSavedCallback(photoFile));
+    }
+
+    /**
+     * Creates the onImageSavedCallback for when a picture is saved
+     * @param photoFile File that is saved
+     * @return ImageCapture.onImageSavedCallback
+     */
+    private ImageCapture.OnImageSavedCallback onImageSavedCallback(File photoFile){
+        return new ImageCapture.OnImageSavedCallback() {
             @Override
             public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
                 //Get the Uri of the saved picture
@@ -344,9 +353,9 @@ public class CameraPreview extends Fragment{
 
             //Create a handler to display the toast inside of the onImageSaved callback
             final Handler handler = pictureMessageHandler();
-        });
+        };
     }
-    
+
     /**
      * Handler that is used to display the toast inside the onImageSavedCallback
      * @return Handler for the toast messages
