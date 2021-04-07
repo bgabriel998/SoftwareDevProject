@@ -201,7 +201,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
      * Test that toast is displayed with correct text after taking a picture in portrait and landscape mode
      */
     @Test
-    public void takePictureTest() throws NoSuchMethodException {
+    public void takePictureTest() throws NoSuchMethodException, InterruptedException {
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
         String pictureTakenCorrectly = context.getResources().getString(R.string.pictureTakenToast);
@@ -227,8 +227,12 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
             }
         });
 
+        Thread.sleep(3000);
+
         //Take a picture, needs to be done outside of onActivity
         onView(withId(R.id.takePicture)).perform(click());
+
+        Thread.sleep(3000);
 
         testRule.getScenario().onActivity(activity -> {
             try {
@@ -249,13 +253,17 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
             }
         });
 
+        Thread.sleep(3000);
+
         //Take a picture
         onView(withId(R.id.takePicture)).perform(click());
+
+        Thread.sleep(3000);
 
         testRule.getScenario().onActivity(activity -> {
             try {
                 //Wait for one second so that the toast gets displayed
-                Thread.sleep(1000);
+                Thread.sleep(10000);
                 //Check that correct toast was displayed
                 assertEquals(pictureTakenCorrectly, getLastToast.invoke(activity));
             } catch (InterruptedException | IllegalAccessException | InvocationTargetException e) {
