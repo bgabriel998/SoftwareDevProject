@@ -3,6 +3,8 @@ package com.github.bgabriel998.softwaredevproject;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.ImageFormat;
 import android.media.Image;
 import android.media.ImageReader;
@@ -11,7 +13,6 @@ import android.os.HandlerThread;
 import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.camera.core.Camera;
@@ -24,7 +25,6 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
 import androidx.test.annotation.UiThreadTest;
-import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -37,6 +37,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -45,14 +47,10 @@ import java.util.function.Consumer;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.not;
-
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAvailableListener, Consumer<SurfaceRequest.Result> {
@@ -66,7 +64,6 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private ProcessCameraProvider provider;
-
 
     @Before
     public void setup() throws ExecutionException, InterruptedException {
@@ -109,12 +106,14 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         Log.i("CameraPreviewTest", String.format("image: %d %s", imageNumber, image));
     }
 
+    @UiThreadTest
     @Before
     public void markCreated() {
         registry.setCurrentState(Lifecycle.State.INITIALIZED);
         registry.setCurrentState(Lifecycle.State.CREATED);
     }
 
+    @UiThreadTest
     @After
     public void markDestroyed() {
         registry.setCurrentState(Lifecycle.State.DESTROYED);
@@ -146,7 +145,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
 
         // select Back camera
         CameraSelector.Builder selectorBuilder = new CameraSelector.Builder();
-        Assert.assertTrue(provider.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA));
+        assertTrue(provider.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA));
         selectorBuilder.requireLensFacing(CameraSelector.LENS_FACING_BACK);
 
         // fit the preview size to ImageReader
@@ -166,7 +165,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         });
         // wait until onImageAvailable is invoked. retry several times
         for (int repeat=50; repeat>=0; repeat--) {
-            Thread.sleep(600);
+            Thread.sleep(1000);
             int value = counter.get();
             Log.i("CameraPreviewTest", String.format("count: %d", value));
             if (value > 0) return;
@@ -201,30 +200,80 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
     }
 
     /**
-     * Test that toast is displayed with correct text after taking a picture
+     * Test that toast is displayed with correct text after taking a picture in portrait and landscape mode
      */
     @Test
-    public void takePictureTest(){
+    public void takePictureTest() throws NoSuchMethodException {
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
+        String pictureTakenCorrectly = context.getResources().getString(R.string.pictureTakenToast);
 
+        //Method to get the last displayed toast
+        Method getLastToast = Button1Activity.class.getDeclaredMethod("getLastToast");
+        getLastToast.setAccessible(true);
+
+        //Method to get the last displayed toast
+        Method setLastToast = Button1Activity.class.getDeclaredMethod("setLastToast", String.class);
+        getLastToast.setAccessible(true);
+
+        Configuration portraitConfiguration = new Configuration();
+        portraitConfiguration.orientation = Configuration.ORIENTATION_PORTRAIT;
+        Configuration landscapeConfiguration = new Configuration();
+        landscapeConfiguration.orientation = Configuration.ORIENTATION_LANDSCAPE;
+
+        //Method to get the last displayed toast
+        Method onConfigurationChanged = Button1Activity.class.getDeclaredMethod("onConfigurationChanged", Configuration.class);
+        getLastToast.setAccessible(true);
+
+        testRule.getScenario().onActivity(activity -> {
+            try {
+                //Check that last displayed toast is null
+                assertNull(getLastToast.invoke(activity));
+                //Set orientation to portrait
+                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                //Wait for the view to be correctly displayed
+                Thread.sleep(1000);
+            } catch (IllegalAccessException | InvocationTargetException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        //Take a picture, needs to be done outside of onActivity
         onView(withId(R.id.takePicture)).perform(click());
 
+        testRule.getScenario().onActivity(activity -> {
+            try {
+                //Wait for one second so that the toast gets displayed
+                Thread.sleep(1000);
+                //Check that correct toast was displayed
+                assertEquals(pictureTakenCorrectly, getLastToast.invoke(activity));
+                //Reset toast
+                setLastToast.invoke(activity, (Object) null);
+                //Check that last toast was reset
+                assertNull(getLastToast.invoke(activity));
+                //Rotate screen back to portrait
+                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                //Wait for orientation changes
+                Thread.sleep(1000);
+            } catch (InterruptedException | IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        });
 
-//        onView(withText(expectedMessage)).
-//                inRoot(withDecorView(not(decorView)))
-//                .check(matches(isDisplayed()));
+        //Take a picture
+        onView(withId(R.id.takePicture)).perform(click());
 
-        //onToast(expectedMessage).check(matches(isDisplayed()));
+        testRule.getScenario().onActivity(activity -> {
+            try {
+                //Wait for one second so that the toast gets displayed
+                Thread.sleep(1000);
+                //Check that correct toast was displayed
+                assertEquals(pictureTakenCorrectly, getLastToast.invoke(activity));
+            } catch (InterruptedException | IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        });
 
-        onView(withText(R.string.pictureTakenToast)).inRoot(new ToastMatcher())
-                .check(matches(isDisplayed()));
-
-
-        //Wail for toast to disappear
-
-
-        //Change orientation and retake a picture
 
     }
 }

@@ -47,6 +47,7 @@ import java.util.concurrent.Executors;
  * A {@link Fragment} subclass that represents the camera-preview.
  * Use the {@link CameraPreview#newInstance} factory method to
  * create an instance of this fragment.
+ * See: https://github.com/android/camera-samples/blob/main/CameraXBasic
  */
 public class CameraPreview extends Fragment{
 
@@ -70,7 +71,7 @@ public class CameraPreview extends Fragment{
 
     private DisplayManager.DisplayListener displayListener;
 
-    private String lastToast;
+    String lastToast = null;
 
     /**
      * Constructor for the CameraPreview
@@ -349,13 +350,13 @@ public class CameraPreview extends Fragment{
                     //Make the toasts depending on the Message code
                     if(msg.what == FAILED_TO_TAKE_PICTURE){
                         String toastMessage = "Failed to take picture: " + msg.obj.toString();
+                        lastToast = toastMessage;
                         Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show();
-                        setLastToast(toastMessage);
                     }
                     else if(msg.what == PICTURE_TAKEN){
                         //Display only the file location
                         String toastMessage = "Picture saved at: " + msg.obj.toString().substring(0, msg.obj.toString().length() - FILE_LENGTH);
-                        setLastToast(toastMessage);
+                        lastToast = toastMessage;
                         Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show();
                     }
                 }
@@ -369,21 +370,5 @@ public class CameraPreview extends Fragment{
      */
     public Bitmap getBitmap(){
         return previewView.getBitmap();
-    }
-
-    /**
-     * Used for testing, gets the last displayed toast
-     * @return Returns the last displayed toast
-     */
-    public String getLastToast(){
-        return lastToast;
-    }
-
-    /**
-     * Used for testing, sets the last displayed toast
-     * @param lastToast String that was displayed
-     */
-    public void setLastToast(String lastToast){
-        this.lastToast = lastToast;
     }
 }

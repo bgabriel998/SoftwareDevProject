@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-public class Button1Activity extends AppCompatActivity{
+public class Button1Activity extends AppCompatActivity {
 
     //Widgets
     private CameraPreview cameraPreview;
@@ -40,11 +40,11 @@ public class Button1Activity extends AppCompatActivity{
         setContentView(R.layout.activity_button1);
 
         //Add the camera fragment
-        if(savedInstanceState==null){
+        if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .add(R.id.fragment_camera, CameraPreview.newInstance(), null)
-                .commitNow();
+                    .setReorderingAllowed(true)
+                    .add(R.id.fragment_camera, CameraPreview.newInstance(), null)
+                    .commitNow();
         }
 
         //Hide status-bar
@@ -54,12 +54,12 @@ public class Button1Activity extends AppCompatActivity{
 
         // TextView that will tell the user what degree he's heading
         // Used for demo and debug
-        headingHorizontal =  findViewById(R.id.headingHorizontal);
-        headingVertical =  findViewById(R.id.headingVertical);
+        headingHorizontal = findViewById(R.id.headingHorizontal);
+        headingVertical = findViewById(R.id.headingVertical);
         // TextView that will tell the user what fov in degrees
         // Used for demo and debug
-        fovHorizontal =  findViewById(R.id.fovHorizontal);
-        fovVertical =  findViewById(R.id.fovVertical);
+        fovHorizontal = findViewById(R.id.fovHorizontal);
+        fovVertical = findViewById(R.id.fovVertical);
 
         //Create compass view
         compassView = findViewById(R.id.compass);
@@ -83,19 +83,19 @@ public class Button1Activity extends AppCompatActivity{
             e.printStackTrace();
         }
 
-        if(cameraFieldOfView!=null){
+        if (cameraFieldOfView != null) {
             //Set text for demo/debug
-            fovHorizontal.setText(String.format(Locale.ENGLISH,"%.1f °", cameraFieldOfView.first));
-            fovVertical.setText(String.format(Locale.ENGLISH,"%.1f °", cameraFieldOfView.second));
+            fovHorizontal.setText(String.format(Locale.ENGLISH, "%.1f °", cameraFieldOfView.first));
+            fovVertical.setText(String.format(Locale.ENGLISH, "%.1f °", cameraFieldOfView.second));
         }
 
         //Get device orientation
         int orientation = getResources().getConfiguration().orientation;
 
-        if(cameraFieldOfView!=null && cameraFieldOfView.first != null && cameraFieldOfView.second != null && compassView!=null){
+        if (cameraFieldOfView != null && cameraFieldOfView.first != null && cameraFieldOfView.second != null && compassView != null) {
             //Set range depending on the camera fov
             //Switch horizontal and vertical fov depending on the orientation
-            compassView.setRange(orientation==Configuration.ORIENTATION_LANDSCAPE ?
+            compassView.setRange(orientation == Configuration.ORIENTATION_LANDSCAPE ?
                     cameraFieldOfView.first : cameraFieldOfView.second);
         }
 
@@ -112,6 +112,7 @@ public class Button1Activity extends AppCompatActivity{
     /**
      * getCompassListener returns a CompassListener which updates the compass view and the textviews
      * with the actual heading
+     *
      * @return CompassListener for the compass
      */
     private CompassListener getCompassListener() {
@@ -121,8 +122,8 @@ public class Button1Activity extends AppCompatActivity{
                 //Update the compass when the heading changes
                 compassView.setDegrees(heading, headingV);
                 //Update the textviews with the new headings
-                headingHorizontal.setText(String.format(Locale.ENGLISH,"%.1f °", heading));
-                headingVertical.setText(String.format(Locale.ENGLISH,"%.1f °", headingV));
+                headingHorizontal.setText(String.format(Locale.ENGLISH, "%.1f °", heading));
+                headingVertical.setText(String.format(Locale.ENGLISH, "%.1f °", headingV));
             }
         };
     }
@@ -137,6 +138,7 @@ public class Button1Activity extends AppCompatActivity{
         // releases the sensor listeners of the compass
         compass.stop();
     }
+
     /**
      * onResume restarts the compass listener from when user reopens the application
      * without closing it (app running in background)
@@ -149,7 +151,7 @@ public class Button1Activity extends AppCompatActivity{
     }
 
     /**
-     *  Unbind and shutdown camera before exiting camera and stop the compass
+     * Unbind and shutdown camera before exiting camera and stop the compass
      */
     @Override
     protected void onDestroy() {
@@ -160,6 +162,7 @@ public class Button1Activity extends AppCompatActivity{
 
     /**
      * Handle orientation changes
+     *
      * @param newConfig new device configuration
      */
     @Override
@@ -171,7 +174,7 @@ public class Button1Activity extends AppCompatActivity{
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) takePictureButton.getLayoutParams();
 
         //Change constraints of the ImageButton depending on the orientation
-        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             params.rightToRight = R.id.cameraLayout;
             params.topToTop = R.id.cameraLayout;
             params.bottomToBottom = R.id.cameraLayout;
@@ -179,8 +182,7 @@ public class Button1Activity extends AppCompatActivity{
             params.startToStart = -1;
             params.rightMargin = 10;
 
-        }
-        else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             params.rightToRight = -1;
             params.topToTop = -1;
             params.endToEnd = R.id.cameraLayout;
@@ -195,6 +197,7 @@ public class Button1Activity extends AppCompatActivity{
 
     /**
      * Callback for the takePicture ImageButton takes two pictures, one of the camera and one with the UI
+     *
      * @param view ImageButton
      * @throws IOException if the bitmap could not be stored
      */
@@ -213,7 +216,8 @@ public class Button1Activity extends AppCompatActivity{
 
     /**
      * Combines two bitmaps into one
-     * @param base first bitmap
+     *
+     * @param base    first bitmap
      * @param overlay second bitmap that is drawn on first bitmap
      * @return A bitmap that combine the two bitmaps
      */
@@ -227,6 +231,7 @@ public class Button1Activity extends AppCompatActivity{
 
     /**
      * Stores the bitmap on the device.
+     *
      * @param bitmap Bitmap that is to be stored
      * @throws IOException thrown when bitmap could not be stores
      */
@@ -244,11 +249,12 @@ public class Button1Activity extends AppCompatActivity{
 
     /**
      * Creates a file which will be used to store the bitmaps
-     * @param format Format of file name
+     *
+     * @param format    Format of file name
      * @param extension File extension
      * @return A file with the
      */
-    static File createFile(Context context, String format, String extension){
+    static File createFile(Context context, String format, String extension) {
         return new File(getOutputDirectory(context),
                 new SimpleDateFormat(format, Locale.ENGLISH).format(System.currentTimeMillis()) + extension);
     }
@@ -256,13 +262,30 @@ public class Button1Activity extends AppCompatActivity{
     /**
      * Returns outpudirectory to store images. Use externel media if it is available, our app's
      * file directory otherwise
+     *
      * @return outputdirectory as a File
      */
-    public static File getOutputDirectory(Context context){
+    public static File getOutputDirectory(Context context) {
         Context appContext = context.getApplicationContext();
         File mediaDir;
         File[] mediaDirs = context.getExternalMediaDirs();
         mediaDir = mediaDirs != null ? mediaDirs[0] : null;
-        return (mediaDir!=null && mediaDir.exists()) ? mediaDir : appContext.getFilesDir();
+        return (mediaDir != null && mediaDir.exists()) ? mediaDir : appContext.getFilesDir();
+    }
+
+    /**
+     * Used for testing, gets the last displayed toast
+     * @return Returns the last displayed toast
+     */
+    public String getLastToast(){
+        return cameraPreview.lastToast;
+    }
+
+    /**
+     * Used for testing, sets the last displayed toast
+     * @param lastToast String that was displayed
+     */
+    public void setLastToast(String lastToast){
+        cameraPreview.lastToast = lastToast;
     }
 }
