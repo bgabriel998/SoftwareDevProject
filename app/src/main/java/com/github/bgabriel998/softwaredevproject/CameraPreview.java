@@ -343,25 +343,33 @@ public class CameraPreview extends Fragment{
             }
 
             //Create a handler to display the toast inside of the onImageSaved callback
-            final Handler handler = new Handler(Looper.getMainLooper()){
-                @Override
-                public void handleMessage(@NonNull Message msg) {
-                    super.handleMessage(msg);
-                    //Make the toasts depending on the Message code
-                    if(msg.what == FAILED_TO_TAKE_PICTURE){
-                        String toastMessage = "Failed to take picture: " + msg.obj.toString();
-                        lastToast = toastMessage;
-                        Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show();
-                    }
-                    else if(msg.what == PICTURE_TAKEN){
-                        //Display only the file location
-                        String toastMessage = "Picture saved at: " + msg.obj.toString().substring(0, msg.obj.toString().length() - FILE_LENGTH);
-                        lastToast = toastMessage;
-                        Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show();
-                    }
-                }
-            };
+            final Handler handler = pictureMessageHandler();
         });
+    }
+    
+    /**
+     * Handler that is used to display the toast inside the onImageSavedCallback
+     * @return Handler for the toast messages
+     */
+    private Handler pictureMessageHandler(){
+        return new Handler(Looper.getMainLooper()){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                //Make the toasts depending on the Message code
+                if(msg.what == FAILED_TO_TAKE_PICTURE){
+                    String toastMessage = "Failed to take picture: " + msg.obj.toString();
+                    lastToast = toastMessage;
+                    Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show();
+                }
+                else if(msg.what == PICTURE_TAKEN){
+                    //Display only the file location
+                    String toastMessage = "Picture saved at: " + msg.obj.toString().substring(0, msg.obj.toString().length() - FILE_LENGTH);
+                    lastToast = toastMessage;
+                    Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show();
+                }
+            }
+        };
     }
 
     /**
