@@ -60,4 +60,8 @@
     <string name="points__mountain_category">Points:</string>
     <string name="height_mountain_category">Height:</string>
     <string name="position_mountain_category">Position:</string>
+
+    <string name="pictureTakenToast">Picture saved at: file:///storage/emulated/0/Android/media/com.github.bgabriel998.softwaredevproject/</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

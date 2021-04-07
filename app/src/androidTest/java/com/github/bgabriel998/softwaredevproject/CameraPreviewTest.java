@@ -1,6 +1,7 @@
 package com.github.bgabriel998.softwaredevproject;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.ImageFormat;
 import android.media.Image;
@@ -10,6 +11,7 @@ import android.os.HandlerThread;
 import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.camera.core.Camera;
@@ -22,6 +24,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
 import androidx.test.annotation.UiThreadTest;
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -40,6 +43,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.not;
+
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
@@ -54,6 +66,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private ProcessCameraProvider provider;
+
 
     @Before
     public void setup() throws ExecutionException, InterruptedException {
@@ -185,5 +198,33 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         assertEquals(compassView.selectHeadingString(315), "NW");
         assertEquals(compassView.selectHeadingString(360), "N");
         assertEquals(compassView.selectHeadingString(1), "");
+    }
+
+    /**
+     * Test that toast is displayed with correct text after taking a picture
+     */
+    @Test
+    public void takePictureTest(){
+        Context context = ApplicationProvider.getApplicationContext();
+        Assert.assertNotNull(context);
+
+        onView(withId(R.id.takePicture)).perform(click());
+
+
+//        onView(withText(expectedMessage)).
+//                inRoot(withDecorView(not(decorView)))
+//                .check(matches(isDisplayed()));
+
+        //onToast(expectedMessage).check(matches(isDisplayed()));
+
+        onView(withText(R.string.pictureTakenToast)).inRoot(new ToastMatcher())
+                .check(matches(isDisplayed()));
+
+
+        //Wail for toast to disappear
+
+
+        //Change orientation and retake a picture
+
     }
 }

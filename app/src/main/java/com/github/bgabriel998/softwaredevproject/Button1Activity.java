@@ -1,11 +1,13 @@
 package com.github.bgabriel998.softwaredevproject;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Camera;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.hardware.camera2.CameraAccessException;
@@ -15,6 +17,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +29,7 @@ import androidx.camera.view.PreviewView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.util.Pair;
+import androidx.fragment.app.FragmentManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,7 +39,7 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
-public class Button1Activity extends AppCompatActivity {
+public class Button1Activity extends AppCompatActivity{
 
     //Widgets
     private PreviewView previewView;
@@ -47,6 +51,9 @@ public class Button1Activity extends AppCompatActivity {
     private TextView fovVertical;
     private Compass compass;
     private Context context;
+    private FrameLayout container;
+
+    private Fragment fragment;
 
 
     private File outputDirectory;
@@ -57,17 +64,23 @@ public class Button1Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_button1);
 
+        //container = findViewById(R.id.fragment_container);
+
+        if(savedInstanceState==null){
+            getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .add(R.id.fragment_camera, CameraPreview.newInstance(), null)
+                //.replace(R.id.camera_fragment, CameraPreview.newInstance(), null)
+                .commitNow();
+        }
         context = this;
 
         //Hide status-bar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        setContentView(R.layout.activity_button1);
-
-        //Camera-view
-        previewView = findViewById(R.id.cameraPreview);
 
         // TextView that will tell the user what degree he's heading
         // Used for demo and debug
@@ -82,7 +95,7 @@ public class Button1Activity extends AppCompatActivity {
         compassView = findViewById(R.id.compass);
 
         //Create camera preview on the previewView
-        cameraPreview = new CameraPreview(this, previewView);
+        cameraPreview = (CameraPreview) getSupportFragmentManager().findFragmentById(R.id.fragment_camera);
 
         //Setup the compass
         startCompass();
@@ -97,19 +110,21 @@ public class Button1Activity extends AppCompatActivity {
         //Get the fov of the camera
         Pair<Float, Float> cameraFieldOfView = new Pair<>(0f, 0f);
         try {
-            cameraFieldOfView = cameraPreview.getFieldOfView();
+            cameraFieldOfView = cameraPreview.getFieldOfView(context);
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
 
-        //Set text for demo/debug
-        fovHorizontal.setText(String.format(Locale.ENGLISH,"%.1f °", cameraFieldOfView.first));
-        fovVertical.setText(String.format(Locale.ENGLISH,"%.1f °", cameraFieldOfView.second));
+        if(cameraFieldOfView!=null){
+            //Set text for demo/debug
+            fovHorizontal.setText(String.format(Locale.ENGLISH,"%.1f °", cameraFieldOfView.first));
+            fovVertical.setText(String.format(Locale.ENGLISH,"%.1f °", cameraFieldOfView.second));
+        }
 
         //Get device orientation
         int orientation = getResources().getConfiguration().orientation;
 
-        if(cameraFieldOfView.first != null && cameraFieldOfView.second != null){
+        if(cameraFieldOfView!=null && cameraFieldOfView.first != null && cameraFieldOfView.second != null && compassView!=null){
             //Set range depending on the camera fov
             //Switch horizontal and vertical fov depending on the orientation
             compassView.setRange(orientation==Configuration.ORIENTATION_LANDSCAPE ?
@@ -147,8 +162,6 @@ public class Button1Activity extends AppCompatActivity {
     /**
      * onPause release the sensor listener from compass when user leave the application
      * without closing it (app running in background)
-     * @Override
-     * @return nothing
      */
     @Override
     protected void onPause() {
@@ -159,14 +172,12 @@ public class Button1Activity extends AppCompatActivity {
     /**
      * onResume restarts the compass listener from when user reopens the application
      * without closing it (app running in background)
-     * @Override
-     * @return nothing
      */
     @Override
     protected void onResume() {
         super.onResume();
         //starts the compass
-        startCompass();
+        //startCompass();
     }
 
     /**
@@ -175,7 +186,7 @@ public class Button1Activity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        cameraPreview.destroy();
+        //cameraPreview.destroy();
         compass.stop();
     }
 
@@ -188,8 +199,16 @@ public class Button1Activity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
 
         //Restart camera preview after orientation change
-        cameraPreview.destroy();
-        cameraPreview = new CameraPreview(this, previewView);
+        //cameraPreview.destroy();
+        //cameraPreview = new CameraPreview(this, previewView);
+//        cameraPreview.onDestroy();
+//
+//        getSupportFragmentManager().beginTransaction()
+//                .setReorderingAllowed(true)
+//                .replace(R.id.fragment_camera, CameraPreview.newInstance(), null)
+//                .commitNow();
+//
+//        cameraPreview = (CameraPreview) getSupportFragmentManager().findFragmentById(R.id.fragment_camera);
 
         ImageButton takePictureButton = findViewById(R.id.takePicture);
 
@@ -223,11 +242,11 @@ public class Button1Activity extends AppCompatActivity {
      * @param view ImageButton
      * @throws IOException if the bitmap could not be stored
      */
-    public void takePicture(View view) throws IOException {
-        //Takes a picture without the UI
-        cameraPreview.takePicture();
-
+    public void takePictureListener(View view) throws IOException {
         //Create a bitmap of the camera preview
+
+        //cameraPreview = (CameraPreview) getSupportFragmentManager().findFragmentById(R.id.fragment_camera);
+
         Bitmap cameraBitmap = cameraPreview.getBitmap();
         //Create a bitmap of the compass-view
         Bitmap compassBitmap = compassView.getBitmap();
