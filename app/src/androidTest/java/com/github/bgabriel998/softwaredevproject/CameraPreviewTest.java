@@ -220,13 +220,12 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
                 assertNull(getLastToast.invoke(activity));
                 //Set orientation to portrait
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                //Wait for the view to be correctly displayed
-                Thread.sleep(10000);
-            } catch (IllegalAccessException | InvocationTargetException | InterruptedException e) {
+            } catch (InvocationTargetException | IllegalAccessException e) {
                 e.printStackTrace();
             }
         });
 
+        //Wait for the view to be correctly displayed
         Thread.sleep(3000);
 
         //Take a picture, needs to be done outside of onActivity
@@ -236,8 +235,6 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
 
         testRule.getScenario().onActivity(activity -> {
             try {
-                //Wait for one second so that the toast gets displayed
-                Thread.sleep(1000);
                 //Check that correct toast was displayed
                 assertEquals(pictureTakenCorrectly, getLastToast.invoke(activity));
                 //Reset toast
@@ -246,27 +243,26 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
                 assertNull(getLastToast.invoke(activity));
                 //Rotate screen back to portrait
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                //Wait for orientation changes
-                Thread.sleep(10000);
-            } catch (InterruptedException | IllegalAccessException | InvocationTargetException e) {
+
+            } catch (IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
         });
 
+        //Wait for orientation changes
         Thread.sleep(3000);
 
         //Take a picture
         onView(withId(R.id.takePicture)).perform(click());
 
+        //Wait for the toast to get displayed
         Thread.sleep(3000);
 
         testRule.getScenario().onActivity(activity -> {
             try {
-                //Wait for one second so that the toast gets displayed
-                Thread.sleep(10000);
                 //Check that correct toast was displayed
                 assertEquals(pictureTakenCorrectly, getLastToast.invoke(activity));
-            } catch (InterruptedException | IllegalAccessException | InvocationTargetException e) {
+            } catch (IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
         });
