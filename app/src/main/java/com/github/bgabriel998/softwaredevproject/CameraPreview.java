@@ -314,9 +314,7 @@ public class CameraPreview extends Fragment{
         }
         return new Pair<>((float) Math.toDegrees(horizontalAngle), (float) Math.toDegrees(verticalAngle));
     }
-
-
-
+    
     /**
      * Takes a picture of the camera-preview without the canvas drawn
      */
