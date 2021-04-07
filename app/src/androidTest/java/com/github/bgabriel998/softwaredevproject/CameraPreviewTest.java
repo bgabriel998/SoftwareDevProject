@@ -1,10 +1,8 @@
 package com.github.bgabriel998.softwaredevproject;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.graphics.ImageFormat;
 import android.media.Image;
 import android.media.ImageReader;
@@ -216,15 +214,6 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         Method setLastToast = Button1Activity.class.getDeclaredMethod("setLastToast", String.class);
         getLastToast.setAccessible(true);
 
-        Configuration portraitConfiguration = new Configuration();
-        portraitConfiguration.orientation = Configuration.ORIENTATION_PORTRAIT;
-        Configuration landscapeConfiguration = new Configuration();
-        landscapeConfiguration.orientation = Configuration.ORIENTATION_LANDSCAPE;
-
-        //Method to get the last displayed toast
-        Method onConfigurationChanged = Button1Activity.class.getDeclaredMethod("onConfigurationChanged", Configuration.class);
-        getLastToast.setAccessible(true);
-
         testRule.getScenario().onActivity(activity -> {
             try {
                 //Check that last displayed toast is null
@@ -273,7 +262,5 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
                 e.printStackTrace();
             }
         });
-
-
     }
 }
