@@ -221,7 +221,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
                 //Set orientation to portrait
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 //Wait for the view to be correctly displayed
-                Thread.sleep(1000);
+                Thread.sleep(10000);
             } catch (IllegalAccessException | InvocationTargetException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -243,7 +243,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
                 //Rotate screen back to portrait
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                 //Wait for orientation changes
-                Thread.sleep(1000);
+                Thread.sleep(10000);
             } catch (InterruptedException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
