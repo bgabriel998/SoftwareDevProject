@@ -1,48 +1,31 @@
 package com.github.bgabriel998.softwaredevproject;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Camera;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.hardware.camera2.CameraAccessException;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.view.PreviewView;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.util.Pair;
-import androidx.fragment.app.FragmentManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-import java.util.UUID;
-import java.util.concurrent.ExecutorService;
 
 public class Button1Activity extends AppCompatActivity{
 
     //Widgets
-    private PreviewView previewView;
     private CameraPreview cameraPreview;
     private CompassView compassView;
     private TextView headingHorizontal;
@@ -50,32 +33,19 @@ public class Button1Activity extends AppCompatActivity{
     private TextView fovHorizontal;
     private TextView fovVertical;
     private Compass compass;
-    private Context context;
-    private FrameLayout container;
-
-    private Fragment fragment;
-
-
-    private File outputDirectory;
-
-    private final String FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS";
-    private final String PHOTO_EXTENSION = ".jpg";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_button1);
 
-        //container = findViewById(R.id.fragment_container);
-
+        //Add the camera fragment
         if(savedInstanceState==null){
             getSupportFragmentManager().beginTransaction()
                 .setReorderingAllowed(true)
                 .add(R.id.fragment_camera, CameraPreview.newInstance(), null)
-                //.replace(R.id.camera_fragment, CameraPreview.newInstance(), null)
                 .commitNow();
         }
-        context = this;
 
         //Hide status-bar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -99,8 +69,6 @@ public class Button1Activity extends AppCompatActivity{
 
         //Setup the compass
         startCompass();
-
-        outputDirectory = getOutputDirectory(this);
     }
 
     /**
@@ -110,7 +78,7 @@ public class Button1Activity extends AppCompatActivity{
         //Get the fov of the camera
         Pair<Float, Float> cameraFieldOfView = new Pair<>(0f, 0f);
         try {
-            cameraFieldOfView = cameraPreview.getFieldOfView(context);
+            cameraFieldOfView = cameraPreview.getFieldOfView(this);
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
@@ -177,7 +145,7 @@ public class Button1Activity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
         //starts the compass
-        //startCompass();
+        startCompass();
     }
 
     /**
@@ -197,18 +165,6 @@ public class Button1Activity extends AppCompatActivity{
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-
-        //Restart camera preview after orientation change
-        //cameraPreview.destroy();
-        //cameraPreview = new CameraPreview(this, previewView);
-//        cameraPreview.onDestroy();
-//
-//        getSupportFragmentManager().beginTransaction()
-//                .setReorderingAllowed(true)
-//                .replace(R.id.fragment_camera, CameraPreview.newInstance(), null)
-//                .commitNow();
-//
-//        cameraPreview = (CameraPreview) getSupportFragmentManager().findFragmentById(R.id.fragment_camera);
 
         ImageButton takePictureButton = findViewById(R.id.takePicture);
 
@@ -243,10 +199,9 @@ public class Button1Activity extends AppCompatActivity{
      * @throws IOException if the bitmap could not be stored
      */
     public void takePictureListener(View view) throws IOException {
+        //Take a picture with the camera without the UI
+        cameraPreview.takePicture();
         //Create a bitmap of the camera preview
-
-        //cameraPreview = (CameraPreview) getSupportFragmentManager().findFragmentById(R.id.fragment_camera);
-
         Bitmap cameraBitmap = cameraPreview.getBitmap();
         //Create a bitmap of the compass-view
         Bitmap compassBitmap = compassView.getBitmap();
@@ -277,7 +232,9 @@ public class Button1Activity extends AppCompatActivity{
      */
     private void storeBitmap(Bitmap bitmap) throws IOException {
         //Create the file
-        File screenshotFile = createFile(context, FILENAME, PHOTO_EXTENSION);
+        String FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS";
+        String PHOTO_EXTENSION = ".jpg";
+        File screenshotFile = createFile(this, FILENAME, PHOTO_EXTENSION);
         FileOutputStream outputStream = new FileOutputStream(screenshotFile);
         int quality = 100;
         bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
@@ -292,7 +249,8 @@ public class Button1Activity extends AppCompatActivity{
      * @return A file with the
      */
     static File createFile(Context context, String format, String extension){
-        return new File(getOutputDirectory(context), new SimpleDateFormat(format, Locale.ENGLISH).format(System.currentTimeMillis()) + extension);
+        return new File(getOutputDirectory(context),
+                new SimpleDateFormat(format, Locale.ENGLISH).format(System.currentTimeMillis()) + extension);
     }
 
     /**

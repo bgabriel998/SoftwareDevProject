@@ -8,22 +8,7 @@
     android:layout_height="match_parent"
     android:id="@+id/cameraLayout">
 
-<!--    <androidx.fragment.app.FragmentContainerView-->
-<!--        android:id="@+id/fragment_container"-->
-<!--        android:name="androidx.navigation.fragment.NavHostFragment"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:keepScreenOn="true"-->
-<!--        app:defaultNavHost="true"-->
-<!--        app:navGraph="@navigation/nav_graph"-->
-<!--        tools:context=".Button1Activity"/>-->
-
-<!--    <fragment-->
-<!--        android:name="com.github.bgabriel998.softwaredevproject.CameraPreview"-->
-<!--        android:id="@+id/fragment_camera"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"/>-->
-
+    <!-- Fragment placeholder for the camera fragment -->
     <FrameLayout
         android:id="@+id/fragment_camera"
         android:layout_width="match_parent"
@@ -51,17 +36,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
-<!--    <ImageButton-->
-<!--        android:id="@+id/takePicture2"-->
-<!--        android:layout_width="65dp"-->
-<!--        android:layout_height="50dp"-->
-<!--        android:background="@drawable/take_photo_button"-->
-<!--        android:layout_marginEnd="10dp"-->
-<!--        app:layout_constraintRight_toRightOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"/>-->
-
-<!--TextView indicates the horizontal degrees and the direction in which the user is heading-->
+    <!--TextView indicates the horizontal degrees and the direction in which the user is heading-->
     <TextView
         android:id="@+id/headingHorizontal"
         android:visibility="visible"
@@ -92,8 +67,7 @@
         android:text=""
         android:layout_marginStart="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headingHorizontal"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/headingHorizontal" />
 
     <!--TextView indicates the vertical degrees-->
     <TextView
@@ -109,8 +83,7 @@
         android:text=""
         android:layout_marginStart="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headingVertical"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/headingVertical" />
 
     <!--TextView indicates the vertical degrees-->
     <TextView
@@ -126,7 +99,6 @@
         android:text=""
         android:layout_marginStart="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fovHorizontal"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/fovHorizontal" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

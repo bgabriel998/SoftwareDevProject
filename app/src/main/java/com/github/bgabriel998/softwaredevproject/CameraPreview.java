@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
@@ -17,7 +16,6 @@ import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.SizeF;
 import android.view.LayoutInflater;
-import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -42,7 +40,6 @@ import androidx.lifecycle.LifecycleOwner;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -58,8 +55,6 @@ public class CameraPreview extends Fragment{
     private ImageCapture imageCapture;
     private ExecutorService cameraExecutor;
     private Context context;
-    private ConstraintLayout container;
-    private File outputDirectory;
 
     private final String FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS";
     private final String PHOTO_EXTENSION = ".jpg";
@@ -96,22 +91,20 @@ public class CameraPreview extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_camera_preview, container, false);
+        return inflater.inflate(R.layout.camera_preview, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        container = (ConstraintLayout)view;
+        ConstraintLayout container = (ConstraintLayout) view;
         previewView = container.findViewById(R.id.cameraPreview);
 
         //Initialize background executor
@@ -121,7 +114,7 @@ public class CameraPreview extends Fragment{
         displayManager.registerDisplayListener(displayListener, null);
 
         //Get outputdirectory to store image
-        outputDirectory = Button1Activity.getOutputDirectory(requireContext());
+        //outputDirectory = Button1Activity.getOutputDirectory(requireContext());
 
         //Configure context
         context = getContext();
@@ -131,11 +124,13 @@ public class CameraPreview extends Fragment{
             previewDisplayId = previewView.getDisplay().getDisplayId();
 
             setUpCamera();
-
-            updateCamerUI();
         });
     }
 
+    /**
+     * Create listeners after that the Frgment was attached and has a context
+     * @param context context
+     */
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -252,77 +247,15 @@ public class CameraPreview extends Fragment{
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
     }
 
-
-
+    /**
+     * Redraws the camera preview when configuration gets changed
+     * @param newConfig new configuration
+     */
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-
         //Redraw the cameraUI
         setUpCamera();
-    }
-
-    private void updateTransform(int width, int height) {
-        Matrix matrix = new Matrix();
-
-        // Compute the center of the view finder
-        float centerX = previewView.getWidth() / 2f;
-        float centerY = previewView.getHeight() / 2f;
-
-        // Correct preview output to account for display rotation
-        int rotationDegrees;
-        switch(previewView.getDisplay().getRotation()) {
-            case Surface.ROTATION_0:
-                rotationDegrees = 0;
-            case Surface.ROTATION_90:
-                rotationDegrees = 90;
-            case Surface.ROTATION_180:
-                rotationDegrees = 180;
-            case Surface.ROTATION_270:
-                rotationDegrees = 270;
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + previewView.getDisplay().getRotation());
-        }
-
-        matrix.postRotate((float)-rotationDegrees, centerX, centerY);
-
-        DisplayMetrics viewMetrics = new DisplayMetrics();
-        previewView.getDisplay().getRealMetrics(viewMetrics);
-
-        float previewWidth = viewMetrics.widthPixels;
-        float previewHeight = viewMetrics.heightPixels;
-
-        matrix.postScale(previewWidth/ height,previewHeight/ width, centerX, centerY);
-
-        // Finally, apply transformations to our TextureView
-        previewView.getMatrix().set(matrix);
-    }
-
-    private void updateCamerUI(){
-        setUpCamera();
-        //DisplayMetrics metrics = getResources().getDisplayMetrics();
-        //updateTransform(metrics.widthPixels, metrics.heightPixels);
-        //container.removeView(container.findViewById(R.id.cameraLayout));
-
-        //View controls = View.inflate(requireContext(), R.layout.activity_button1, container);
-
-//        controls.findViewById(R.id.takePicture).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //takes a picture without the UI and saves it
-//               takePicture();
-
- //               //Create a bitmap of the camera preview
-//                Bitmap cameraBitmap = getBitmap();
-//                //Create a bitmap of the compass-view
-//                Bitmap compassBitmap = compassView.getBitmap();
-//                //Combine the two bitmaps
-//                Bitmap bitmap = overlay(cameraBitmap, compassBitmap);
-//                //Store the bitmap on the user device
-//                storeBitmap(bitmap);
-//            }
-//        });
     }
 
     /**
