@@ -69,6 +69,6 @@ public class POIPoint extends Point {
             return false;
         if (obj == this)
             return true;
-        return Objects.equals(this.getName(), ((POIPoint) obj).getName());
+        return getName().equals(((POIPoint)obj).getName());
     }
 }
