@@ -214,7 +214,7 @@ public class FirebaseAccount implements Account {
                     ((HashMap<String, Long>) value).get(Database.CHILD_ATTRIBUTE_PEAK_ALTITUDE));
 
             //Check if the peak is already contain to avoid duplicate creation
-            if(!discoveredPeaks.contains(peak)) discoveredPeaks.add(peak);
+            discoveredPeaks.add(peak);
         }
     }
 
