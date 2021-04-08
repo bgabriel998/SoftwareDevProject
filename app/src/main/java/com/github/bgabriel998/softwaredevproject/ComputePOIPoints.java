@@ -1,7 +1,6 @@
 package com.github.bgabriel998.softwaredevproject;
 
 import android.content.Context;
-import android.text.PrecomputedText;
 
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
 import com.github.ravifrancesco.softwaredevproject.Point;
@@ -57,88 +56,75 @@ public class ComputePOIPoints {
     }
 
     /**
-     * Calculates the vertical angle between the point and another point
-     * @param startPoint StartPoint from where the distance is calculated
-     * @return Angle in degrees between 0 and 360
-     */
-//    public double getVerticalAngleToPoint(Point startPoint, Point endPoint){
-//        double startLat = Math.toRadians(startPoint.getLatitude());
-//        double startLon = Math.toRadians(startPoint.getLongitude());
-//        double startAlt = startPoint.getAltitude();
-//        double endLat = Math.toRadians(endPoint.getLatitude());
-//        double endLon = Math.toRadians(endPoint.getLongitude());
-//        double endAlt = endPoint.getAltitude();
-//
-//        double distance = startPoint.computeDistance(this);
-//        double dropInHeight = distance / 2*EARTH_RADIUS;
-//        double elevationAngle = (this.altitude - startPoint.altitude)/distance;
-//        //Add offset of 90°
-//        double angleRadians = elevationAngle - dropInHeight;
-//        double angleDegree  = Math.toDegrees(angleRadians);
-//        double angle = (angleDegree + 360 + 90) % 360;
-//        return angle;
-//    }
-
-
-
-    // Horizon is 0 degree, Up is 90 degree
-
-    /**
      * Calculates the vertical angle between a startpoint and endpoint
+     * See https://stackoverflow.com/a/41566887
      * @param startPoint Point from where the angle is calculated
      * @param endPoint Point to where the angle is calculated
      * @return Angle in degrees between 0 and 360°, horizon is 90°
      */
     public static double getVerticalBearing(Point startPoint, Point endPoint) {
-        double startLat = Math.toRadians(startPoint.getLatitude());
-        double startLon = Math.toRadians(startPoint.getLongitude());
-        double startAlt = startPoint.getAltitude();
-        double endLat = Math.toRadians(endPoint.getLatitude());
-        double endLon = Math.toRadians(endPoint.getLongitude());
-        double endAlt = endPoint.getAltitude();
 
-        double[] fromECEF = getECEF(startLat, startLon, startAlt);
-        double[] toECEF = getECEF(endLat, endLon, endAlt);
-        double[] deltaECEF = getDeltaECEF(fromECEF, toECEF);
+        Point fromECEF = getECEF(startPoint);
+        Point toECEF = getECEF(endPoint);
+        Point deltaECEF = getDeltaECEF(fromECEF, toECEF);
 
-        double d = (fromECEF[0] * deltaECEF[0] + fromECEF[1] * deltaECEF[1] + fromECEF[2] * deltaECEF[2]);
-        double a = ((fromECEF[0] * fromECEF[0]) + (fromECEF[1] * fromECEF[1]) + (fromECEF[2] * fromECEF[2]));
-        double b = ((deltaECEF[0] * deltaECEF[0]) + (deltaECEF[2] * deltaECEF[2]) + (deltaECEF[2] * deltaECEF[2]));
+        double fromLat = fromECEF.getLatitude();
+        double fromLon = fromECEF.getLatitude();
+        double fromAlt = fromECEF.getLatitude();
+
+        double deltaLat = deltaECEF.getLatitude();
+        double deltaLon = deltaECEF.getLatitude();
+        double deltaAlt = deltaECEF.getLatitude();
+        
+        double d = (fromLat * deltaLat + fromLon * deltaLon + fromAlt * deltaAlt);
+        double a = ((fromLat * fromLat) + (fromLon * fromLon) + (fromAlt * fromAlt));
+        double b = ((deltaLat * deltaLat) + (deltaAlt * deltaAlt) + (deltaAlt * deltaAlt));
         double angle = Math.toDegrees(Math.acos(d / Math.sqrt(a * b)));
         angle = (angle + 360) % 360;
-
         return angle;
     }
 
-    private static double[] getDeltaECEF(double[] from, double[] to) {
-        double X = to[0] - from[0];
-        double Y = to[1] - from[1];
-        double Z = to[2] - from[2];
+    /**
+     * Computes the delta between two ECEF points
+     * @param from startpoint in ECEF
+     * @param to endpoint in ECEF
+     * @return Point
+     */
+    private static Point getDeltaECEF(Point from, Point to) {
+        double X = to.getLatitude() - from.getLatitude();
+        double Y = to.getLongitude() - from.getLongitude();
+        double Z = to.getAltitude() - from.getAltitude();
 
-        return new double[]{X, Y, Z};
+        return new Point(X, Y, Z);
     }
 
-    private static double[] getECEF(double lat, double lon, double alt) {
+    /**
+     * Calculates a ECEF point from a Point
+     * @param point Point to be computed
+     * @return New Point with ECEF coordinate system
+     */
+    private static Point getECEF(Point point) {
+        double lat = Math.toRadians(point.getLatitude());
+        double lon = Math.toRadians(point.getLongitude());
+        double alt = Math.toRadians(point.getAltitude());
+        
         double polarRadius = 6356752.312106893;
 
         double asqr = EARTH_RADIUS * EARTH_RADIUS;
         double bsqr = polarRadius * polarRadius;
         double e = Math.sqrt((asqr-bsqr)/asqr);
 
-        double N = getN(EARTH_RADIUS, e, lat);
+        double sinlatitude = Math.sin(lat);
+        double denom = Math.sqrt(1 - e * e * sinlatitude * sinlatitude);
+        double N = EARTH_RADIUS / denom;
+
         double ratio = (bsqr / asqr);
 
         double X = (N + alt) * Math.cos(lat) * Math.cos(lon);
         double Y = (N + alt) * Math.cos(lat) * Math.sin(lon);
         double Z = (ratio * N + alt) * Math.sin(lat);
 
-        return new double[]{X, Y, Z};
-    }
-
-    private static double getN(double a, double e, double lat) {
-        double sinlatitude = Math.sin(lat);
-        double denom = Math.sqrt(1 - e * e * sinlatitude * sinlatitude);
-        return a / denom;
+        return new Point(X, Y, Z);
     }
 
 
@@ -160,6 +146,12 @@ public class ComputePOIPoints {
         return elevation;
     }
 
+    /**
+     * Uses two points to create a new normalized Point
+     * @param b first Point
+     * @param a second Point
+     * @return Point that is normalized
+     */
     private static Point NormalizeVectorDiff(Point b, Point a){
         // Calculate norm(b-a), where norm divides a vector by its length to produce a unit vector.
         double dx = b.getLatitude() - a.getLatitude();
@@ -173,6 +165,11 @@ public class ComputePOIPoints {
         return new Point(dx/dist, dy/dist, dz/dist);
     }
 
+    /**
+     * Compute the location to the point
+     * @param c Point that gets computed
+     * @return new Point with computed location
+     */
     private static Point LocationToPoint(Point c){
         // Convert (lat, lon, elv) to (x, y, z).
         double lat = c.getLatitude() * Math.PI / 180.0;
