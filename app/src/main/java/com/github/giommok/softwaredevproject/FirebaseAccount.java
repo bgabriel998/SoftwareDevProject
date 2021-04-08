@@ -122,6 +122,11 @@ public class FirebaseAccount implements Account {
     }
 
     @Override
+    public List<FriendItem> getFriends() {
+        return friends;
+    }
+
+    @Override
     public void setUserScore(long newScore) {
         //set local value
         score = newScore;

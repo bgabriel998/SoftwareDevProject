@@ -171,7 +171,7 @@ public class ProfileActivity extends AppCompatActivity {
                             if (snapshot.exists()) {
                                 for (DataSnapshot user: snapshot.getChildren()) {
                                     String friendUid = user.getKey();
-                                    Database.setChild(Database.CHILD_USERS + Database.FOLDER + account.getId() + Database.FOLDER + Database.CHILD_FRIENDS, Collections.singletonList(friendUid), Collections.singletonList(""));
+                                    Database.setChild(Database.CHILD_USERS + account.getId() + Database.CHILD_FRIENDS, Collections.singletonList(friendUid), Collections.singletonList(""));
                                     Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.friend_added, Snackbar.LENGTH_LONG);
                                     snackbar.show();
                                 }

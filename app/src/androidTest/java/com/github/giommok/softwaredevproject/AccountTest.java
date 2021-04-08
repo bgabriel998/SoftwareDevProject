@@ -2,11 +2,8 @@ package com.github.giommok.softwaredevproject;
 
 import android.net.Uri;
 
-import androidx.test.espresso.core.internal.deps.guava.cache.Cache;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 
 
@@ -18,6 +15,7 @@ import org.junit.runner.RunWith;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -29,19 +27,20 @@ public class AccountTest {
     @BeforeClass
     public static void init() throws InterruptedException {
         /* Make sure that mock users are not on the database before the tests*/
-        Database.refRoot.child("users").child("null").removeValue();
+        Database.refRoot.child(Database.CHILD_USERS).child("null").removeValue();
         Thread.sleep(1500);
 
         /* Make sure no user is signed in before a test */
         FirebaseAuth.getInstance().signOut();
-        Account.getAccount().synchronizeUsername();
+        Account.getAccount().synchronizeUserProfile();
         Thread.sleep(1500);
     }
 
     /* Make sure that mock users are not on the database after a test */
     @After
     public void removeTestUsers() throws InterruptedException {
-        Database.refRoot.child("users").child("null").removeValue();
+        Database.refRoot.child(Database.CHILD_USERS).child("null").removeValue();
+        Database.refRoot.child(Database.CHILD_USERS).child("test").removeValue();
         Thread.sleep(1500);
     }
 
@@ -54,6 +53,7 @@ public class AccountTest {
         Account account = Account.getAccount();
 
         assertFalse(account.isSignedIn());
+        assertTrue(account.getFriends().isEmpty());
         assertEquals(account.getDisplayName(), "null");
         assertEquals(account.getEmail(), "null");
         assertEquals(account.getId(), "null");
@@ -67,17 +67,41 @@ public class AccountTest {
      */
     @Test
     public void synchronizeUsernameTest() throws InterruptedException {
-        Database.setChild("users/null", Arrays.asList("username"), Arrays.asList("username@Test"));
+        Database.setChild(Database.CHILD_USERS+"/null", Arrays.asList(Database.CHILD_USERNAME), Arrays.asList("username@Test"));
         Thread.sleep(1500);
         Account account = Account.getAccount();
         // The uid used by synchronize username will be "null", the default value returned by getId() method.
-        account.synchronizeUsername();
+        account.synchronizeUserProfile();
         Thread.sleep(1500);
-        assertEquals(account.getUsername(), "username@Test");
+        assertEquals("username@Test", account.getUsername());
         // Now it will test that if no data is present it produces a "null" username
-        Database.refRoot.child("users").child("null").removeValue();
+        Database.refRoot.child(Database.CHILD_USERS).child("null").removeValue();
         Thread.sleep(2000);
-        assertEquals(account.getUsername(), "null");
+        assertEquals("null",account.getUsername());
+    }
+
+    /**
+     * Testing that synchronizeUsername works fine
+     * @throws InterruptedException
+     */
+    @Test
+    public void synchronizeFriends() throws InterruptedException {
+        Database.setChild(Database.CHILD_USERS+ "null", Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList("username@Test"));
+        Database.setChild(Database.CHILD_USERS+ "test", Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList("username2@Test"));
+        Thread.sleep(1500);
+        Account account = Account.getAccount();
+        // Test if no friend is present
+        account.synchronizeUserProfile();
+        Thread.sleep(1500);
+        assertTrue(account.getFriends().isEmpty());
+        // Test if a friend is present
+        Database.setChild(Database.CHILD_USERS + "null" + Database.CHILD_FRIENDS, Collections.singletonList("test"), Collections.singletonList(""));
+        Thread.sleep(2000);
+        assertEquals("test", account.getFriends().get(0).getUid());
+        // Test if the friend is removed
+        Database.refRoot.child(Database.CHILD_USERS + "null" + Database.CHILD_FRIENDS).removeValue();
+        Thread.sleep(2000);
+        assertTrue(account.getFriends().isEmpty());
     }
 
     /**
@@ -86,7 +110,7 @@ public class AccountTest {
      */
     @Test
     public void setAndGetUserScoreTest() throws InterruptedException{
-        Database.setChild("users/null", Collections.singletonList("username"), Collections.singletonList("usernameTest4"));
+        Database.setChild(Database.CHILD_USERS+"/null", Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList("usernameTest4"));
 
         Thread.sleep(1000);
         Account account = Account.getAccount();
@@ -103,22 +127,22 @@ public class AccountTest {
     @Test
     public void synchronizeUserScoreTest()throws InterruptedException{
         // To be sure that null user does not exists
-        Database.refRoot.child("users").child("null").removeValue();
+        Database.refRoot.child(Database.CHILD_USERS).child("null").removeValue();
         Thread.sleep(1000);
-        Database.setChild("users/null", Collections.singletonList("username"), Collections.singletonList("usernameTest3"));
+        Database.setChild(Database.CHILD_USERS+"/null", Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList("usernameTest3"));
 
         //Set user score to zero
         Account account = Account.getAccount();
-        DatabaseReference refAdd = Database.refRoot.child("users/");
-        refAdd.child(account.getId()).child("score").setValue(0);
+        DatabaseReference refAdd = Database.refRoot.child(Database.CHILD_USERS);
+        refAdd.child(account.getId()).child(Database.CHILD_SCORE).setValue(0);
         Thread.sleep(1000);
 
-        account.synchronizeUserScore();
-        refAdd.child(account.getId()).child("score").setValue(200000);
+        account.synchronizeUserProfile();
+        refAdd.child(account.getId()).child(Database.CHILD_SCORE).setValue(200000);
 
         Thread.sleep(1000);
 
-        assertEquals(account.getUserScore(), 200000);
+        assertEquals(200000,account.getUserScore());
 
     }
 
@@ -129,34 +153,61 @@ public class AccountTest {
      */
     @Test
     public void setAndGetDiscoveredCountryHighPoints()throws InterruptedException{
-        Database.setChild("users/null", Collections.singletonList("username"), Collections.singletonList("usernameTest4"));
+        Database.setChild(Database.CHILD_USERS+"/null", Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList("usernameTest4"));
         Thread.sleep(1000);
         Account account = Account.getAccount();
-        CacheEntry newEntry = new CacheEntry("France","Mont Blanc",4810);
+        CountryHighPoint newEntry = new CountryHighPoint("France","Mont Blanc",4810);
         account.setDiscoveredCountryHighPoint(newEntry);
         Thread.sleep(1000);
-        assertEquals(account.getDiscoveredCountryHighPoint().get("France").toString(),newEntry.toString());
+        assertEquals(newEntry.toString(), account.getDiscoveredCountryHighPoint().get("France").toString());
     }
 
 
+    /**
+     * Tests the synchronization of discovered country high points
+     * @throws InterruptedException
+     */
     @Test
     public void synchronizeDiscoveredCountryHighPointsTest() throws InterruptedException{
-        Database.setChild("users/null", Collections.singletonList("username"), Collections.singletonList("usernameTest4"));
+        Database.setChild(Database.CHILD_USERS + "/null", Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList("usernameTest4"));
         Thread.sleep(1000);
         Account account = Account.getAccount();
-        CacheEntry newEntry = new CacheEntry("France","Mont Blanc",4810);
+        CountryHighPoint newEntry = new CountryHighPoint("France","Mont Blanc",4810);
         //Add sync call back
-        account.synchronizeDiscoveredCountryHighPoints();
+        account.synchronizeUserProfile();
 
         Thread.sleep(1000);
         //Set value to the database manually
-        DatabaseReference refAdd = Database.refRoot.child("users/");
-        refAdd.child("null").child("CountryHighPoint").push().setValue(newEntry);
+        DatabaseReference refAdd = Database.refRoot.child(Database.CHILD_USERS);
+        refAdd.child("null").child(Database.CHILD_COUNTRY_HIGH_POINT).push().setValue(newEntry);
 
         Thread.sleep(1000);
         String s1 = account.getDiscoveredCountryHighPoint().get("France").toString();
         String s2 = newEntry.toString();
-        assertEquals(s1,s2);
+        assertEquals(s2,s1);
+    }
+
+    @Test
+    public void synchronizeDiscoveredHeights() throws InterruptedException {
+        Database.setChild(Database.CHILD_USERS + "/null", Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList("usernameTest4"));
+        Thread.sleep(1000);
+        Account account = Account.getAccount();
+        //Add sync call back
+        account.synchronizeUserProfile();
+
+        Thread.sleep(1000);
+        //Set value to the database manually
+        Integer entry1 = ScoringConstants.BADGE_1st_4000_M_PEAK;
+        Integer entry2 = ScoringConstants.BADGE_1st_3000_M_PEAK;
+        DatabaseReference refAdd = Database.refRoot.child(Database.CHILD_USERS);
+
+        Database.setChildObject(Database.CHILD_USERS +  "null" +
+                Database.CHILD_DISCOVERED_PEAKS_HEIGHTS,Collections.singletonList(entry1));
+        Database.setChildObject(Database.CHILD_USERS +  "null" +
+                Database.CHILD_DISCOVERED_PEAKS_HEIGHTS,Collections.singletonList(entry2));
+
+        Thread.sleep(1000);
+        assertTrue(account.getDiscoveredPeakHeights().contains(entry1) && account.getDiscoveredPeakHeights().contains(entry2));
     }
 
 

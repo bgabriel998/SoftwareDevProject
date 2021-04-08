@@ -21,7 +21,7 @@ class DatabaseException extends RuntimeException {
 public class Database {
 
     public static final String CHILD_USERS = "users/";
-    public static final String CHILD_FRIENDS = "friends/";
+    public static final String CHILD_FRIENDS = "/friends/";
     public static final String CHILD_EMAIL = "email";
     public static final String CHILD_DISCOVERED_PEAKS = "DiscoveredPeaks";
     public static final String CHILD_DISCOVERED_PEAKS_HEIGHTS = "DiscoveredHeights";

@@ -67,7 +67,7 @@ public class UserScoreTest {
         inputArrayList.add(point_4);
 
 
-        userScore.updateUserScore(inputArrayList);
+        userScore.updateUserScoreAndDiscoveredPeaks(inputArrayList);
         long expectedUserScore = (long)(point_1.getAltitude() * ScoringConstants.PEAK_FACTOR +
                                 point_2.getAltitude() * ScoringConstants.PEAK_FACTOR +
                                 point_3.getAltitude() * ScoringConstants.PEAK_FACTOR +
