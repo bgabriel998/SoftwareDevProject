@@ -107,7 +107,7 @@ public class AccountTest {
 
         //Set user score to zero
         Account account = Account.getAccount();
-        DatabaseReference refAdd = Database.refRoot.child(Database.CHILD_USERS + Database.FOLDER);
+        DatabaseReference refAdd = Database.refRoot.child(Database.CHILD_USERS);
         refAdd.child(account.getId()).child(Database.CHILD_SCORE).setValue(0);
         Thread.sleep(1000);
 
@@ -152,7 +152,7 @@ public class AccountTest {
 
         Thread.sleep(1000);
         //Set value to the database manually
-        DatabaseReference refAdd = Database.refRoot.child(Database.CHILD_USERS + Database.FOLDER);
+        DatabaseReference refAdd = Database.refRoot.child(Database.CHILD_USERS);
         refAdd.child("null").child(Database.CHILD_COUNTRY_HIGH_POINT).push().setValue(newEntry);
 
         Thread.sleep(1000);
@@ -173,11 +173,11 @@ public class AccountTest {
         //Set value to the database manually
         Integer entry1 = ScoringConstants.BADGE_1st_4000_M_PEAK;
         Integer entry2 = ScoringConstants.BADGE_1st_3000_M_PEAK;
-        DatabaseReference refAdd = Database.refRoot.child(Database.CHILD_USERS + Database.FOLDER);
+        DatabaseReference refAdd = Database.refRoot.child(Database.CHILD_USERS);
 
-        Database.setChildObject(Database.CHILD_USERS + Database.FOLDER + "null",
+        Database.setChildObject(Database.CHILD_USERS +  "null" +
                 Database.CHILD_DISCOVERED_PEAKS_HEIGHTS,Collections.singletonList(entry1));
-        Database.setChildObject(Database.CHILD_USERS + Database.FOLDER + "null",
+        Database.setChildObject(Database.CHILD_USERS +  "null" +
                 Database.CHILD_DISCOVERED_PEAKS_HEIGHTS,Collections.singletonList(entry2));
 
         Thread.sleep(1000);

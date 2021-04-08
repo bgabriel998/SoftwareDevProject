@@ -128,11 +128,13 @@ public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> impl
     @Override
     protected Object doInBackground(Object[] objects) {
         ArrayList<POI> resList = null;
+
         while(this.retryNbr<= DEFAULT_NUMBER_OF_RETRY){
             try {
                 resList = getPOIsFromUrl(queryUrl);
                 break;
             } catch (HttpException e) {
+                //If the HTTP request fails retry (at most DEFAULT_NUMBER_OF_RETRY times)
                 this.retryNbr++;
             }
         }

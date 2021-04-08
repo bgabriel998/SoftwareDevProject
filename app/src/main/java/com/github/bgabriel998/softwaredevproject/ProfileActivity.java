@@ -172,7 +172,7 @@ public class ProfileActivity extends AppCompatActivity {
      */
     public void registerUser(String username) {
         // Notify the user that the username has changed
-        Database.setChild(Database.CHILD_USERS + Database.FOLDER + account.getId(), Arrays.asList(Database.CHILD_EMAIL, Database.CHILD_USERNAME), Arrays.asList(account.getEmail(), username));
+        Database.setChild(Database.CHILD_USERS + account.getId(), Arrays.asList(Database.CHILD_EMAIL, Database.CHILD_USERNAME), Arrays.asList(account.getEmail(), username));
         Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.available_username , Snackbar.LENGTH_LONG);
         snackbar.show();
         setUI();
