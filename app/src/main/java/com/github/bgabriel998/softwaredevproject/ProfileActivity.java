@@ -63,7 +63,7 @@ public class ProfileActivity extends AppCompatActivity {
         // If the user is not logged
         if(!account.isSignedIn()) setUI();
         else {
-            Database.isPresent("users", "email", account.getEmail(), this::setUI, this::setUsernameChoiceUI);
+            Database.isPresent(Database.CHILD_USERS, Database.CHILD_EMAIL, account.getEmail(), this::setUI, this::setUsernameChoiceUI);
         }
     }
 
@@ -101,7 +101,7 @@ public class ProfileActivity extends AppCompatActivity {
                 snackbar.show();
             }
             // Finally, check if it is available
-            else Database.isPresent("users", "username", username, () -> usernameAlreadyPresent(username), () -> registerUser(username));
+            else Database.isPresent(Database.CHILD_USERS, Database.CHILD_USERNAME, username, () -> usernameAlreadyPresent(username), () -> registerUser(username));
         }
         // Display that the username is not valid
         else {
@@ -118,7 +118,7 @@ public class ProfileActivity extends AppCompatActivity {
         AuthUI.getInstance().signOut(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     public void onComplete(Task<Void> task) {
-                        account.synchronizeUsername();
+                        account.synchronizeUserProfile();
                         setUI();
                     }
                 });
@@ -155,9 +155,9 @@ public class ProfileActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Firebase AUTH", "signInWithCredential:success");
-                            account.synchronizeUsername();
+                            account.synchronizeUserProfile();
                             // Check if the user is already registered on the database
-                            Database.isPresent("users", "email", account.getEmail(), () -> setUI(), () -> setUsernameChoiceUI());
+                            Database.isPresent(Database.CHILD_USERS, Database.CHILD_EMAIL, account.getEmail(), () -> setUI(), () -> setUsernameChoiceUI());
                         } else {
                             Log.w("Firebase AUTH", "signInWithCredential:failure", task.getException());
                         }
@@ -172,7 +172,7 @@ public class ProfileActivity extends AppCompatActivity {
      */
     public void registerUser(String username) {
         // Notify the user that the username has changed
-        Database.setChild("users/" + account.getId(), Arrays.asList("email", "username"), Arrays.asList(account.getEmail(), username));
+        Database.setChild(Database.CHILD_USERS + Database.FOLDER + account.getId(), Arrays.asList(Database.CHILD_EMAIL, Database.CHILD_USERNAME), Arrays.asList(account.getEmail(), username));
         Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.available_username , Snackbar.LENGTH_LONG);
         snackbar.show();
         setUI();

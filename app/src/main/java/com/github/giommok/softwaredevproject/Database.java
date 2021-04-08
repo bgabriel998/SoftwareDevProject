@@ -19,6 +19,21 @@ class DatabaseException extends RuntimeException {
 }
 
 public class Database {
+
+    public static final String FOLDER = "/";
+    public static final String CHILD_USERS = "users";
+    public static final String CHILD_EMAIL = "email";
+    public static final String CHILD_DISCOVERED_PEAKS = "DiscoveredPeaks";
+    public static final String CHILD_DISCOVERED_PEAKS_HEIGHTS = "DiscoveredHeights";
+    public static final String CHILD_USERNAME = "username";
+    public static final String CHILD_SCORE = "score";
+    public static final String CHILD_COUNTRY_HIGH_POINT = "countryHighPoint";
+    public static final String CHILD_ATTRIBUTE_HIGH_POINT_HEIGHT = "highPointHeight";
+    public static final String CHILD_ATTRIBUTE_COUNTRY_NAME = "countryName";
+    public static final String CHILD_ATTRIBUTE_PEAK_NAME = "name";
+    public static final String CHILD_ATTRIBUTE_PEAK_LATITUDE = "latitude";
+    public static final String CHILD_ATTRIBUTE_PEAK_LONGITUDE = "longitude";
+    public static final String CHILD_ATTRIBUTE_PEAK_ALTITUDE = "altitude";
     // This is a reference to the database root
     public static final DatabaseReference refRoot = FirebaseDatabase.getInstance("https://peakar-default-rtdb.europe-west1.firebasedatabase.app/").getReference();
 
@@ -40,6 +55,37 @@ public class Database {
         for(int i = 0; i < childKeys.size(); i++) {
             refAdd.child(childKeys.get(i)).setValue(values.get(i));
         }
+    }
+
+
+    /**
+     * Sets an array of values to the given child at the given path in the DB
+     * @param path The path to the fields to be modified
+     * @param child child key where to put the new values
+     * @param values list of values to add
+     */
+    public static void setChildObjectList(String path, String child,  ArrayList<Object> values){
+        // Moving to the correct child position
+        DatabaseReference refAdd = refRoot.child(path);
+
+        //Iterate over all child and put values
+        for(Object val : values)
+            refAdd.child(child).push().setValue(val);
+    }
+
+
+    /**
+     * Sets an array of values to the given child at the given path in the DB
+     * @param path The path to the fields to be modified
+     * @param child child key where to put the new values
+     * @param value object to add
+     */
+    public static void setChildObject(String path, String child,  Object value){
+        // Moving to the correct child position
+        DatabaseReference refAdd = refRoot.child(path);
+
+        //Put value
+        refAdd.child(child).push().setValue(value);
     }
 
     /**
@@ -69,4 +115,5 @@ public class Database {
             }
         });
     }
+
 }
