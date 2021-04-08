@@ -78,8 +78,12 @@ public class Button1Activity extends AppCompatActivity {
         if(cameraFieldOfView.first != null && cameraFieldOfView.second != null){
             //Set range depending on the camera fov
             //Switch horizontal and vertical fov depending on the orientation
-            compassView.setRange(orientation==Configuration.ORIENTATION_LANDSCAPE ?
-                    cameraFieldOfView.first : cameraFieldOfView.second);
+            if(orientation==Configuration.ORIENTATION_PORTRAIT){
+                compassView.setRange(cameraFieldOfView.first, cameraFieldOfView.second);
+            }
+            else if(orientation==Configuration.ORIENTATION_LANDSCAPE){
+                compassView.setRange(cameraFieldOfView.second, cameraFieldOfView.first);
+            }
         }
 
         //Create new compass
@@ -90,6 +94,9 @@ public class Button1Activity extends AppCompatActivity {
 
         //Bind the compassListener with the compass
         compass.setListener(compassListener);
+
+        ComputePOIPoints computePOIPoints = new ComputePOIPoints(this);
+        compassView.setPOIs(computePOIPoints.POIPoints, computePOIPoints.userPoint);
     }
 
     /**

@@ -9,7 +9,13 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
+import com.github.ravifrancesco.softwaredevproject.Point;
+import com.github.ravifrancesco.softwaredevproject.UserPoint;
 
+import org.osmdroid.bonuspack.location.POI;
+import org.osmdroid.util.GeoPoint;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -48,9 +54,10 @@ public class CompassView extends View {
     private float pixDeg;
 
     //Range of the for-loop to draw the compass
-    private float rangeDegrees;
     private float minDegrees;
     private float maxDegrees;
+    private float rangeDegreesVertical;
+    private float rangeDegreesHorizontal;
 
     //Compass canvas
     private Canvas canvas;
@@ -68,6 +75,8 @@ public class CompassView extends View {
     private Bitmap mountainMarker;
 
     private List<POIPoint> POIPoints;
+    private Point userPoint;
+    private ArrayList<GeoPoint> geoPoints;
 
     /**
      * Constructor for the CompassView which initializes the widges like the font height and paints used
@@ -90,6 +99,10 @@ public class CompassView extends View {
         //Initialize fonts
         float screenDensity = getResources().getDisplayMetrics().scaledDensity;
         mainTextSize = (int) (MAIN_TEXT_FACTOR * screenDensity);
+
+        //Initialize mountain marker
+        mountainMarker = BitmapFactory.decodeResource(getResources(), R.drawable.mountain_marker);
+        mountainMarker = Bitmap.createScaledBitmap(mountainMarker, 150, 150, true);
 
         //Initialize paints
         //Paint used for the main text heading (N, E, S, W)
@@ -149,11 +162,13 @@ public class CompassView extends View {
     }
 
     /**
-     * Sets the range in degrees of the compass-view
-     * @param rangeDegrees range in degrees
+     * Sets the range in degrees of the compass-view, corresponds to the field of view of the camera
+     * @param rangeDegreesHorizontal range in degrees
+     * @param rangeDegreesVertical range in degrees
      */
-    public void setRange(float rangeDegrees) {
-        this.rangeDegrees = rangeDegrees;
+    public void setRange(float rangeDegreesHorizontal, float rangeDegreesVertical) {
+        this.rangeDegreesHorizontal = rangeDegreesHorizontal;
+        this.rangeDegreesVertical = rangeDegreesVertical;
     }
 
     /**
@@ -184,11 +199,11 @@ public class CompassView extends View {
         terciaryLineHeight = secondaryLineHeight + mainTextSize;
 
         //Get the starting degree and ending degree of the compass
-        minDegrees = horizontalDegrees - rangeDegrees/2;
-        maxDegrees = horizontalDegrees + rangeDegrees/2;
+        minDegrees = horizontalDegrees - rangeDegreesHorizontal/2;
+        maxDegrees = horizontalDegrees + rangeDegreesHorizontal/2;
 
         //Calculate the width in pixel of one degree
-        pixDeg = width/rangeDegrees;
+        pixDeg = width/rangeDegreesHorizontal;
 
         //Draws the compass
         drawCanvas();
@@ -244,19 +259,62 @@ public class CompassView extends View {
         canvas.drawLine(pixDeg * (degree - minDegrees), height, pixDeg * (degree - minDegrees), lineHeight, paint);
     }
 
-    public void setPOIs(List<POIPoint> POIPoints){
+    /**
+     * Set the POIs that will be drawn on the camera-preview
+     * TODO replace mock geopoints
+     * @param POIPoints List of POIPoints
+     * @param userPoint location of the user
+     */
+    public void setPOIs(List<POIPoint> POIPoints, Point userPoint){
         this.POIPoints = POIPoints;
+        this.geoPoints = new ArrayList<>();
+        this.userPoint = userPoint;
+        GeoPoint amsterdam = new GeoPoint(52.38336341146919, 4.899839273125784, 0);
+        GeoPoint corse = new GeoPoint(42.412878661343186, 8.951160966878296, 2706);
+        GeoPoint wien = new GeoPoint(48.22066363087269, 16.396538068482492, 150);
+        GeoPoint bordeaux = new GeoPoint(44.8447387495189, -0.5700051995730769, 15);
+        geoPoints.add(amsterdam);
+        geoPoints.add(corse);
+        geoPoints.add(wien);
+        geoPoints.add(bordeaux);
         invalidate();
         requestLayout();
     }
 
+    /**
+     * Draws the POIs on the display
+     * @param actualDegree degree of the actual heading of the user
+     */
     private void drawPOIs(int actualDegree){
+        //Go through all POIPoints
         for(POIPoint poiPoint : POIPoints){
-            //if(poiPoint.getHorizontalAngleToUser == actualDegree){
+            int horizontalAngle = (int)ComputePOIPoints.getHorizontalBearing(userPoint, poiPoint);
+            if(horizontalAngle == actualDegree){
+                //Calculate position in pixel of marker
+                float deltaVerticalAngle = (float) (ComputePOIPoints.getVerticalBearing(userPoint, poiPoint) - verticalDegrees);
+                float mountainMarkerPosition = height * (rangeDegreesVertical - 2*deltaVerticalAngle) / (2*rangeDegreesVertical)
+                        - (float)mountainMarker.getHeight()/2;
+
                 canvas.drawBitmap(mountainMarker, pixDeg * (actualDegree - minDegrees),
-                        pixDeg * (actualDegree - minDegrees), null);
-            //}
+                         mountainMarkerPosition, null);
+            }
         }
+        //Go through all GeoPoints
+        for(GeoPoint geoPoint : geoPoints){
+            Point point = new Point(geoPoint.getLatitude(), geoPoint.getLongitude(), geoPoint.getAltitude());
+            int horizontalAngle = (int) ComputePOIPoints.getHorizontalBearing(userPoint, point);
+            if(horizontalAngle == actualDegree){
+                //Calculate position in pixel of marker
+                float deltaVerticalAngle = (float) (ComputePOIPoints.getVerticalBearing(userPoint, point) - verticalDegrees);
+                float deltaVerticalAngle2 = (float) (ComputePOIPoints.calculateElevationAngle(userPoint, point) - verticalDegrees);
+                float mountainMarkerPosition = height * (rangeDegreesVertical - 2*deltaVerticalAngle) / (2*rangeDegreesVertical)
+                        - (float)mountainMarker.getHeight()/2;
+
+                canvas.drawBitmap(mountainMarker, pixDeg * (actualDegree - minDegrees),
+                        mountainMarkerPosition, null);
+            }
+        }
+
     }
 
     /**
