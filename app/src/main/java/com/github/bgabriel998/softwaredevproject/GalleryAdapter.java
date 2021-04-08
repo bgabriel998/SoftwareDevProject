@@ -76,7 +76,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
      * View holder for the gallery adapter.
      * Contains the image view to be able to set the correct image.
      */
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView image;
 
         /**
