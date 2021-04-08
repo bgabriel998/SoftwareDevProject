@@ -96,7 +96,7 @@ public class Button1Activity extends AppCompatActivity {
         compass.setListener(compassListener);
 
         ComputePOIPoints computePOIPoints = new ComputePOIPoints(this);
-        compassView.setPOIs(computePOIPoints.POIPoints, computePOIPoints.userPoint);
+        compassView.setPOIs(ComputePOIPoints.POIPoints, computePOIPoints.userPoint);
     }
 
     /**

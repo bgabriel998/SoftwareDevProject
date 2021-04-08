@@ -16,6 +16,7 @@ public class ComputePOIPoints {
     public static List<POIPoint> POIPoints;
     public UserPoint userPoint;
     private final static double EARTH_RADIUS = 6378137; // value in meters
+    private GeonamesHandler geonamesHandler;
 
     public ComputePOIPoints(Context context){
         POIPoints = new ArrayList<>();
