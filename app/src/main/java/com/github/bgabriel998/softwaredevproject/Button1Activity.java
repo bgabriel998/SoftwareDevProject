@@ -156,7 +156,6 @@ public class Button1Activity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //cameraPreview.destroy();
         compass.stop();
     }
 

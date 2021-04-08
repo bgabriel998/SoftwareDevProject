@@ -365,13 +365,14 @@ public class CameraPreview extends Fragment{
                 super.handleMessage(msg);
                 //Make the toasts depending on the Message code
                 if(msg.what == FAILED_TO_TAKE_PICTURE){
-                    String toastMessage = "Failed to take picture: " + msg.obj.toString();
+                    String toastMessage = getResources().getString(R.string.pictureSavedFailed) + " " + msg.obj.toString();
                     lastToast = toastMessage;
                     Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show();
                 }
                 else if(msg.what == PICTURE_TAKEN){
                     //Display only the file location
-                    String toastMessage = "Picture saved at: " + msg.obj.toString().substring(0, msg.obj.toString().length() - FILE_LENGTH);
+                    String toastMessage = getResources().getString(R.string.pictureSavedSuccessfully) + " " +
+                            msg.obj.toString().substring(0, msg.obj.toString().length() - FILE_LENGTH);
                     lastToast = toastMessage;
                     Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show();
                 }
