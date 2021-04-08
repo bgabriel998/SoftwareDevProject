@@ -247,7 +247,10 @@ public class ProfileActivity extends AppCompatActivity {
      */
     public void setUI() {
         if (account.isSignedIn()) setLoggedUI();
-        else setNotLoggedUI();
+        else {
+            resetUI();
+            findViewById(R.id.signInButton).setVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -259,14 +262,6 @@ public class ProfileActivity extends AppCompatActivity {
         findViewById(R.id.changeUsernameButton).setVisibility(View.VISIBLE);
         findViewById(R.id.addFriendButton).setVisibility(View.VISIBLE);
         findViewById(R.id.friendsButton).setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * Sets what is visible on UI if the user is not logged
-     */
-    public void setNotLoggedUI(){
-        resetUI();
-        findViewById(R.id.signInButton).setVisibility(View.VISIBLE);
     }
 
     /**
