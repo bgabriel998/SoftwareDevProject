@@ -18,7 +18,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
 
     private final Context mContext;    
     // TODO change to list of paths to images in folder
-    private List<Integer> images;
+    private final List<Integer> images;
     protected PhotoListener photoListener;
 
     /**
