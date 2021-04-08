@@ -34,7 +34,7 @@
     <!-- FRIENDS SYSTEM -->
     <string name='add_friend_button'>Add a friend</string>
     <string name='friends_button'>Friends</string>
-    <string name='insert_friend_button'>Insert your friend\'s username</string>
+    <string name='insert_friend_button'>Insert here</string>
     <string name='submit_friend_button'>Add</string>
     <string name='add_current_username'>You can\'t add yourself to your friends!</string>
     <string name='friend_already_added'>The user is already your friend.</string>

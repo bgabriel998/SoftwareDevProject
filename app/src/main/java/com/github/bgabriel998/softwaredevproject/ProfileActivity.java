@@ -147,29 +147,18 @@ public class ProfileActivity extends AppCompatActivity {
         String username = ((EditText)findViewById(R.id.editTextFriend)).getText().toString();
         String currentUsername = account.getUsername();
         Log.d("FRIENDS SIZE", "onSubmit: " + account.getFriends().size());
-        // First, check if the username is valid
-        if(!Account.isValid(username)) {
-            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.invalid_username , Snackbar.LENGTH_LONG);
-            snackbar.show();
-            return;
-        }
-        // Then, check if it is the current user's username
-        if(username.equals(currentUsername)) {
-            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.add_current_username, Snackbar.LENGTH_LONG);
-            snackbar.show();
-            return;
-        }
-        // Then, check if the chosen user is already a friend
+
         boolean found = false;
         for(FriendItem friend: account.getFriends()) {
             if(friend.hasUsername(username)) found = true;
         }
-        if(found) {
-            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.friend_already_added, Snackbar.LENGTH_LONG);
+
+        // First, check if the username is valid, it's not the current user or it's already in the current user's friends
+        if(!Account.isValid(username) || username.equals(currentUsername) || found) {
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), !Account.isValid(username) ? R.string.invalid_username : ( !found ? R.string.add_current_username : R.string.friend_already_added), Snackbar.LENGTH_LONG);
             snackbar.show();
             return;
         }
-
         Database.refRoot.child(Database.CHILD_USERS).orderByChild(Database.CHILD_USERNAME).equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
