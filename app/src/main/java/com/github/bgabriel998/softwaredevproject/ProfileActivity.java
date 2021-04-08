@@ -99,22 +99,23 @@ public class ProfileActivity extends AppCompatActivity {
         String username = ((EditText)findViewById(R.id.editTextUsername)).getText().toString();
         String currentUsername = account.getUsername();
         Log.d("CURRENT_USERNAME", "onSubmit: " + currentUsername);
-        // First, check if the username is valid
-        if(Account.isValid(username)) {
-            // Then, check if it is already used by the user
-            if(username.equals(currentUsername)) {
-                Log.d("CURRENT_USERNAME", "onSubmit: EQUAL_CASE");
-                Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.current_username, Snackbar.LENGTH_LONG);
-                snackbar.show();
-            }
-            // Finally, check if it is available
-            else Database.isPresent("users", "username", username, () -> usernameAlreadyPresent(username), () -> registerUser(username));
-        }
-        // Display that the username is not valid
-        else {
-            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.invalid_username , Snackbar.LENGTH_LONG);
+        // First, check if the username is valid or if it is already used by the user
+        if(!Account.isValid(username) || username.equals(currentUsername)) {
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), !Account.isValid(username) ? R.string.invalid_username : R.string.current_username, Snackbar.LENGTH_LONG);
             snackbar.show();
         }
+        // Finally, check if it is available
+        else Database.isPresent("users", "username", username, () -> {
+            // Notify the user that the chosen username is already used
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.already_existing_username , Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }, () -> {
+            // Notify the user that the username has changed
+            Database.setChild("users/" + account.getId(), Arrays.asList("email", "username"), Arrays.asList(account.getEmail(), username));
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.available_username , Snackbar.LENGTH_LONG);
+            snackbar.show();
+            setUI();
+        });
     }
 
     /**
@@ -235,28 +236,6 @@ public class ProfileActivity extends AppCompatActivity {
 
                     }
                 });
-    }
-
-    /**
-     * This method is called when the user correctly ended the registration phase
-     * @param username
-     */
-    public void registerUser(String username) {
-        // Notify the user that the username has changed
-        Database.setChild("users/" + account.getId(), Arrays.asList("email", "username"), Arrays.asList(account.getEmail(), username));
-        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.available_username , Snackbar.LENGTH_LONG);
-        snackbar.show();
-        setUI();
-    }
-
-    /**
-     * This method is called when the desired username is already present
-     * @param username
-     */
-    public void usernameAlreadyPresent(String username) {
-        // Notify the user that the chosen username is already used
-        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.already_existing_username , Snackbar.LENGTH_LONG);
-        snackbar.show();
     }
 
     /* UI METHODS */
