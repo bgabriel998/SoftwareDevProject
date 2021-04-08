@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
 
-    private Context mContext;
+    private final Context mContext;    
     // TODO change to list of paths to images in folder
     private List<Integer> images;
     protected PhotoListener photoListener;
