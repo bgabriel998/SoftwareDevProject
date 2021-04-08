@@ -159,6 +159,11 @@ public class ProfileActivity extends AppCompatActivity {
             snackbar.show();
             return;
         }
+        checkUserExistsAndAdd(username);
+    }
+
+    /* Check that the user exists on the DB and, if so, add it to the friends of the current user  */
+    private void checkUserExistsAndAdd(String username) {
         Database.refRoot.child(Database.CHILD_USERS).orderByChild(Database.CHILD_USERNAME).equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
