@@ -53,9 +53,7 @@ public class FirebaseAccount implements Account {
             if(snapshot.hasChild(Database.CHILD_USERNAME))
                 syncGetUsernameFromProfile(snapshot.child(Database.CHILD_USERNAME).getValue(String.class));
             else username = "null";
-            if(snapshot.hasChild(Database.CHILD_FRIENDS))
-                syncFriendsFromProfile(snapshot.child(Database.CHILD_FRIENDS));
-            else friends = new ArrayList<>();
+            syncFriendsFromProfile(snapshot.child(Database.CHILD_FRIENDS));
             if(snapshot.hasChild(Database.CHILD_SCORE))
                 syncGetUserScoreFromProfile(snapshot.child(Database.CHILD_SCORE).getValue(long.class));
             else score = 0;

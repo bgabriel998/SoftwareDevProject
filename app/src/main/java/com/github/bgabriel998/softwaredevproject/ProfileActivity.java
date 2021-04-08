@@ -148,52 +148,49 @@ public class ProfileActivity extends AppCompatActivity {
         String currentUsername = account.getUsername();
         Log.d("FRIENDS SIZE", "onSubmit: " + account.getFriends().size());
         // First, check if the username is valid
-        if(Account.isValid(username)) {
-            // Then, check if it is the current user's username
-            if(username.equals(currentUsername)) {
-                Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.add_current_username, Snackbar.LENGTH_LONG);
-                snackbar.show();
-            }
-            // Then, check if the chosen user is already a friend
-            else {
-                boolean found = false;
-                for(FriendItem friend: account.getFriends()) {
-                    if(friend.hasUsername(username)) found = true;
-                }
-                if(found) {
-                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.friend_already_added, Snackbar.LENGTH_LONG);
-                    snackbar.show();
-                }
-                else {
-                    Database.refRoot.child(Database.CHILD_USERS).orderByChild(Database.CHILD_USERNAME).equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot snapshot) {
-                            if (snapshot.exists()) {
-                                for (DataSnapshot user: snapshot.getChildren()) {
-                                    String friendUid = user.getKey();
-                                    Database.setChild(Database.CHILD_USERS + account.getId() + Database.CHILD_FRIENDS, Collections.singletonList(friendUid), Collections.singletonList(""));
-                                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.friend_added, Snackbar.LENGTH_LONG);
-                                    snackbar.show();
-                                }
-                            }
-                            else {
-                                Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.friend_not_present_db, Snackbar.LENGTH_LONG);
-                                snackbar.show();
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                        }
-                    });
-                }
-            }
-        }
-        // Display that the username is not valid
-        else {
+        if(!Account.isValid(username)) {
             Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.invalid_username , Snackbar.LENGTH_LONG);
             snackbar.show();
+            return;
         }
+        // Then, check if it is the current user's username
+        if(username.equals(currentUsername)) {
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.add_current_username, Snackbar.LENGTH_LONG);
+            snackbar.show();
+            return;
+        }
+        // Then, check if the chosen user is already a friend
+        boolean found = false;
+        for(FriendItem friend: account.getFriends()) {
+            if(friend.hasUsername(username)) found = true;
+        }
+        if(found) {
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.friend_already_added, Snackbar.LENGTH_LONG);
+            snackbar.show();
+            return;
+        }
+
+        Database.refRoot.child(Database.CHILD_USERS).orderByChild(Database.CHILD_USERNAME).equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot user: snapshot.getChildren()) {
+                        String friendUid = user.getKey();
+                        Database.setChild(Database.CHILD_USERS + account.getId() + Database.CHILD_FRIENDS, Collections.singletonList(friendUid), Collections.singletonList(""));
+                        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.friend_added, Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                    }
+                }
+                else {
+                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.friend_not_present_db, Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
     }
 
     /**
@@ -347,8 +344,8 @@ public class ProfileActivity extends AppCompatActivity {
      * Sets what is visible on UI after a username change is requested or required
      */
     public void setAddFriendUI() {
-        hideMenuButtons();
         hideChangeUsernameButtons();
+        hideMenuButtons();
         findViewById(R.id.submitFriendButton).setVisibility(View.VISIBLE);
         findViewById(R.id.editTextFriend).setVisibility(View.VISIBLE);
     }
