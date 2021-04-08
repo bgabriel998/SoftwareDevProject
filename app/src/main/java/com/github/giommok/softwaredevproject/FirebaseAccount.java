@@ -32,6 +32,7 @@ public class FirebaseAccount implements Account {
     private static String username = "null";
     private static long score = 0;
     private static FirebaseAccount account = null;
+    private static DatabaseReference dbRefUser = Database.refRoot.child("users/null/username");
     /*local list of discovered country highest point : key -> country name */
     private static HashMap<String, CountryHighPoint> discoveredCountryHighPoint = new HashMap<String, CountryHighPoint>();
     /*local list of discovered height ranges 1000,2000,3000 m etc. */
@@ -190,9 +191,9 @@ public class FirebaseAccount implements Account {
 
     @Override
     public void synchronizeUserProfile(){
-        DatabaseReference dbRef = Database.refRoot.child(Database.CHILD_USERS+ Database.FOLDER + getId());
-        dbRef.removeEventListener(userListener);
-        dbRef.addValueEventListener(userListener);
+        dbRefUser.removeEventListener(userListener);
+        dbRefUser = Database.refRoot.child(Database.CHILD_USERS+ Database.FOLDER + getId());
+        dbRefUser.addValueEventListener(userListener);
         Log.d("FirebaseAccount","User profile callback created successfully");
     }
 

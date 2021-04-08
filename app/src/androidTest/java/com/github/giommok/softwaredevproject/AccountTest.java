@@ -107,7 +107,7 @@ public class AccountTest {
 
         //Set user score to zero
         Account account = Account.getAccount();
-        DatabaseReference refAdd = Database.refRoot.child("users/");
+        DatabaseReference refAdd = Database.refRoot.child(Database.CHILD_USERS + Database.FOLDER);
         refAdd.child(account.getId()).child(Database.CHILD_SCORE).setValue(0);
         Thread.sleep(1000);
 

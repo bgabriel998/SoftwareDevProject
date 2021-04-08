@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
+import org.apache.http.HttpException;
 import org.osmdroid.bonuspack.location.GeoNamesPOIProvider;
 import org.osmdroid.bonuspack.location.NominatimPOIProvider;
 import org.osmdroid.bonuspack.location.OverpassAPIProvider;
@@ -32,6 +33,8 @@ public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> impl
     private static final int DEFAULT_QUERY_MAX_RESULT = 300;
     private static final int DEFAULT_QUERY_TIMEOUT = 10;
 
+    private static final int DEFAULT_NUMBER_OF_RETRY = 2;
+
     //List containing query POI's
     private ArrayList<POI> POIs;
 
@@ -43,6 +46,7 @@ public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> impl
     private final int queryMaxResults;
     private final int queryTimeout;
     private String queryUrl;
+    private int retryNbr;
 
     /**
      * Initializes provider
@@ -57,6 +61,7 @@ public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> impl
         this.rangeInKm = DEFAULT_RANGE_IN_KM;
         this.queryMaxResults = DEFAULT_QUERY_MAX_RESULT;
         this.queryTimeout = DEFAULT_QUERY_TIMEOUT;
+        this.retryNbr = 0;
     }
 
     /**
@@ -84,6 +89,7 @@ public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> impl
         this.queryTimeout = queryTimeout;
         this.poiProvider = new OverpassAPIProvider();
         this.POIs = new ArrayList<POI>();
+        this.retryNbr = 0;
     }
 
 
@@ -121,7 +127,16 @@ public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> impl
      */
     @Override
     protected Object doInBackground(Object[] objects) {
-        return getPOIsFromUrl(queryUrl);
+        ArrayList<POI> resList = null;
+        while(this.retryNbr<= DEFAULT_NUMBER_OF_RETRY){
+            try {
+                resList = getPOIsFromUrl(queryUrl);
+                break;
+            } catch (HttpException e) {
+                this.retryNbr++;
+            }
+        }
+        return resList;
     }
 
 
@@ -133,12 +148,12 @@ public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> impl
      * - ways and relations must contain the "center" element. <br>
      * @return elements as a list of POI
      */
-    private ArrayList<POI> getPOIsFromUrl(String url){
+    private ArrayList<POI> getPOIsFromUrl(String url) throws HttpException {
         Log.d(BonusPackHelper.LOG_TAG, "OverpassAPIProvider:getPOIsFromUrl:"+url);
         String jString = BonusPackHelper.requestStringFromUrl(url);
         if (jString == null) {
             Log.e(BonusPackHelper.LOG_TAG, "OverpassAPIProvider: request failed.");
-            return null;
+            throw new HttpException("OverpassAPIProvider: request failed. --> requestStringFromUrl");
         }
         try {
             //parse JSON and build POIs

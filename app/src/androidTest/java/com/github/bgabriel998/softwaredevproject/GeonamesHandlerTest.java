@@ -74,7 +74,7 @@ public class GeonamesHandlerTest {
                                             MOCK_LOCATION_ALT_LAUSANNE);
         startTimeMs = System.currentTimeMillis();
 
-        GeonamesHandler handler = (GeonamesHandler) new GeonamesHandler(userPoint,20,300,30) {
+        GeonamesHandler handler = (GeonamesHandler) new GeonamesHandler(userPoint) {
             @Override
             public void onResponseReceived(Object result) {
                 resultPOI = (ArrayList<POI>) result;
@@ -84,14 +84,14 @@ public class GeonamesHandlerTest {
 
 
 
-        Thread.sleep(DEFAULT_QUERY_TIMEOUT*3*MILLI_SEC_TO_SEC);
+        Thread.sleep(DEFAULT_QUERY_TIMEOUT*MILLI_SEC_TO_SEC*3);
 
     }
 
     /**
      * Checks that the result array list contains POI
      */
-/*    @Test
+    @Test
     public void testResultsQuantity(){
         assertNotNull("testResultsQuantity failed. Acquired POI List is empty...", resultPOI);
         assertThat(resultPOI.size(), greaterThan(0));
@@ -101,7 +101,7 @@ public class GeonamesHandlerTest {
      * Checks that the POI contained in the ArrayList are POI
      * from type natural:peaks
      */
-/*    @Test
+    @Test
     public void testResultType(){
         assertNotNull("testResultType failed. Acquired POI List is empty...", resultPOI);
         for(POI point : resultPOI){
@@ -116,8 +116,9 @@ public class GeonamesHandlerTest {
      * are not empty strings. Only POI with valid names should
      * be returned
      */
-  //  @Test
- /*   public void testResultNameNonNull(){
+
+    @Test
+    public void testResultNameNonNull(){
         assertNotNull("testResultNameNonNull failed. Acquired POI List is empty...", resultPOI);
         for(POI point : resultPOI){
             assertNotEquals(point.mType,isEmptyOrNullString());
@@ -129,7 +130,7 @@ public class GeonamesHandlerTest {
      * A POI where the height parameter is missing should not be
      * added to the result list.
      */
- /*   @Test
+    @Test
     public void testResultHeightNonNull(){
 
         assertNotNull("testResultHeightNonNull failed. Acquired POI List is empty...", resultPOI);
@@ -143,7 +144,7 @@ public class GeonamesHandlerTest {
      * set in the query (default value of the query is defined by DEFAULT_QUERY_MAX_RESULT
      * parameter in class GeonamesHandler.java
      */
- /*   @Test
+   @Test
     public void testResultListNotExceedLimit(){
         assertNotNull("testResultListNotExceedLimit failed. Acquired POI List is empty...", resultPOI);
         for(POI point : resultPOI){
@@ -155,11 +156,11 @@ public class GeonamesHandlerTest {
      * Checks that the query doesn't exceed the timeout set in the
      * query parameters. (default value of the query is defined by DEFAULT_QUERY_TIMEOUT)
      */
- //   @Test
- //   public void testResultListNotExceedTimeLimit(){
-//        assertThat(queryTimeS, lessThanOrEqualTo((double)DEFAULT_QUERY_TIMEOUT));
-//        assertNotNull(resultPOI);
-  //  }
+        @Test
+       public void testResultListNotExceedTimeLimit(){
+            assertThat(queryTimeS, lessThanOrEqualTo((double)DEFAULT_QUERY_TIMEOUT*3));
+            assertNotNull(resultPOI);
+        }
 
     /**
      * Check GeonamesHandler creation without valid parameters
