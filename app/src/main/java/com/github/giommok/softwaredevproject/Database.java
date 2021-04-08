@@ -20,9 +20,8 @@ class DatabaseException extends RuntimeException {
 
 public class Database {
 
-    public static final String FOLDER = "/";
-    public static final String CHILD_USERS = "users";
-    public static final String CHILD_FRIENDS = "friends";
+    public static final String CHILD_USERS = "users/";
+    public static final String CHILD_FRIENDS = "friends/";
     public static final String CHILD_EMAIL = "email";
     public static final String CHILD_DISCOVERED_PEAKS = "DiscoveredPeaks";
     public static final String CHILD_DISCOVERED_PEAKS_HEIGHTS = "DiscoveredHeights";
@@ -61,32 +60,30 @@ public class Database {
 
     /**
      * Sets an array of values to the given child at the given path in the DB
-     * @param path The path to the fields to be modified
-     * @param child child key where to put the new values
+     * @param path The path to the field to be modified
      * @param values list of values to add
      */
-    public static void setChildObjectList(String path, String child,  ArrayList<Object> values){
+    public static void setChildObjectList(String path,  ArrayList<Object> values){
         // Moving to the correct child position
         DatabaseReference refAdd = refRoot.child(path);
 
         //Iterate over all child and put values
         for(Object val : values)
-            refAdd.child(child).push().setValue(val);
+            refAdd.push().setValue(val);
     }
 
 
     /**
      * Sets an array of values to the given child at the given path in the DB
      * @param path The path to the fields to be modified
-     * @param child child key where to put the new values
      * @param value object to add
      */
-    public static void setChildObject(String path, String child,  Object value){
+    public static void setChildObject(String path,  Object value){
         // Moving to the correct child position
         DatabaseReference refAdd = refRoot.child(path);
 
         //Put value
-        refAdd.child(child).push().setValue(value);
+        refAdd.push().setValue(value);
     }
 
     /**

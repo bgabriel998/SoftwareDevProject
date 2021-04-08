@@ -6,7 +6,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.github.bgabriel998.softwaredevproject.FriendItem;
-import com.github.bgabriel998.softwaredevproject.RankingItem;
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -33,9 +32,12 @@ public class FirebaseAccount implements Account {
 
     private static String username = "null";
     private static long score = 0;
-    private static ArrayList<FriendItem> friends = new ArrayList<>();
     private static FirebaseAccount account = null;
-    DatabaseReference dbRefUser = Database.refRoot.child(Database.CHILD_USERS+ Database.FOLDER + getId());
+    /*local list of friends */
+    private static ArrayList<FriendItem> friends = new ArrayList<>();
+    private static DatabaseReference dbRefUser = Database.refRoot.child("users/null");
+    /*local list of discovered country highest point : key -> country name */
+    private static HashMap<String, CountryHighPoint> discoveredCountryHighPoint = new HashMap<String, CountryHighPoint>();
     /*local list of discovered height ranges 1000,2000,3000 m etc. */
     private static HashSet<Integer> discoveredPeakHeights = new HashSet<>();
     /*local list of discovered Peaks*/
@@ -45,7 +47,9 @@ public class FirebaseAccount implements Account {
     private static final ValueEventListener userListener = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
-            Log.w("SYNCH PROFILE USER", "onDataChange: called");
+            if(snapshot.hasChild(Database.CHILD_DISCOVERED_PEAKS))
+                syncGetDiscoveredPeaksFromProfile(snapshot.child(Database.CHILD_DISCOVERED_PEAKS));
+            else discoveredPeaks = new HashSet<>();
             if(snapshot.hasChild(Database.CHILD_USERNAME))
                 syncGetUsernameFromProfile(snapshot.child(Database.CHILD_USERNAME).getValue(String.class));
             else username = "null";
@@ -55,10 +59,12 @@ public class FirebaseAccount implements Account {
             if(snapshot.hasChild(Database.CHILD_SCORE))
                 syncGetUserScoreFromProfile(snapshot.child(Database.CHILD_SCORE).getValue(long.class));
             else score = 0;
+            if(snapshot.hasChild(Database.CHILD_COUNTRY_HIGH_POINT))
+                syncGetCountryHighPointsFromProfile(snapshot.child(Database.CHILD_COUNTRY_HIGH_POINT));
+            else discoveredCountryHighPoint = new HashMap<String, CountryHighPoint>();
             if(snapshot.hasChild(Database.CHILD_DISCOVERED_PEAKS_HEIGHTS))
                 syncGetDiscoveredHeight(snapshot.child(Database.CHILD_DISCOVERED_PEAKS_HEIGHTS));
             else discoveredPeakHeights = new HashSet<>();
-
         }
         @Override
         public void onCancelled(@NonNull DatabaseError error) {
@@ -116,15 +122,10 @@ public class FirebaseAccount implements Account {
     }
 
     @Override
-    public List<FriendItem> getFriends() {
-        return friends;
-    }
-
-    @Override
     public void setUserScore(long newScore) {
         //set local value
         score = newScore;
-        Database.setChild(Database.CHILD_USERS + Database.FOLDER + getId(),
+        Database.setChild(Database.CHILD_USERS +  getId(),
                 Collections.singletonList(Database.CHILD_SCORE),
                 Collections.singletonList(score));
     }
@@ -134,12 +135,28 @@ public class FirebaseAccount implements Account {
         return score;
     }
 
+    @Override
+    public void setDiscoveredCountryHighPoint(CountryHighPoint entry){
+        if(!discoveredCountryHighPoint.containsKey(entry.getCountryName())) {
+            //Put entry in the account local copy
+            discoveredCountryHighPoint.put(entry.getCountryName(), entry);
+            //Put entry to the database
+            Database.setChildObject(Database.CHILD_USERS + getId() +
+                    Database.CHILD_COUNTRY_HIGH_POINT,entry);
+        }
+    }
+
+    @Override
+    public HashMap<String, CountryHighPoint> getDiscoveredCountryHighPoint(){
+        return discoveredCountryHighPoint;
+    }
+
 
     @Override
     public void setDiscoveredPeakHeights(int badge){
         if(!discoveredPeakHeights.contains(badge)){
             discoveredPeakHeights.add(badge);
-            Database.setChildObject(Database.CHILD_USERS + Database.FOLDER + getId(),
+            Database.setChildObject(Database.CHILD_USERS +  getId() +
                     Database.CHILD_DISCOVERED_PEAKS_HEIGHTS,Collections.singletonList(badge));
         }
     }
@@ -152,8 +169,8 @@ public class FirebaseAccount implements Account {
 
     @Override
     public void setDiscoveredPeaks(ArrayList<POIPoint> newDiscoveredPeaks){
-        Database.setChildObjectList(Database.CHILD_USERS + Database.FOLDER +getId(),
-                Database.CHILD_DISCOVERED_PEAKS,
+        Database.setChildObjectList(Database.CHILD_USERS + getId() +
+                        Database.CHILD_DISCOVERED_PEAKS,
                 new ArrayList<Object>(newDiscoveredPeaks));
 
     }
@@ -181,11 +198,31 @@ public class FirebaseAccount implements Account {
     @Override
     public void synchronizeUserProfile(){
         dbRefUser.removeEventListener(userListener);
-        dbRefUser = Database.refRoot.child(Database.CHILD_USERS+ Database.FOLDER + getId());
+        dbRefUser = Database.refRoot.child(Database.CHILD_USERS+  getId());
         dbRefUser.addValueEventListener(userListener);
         Log.d("FirebaseAccount","User profile callback created successfully");
     }
 
+
+    /**
+     * Get the list of discovered peak from the datasnapshot from database.
+     * The list is automatically appended to the discoveredPeaks HashSet
+     * @param discoveredPeaksFromHashMap snapshot from the database user child
+     */
+    private static void syncGetDiscoveredPeaksFromProfile(DataSnapshot discoveredPeaksFromHashMap){
+        HashMap<String, HashMap<String, String>> entries = (HashMap<String, HashMap<String, String>>) discoveredPeaksFromHashMap.getValue();
+
+        for (Map.Entry<String, HashMap<String, String>> entry : entries.entrySet()) {
+            Object value = entry.getValue();
+            POIPoint peak = new POIPoint(((HashMap<String, String>) value).get(Database.CHILD_ATTRIBUTE_PEAK_NAME),
+                    ((HashMap<String, Double>) value).get(Database.CHILD_ATTRIBUTE_PEAK_LATITUDE),
+                    ((HashMap<String, Double>) value).get(Database.CHILD_ATTRIBUTE_PEAK_LONGITUDE),
+                    ((HashMap<String, Long>) value).get(Database.CHILD_ATTRIBUTE_PEAK_ALTITUDE));
+
+            //Check if the peak is already contain to avoid duplicate creation
+            discoveredPeaks.add(peak);
+        }
+    }
 
     /**
      * Get the username from the database
@@ -205,6 +242,27 @@ public class FirebaseAccount implements Account {
         score = scoreFromHashMap;
     }
 
+    /**
+     * Get the list of discovered country highPoints from the datasnapshot from database.
+     * The list is automatically appended to the discoveredCountryHighPoint HashSet
+     * @param countryHighPointFromHashMap snapshot from the database userchild
+     */
+    private static void syncGetCountryHighPointsFromProfile(DataSnapshot countryHighPointFromHashMap){
+
+        HashMap<String, HashMap<String, String>> entries = (HashMap<String, HashMap<String, String>>) countryHighPointFromHashMap.getValue();
+
+        //Iterate over the data snapshot to re-create objects
+        for (Map.Entry<String, HashMap<String, String>> entry : entries.entrySet()) {
+            Object value = entry.getValue();
+            CountryHighPoint countryHighPoint = new CountryHighPoint(((HashMap<String, String>) value).get(Database.CHILD_ATTRIBUTE_COUNTRY_NAME),
+                    ((HashMap<String, String>) value).get(Database.CHILD_COUNTRY_HIGH_POINT),
+                    ((HashMap<String, Long>) value).get(Database.CHILD_ATTRIBUTE_HIGH_POINT_HEIGHT));
+            String countryName = ((HashMap<String, String>) value).get(Database.CHILD_ATTRIBUTE_COUNTRY_NAME);
+            //Check if the country high point is already in the list to avoid duplicate
+            if(!discoveredCountryHighPoint.containsKey(countryName))
+                discoveredCountryHighPoint.put(((HashMap<String, String>) value).get(Database.CHILD_ATTRIBUTE_COUNTRY_NAME), countryHighPoint);
+        }
+    }
 
     /**
      * Get the list of discovered peak heights (ranges)
@@ -216,7 +274,7 @@ public class FirebaseAccount implements Account {
         for (Map.Entry<String, HashMap<String, String>> entry : entries.entrySet()){
             Object value = entry.getValue();
             long retrievedVal = ((ArrayList<Long>) value).get(0);
-            if(!discoveredPeakHeights.contains(retrievedVal)) discoveredPeakHeights.add((int)retrievedVal);
+            discoveredPeakHeights.add((int)retrievedVal);
         }
     }
 
@@ -225,7 +283,7 @@ public class FirebaseAccount implements Account {
         for (DataSnapshot child : parent.getChildren()) {
             String uidFriend = child.getKey();
             Log.d("FRIENDS", "Updating friends. Current size = " + friends.size());
-            DatabaseReference childRef = Database.refRoot.child(Database.CHILD_USERS + Database.FOLDER + uidFriend);
+            DatabaseReference childRef = Database.refRoot.child(Database.CHILD_USERS + uidFriend);
             childRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {

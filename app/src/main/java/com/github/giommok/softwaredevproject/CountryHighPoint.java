@@ -1,7 +1,7 @@
 package com.github.giommok.softwaredevproject;
 
 
-public class CacheEntry {
+public class CountryHighPoint {
 
 
     private String countryName;
@@ -11,7 +11,7 @@ public class CacheEntry {
     /**
      * Class constructor -> initialises attributes to null/zero
      */
-    public CacheEntry(){
+    public CountryHighPoint(){
         this.countryName = null;
         this.countryHighPoint = null;
         this.highPointHeight = 0;
@@ -21,7 +21,7 @@ public class CacheEntry {
      * @param countryHighPoint Country highest peak name
      * @param highPointHeight Country highest peak height
      */
-    public CacheEntry(String countryHighPoint,long highPointHeight){
+    public CountryHighPoint(String countryHighPoint, long highPointHeight){
         this.countryHighPoint = countryHighPoint;
         this.highPointHeight = highPointHeight;
     }
@@ -32,7 +32,7 @@ public class CacheEntry {
      * @param countryHighPoint name of the highest peak in the country
      * @param highPointHeight height of the highest peak in the country
      */
-    public CacheEntry(String countryName, String countryHighPoint,long highPointHeight){
+    public CountryHighPoint(String countryName, String countryHighPoint, long highPointHeight){
         this.countryHighPoint = countryHighPoint;
         this.highPointHeight = highPointHeight;
         this.countryName = countryName;

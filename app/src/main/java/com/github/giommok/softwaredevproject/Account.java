@@ -2,13 +2,11 @@ package com.github.giommok.softwaredevproject;
 
 import android.net.Uri;
 
-import com.github.bgabriel998.softwaredevproject.FriendItem;
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 
 public interface Account {
 
@@ -56,11 +54,6 @@ public interface Account {
     public String getUsername();
 
     /**
-     * @return the friends of the current user or an empty list if the user has no friends
-     */
-    public List<FriendItem> getFriends();
-
-    /**
      * Check if the username chosen by the user is valid.
      * @param username inserted by the user.
      * @return true if and only if the username is valid.
@@ -80,6 +73,18 @@ public interface Account {
      */
     public long getUserScore();
 
+
+    /**
+     * Add entry to the list of discovered Country High points
+     * @param entry new country highest point discovered
+     */
+    public void setDiscoveredCountryHighPoint(CountryHighPoint entry);
+
+
+    /**
+     * @return country high points discovered by the user
+     */
+    public HashMap<String, CountryHighPoint> getDiscoveredCountryHighPoint();
 
     /**
      * @return hashset of discovered peaks

@@ -1,23 +1,24 @@
 package com.github.giommok.softwaredevproject;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.util.Log;
 
+import androidx.core.math.MathUtils;
+
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
 public class UserScore {
 
 
-    private HashMap<String,CacheEntry> databaseCache = null;
+    /*Local database cache*/
+    private HashMap<String, CountryHighPoint> databaseCache = null;
     private DataBaseHelper dataBaseHelper = null;
     private final FirebaseAccount fireBaseAccount;
 
@@ -34,10 +35,86 @@ public class UserScore {
         this.mContext = context;
         this.fireBaseAccount = fireBaseAccount;
 
-        databaseCache = new HashMap<String,CacheEntry>();
+        databaseCache = new HashMap<String, CountryHighPoint>();
         if(dataBaseHelper == null){
             dataBaseHelper = new DataBaseHelper(context);
         }
+    }
+
+    /**
+     * Compute user bonus.
+     * If the user discovers the highest peak in a country
+     * a bonus is added to the his score
+     * @return bonus to add
+     */
+    private long computeUserBonus(POIPoint poiPoint){
+        long retValue = 0;
+        retValue += computeCountryHighPointBonus(poiPoint);
+        retValue += computePeakHeightBonus(poiPoint);
+        return retValue;
+    }
+
+    /**
+     * Compute part of the user bonus.
+     * If the user discovers the highest peak in a country
+     * a bonus is added to the his score
+     * @return bonus to add
+     */
+    private long computeCountryHighPointBonus(POIPoint poiPoint){
+        long retValue = 0;
+        dataBaseHelper.openDataBase();
+        /*Search country*/
+        String country = getCountryFromCoordinates(poiPoint.getLatitude(), poiPoint.getLongitude());
+        if(country != null){
+            CountryHighPoint countryInfo = getDataFromCache(country);
+            if (countryInfo == null) {
+                //Value was not in the cache
+                //Retrieve info to cache it
+                countryInfo = new CountryHighPoint(dataBaseHelper.queryHighestPeakName(country),
+                        dataBaseHelper.queryHighestPeakHeight(country));
+                databaseCache.put(country,countryInfo);
+            }
+            //Check if the current peak is one country high point
+            if(comparePeakNameWithCacheData(countryInfo, poiPoint) && !countryHighPointAlreadyDiscovered(poiPoint,country)) {
+                retValue += ScoringConstants.BONUS_COUNTRY_TALLEST_PEAK;
+                countryInfo.setCountryName(country);
+                fireBaseAccount.setDiscoveredCountryHighPoint(countryInfo);
+            }
+        }
+        dataBaseHelper.close();
+        return  retValue;
+    }
+
+    /**
+     * Compute part of the user bonus.
+     * If the user discovers a new height range
+     * a bonus is added to the his score
+     * @return bonus to add
+     */
+    public long computePeakHeightBonus(POIPoint poiPoint){
+        int roundedHeight = (int)(poiPoint.getAltitude() - (poiPoint.getAltitude() % 1000));
+        if(!fireBaseAccount.getDiscoveredPeakHeights().contains(roundedHeight)){
+            fireBaseAccount.setDiscoveredPeakHeights(roundedHeight);
+            switch (roundedHeight){
+                case ScoringConstants.BADGE_1st_1000_M_PEAK:
+                    return ScoringConstants.BONUS_1st_1000_M_PEAK;
+                case ScoringConstants.BADGE_1st_2000_M_PEAK:
+                    return ScoringConstants.BONUS_1st_2000_M_PEAK;
+                case ScoringConstants.BADGE_1st_3000_M_PEAK:
+                    return ScoringConstants.BONUS_1st_3000_M_PEAK;
+                case ScoringConstants.BADGE_1st_4000_M_PEAK:
+                    return ScoringConstants.BONUS_1st_4000_M_PEAK;
+                case ScoringConstants.BADGE_1st_5000_M_PEAK:
+                    return ScoringConstants.BONUS_1st_5000_M_PEAK;
+                case ScoringConstants.BADGE_1st_6000_M_PEAK:
+                    return ScoringConstants.BONUS_1st_6000_M_PEAK;
+                case ScoringConstants.BADGE_1st_7000_M_PEAK:
+                    return ScoringConstants.BONUS_1st_7000_M_PEAK;
+                case ScoringConstants.BADGE_1st_8000_M_PEAK:
+                    return ScoringConstants.BONUS_1st_8000_M_PEAK;
+            }
+        }
+        return 0;
     }
 
     /**
@@ -46,10 +123,25 @@ public class UserScore {
      * @param poiPoint peak retrieved with provider
      * @return true if the comparison matches
      */
-    private boolean comparePeakNameWithCacheData(CacheEntry countryInfo, POIPoint poiPoint){
+    private boolean comparePeakNameWithCacheData(CountryHighPoint countryInfo, POIPoint poiPoint){
         return (countryInfo.getCountryHighPoint().contains(poiPoint.getName()) ||
                 poiPoint.getName().contains(countryInfo.getCountryHighPoint()))
                 && Math.abs(poiPoint.getAltitude() - countryInfo.getHighPointHeight()) < COUNTRY_HIGHEST_PEAK_DETECTION_TOLERANCE;
+    }
+
+    /**
+     * Check in the database if the user has already discovered this country
+     * highest point
+     * @param poiPoint new discovered peak
+     * @param country country in which the new discovered peak is located
+     * @return true if the
+     */
+    private boolean countryHighPointAlreadyDiscovered(POIPoint poiPoint, String country){
+        HashMap<String, CountryHighPoint> countryHighPointDiscovered = fireBaseAccount.getDiscoveredCountryHighPoint();
+        if(countryHighPointDiscovered == null) return false;
+        if(countryHighPointDiscovered.containsKey(country))
+            return countryHighPointDiscovered.get(country).getCountryHighPoint().contains(poiPoint.getName());
+        return false;
     }
 
     /**
@@ -58,25 +150,45 @@ public class UserScore {
      * @param country country name to get its highest point
      * @return CacheEntry containing
      */
-    private CacheEntry getDataFromCache(String country){
+    private CountryHighPoint getDataFromCache(String country){
         if(databaseCache.containsKey(country)){
             return databaseCache.get(country);
         }
         else return null;
     }
 
+    /**
+     * Computes the new user score given the list of freshly scanned peaks
+     * Updates discovered country high point list in the DB
+     * @param scannedPeaks peaks the user scanned
+     * @return new user Score
+     */
+    private long computeUserScore(ArrayList<POIPoint> scannedPeaks){
 
+        //Get previous score from user database
+        long userScore = fireBaseAccount.getUserScore();
+        //Foreach loop over all scanned peaks
+        for(POIPoint poiPoint : scannedPeaks){
+            /*Add classical amount of points*/
+            userScore += poiPoint.getAltitude() * ScoringConstants.PEAK_FACTOR;
+            userScore += computeUserBonus(poiPoint);
+        }
+        return userScore;
+    }
 
     /**
-     * Function that queries the user database. This function returns which
-     * height range has already been discovered by the user
-     * (1000m, 2000m, 3000m, 4000m, 5000m, 6000m, 7000m and 8000m peaks)
-     * @return Array list of integers containing the above listed tags
+     * Computes the list of newly discovered peaks and the new user score
+     * Writes the user score and the new discovered peaks to the database
+     * @param scannedPeaks list of scanned peaks (unfiltered : may contain already scanned peaks)
      */
-    private ArrayList<Integer> retrieveDiscoveredHeights(){
-        //TODO : move this method to firebase account class and implement
-        //TODO : functionality
-        return null;
+    public void updateUserScoreAndDiscoveredPeaks(ArrayList<POIPoint> scannedPeaks){
+        //Filter out all already discovered peaks
+        ArrayList<POIPoint> filteredScannedPeaks = fireBaseAccount.filterNewDiscoveredPeaks(scannedPeaks);
+        long userScore = computeUserScore(filteredScannedPeaks);
+        //Overwrite score value in the database
+        fireBaseAccount.setUserScore(userScore);
+        //Add all new discovered peaks to the database
+        fireBaseAccount.setDiscoveredPeaks(filteredScannedPeaks);
     }
 
 
@@ -99,6 +211,4 @@ public class UserScore {
         }
         return null;
     }
-
-
 }

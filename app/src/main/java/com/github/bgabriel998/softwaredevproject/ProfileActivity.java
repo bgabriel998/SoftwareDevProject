@@ -151,7 +151,6 @@ public class ProfileActivity extends AppCompatActivity {
         if(Account.isValid(username)) {
             // Then, check if it is the current user's username
             if(username.equals(currentUsername)) {
-                Log.d("CURRENT_USERNAME", "onSubmit: EQUAL_CASE");
                 Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.add_current_username, Snackbar.LENGTH_LONG);
                 snackbar.show();
             }
