@@ -129,7 +129,7 @@ public class CameraPreview extends Fragment{
     }
 
     /**
-     * Create listeners after that the Frgment was attached and has a context
+     * Create listeners after that the Fragment was attached and has a context
      * @param context context
      */
     @Override
