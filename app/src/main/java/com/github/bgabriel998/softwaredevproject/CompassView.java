@@ -267,14 +267,6 @@ public class CompassView extends View {
     public void setPOIs(List<POIPoint> POIPoints, Point userPoint){
         this.POIPoints = POIPoints;
         this.userPoint = userPoint;
-        GeoPoint amsterdam = new GeoPoint(52.38336341146919, 4.899839273125784, 0);
-        GeoPoint corse = new GeoPoint(42.412878661343186, 8.951160966878296, 2706);
-        GeoPoint wien = new GeoPoint(48.22066363087269, 16.396538068482492, 150);
-        GeoPoint bordeaux = new GeoPoint(44.8447387495189, -0.5700051995730769, 15);
-        this.POIPoints.add(new POIPoint(amsterdam));
-        this.POIPoints.add(new POIPoint(corse));
-        this.POIPoints.add(new POIPoint(wien));
-        this.POIPoints.add(new POIPoint(bordeaux));
         invalidate();
         requestLayout();
     }

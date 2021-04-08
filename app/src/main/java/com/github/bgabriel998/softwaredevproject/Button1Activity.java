@@ -1,19 +1,23 @@
 package com.github.bgabriel998.softwaredevproject;
 
 import android.content.res.Configuration;
+import android.graphics.Point;
 import android.hardware.camera2.CameraAccessException;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.view.PreviewView;
 import androidx.core.util.Pair;
 
+
 import java.util.Locale;
 
-public class Button1Activity extends AppCompatActivity {
+public class Button1Activity extends AppCompatActivity{
 
     //Widgets
     private CameraPreview cameraPreview;
@@ -23,6 +27,7 @@ public class Button1Activity extends AppCompatActivity {
     private TextView fovHorizontal;
     private TextView fovVertical;
     private Compass compass;
+    private ComputePOIPoints computePOIPoints;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +56,9 @@ public class Button1Activity extends AppCompatActivity {
 
         //Create camera preview on the previewView
         cameraPreview = new CameraPreview(this, previewView);
+
+        //Request the POIpoints
+        computePOIPoints = new ComputePOIPoints(this);
 
         //Setup the compass
         startCompass();
@@ -95,7 +103,7 @@ public class Button1Activity extends AppCompatActivity {
         //Bind the compassListener with the compass
         compass.setListener(compassListener);
 
-        ComputePOIPoints computePOIPoints = new ComputePOIPoints(this);
+        //Set the POIs for the compass
         compassView.setPOIs(ComputePOIPoints.POIPoints, computePOIPoints.userPoint);
     }
 

@@ -16,14 +16,22 @@ public class ComputePOIPoints {
     public static List<POIPoint> POIPoints;
     public UserPoint userPoint;
     private final static double EARTH_RADIUS = 6378137; // value in meters
-    private GeonamesHandler geonamesHandler;
 
+    /**
+     * Constructor of ComputePOIPoints, updates userPoint and gets the POIs for the userPoint
+     * @param context
+     */
     public ComputePOIPoints(Context context){
         POIPoints = new ArrayList<>();
         userPoint = new UserPoint(context);
+        userPoint.update();
         getPOIs(userPoint);
     }
 
+    /**
+     * Gets the POIs for the userPoint
+     * @param userPoint location of the user
+     */
     private static void getPOIs(UserPoint userPoint){
         new GeonamesHandler(userPoint) {
             @Override
@@ -141,9 +149,9 @@ public class ComputePOIPoints {
 
         Point bma = NormalizeVectorDiff(bp, ap);
 
-        double elevation = (180.0 / Math.PI)*Math.acos(bma.getLatitude() * ap.getLatitude() +
+        double elevation = Math.acos(bma.getLatitude() * ap.getLatitude() +
                 bma.getLongitude() * ap.getLongitude() + bma.getAltitude() * ap.getAltitude());
-        return elevation;
+        return Math.toDegrees(elevation);
     }
 
     /**
