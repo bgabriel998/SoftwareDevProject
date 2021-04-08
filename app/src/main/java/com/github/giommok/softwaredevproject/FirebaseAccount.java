@@ -268,7 +268,7 @@ public class FirebaseAccount implements Account {
         for (Map.Entry<String, HashMap<String, String>> entry : entries.entrySet()){
             Object value = entry.getValue();
             long retrievedVal = ((ArrayList<Long>) value).get(0);
-            if(!discoveredPeakHeights.contains(retrievedVal)) discoveredPeakHeights.add((int)retrievedVal);
+             discoveredPeakHeights.add((int)retrievedVal);
         }
     }
 }
