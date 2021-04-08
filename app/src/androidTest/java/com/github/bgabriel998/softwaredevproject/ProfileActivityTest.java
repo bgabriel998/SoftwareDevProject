@@ -203,7 +203,8 @@ public class ProfileActivityTest {
         Account.getAccount().synchronizeUserProfile();
         Thread.sleep(1500);
 
-        testRule.getScenario().onActivity(ProfileActivity::setAddFriendUI);
+        testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
+        onView(withId(R.id.addFriendButton)).perform(click());
         onView(withId(R.id.editTextFriend)).perform(typeText(friendUsername));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());
@@ -219,7 +220,8 @@ public class ProfileActivityTest {
         Database.setChild(Database.CHILD_USERS + "test", Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(username));
         Thread.sleep(1500);
 
-        testRule.getScenario().onActivity(ProfileActivity::setAddFriendUI);
+        testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
+        onView(withId(R.id.addFriendButton)).perform(click());
         onView(withId(R.id.editTextFriend)).perform(typeText(username));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());
@@ -232,7 +234,8 @@ public class ProfileActivityTest {
     public void addFriendCurrentUsernameTest() throws InterruptedException {
         final String username = "null";
 
-        testRule.getScenario().onActivity(ProfileActivity::setAddFriendUI);
+        testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
+        onView(withId(R.id.addFriendButton)).perform(click());
         onView(withId(R.id.editTextFriend)).perform(typeText(username));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());
@@ -245,7 +248,8 @@ public class ProfileActivityTest {
     public void addNoExistingUser() throws InterruptedException {
         final String username = "i3gn4u34o";
 
-        testRule.getScenario().onActivity(ProfileActivity::setAddFriendUI);
+        testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
+        onView(withId(R.id.addFriendButton)).perform(click());
         onView(withId(R.id.editTextFriend)).perform(typeText(username));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());
@@ -258,7 +262,8 @@ public class ProfileActivityTest {
     public void friendIsNotValidTest() throws InterruptedException {
         final String username = "";
 
-        testRule.getScenario().onActivity(ProfileActivity::setAddFriendUI);
+        testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
+        onView(withId(R.id.addFriendButton)).perform(click());
         onView(withId(R.id.editTextFriend)).perform(typeText(username));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());

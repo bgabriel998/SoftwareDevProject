@@ -137,7 +137,9 @@ public class ProfileActivity extends AppCompatActivity {
      * @param view
      */
     public void addFriendButton(View view) {
-        setAddFriendUI();
+        resetUI();
+        findViewById(R.id.submitFriendButton).setVisibility(View.VISIBLE);
+        findViewById(R.id.editTextFriend).setVisibility(View.VISIBLE);
     }
 
     /**
@@ -252,33 +254,25 @@ public class ProfileActivity extends AppCompatActivity {
      * Sets what is visible on UI if the user is logged
      */
     public void setLoggedUI(){
-        setVisibilitySignInUI(true);
+        resetUI();
+        findViewById(R.id.signOutButton).setVisibility(View.VISIBLE);
+        findViewById(R.id.changeUsernameButton).setVisibility(View.VISIBLE);
+        findViewById(R.id.addFriendButton).setVisibility(View.VISIBLE);
+        findViewById(R.id.friendsButton).setVisibility(View.VISIBLE);
     }
 
     /**
      * Sets what is visible on UI if the user is not logged
      */
     public void setNotLoggedUI(){
-        setVisibilitySignInUI(false);
-    }
-
-    /**
-     * Sets visibility for sign-in related buttons
-     * @param logged
-     */
-    public void setVisibilitySignInUI(Boolean logged) {
-        hideUI();
-        findViewById(R.id.signInButton).setVisibility(logged ? View.GONE : View.VISIBLE);
-        findViewById(R.id.signOutButton).setVisibility(logged ? View.VISIBLE : View.GONE);
-        findViewById(R.id.changeUsernameButton).setVisibility(logged ? View.VISIBLE : View.GONE);
-        findViewById(R.id.addFriendButton).setVisibility(logged ? View.VISIBLE : View.GONE);
-        findViewById(R.id.friendsButton).setVisibility(logged ? View.VISIBLE : View.GONE);
+        resetUI();
+        findViewById(R.id.signInButton).setVisibility(View.VISIBLE);
     }
 
     /**
      * Hide all the buttons
      */
-    public void hideUI() {
+    public void resetUI() {
         findViewById(R.id.submitFriendButton).setVisibility(View.GONE);
         findViewById(R.id.editTextFriend).setVisibility(View.GONE);
         findViewById(R.id.submitUsernameButton).setVisibility(View.GONE);
@@ -294,19 +288,8 @@ public class ProfileActivity extends AppCompatActivity {
      * Sets what is visible on UI after a username change is requested or required
      */
     public void setUsernameChoiceUI() {
-        hideUI();
+        resetUI();
         findViewById(R.id.submitUsernameButton).setVisibility(View.VISIBLE);
         findViewById(R.id.editTextUsername).setVisibility(View.VISIBLE);
     }
-
-    /**
-     * Sets what is visible on UI after add friend button is pressed
-     */
-    public void setAddFriendUI() {
-        hideUI();
-        findViewById(R.id.submitFriendButton).setVisibility(View.VISIBLE);
-        findViewById(R.id.editTextFriend).setVisibility(View.VISIBLE);
-    }
-
-
 }
