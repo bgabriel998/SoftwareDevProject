@@ -335,11 +335,11 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * Sets what is visible on UI after a username change is requested or required
+     * Sets what is visible on UI after add friend button is pressed
      */
     public void setAddFriendUI() {
-        hideChangeUsernameButtons();
         hideMenuButtons();
+        hideChangeUsernameButtons();
         findViewById(R.id.submitFriendButton).setVisibility(View.VISIBLE);
         findViewById(R.id.editTextFriend).setVisibility(View.VISIBLE);
     }
