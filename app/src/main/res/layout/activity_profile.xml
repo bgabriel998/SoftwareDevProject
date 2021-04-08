@@ -26,19 +26,7 @@
         android:text="@string/sign_in_button"
         android:onClick="signInButton" />
 
-    <!-- Change username -->
-    <Button
-        android:id="@+id/changeUsernameButton"
-        android:layout_height="70dp"
-        android:layout_width="300dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        style="@style/ButtonGrey"
-        android:text="@string/change_username_button"
-        android:onClick="changeUsernameButton" />
-
+    <!-- Submit username -->
     <Button
         android:id="@+id/submitUsernameButton"
         android:layout_width="300dp"
@@ -50,6 +38,63 @@
         style="@style/ButtonDarkGreen"
         android:text="@string/submit_username_button"
         android:onClick="submitUsernameButton" />
+
+    <!-- Submit friend -->
+    <Button
+        android:id="@+id/submitFriendButton"
+        android:layout_width="300dp"
+        android:layout_height="70dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/ButtonDarkGreen"
+        android:text="@string/submit_friend_button"
+        android:onClick="submitFriendButton" />
+
+    <LinearLayout
+        android:id="@+id/loggedLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="55dp"
+        android:layout_marginEnd="55dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <!-- Change username -->
+        <Button
+            android:id="@+id/changeUsernameButton"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginTop="30dp"
+            style="@style/ButtonGrey"
+            android:onClick="changeUsernameButton"
+            android:text="@string/change_username_button" />
+
+        <!-- Add friend -->
+        <Button
+            android:id="@+id/addFriendButton"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginTop="30dp"
+            style="@style/ButtonGrey"
+            android:onClick="addFriendButton"
+            android:text="@string/add_friend_button" />
+
+        <!-- Friends button-->
+        <Button
+            android:id="@+id/friendsButton"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginTop="30dp"
+            style="@style/ButtonGrey"
+            android:onClick="friendsButton"
+            android:text="@string/friends_button" />
+    </LinearLayout>
 
     <!-- Sign out button -->
     <Button
@@ -68,17 +113,31 @@
 
     <EditText
         android:id="@+id/editTextUsername"
-        android:imeOptions="actionDone"
-        android:layout_height="70dp"
+        style="@style/ButtonGrey"
         android:layout_width="300dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="70dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="@string/insert_username_button"
-        style="@style/ButtonGrey" />
+        android:imeOptions="actionDone"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextFriend"
+        style="@style/ButtonGrey"
+        android:layout_width="300dp"
+        android:layout_height="70dp"
+        android:ems="10"
+        android:hint="@string/insert_friend_button"
+        android:imeOptions="actionDone"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

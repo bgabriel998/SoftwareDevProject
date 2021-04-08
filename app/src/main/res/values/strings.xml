@@ -28,8 +28,15 @@
     <string name='current_username'>You can\'t choose the username you already have!</string>
     <string name='available_username'>Your username has changed!</string>
     <string name='insert_username_button'>Insert your username here</string>
-    <string name='change_username_button'>Change the username</string>
-    <string name='submit_username_button'>Submit</string>
+    <string name='change_username_button'>Change username</string>
+    <string name='submit_username_button'>Change</string>
+
+    <!-- FRIENDS SYSTEM -->
+    <string name='add_friend_button'>Add a friend</string>
+    <string name='friends_button'>Friends</string>
+    <string name='insert_friend_button'>Insert your friend\'s username</string>
+    <string name='submit_friend_button'>Add</string>
+    <string name='add_current_username'>You can\'t add yourself to your friends!</string>
 
     <!-- RANKINGS HEADER -->
     <string name="header_position">Pos</string>

@@ -124,6 +124,52 @@ public class ProfileActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * On add friend button click
+     * @param view
+     */
+    public void addFriendButton(View view) {
+        setAddFriendUI();
+    }
+
+    /**
+     * On submit of add friend UI button click
+     * @param view
+     */
+    public void submitFriendButton(View view) {
+        String username = ((EditText)findViewById(R.id.editTextFriend)).getText().toString();
+        String currentUsername = account.getUsername();
+        Log.d("CURRENT_USERNAME", "onSubmit: " + currentUsername);
+        // First, check if the username is valid
+        if(Account.isValid(username)) {
+            // Then, check if it is the current user's username
+            if(username.equals(currentUsername)) {
+                Log.d("CURRENT_USERNAME", "onSubmit: EQUAL_CASE");
+                Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.add_current_username, Snackbar.LENGTH_LONG);
+                snackbar.show();
+            }
+            // Then, check if the chosen user is already a friend
+            else {
+                // TODO Check if the added friend is already a friend
+
+                // TODO If not, check if the added friend exists
+            }
+        }
+        // Display that the username is not valid
+        else {
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.invalid_username , Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
+    }
+
+    /**
+     * On friends button click
+     * @param view
+     */
+    public void friendsButton(View view) {
+
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -203,7 +249,6 @@ public class ProfileActivity extends AppCompatActivity {
      */
     public void setLoggedUI(){
         setVisibilitySignInUI(true);
-        hideChangeUsernameButtons();
     }
 
     /**
@@ -211,7 +256,6 @@ public class ProfileActivity extends AppCompatActivity {
      */
     public void setNotLoggedUI(){
         setVisibilitySignInUI(false);
-        hideChangeUsernameButtons();
     }
 
     /**
@@ -222,10 +266,14 @@ public class ProfileActivity extends AppCompatActivity {
         findViewById(R.id.signInButton).setVisibility(logged ? View.GONE : View.VISIBLE);
         findViewById(R.id.signOutButton).setVisibility(logged ? View.VISIBLE : View.GONE);
         findViewById(R.id.changeUsernameButton).setVisibility(logged ? View.VISIBLE : View.GONE);
+        findViewById(R.id.addFriendButton).setVisibility(logged ? View.VISIBLE : View.GONE);
+        findViewById(R.id.friendsButton).setVisibility(logged ? View.VISIBLE : View.GONE);
+        hideChangeUsernameButtons();
+        hideAddFriendButtons();
     }
 
     /**
-     * Hides the username change buttons
+     * Hide change username views
      */
     public void hideChangeUsernameButtons() {
         findViewById(R.id.submitUsernameButton).setVisibility(View.GONE);
@@ -233,13 +281,43 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * Sets what is visible on UI after a username change is requested or required
+     * Hide add friend views
      */
-    public void setUsernameChoiceUI() {
+    public void hideAddFriendButtons() {
+        findViewById(R.id.submitFriendButton).setVisibility(View.GONE);
+        findViewById(R.id.editTextFriend).setVisibility(View.GONE);
+    }
+
+    /**
+     * Hide menu views
+     */
+    public void hideMenuButtons() {
         findViewById(R.id.signInButton).setVisibility(View.GONE);
         findViewById(R.id.signOutButton).setVisibility(View.GONE);
         findViewById(R.id.changeUsernameButton).setVisibility(View.GONE);
+        findViewById(R.id.addFriendButton).setVisibility(View.GONE);
+        findViewById(R.id.friendsButton).setVisibility(View.GONE);
+    }
+
+    /**
+     * Sets what is visible on UI after a username change is requested or required
+     */
+    public void setUsernameChoiceUI() {
+        hideMenuButtons();
+        hideAddFriendButtons();
         findViewById(R.id.submitUsernameButton).setVisibility(View.VISIBLE);
         findViewById(R.id.editTextUsername).setVisibility(View.VISIBLE);
     }
+
+    /**
+     * Sets what is visible on UI after a username change is requested or required
+     */
+    public void setAddFriendUI() {
+        hideMenuButtons();
+        hideChangeUsernameButtons();
+        findViewById(R.id.submitFriendButton).setVisibility(View.VISIBLE);
+        findViewById(R.id.editTextFriend).setVisibility(View.VISIBLE);
+    }
+
+
 }
