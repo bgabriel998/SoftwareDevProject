@@ -228,12 +228,12 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         });
 
         //Wait for the view to be correctly displayed
-        Thread.sleep(3000);
+        Thread.sleep(6000);
 
         //Take a picture, needs to be done outside of onActivity
         onView(withId(R.id.takePicture)).perform(click());
 
-        Thread.sleep(3000);
+        Thread.sleep(6000);
 
         testRule.getScenario().onActivity(activity -> {
             try {
@@ -256,13 +256,13 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         });
 
         //Wait for orientation changes
-        Thread.sleep(3000);
+        Thread.sleep(6000);
 
         //Take a picture
         onView(withId(R.id.takePicture)).perform(click());
 
         //Wait for the toast to get displayed
-        Thread.sleep(3000);
+        Thread.sleep(6000);
 
         testRule.getScenario().onActivity(activity -> {
             try {
