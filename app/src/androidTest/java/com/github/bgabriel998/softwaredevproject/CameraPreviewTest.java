@@ -222,7 +222,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 //Wait for orientation changes
                 //Thread.sleep(3000);
-            } catch (InvocationTargetException | IllegalAccessException | InterruptedException e) {
+            } catch (InvocationTargetException | IllegalAccessException e) {
                 e.printStackTrace();
             }
         });
@@ -250,7 +250,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
                 //Wait for orientation changes
                 //Thread.sleep(3000);
 
-            } catch (IllegalAccessException | InvocationTargetException | InterruptedException e) {
+            } catch (IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
         });
@@ -270,7 +270,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
                 //Thread.sleep(3000);
                 //Check that correct toast was displayed
                 assertEquals(pictureTakenCorrectly, getLastToast.invoke(activity));
-            } catch (IllegalAccessException | InvocationTargetException | InterruptedException e) {
+            } catch (IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
         });
