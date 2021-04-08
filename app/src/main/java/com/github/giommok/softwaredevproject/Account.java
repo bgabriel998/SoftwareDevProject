@@ -2,8 +2,13 @@ package com.github.giommok.softwaredevproject;
 
 import android.net.Uri;
 
+import com.github.bgabriel998.softwaredevproject.FriendItem;
+import com.github.ravifrancesco.softwaredevproject.POIPoint;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 public interface Account {
 
@@ -51,44 +56,9 @@ public interface Account {
     public String getUsername();
 
     /**
-     * This method updates the username of the current account
+     * @return the friends of the current user or an empty list if the user has no friends
      */
-    public void synchronizeUsername();
-
-    /**
-
-     * set the user score in the database
-     */
-    public void setUserScore(long newScore);
-
-    /**
-     *
-     * @return the score of the user or zero if no account is signed in
-     */
-    public long getUserScore();
-
-    /**
-     * This method updates the user score stored in the database
-     */
-    public void synchronizeUserScore();
-
-
-    /**
-     * Add entry to the list of discovered Country High points
-     * @param entry new country highest point discovered
-     */
-    public void setDiscoveredCountryHighPoint(CacheEntry entry);
-
-    /**
-     * This method updates the country highest points that has been
-     * discovered by the user
-     */
-    public void synchronizeDiscoveredCountryHighPoints();
-
-    /**
-     * @return country high points discovered by the user
-     */
-    public HashMap<String,CacheEntry> getDiscoveredCountryHighPoint();
+    public List<FriendItem> getFriends();
 
     /**
      * Check if the username chosen by the user is valid.
@@ -99,4 +69,45 @@ public interface Account {
         return username != null && username.matches("\\w{3,15}");
     }
 
+    /**
+     * set the user score in the database
+     */
+    public void setUserScore(long newScore);
+
+    /**
+     *
+     * @return the score of the user or zero if no account is signed in
+     */
+    public long getUserScore();
+
+
+    /**
+     * @return hashset of discovered peaks
+     */
+    public HashSet<POIPoint> getDiscoveredPeaks();
+
+    /**
+     * Append the list of new discovered peaks to the database.
+     * WARNING : The list given to the method filter out all peaks already in the database
+     */
+    public void setDiscoveredPeaks(ArrayList<POIPoint> newDiscoveredPeaks);
+
+
+    /**
+     * Creates a callback to synchronize the whole user profile
+     */
+    public void synchronizeUserProfile();
+
+    /**
+     * Add new Height badge to the local Hashset and to the database
+     * Avoid duplicates.
+     * @param badge height badge (see ScoringConstants.java)
+     */
+    public void setDiscoveredPeakHeights(int badge);
+
+
+    /**
+     * @return list containing all height badges
+     */
+    public HashSet<Integer> getDiscoveredPeakHeights();
 }

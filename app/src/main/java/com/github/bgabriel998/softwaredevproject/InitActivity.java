@@ -37,8 +37,6 @@ public class InitActivity extends AppCompatActivity {
      */
     private void initApp() {
         FirebaseAccount firebaseAccount = FirebaseAccount.getAccount();
-        firebaseAccount.synchronizeDiscoveredCountryHighPoints();
-        firebaseAccount.synchronizeUserScore();
-        firebaseAccount.synchronizeUsername();
+        firebaseAccount.synchronizeUserProfile();
     }
 }

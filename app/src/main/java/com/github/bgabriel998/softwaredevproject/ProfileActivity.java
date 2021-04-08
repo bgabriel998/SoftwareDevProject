@@ -1,5 +1,6 @@
 package com.github.bgabriel998.softwaredevproject;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,8 +25,14 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -118,7 +125,7 @@ public class ProfileActivity extends AppCompatActivity {
         AuthUI.getInstance().signOut(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     public void onComplete(Task<Void> task) {
-                        account.synchronizeUsername();
+                        account.synchronizeUserProfile();
                         setUI();
                     }
                 });
@@ -139,7 +146,7 @@ public class ProfileActivity extends AppCompatActivity {
     public void submitFriendButton(View view) {
         String username = ((EditText)findViewById(R.id.editTextFriend)).getText().toString();
         String currentUsername = account.getUsername();
-        Log.d("CURRENT_USERNAME", "onSubmit: " + currentUsername);
+        Log.d("FRIENDS SIZE", "onSubmit: " + account.getFriends().size());
         // First, check if the username is valid
         if(Account.isValid(username)) {
             // Then, check if it is the current user's username
@@ -150,9 +157,37 @@ public class ProfileActivity extends AppCompatActivity {
             }
             // Then, check if the chosen user is already a friend
             else {
-                // TODO Check if the added friend is already a friend
+                boolean found = false;
+                for(FriendItem friend: account.getFriends()) {
+                    if(friend.hasUsername(username)) found = true;
+                }
+                if(found) {
+                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.friend_already_added, Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                }
+                else {
+                    Database.refRoot.child(Database.CHILD_USERS).orderByChild(Database.CHILD_USERNAME).equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                for (DataSnapshot user: snapshot.getChildren()) {
+                                    String friendUid = user.getKey();
+                                    Database.setChild(Database.CHILD_USERS + Database.FOLDER + account.getId() + Database.FOLDER + Database.CHILD_FRIENDS, Collections.singletonList(friendUid), Collections.singletonList(""));
+                                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.friend_added, Snackbar.LENGTH_LONG);
+                                    snackbar.show();
+                                }
+                            }
+                            else {
+                                Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.friend_not_present_db, Snackbar.LENGTH_LONG);
+                                snackbar.show();
+                            }
+                        }
 
-                // TODO If not, check if the added friend exists
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
+                }
             }
         }
         // Display that the username is not valid
@@ -201,7 +236,7 @@ public class ProfileActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Firebase AUTH", "signInWithCredential:success");
-                            account.synchronizeUsername();
+                            account.synchronizeUserProfile();
                             // Check if the user is already registered on the database
                             Database.isPresent("users", "email", account.getEmail(), () -> setUI(), () -> setUsernameChoiceUI());
                         } else {

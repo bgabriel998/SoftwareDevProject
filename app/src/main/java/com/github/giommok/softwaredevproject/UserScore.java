@@ -41,37 +41,6 @@ public class UserScore {
     }
 
     /**
-     * Compute user bonus.
-     * If the user discovers the highest peak in a country
-     * a bonus is added to the his score
-     * @return bonus to add
-     */
-    private long computeUserBonus(POIPoint poiPoint){
-        long retValue = 0;
-        dataBaseHelper.openDataBase();
-        /*Search country*/
-        String country = getCountryFromCoordinates(poiPoint.getLatitude(), poiPoint.getLongitude());
-        if(country != null){
-            CacheEntry countryInfo = getDataFromCache(country);
-            if (countryInfo == null) {
-                //Value was not in the cache
-                //Retrieve info to cache it
-                countryInfo = new CacheEntry(dataBaseHelper.queryHighestPeakName(country),
-                        dataBaseHelper.queryHighestPeakHeight(country));
-                databaseCache.put(country,countryInfo);
-            }
-            //Check if the current peak is one country high point
-            if(comparePeakNameWithCacheData(countryInfo, poiPoint) && !countryHighPointAlreadyDiscovered(poiPoint,country)) {
-                retValue += ScoringConstants.BONUS_COUNTRY_TALLEST_PEAK;
-                countryInfo.setCountryName(country);
-                fireBaseAccount.setDiscoveredCountryHighPoint(countryInfo);
-            }
-        }
-        dataBaseHelper.close();
-        return retValue;
-    }
-
-    /**
      * Compare the poi peak name with the given cache entry name
      * @param countryInfo cache entry containing highest point name from the same country as poiPoint
      * @param poiPoint peak retrieved with provider
@@ -81,21 +50,6 @@ public class UserScore {
         return (countryInfo.getCountryHighPoint().contains(poiPoint.getName()) ||
                 poiPoint.getName().contains(countryInfo.getCountryHighPoint()))
                 && Math.abs(poiPoint.getAltitude() - countryInfo.getHighPointHeight()) < COUNTRY_HIGHEST_PEAK_DETECTION_TOLERANCE;
-    }
-
-    /**
-     * Check in the database if the user has already discovered this country
-     * highest point
-     * @param poiPoint new discovered peak
-     * @param country country in which the new discovered peak is located
-     * @return true if the
-     */
-    private boolean countryHighPointAlreadyDiscovered(POIPoint poiPoint, String country){
-        HashMap<String,CacheEntry> countryHighPointDiscovered = fireBaseAccount.getDiscoveredCountryHighPoint();
-        if(countryHighPointDiscovered == null) return false;
-        if(countryHighPointDiscovered.containsKey(country))
-            return countryHighPointDiscovered.get(country).getCountryHighPoint().contains(poiPoint.getName());
-        return false;
     }
 
     /**
@@ -111,33 +65,6 @@ public class UserScore {
         else return null;
     }
 
-
-    /**
-     * Computes the new user score given the list of freshly scanned peaks
-     * @param scannedPeaks peaks the user scanned
-     * @return new user Score
-     */
-    private long computeUserScore(ArrayList<POIPoint> scannedPeaks){
-        //Get previous score from user database
-        long userScore = fireBaseAccount.getUserScore();
-        //Foreach loop over all scanned peaks
-        for(POIPoint poiPoint : scannedPeaks){
-            /*Add classical amount of points*/
-            userScore += poiPoint.getAltitude() * ScoringConstants.PEAK_FACTOR;
-            userScore += computeUserBonus(poiPoint);
-        }
-        return userScore;
-    }
-
-
-
-    /**
-     * Updates user score in the database
-     */
-    public void updateUserScore(ArrayList<POIPoint> scannedPeaks){
-        long userScore = computeUserScore(scannedPeaks);
-        fireBaseAccount.setUserScore(userScore);
-    }
 
 
     /**
