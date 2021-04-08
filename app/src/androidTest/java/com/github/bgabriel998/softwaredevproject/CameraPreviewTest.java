@@ -221,7 +221,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
                 //Set orientation to portrait
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 //Wait for orientation changes
-                Thread.sleep(3000);
+                //Thread.sleep(3000);
             } catch (InvocationTargetException | IllegalAccessException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -238,7 +238,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         testRule.getScenario().onActivity(activity -> {
             try {
                 //Wait for orientation changes
-                Thread.sleep(3000);
+                //Thread.sleep(3000);
                 //Check that correct toast was displayed
                 assertEquals(pictureTakenCorrectly, getLastToast.invoke(activity));
                 //Reset toast
@@ -248,7 +248,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
                 //Rotate screen back to portrait
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                 //Wait for orientation changes
-                Thread.sleep(3000);
+                //Thread.sleep(3000);
 
             } catch (IllegalAccessException | InvocationTargetException | InterruptedException e) {
                 e.printStackTrace();
@@ -267,7 +267,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         testRule.getScenario().onActivity(activity -> {
             try {
                 //Wait for orientation changes
-                Thread.sleep(3000);
+                //Thread.sleep(3000);
                 //Check that correct toast was displayed
                 assertEquals(pictureTakenCorrectly, getLastToast.invoke(activity));
             } catch (IllegalAccessException | InvocationTargetException | InterruptedException e) {
