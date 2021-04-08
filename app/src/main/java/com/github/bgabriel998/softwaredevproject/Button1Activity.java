@@ -161,41 +161,6 @@ public class Button1Activity extends AppCompatActivity {
     }
 
     /**
-     * Handle orientation changes
-     *
-     * @param newConfig new device configuration
-     */
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        ImageButton takePictureButton = findViewById(R.id.takePicture);
-
-        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) takePictureButton.getLayoutParams();
-
-        //Change constraints of the ImageButton depending on the orientation
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            params.rightToRight = R.id.cameraLayout;
-            params.topToTop = R.id.cameraLayout;
-            params.bottomToBottom = R.id.cameraLayout;
-            params.endToEnd = -1;
-            params.startToStart = -1;
-            params.rightMargin = 10;
-
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            params.rightToRight = -1;
-            params.topToTop = -1;
-            params.endToEnd = R.id.cameraLayout;
-            params.startToStart = R.id.cameraLayout;
-            params.bottomToBottom = R.id.compass;
-            params.rightMargin = 0;
-        }
-
-        //Change the constraints of the button
-        takePictureButton.setLayoutParams(params);
-    }
-
-    /**
      * Callback for the takePicture ImageButton takes two pictures, one of the camera and one with the UI
      *
      * @param view ImageButton
@@ -217,7 +182,7 @@ public class Button1Activity extends AppCompatActivity {
     /**
      * Combines two bitmaps into one
      *
-     * @param base    first bitmap
+     * @param base first bitmap
      * @param overlay second bitmap that is drawn on first bitmap
      * @return A bitmap that combine the two bitmaps
      */

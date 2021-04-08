@@ -39,8 +39,7 @@
         <activity android:name=".Button4Activity" />
         <activity android:name=".Button3Activity" />
         <activity android:name=".Button2Activity" />
-        <activity android:name=".Button1Activity"
-            android:configChanges="orientation|screenSize"/>
+        <activity android:name=".Button1Activity" />
         <activity android:name=".InitActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
