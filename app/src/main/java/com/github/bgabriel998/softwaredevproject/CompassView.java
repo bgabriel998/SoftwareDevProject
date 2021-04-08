@@ -271,29 +271,36 @@ public class CompassView extends View {
         GeoPoint corse = new GeoPoint(42.412878661343186, 8.951160966878296, 2706);
         GeoPoint wien = new GeoPoint(48.22066363087269, 16.396538068482492, 150);
         GeoPoint bordeaux = new GeoPoint(44.8447387495189, -0.5700051995730769, 15);
-        POIPoints.add(new POIPoint(amsterdam));
-        POIPoints.add(new POIPoint(corse));
-        POIPoints.add(new POIPoint(wien));
-        POIPoints.add(new POIPoint(bordeaux));
+        this.POIPoints.add(new POIPoint(amsterdam));
+        this.POIPoints.add(new POIPoint(corse));
+        this.POIPoints.add(new POIPoint(wien));
+        this.POIPoints.add(new POIPoint(bordeaux));
         invalidate();
         requestLayout();
     }
 
     /**
-     * Draws the POIs on the display
-     * @param actualDegree degree of the actual heading of the user
+     * Draws the POIs on the display using the horizontal and vertical bearing of the mountain
+     * to the user
+     * @param actualDegree degree of the actual heading of the compass
      */
     private void drawPOIs(int actualDegree){
         //Go through all POIPoints
         for(POIPoint poiPoint : POIPoints){
             int horizontalAngle = (int)ComputePOIPoints.getHorizontalBearing(userPoint, poiPoint);
             if(horizontalAngle == actualDegree){
-                //Calculate position in pixel of marker
-                float deltaVerticalAngle = (float) (ComputePOIPoints.getVerticalBearing(userPoint, poiPoint) - verticalDegrees);
-                float deltaVerticalAngle2 = (float) (ComputePOIPoints.calculateElevationAngle(userPoint, poiPoint) - verticalDegrees);
-                float mountainMarkerPosition = height * (rangeDegreesVertical - 2*deltaVerticalAngle2) / (2*rangeDegreesVertical)
+                //Calculate the vertical angle to the user
+                double verticaleAngle1 = ComputePOIPoints.getVerticalBearing(userPoint, poiPoint);
+                double verticaleAngle2 = ComputePOIPoints.calculateElevationAngle(userPoint, poiPoint);
+
+                //Use both results and substract the actual vertical heading
+                float deltaVerticalAngle = (float) ((verticaleAngle1 + verticaleAngle2)/ 2  - verticalDegrees);
+
+                //Calculate position in Pixel to display the mountainMarker
+                float mountainMarkerPosition = height * (rangeDegreesVertical - 2*deltaVerticalAngle) / (2*rangeDegreesVertical)
                         - (float)mountainMarker.getHeight()/2;
 
+                //Draw the marker on the preview
                 canvas.drawBitmap(mountainMarker, pixDeg * (actualDegree - minDegrees),
                          mountainMarkerPosition, null);
             }

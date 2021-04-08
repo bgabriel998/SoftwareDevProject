@@ -64,18 +64,17 @@ public class ComputePOIPoints {
      * @return Angle in degrees between 0 and 360°, horizon is 90°
      */
     public static double getVerticalBearing(Point startPoint, Point endPoint) {
-
         Point fromECEF = getECEF(startPoint);
         Point toECEF = getECEF(endPoint);
         Point deltaECEF = getDeltaECEF(fromECEF, toECEF);
 
         double fromLat = fromECEF.getLatitude();
-        double fromLon = fromECEF.getLatitude();
-        double fromAlt = fromECEF.getLatitude();
+        double fromLon = fromECEF.getLongitude();
+        double fromAlt = fromECEF.getAltitude();
 
         double deltaLat = deltaECEF.getLatitude();
-        double deltaLon = deltaECEF.getLatitude();
-        double deltaAlt = deltaECEF.getLatitude();
+        double deltaLon = deltaECEF.getLongitude();
+        double deltaAlt = deltaECEF.getAltitude();
         
         double d = (fromLat * deltaLat + fromLon * deltaLon + fromAlt * deltaAlt);
         double a = ((fromLat * fromLat) + (fromLon * fromLon) + (fromAlt * fromAlt));
