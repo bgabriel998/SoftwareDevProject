@@ -10,14 +10,8 @@ import android.view.View;
 
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
 import com.github.ravifrancesco.softwaredevproject.Point;
-import com.github.ravifrancesco.softwaredevproject.UserPoint;
 
-import org.osmdroid.bonuspack.location.POI;
-import org.osmdroid.util.GeoPoint;
-
-import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * CompassView draws the compass on the display
@@ -74,7 +68,10 @@ public class CompassView extends View {
     //Marker used to display mountains on camera-preview
     private Bitmap mountainMarker;
 
+    //List that contains the POIPoints
     private List<POIPoint> POIPoints;
+
+    //Corresponds to the location of the user
     private Point userPoint;
 
     /**
@@ -260,13 +257,23 @@ public class CompassView extends View {
 
     /**
      * Set the POIs that will be drawn on the camera-preview
-     * TODO replace mock geopoints
      * @param POIPoints List of POIPoints
      * @param userPoint location of the user
      */
     public void setPOIs(List<POIPoint> POIPoints, Point userPoint){
         this.POIPoints = POIPoints;
         this.userPoint = userPoint;
+//        Point testDiag = new Point(userPoint.getLatitude()+0.1, userPoint.getLongitude()+0.1, userPoint.getAltitude() + 100000);
+//        Point testAbove = new Point(userPoint.getLatitude(), userPoint.getLongitude(), userPoint.getAltitude() + 100000);
+//        Point testSameHeight = new Point(userPoint.getLatitude()+0.1, userPoint.getLongitude()+0.1, userPoint.getAltitude());
+//        Point testBelow = new Point(userPoint.getLatitude(), userPoint.getLongitude(), userPoint.getAltitude()-1);
+
+//        double testVert = ComputePOIPoints.calculateElevationAngle(userPoint, testAbove);
+//        testVert = ComputePOIPoints.getVerticalBearing(userPoint, testAbove);
+//        testVert = ComputePOIPoints.calculateElevationAngle(userPoint, testDiag);
+//        testVert = ComputePOIPoints.calculateElevationAngle(userPoint, testSameHeight);
+//        testVert = ComputePOIPoints.calculateElevationAngle(userPoint, testBelow);
+//        testVert = ComputePOIPoints.getVerticalBearing(userPoint, testDiag);
         invalidate();
         requestLayout();
     }
@@ -281,12 +288,8 @@ public class CompassView extends View {
         for(POIPoint poiPoint : POIPoints){
             int horizontalAngle = (int)ComputePOIPoints.getHorizontalBearing(userPoint, poiPoint);
             if(horizontalAngle == actualDegree){
-                //Calculate the vertical angle to the user
-                double verticaleAngle1 = ComputePOIPoints.getVerticalBearing(userPoint, poiPoint);
-                double verticaleAngle2 = ComputePOIPoints.calculateElevationAngle(userPoint, poiPoint);
-
                 //Use both results and substract the actual vertical heading
-                float deltaVerticalAngle = (float) ((verticaleAngle1 + verticaleAngle2)/ 2  - verticalDegrees);
+                float deltaVerticalAngle = (float) (ComputePOIPoints.getVerticalBearing(userPoint, poiPoint) - verticalDegrees);
 
                 //Calculate position in Pixel to display the mountainMarker
                 float mountainMarkerPosition = height * (rangeDegreesVertical - 2*deltaVerticalAngle) / (2*rangeDegreesVertical)

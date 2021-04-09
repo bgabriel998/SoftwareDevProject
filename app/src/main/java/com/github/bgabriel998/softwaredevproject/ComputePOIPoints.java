@@ -2,6 +2,8 @@ package com.github.bgabriel998.softwaredevproject;
 
 import android.content.Context;
 
+import androidx.core.util.Pair;
+
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
 import com.github.ravifrancesco.softwaredevproject.Point;
 import com.github.ravifrancesco.softwaredevproject.UserPoint;
@@ -15,11 +17,10 @@ public class ComputePOIPoints {
     private static List<POI> POIs;
     public static List<POIPoint> POIPoints;
     public UserPoint userPoint;
-    private final static double EARTH_RADIUS = 6378137; // value in meters
 
     /**
      * Constructor of ComputePOIPoints, updates userPoint and gets the POIs for the userPoint
-     * @param context
+     * @param context Context of activity
      */
     public ComputePOIPoints(Context context){
         POIPoints = new ArrayList<>();
@@ -37,9 +38,13 @@ public class ComputePOIPoints {
             @Override
             public void onResponseReceived(Object result) {
                 POIs = (ArrayList<POI>) result;
-                for(POI poi : POIs){
-                    POIPoint poiPoint = new POIPoint(poi);
-                    POIPoints.add(poiPoint);
+                if(POIs != null){
+                    for(POI poi : POIs){
+                        POIPoint poiPoint = new POIPoint(poi);
+                        if(!POIPoints.contains(poiPoint)){
+                            POIPoints.add(poiPoint);
+                        }
+                    }
                 }
             }
         }.execute();
@@ -66,91 +71,25 @@ public class ComputePOIPoints {
 
     /**
      * Calculates the vertical angle between a startpoint and endpoint
-     * See https://stackoverflow.com/a/41566887
-     * @param startPoint Point from where the angle is calculated
-     * @param endPoint Point to where the angle is calculated
-     * @return Angle in degrees between 0 and 360°, horizon is 90°
-     */
-    public static double getVerticalBearing(Point startPoint, Point endPoint) {
-        Point fromECEF = getECEF(startPoint);
-        Point toECEF = getECEF(endPoint);
-        Point deltaECEF = getDeltaECEF(fromECEF, toECEF);
-
-        double fromLat = fromECEF.getLatitude();
-        double fromLon = fromECEF.getLongitude();
-        double fromAlt = fromECEF.getAltitude();
-
-        double deltaLat = deltaECEF.getLatitude();
-        double deltaLon = deltaECEF.getLongitude();
-        double deltaAlt = deltaECEF.getAltitude();
-        
-        double d = (fromLat * deltaLat + fromLon * deltaLon + fromAlt * deltaAlt);
-        double a = ((fromLat * fromLat) + (fromLon * fromLon) + (fromAlt * fromAlt));
-        double b = ((deltaLat * deltaLat) + (deltaAlt * deltaAlt) + (deltaAlt * deltaAlt));
-        double angle = Math.toDegrees(Math.acos(d / Math.sqrt(a * b)));
-        angle = (angle + 360) % 360;
-        return angle;
-    }
-
-    /**
-     * Computes the delta between two ECEF points
-     * @param from startpoint in ECEF
-     * @param to endpoint in ECEF
-     * @return Point
-     */
-    private static Point getDeltaECEF(Point from, Point to) {
-        double X = to.getLatitude() - from.getLatitude();
-        double Y = to.getLongitude() - from.getLongitude();
-        double Z = to.getAltitude() - from.getAltitude();
-
-        return new Point(X, Y, Z);
-    }
-
-    /**
-     * Calculates a ECEF point from a Point
-     * @param point Point to be computed
-     * @return New Point with ECEF coordinate system
-     */
-    private static Point getECEF(Point point) {
-        double lat = Math.toRadians(point.getLatitude());
-        double lon = Math.toRadians(point.getLongitude());
-        double alt = Math.toRadians(point.getAltitude());
-        
-        double polarRadius = 6356752.312106893;
-
-        double asqr = EARTH_RADIUS * EARTH_RADIUS;
-        double bsqr = polarRadius * polarRadius;
-        double e = Math.sqrt((asqr-bsqr)/asqr);
-
-        double sinlatitude = Math.sin(lat);
-        double denom = Math.sqrt(1 - e * e * sinlatitude * sinlatitude);
-        double N = EARTH_RADIUS / denom;
-
-        double ratio = (bsqr / asqr);
-
-        double X = (N + alt) * Math.cos(lat) * Math.cos(lon);
-        double Y = (N + alt) * Math.cos(lat) * Math.sin(lon);
-        double Z = (ratio * N + alt) * Math.sin(lat);
-
-        return new Point(X, Y, Z);
-    }
-
-
-    /**
-     * Calculates the vertical angle between a startpoint and endpoint
      * See: http://cosinekitty.com/compass.html
      * @param startPoint Point from where the angle is calculated
      * @param endPoint Point to where the angle is calculated
-     * @return Angle in degrees between 0 and 360°, horizon is 90°
+     * @return Angle in degrees between 0° (mountain exactly below) and
+     * 180° (mountain exactly above), horizon is 90°
      */
-    public static double calculateElevationAngle(Point startPoint, Point endPoint){
-        Point ap = LocationToPoint(startPoint);
-        Point bp = LocationToPoint(endPoint);
+    public static double getVerticalBearing(Point startPoint, Point endPoint){
+        Pair<Point, Point> ap = locationToPoint(startPoint);
+        Pair<Point, Point> bp = locationToPoint(endPoint);
+        Point apGeocentric = ap.first;
+        Point apGeodetic = ap.second;
+        Point bpGeocentric = bp.first;
 
-        Point bma = NormalizeVectorDiff(bp, ap);
+        Point bma = normalizeVectorDiff(bpGeocentric, apGeocentric);
 
-        double elevation = Math.acos(bma.getLatitude() * ap.getLatitude() +
-                bma.getLongitude() * ap.getLongitude() + bma.getAltitude() * ap.getAltitude());
+        double delta = bma.getLatitude() * apGeodetic.getLatitude() +
+                bma.getLongitude() * apGeodetic.getLongitude() + bma.getAltitude() * apGeodetic.getAltitude();
+
+        double elevation = Math.acos(-1*delta);
         return Math.toDegrees(elevation);
     }
 
@@ -160,15 +99,12 @@ public class ComputePOIPoints {
      * @param a second Point
      * @return Point that is normalized
      */
-    private static Point NormalizeVectorDiff(Point b, Point a){
+    private static Point normalizeVectorDiff(Point b, Point a){
         // Calculate norm(b-a), where norm divides a vector by its length to produce a unit vector.
         double dx = b.getLatitude() - a.getLatitude();
         double dy = b.getLongitude() - a.getLongitude();
         double dz = b.getAltitude() - a.getAltitude();
         double dist2 = dx*dx + dy*dy + dz*dz;
-        if (dist2 == 0) {
-            return null;
-        }
         double dist = Math.sqrt(dist2);
         return new Point(dx/dist, dy/dist, dz/dist);
     }
@@ -178,13 +114,23 @@ public class ComputePOIPoints {
      * @param c Point that gets computed
      * @return new Point with computed location
      */
-    private static Point LocationToPoint(Point c){
+    private static Pair<Point, Point> locationToPoint(Point c){
         // Convert (lat, lon, elv) to (x, y, z).
         double lat = c.getLatitude() * Math.PI / 180.0;
         double lon = c.getLongitude() * Math.PI / 180.0;
+        double elv = c.getAltitude();
+
+        double radius = earthRadiusInMeters(lat);
+        double clat   = geocentricLatitude(lat);
 
         double cosLon = Math.cos(lon);
         double sinLon = Math.sin(lon);
+
+        double cosLat = Math.cos(clat);
+        double sinLat = Math.sin(clat);
+        double x = radius * cosLon * cosLat;
+        double y = radius * sinLon * cosLat;
+        double z = radius * sinLat;
 
         // We used geocentric latitude to calculate (x,y,z) on the Earth's ellipsoid.
         // Now we use geodetic latitude to calculate normal vector from the surface, to correct for elevation.
@@ -195,6 +141,41 @@ public class ComputePOIPoints {
         double ny = cosGlat * sinLon;
         double nz = sinGlat;
 
-        return new Point(nx, ny, nz);
+        x += elv * nx;
+        y += elv * ny;
+        z += elv * nz;
+
+        return new Pair<>(new Point(x, y, z), new Point(nx, ny, nz));
+    }
+
+    /**
+     * Calculates the earth radius given the latitude
+     * See http://en.wikipedia.org/wiki/Earth_radius
+     * @param latitudeRadians latitude in radians (geodetic)
+     * @return Radius of the earth in meters
+     */
+    private static double earthRadiusInMeters(double latitudeRadians){
+        //
+        double a = 6378137.0;  // equatorial radius in meters
+        double b = 6356752.3;  // polar radius in meters
+        double cos = Math.cos (latitudeRadians);
+        double sin = Math.sin (latitudeRadians);
+        double t1 = a * a * cos;
+        double t2 = b * b * sin;
+        double t3 = a * cos;
+        double t4 = b * sin;
+        return Math.sqrt ((t1*t1 + t2*t2) / (t3*t3 + t4*t4));
+    }
+
+    /**
+     * Converts a geodetic latitude (like GPS values) to a geocentric latitude (angle measured
+     * from center of Earth between a point and the equator).
+     * See https://en.wikipedia.org/wiki/Latitude#Geocentric_latitude
+     * @param lat Geodetic latitude in radian
+     * @return Converted latitude in radian to geocentric latitude
+     */
+    private static double geocentricLatitude(double lat){
+        double e2 = 0.00669437999014;
+        return Math.atan((1.0 - e2) * Math.tan(lat));
     }
 }
