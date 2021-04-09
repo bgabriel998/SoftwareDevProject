@@ -218,37 +218,45 @@ public class CompassView extends View {
     private void drawCanvas(){
         //Start going through the loop to draw the compass
         for(int i = (int)Math.floor(minDegrees); i <= Math.ceil(maxDegrees); i++){
-
-            //Draw a main line for every 90°
-            if (i % 90 == 0){
-                //Draw the line,
-                //startX starts with 0 at the top left corner and increases when going from left to right
-                //startY also increases from top to bottom -> to start at the bottom,
-                // we will use the height of the compass-view.
-                //stopX is the same as startX since we want to draw a vertical line
-                //stopY is the height of the canvas minus some height to leave enough space to write the heading above
-                drawLine(i, mainLineHeight, mainLinePaint);
-
-                //Select the correct heading depending on the degree with selecHeadingString()
-                //Draw the heading with the mainTextPaint above the line
-                canvas.drawText(selectHeadingString(i), pixDeg * (i - minDegrees), textHeight, mainTextPaint);
-            }
-
-            //Draw a secondary line for every 45° excluding every 90° (45°, 135°, 225° ...)
-            else if (i % 45 == 0){
-                drawLine(i, secondaryLineHeight, secondaryLinePaint);
-                canvas.drawText(selectHeadingString(i), pixDeg * (i - minDegrees), textHeight, secondaryTextPaint);
-            }
-
-            //Draw tertiary line for every 15° excluding every 45° and 90° (15, 30, 60, 75, ...)
-            else if (i % 15 == 0){
-                drawLine(i, terciaryLineHeight, terciaryLinePaint);
-            }
+            //Draw the compass
+            drawCompass(i);
 
             //Draw the mountains on the canvas
             if(POIPoints != null && !POIPoints.isEmpty()){
                 drawPOIs(i);
             }
+        }
+    }
+
+    /**
+     * Draws the compass on the canvas
+     * @param i degree of the compass
+     */
+    private void drawCompass(int i) {
+        //Draw a main line for every 90°
+        if (i % 90 == 0){
+            //Draw the line,
+            //startX starts with 0 at the top left corner and increases when going from left to right
+            //startY also increases from top to bottom -> to start at the bottom,
+            // we will use the height of the compass-view.
+            //stopX is the same as startX since we want to draw a vertical line
+            //stopY is the height of the canvas minus some height to leave enough space to write the heading above
+            drawLine(i, mainLineHeight, mainLinePaint);
+
+            //Select the correct heading depending on the degree with selecHeadingString()
+            //Draw the heading with the mainTextPaint above the line
+            canvas.drawText(selectHeadingString(i), pixDeg * (i - minDegrees), textHeight, mainTextPaint);
+        }
+
+        //Draw a secondary line for every 45° excluding every 90° (45°, 135°, 225° ...)
+        else if (i % 45 == 0){
+            drawLine(i, secondaryLineHeight, secondaryLinePaint);
+            canvas.drawText(selectHeadingString(i), pixDeg * (i - minDegrees), textHeight, secondaryTextPaint);
+        }
+
+        //Draw tertiary line for every 15° excluding every 45° and 90° (15, 30, 60, 75, ...)
+        else if (i % 15 == 0){
+            drawLine(i, terciaryLineHeight, terciaryLinePaint);
         }
     }
 
