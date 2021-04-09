@@ -33,6 +33,6 @@ public class POIPoint extends Point {
         this.setName(point.mType);
     }
 
-
+    
 
 }
