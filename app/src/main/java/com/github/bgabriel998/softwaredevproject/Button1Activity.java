@@ -80,19 +80,8 @@ public class Button1Activity extends AppCompatActivity{
         fovHorizontal.setText(String.format(Locale.ENGLISH,"%.1f °", cameraFieldOfView.first));
         fovVertical.setText(String.format(Locale.ENGLISH,"%.1f °", cameraFieldOfView.second));
 
-        //Get device orientation
-        int orientation = getResources().getConfiguration().orientation;
-
-        if(cameraFieldOfView.first != null && cameraFieldOfView.second != null){
-            //Set range depending on the camera fov
-            //Switch horizontal and vertical fov depending on the orientation
-            if(orientation==Configuration.ORIENTATION_PORTRAIT){
-                compassView.setRange(cameraFieldOfView.first, cameraFieldOfView.second);
-            }
-            else if(orientation==Configuration.ORIENTATION_LANDSCAPE){
-                compassView.setRange(cameraFieldOfView.second, cameraFieldOfView.first);
-            }
-        }
+        //Set range depending on the camera fov
+        compassView.setRange(cameraFieldOfView);
 
         //Create new compass
         compass = new Compass(this);

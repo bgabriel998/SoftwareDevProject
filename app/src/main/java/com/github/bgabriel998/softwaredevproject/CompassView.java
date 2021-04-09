@@ -1,12 +1,15 @@
 package com.github.bgabriel998.softwaredevproject;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
+
+import androidx.core.util.Pair;
 
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
 import com.github.ravifrancesco.softwaredevproject.Point;
@@ -159,12 +162,16 @@ public class CompassView extends View {
 
     /**
      * Sets the range in degrees of the compass-view, corresponds to the field of view of the camera
-     * @param rangeDegreesHorizontal range in degrees
-     * @param rangeDegreesVertical range in degrees
+     * @param cameraFieldOfView Pair containing the horizontal and vertical field of view
      */
-    public void setRange(float rangeDegreesHorizontal, float rangeDegreesVertical) {
-        this.rangeDegreesHorizontal = rangeDegreesHorizontal;
-        this.rangeDegreesVertical = rangeDegreesVertical;
+    public void setRange(Pair<Float, Float> cameraFieldOfView) {
+        int orientation = getResources().getConfiguration().orientation;
+
+        //Switch horizontal and vertical fov depending on the orientation
+        this.rangeDegreesHorizontal = orientation==Configuration.ORIENTATION_PORTRAIT ?
+                cameraFieldOfView.first : cameraFieldOfView.second;
+        this.rangeDegreesHorizontal = orientation==Configuration.ORIENTATION_PORTRAIT ?
+                cameraFieldOfView.second : cameraFieldOfView.first;
     }
 
     /**
