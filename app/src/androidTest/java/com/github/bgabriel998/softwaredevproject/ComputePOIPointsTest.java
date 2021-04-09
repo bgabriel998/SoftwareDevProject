@@ -65,8 +65,7 @@ public class ComputePOIPointsTest {
     }
 
     /**
-     * Compute the horizontal bearing between the userPoint and 4 points each one degree to the
-     * north, east, south and west
+     * Compute the vertical bearing between the userPoint and 4 points above, below, beside and the same point
      */
     @Test
     public void computeVerticalBearing(){
