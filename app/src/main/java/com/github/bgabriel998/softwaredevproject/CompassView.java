@@ -270,17 +270,6 @@ public class CompassView extends View {
     public void setPOIs(List<POIPoint> POIPoints, Point userPoint){
         this.POIPoints = POIPoints;
         this.userPoint = userPoint;
-//        Point testDiag = new Point(userPoint.getLatitude()+0.1, userPoint.getLongitude()+0.1, userPoint.getAltitude() + 100000);
-//        Point testAbove = new Point(userPoint.getLatitude(), userPoint.getLongitude(), userPoint.getAltitude() + 100000);
-//        Point testSameHeight = new Point(userPoint.getLatitude()+0.1, userPoint.getLongitude()+0.1, userPoint.getAltitude());
-//        Point testBelow = new Point(userPoint.getLatitude(), userPoint.getLongitude(), userPoint.getAltitude()-1);
-
-//        double testVert = ComputePOIPoints.calculateElevationAngle(userPoint, testAbove);
-//        testVert = ComputePOIPoints.getVerticalBearing(userPoint, testAbove);
-//        testVert = ComputePOIPoints.calculateElevationAngle(userPoint, testDiag);
-//        testVert = ComputePOIPoints.calculateElevationAngle(userPoint, testSameHeight);
-//        testVert = ComputePOIPoints.calculateElevationAngle(userPoint, testBelow);
-//        testVert = ComputePOIPoints.getVerticalBearing(userPoint, testDiag);
         invalidate();
         requestLayout();
     }
