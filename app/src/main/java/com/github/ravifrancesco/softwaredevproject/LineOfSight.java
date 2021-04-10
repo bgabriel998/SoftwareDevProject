@@ -18,9 +18,9 @@ public class LineOfSight {
 
     static final int ELEVATION_DIFFERENCE_THRESHOLD = 50; // in meters
 
-    private UserPoint userPoint;
+    private final UserPoint userPoint;
 
-    private ElevationMap elevationMap;
+    private final ElevationMap elevationMap;
     private double mapCellSize;
     private double boundingBoxWestLon;
 
@@ -118,8 +118,7 @@ public class LineOfSight {
 
             // Slope error reached limit, time to
             // increment y and update slope error.
-            if (slope_error_new >= 0)
-            {
+            if (slope_error_new >= 0) {
                 y++;
                 slope_error_new -= 2 * (x2 - x1);
             }
