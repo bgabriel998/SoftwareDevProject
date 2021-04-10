@@ -24,6 +24,7 @@ import org.junit.runner.RunWith;
 
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -152,7 +153,7 @@ public class ProfileActivityTest {
         Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
     }
 
-    /* Test that if the username chooses an invalid username the correct message is displayed */
+    /* Test that if the user chooses an invalid username the correct message is displayed */
     @Test
     public void isNotValidTest() throws InterruptedException {
         final String username = "";
@@ -174,6 +175,100 @@ public class ProfileActivityTest {
         onView(withId(R.id.changeUsernameButton)).perform(click());
         Thread.sleep(2000);
         Espresso.onView(withId(R.id.submitUsernameButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+    }
+
+    /* Test that the message inviting the user to write the username in the correct box is correct */
+    @Test
+    public void addFriendTextTest() {
+        ViewInteraction addFriendText = Espresso.onView(withId(R.id.editTextFriend));
+        addFriendText.check(matches(withHint(R.string.insert_friend_button)));
+    }
+
+    /* Test that UI is displayed correctly when friends button is pressed. */
+    @Test
+    public void addFriendButtonTest() throws InterruptedException {
+        testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
+        onView(withId(R.id.addFriendButton)).perform(click());
+        Thread.sleep(2000);
+        Espresso.onView(withId(R.id.submitFriendButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+    }
+
+    /* Test that if the friend is already present the correct message is displayed */
+    @Test
+    public void friendAlreadyPresentTest() throws InterruptedException {
+        final String friendUsername = "i3gn4u34o";
+        Database.setChild(Database.CHILD_USERS + "null", Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_FRIENDS + "test"), Arrays.asList("Username@Test", ""));
+        Database.setChild(Database.CHILD_USERS + "test", Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(friendUsername));
+        Thread.sleep(1500);
+        Account.getAccount().synchronizeUserProfile();
+        Thread.sleep(1500);
+
+        testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
+        onView(withId(R.id.addFriendButton)).perform(click());
+        onView(withId(R.id.editTextFriend)).perform(typeText(friendUsername));
+        Espresso.closeSoftKeyboard();
+        onView(withId(R.id.submitFriendButton)).perform(click());
+        Thread.sleep(2000);
+        onView(withText(R.string.friend_already_added)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+    }
+
+    /* Test that if the friend has been added the correct message is displayed */
+    @Test
+    public void addFriendTest() throws InterruptedException {
+        final String username = "i3gn4u34o";
+
+        Database.setChild(Database.CHILD_USERS + "test", Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(username));
+        Thread.sleep(1500);
+
+        testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
+        onView(withId(R.id.addFriendButton)).perform(click());
+        onView(withId(R.id.editTextFriend)).perform(typeText(username));
+        Espresso.closeSoftKeyboard();
+        onView(withId(R.id.submitFriendButton)).perform(click());
+        Thread.sleep(2000);
+        onView(withText(R.string.friend_added)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+    }
+
+    /* Test that if the friend username is the current username the correct message is displayed */
+    @Test
+    public void addFriendCurrentUsernameTest() throws InterruptedException {
+        final String username = "null";
+
+        testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
+        onView(withId(R.id.addFriendButton)).perform(click());
+        onView(withId(R.id.editTextFriend)).perform(typeText(username));
+        Espresso.closeSoftKeyboard();
+        onView(withId(R.id.submitFriendButton)).perform(click());
+        Thread.sleep(2000);
+        onView(withText(R.string.add_current_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+    }
+
+    /* Test that if the friend username is not present the correct message is displayed */
+    @Test
+    public void addNoExistingUser() throws InterruptedException {
+        final String username = "i3gn4u34o";
+
+        testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
+        onView(withId(R.id.addFriendButton)).perform(click());
+        onView(withId(R.id.editTextFriend)).perform(typeText(username));
+        Espresso.closeSoftKeyboard();
+        onView(withId(R.id.submitFriendButton)).perform(click());
+        Thread.sleep(2000);
+        onView(withText(R.string.friend_not_present_db)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+    }
+
+    /* Test that if the user chooses an invalid friend's username the correct message is displayed */
+    @Test
+    public void friendIsNotValidTest() throws InterruptedException {
+        final String username = "";
+
+        testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
+        onView(withId(R.id.addFriendButton)).perform(click());
+        onView(withId(R.id.editTextFriend)).perform(typeText(username));
+        Espresso.closeSoftKeyboard();
+        onView(withId(R.id.submitFriendButton)).perform(click());
+        Thread.sleep(2000);
+        onView(withText(R.string.invalid_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
     /* Test that UI is displayed correctly when sign out button is pressed. */

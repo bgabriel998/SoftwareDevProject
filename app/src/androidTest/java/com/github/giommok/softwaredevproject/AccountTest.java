@@ -40,6 +40,7 @@ public class AccountTest {
     @After
     public void removeTestUsers() throws InterruptedException {
         Database.refRoot.child(Database.CHILD_USERS).child("null").removeValue();
+        Database.refRoot.child(Database.CHILD_USERS).child("test").removeValue();
         Thread.sleep(1500);
     }
 
@@ -52,6 +53,7 @@ public class AccountTest {
         Account account = Account.getAccount();
 
         assertFalse(account.isSignedIn());
+        assertTrue(account.getFriends().isEmpty());
         assertEquals(account.getDisplayName(), "null");
         assertEquals(account.getEmail(), "null");
         assertEquals(account.getId(), "null");
@@ -76,6 +78,32 @@ public class AccountTest {
         Database.refRoot.child(Database.CHILD_USERS).child("null").removeValue();
         Thread.sleep(2000);
         assertEquals("null",account.getUsername());
+    }
+
+    /**
+     * Testing that synchronizeUsername works fine
+     * @throws InterruptedException
+     */
+    @Test
+    public void synchronizeFriendsTest() throws InterruptedException {
+        String nullUsername = "username@Test";
+        String testUsername = "username2@Test";
+        Database.setChild(Database.CHILD_USERS+ "null", Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(nullUsername));
+        Database.setChild(Database.CHILD_USERS+ "test", Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(testUsername));
+        Thread.sleep(1500);
+        Account account = Account.getAccount();
+        // Test if no friend is present
+        account.synchronizeUserProfile();
+        Thread.sleep(1500);
+        assertTrue(account.getFriends().isEmpty());
+        // Test if a friend is present
+        Database.setChild(Database.CHILD_USERS + "null" + Database.CHILD_FRIENDS, Collections.singletonList("test"), Collections.singletonList(""));
+        Thread.sleep(2000);
+        assertEquals(testUsername, account.getFriends().get(0).getUsername());
+        // Test if the friend is removed
+        Database.refRoot.child(Database.CHILD_USERS + "null" + Database.CHILD_FRIENDS).removeValue();
+        Thread.sleep(2000);
+        assertTrue(account.getFriends().isEmpty());
     }
 
     /**
@@ -183,8 +211,7 @@ public class AccountTest {
         Thread.sleep(1000);
         assertTrue(account.getDiscoveredPeakHeights().contains(entry1) && account.getDiscoveredPeakHeights().contains(entry2));
     }
-
-
+    
     /**
      * Testing that isValid recognizes valid strings and rejects invalid strings
      */

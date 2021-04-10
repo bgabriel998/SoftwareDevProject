@@ -2,11 +2,13 @@ package com.github.giommok.softwaredevproject;
 
 import android.net.Uri;
 
+import com.github.bgabriel998.softwaredevproject.FriendItem;
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 public interface Account {
 
@@ -63,7 +65,6 @@ public interface Account {
     }
 
     /**
-
      * set the user score in the database
      */
     public void setUserScore(long newScore);
@@ -116,4 +117,9 @@ public interface Account {
      * @return list containing all height badges
      */
     public HashSet<Integer> getDiscoveredPeakHeights();
+
+    /**
+     * @return the friends of the current user or an empty list if the user has no friends
+     */
+    public List<FriendItem> getFriends();
 }
