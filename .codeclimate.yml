@@ -3,8 +3,7 @@ checks:
         enabled: true
         config:
             threshold: 25
-    similar-code:
-        enabled: true
+    identical-code:
         config:
             threshold: 4
 exclude_patterns:
