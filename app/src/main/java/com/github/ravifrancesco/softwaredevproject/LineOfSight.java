@@ -3,7 +3,9 @@ package com.github.ravifrancesco.softwaredevproject;
 import android.util.Pair;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -55,6 +57,34 @@ public class LineOfSight {
         return poiPoints.parallelStream()
                 .filter(p -> isVisible(p, userIndexes, userLongitude, userAltitude))
                 .collect(Collectors.toList());
+
+    }
+
+    /**
+     * This method returns a map with the POPoints labeled with <code>true</code> if the
+     * POIPoints is visible, <code>false</code> otherwise
+     *
+     * @param poiPoints a List of POIPoint to filter.
+     * @return          a map with the labeled POIPoints
+     */
+    public Map<POIPoint, Boolean> getVisiblePointsLabeled(List<POIPoint> poiPoints) {
+
+        elevationMap.updateElevationMatrix();
+
+        this.mapCellSize = elevationMap.getMapCellSize();
+        this.boundingBoxWestLon = elevationMap.getBoundingBoxWestLong();
+
+        Pair<Integer, Integer> userIndexes = elevationMap
+                .getIndexesFromCoordinates(userPoint.getLatitude(), userPoint.getLongitude());
+        double userLongitude = userPoint.getLongitude();
+        int userAltitude = (int) userPoint.getAltitude();
+
+        Map<POIPoint, Boolean> labeledPOIPoints = new HashMap<>();
+
+         poiPoints.parallelStream()
+                 .forEach(p -> labeledPOIPoints.put(p, isVisible(p, userIndexes, userLongitude, userAltitude)));
+
+         return labeledPOIPoints;
 
     }
 

@@ -33,12 +33,17 @@ public class LineOfSightTest {
         List<POIPoint> visiblePoints = new ArrayList<>();
         POIPoint point1 = new POIPoint(new GeoPoint(28.011581, 86.907036, 6200));
         POIPoint point2 = new POIPoint(new GeoPoint(28.017394, 86.922196, 7000));
+        point1.setName("point1");
+        point2.setName("point2");
         visiblePoints.add(point1);
         visiblePoints.add(point2);
 
         // points that should not be visible
         POIPoint point3 = new POIPoint(new GeoPoint(27.951538, 86.928781, 6400));
         POIPoint point4 = new POIPoint(new GeoPoint(27.987947, 86.933671, 8000));
+        point3.setName("point3");
+        point4.setName("point4");
+
 
         pointsToCheck.add(point1);
         pointsToCheck.add(point2);
@@ -64,9 +69,13 @@ public class LineOfSightTest {
         List<POIPoint> pointsToCheck = new ArrayList<>();
         POIPoint point1 = new POIPoint(new GeoPoint(28.011581, 86.907036, 6200));
         POIPoint point2 = new POIPoint(new GeoPoint(28.017394, 86.922196, 7000));
+        point1.setName("point1");
+        point2.setName("point2");
         // points that should not be visible
         POIPoint point3 = new POIPoint(new GeoPoint(27.951538, 86.928781, 6400));
         POIPoint point4 = new POIPoint(new GeoPoint(27.987947, 86.933671, 8000));
+        point3.setName("point3");
+        point4.setName("point4");
 
         pointsToCheck.add(point1);
         pointsToCheck.add(point2);
