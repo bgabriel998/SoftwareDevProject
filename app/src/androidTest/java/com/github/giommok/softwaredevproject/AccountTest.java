@@ -85,7 +85,7 @@ public class AccountTest {
      * @throws InterruptedException
      */
     @Test
-    public void synchronizeFriends() throws InterruptedException {
+    public void synchronizeFriendsTest() throws InterruptedException {
         String nullUsername = "username@Test";
         String testUsername = "username2@Test";
         Database.setChild(Database.CHILD_USERS+ "null", Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(nullUsername));

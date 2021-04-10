@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -34,7 +35,7 @@ public class FirebaseAccount implements Account {
     private static long score = 0;
     private static FirebaseAccount account = null;
     /*local list of friends */
-    private static ArrayList<FriendItem> friends = new ArrayList<>();
+    private static List<FriendItem> friends = new ArrayList<>();
     private static DatabaseReference dbRefUser = Database.refRoot.child("users/null");
     /*local list of discovered country highest point : key -> country name */
     private static HashMap<String, CountryHighPoint> discoveredCountryHighPoint = new HashMap<String, CountryHighPoint>();
@@ -282,7 +283,16 @@ public class FirebaseAccount implements Account {
     }
 
     private static void syncFriendsFromProfile(DataSnapshot parent) {
-        ArrayList<FriendItem> tempFriends = new ArrayList<>();
+        long parentSize = parent.getChildrenCount();
+
+        // If parent is empty
+        if(parentSize == 0) {
+            friends = new ArrayList<>();
+            return;
+        }
+
+        // If parent is not empty
+        List<FriendItem> tempFriends = new CopyOnWriteArrayList<>();
         for (DataSnapshot child : parent.getChildren()) {
             String uidFriend = child.getKey();
             Log.d("FRIENDS", "Updating friends. Current size = " + friends.size());
@@ -294,6 +304,15 @@ public class FirebaseAccount implements Account {
                     Integer scoreFriend = snapshot.child("score").getValue(Integer.class);
                     tempFriends.add(new FriendItem(uidFriend, usernameFriend, scoreFriend == null ? 0 : scoreFriend));
                     Log.d("FRIENDS", "Synch: Updated a friend item. New size = " + tempFriends.size());
+                    if(parentSize == tempFriends.size()) {
+                        Log.d("FRIENDS", "Synch completed. Updating friends.");
+                        // Copy all the elements in an ArrayList
+                        List<FriendItem> newFriends = new ArrayList<>();
+                        newFriends.addAll(tempFriends);
+                        // Once the update is done, change the friends object reference
+                        friends = newFriends;
+                        Log.d("FRIENDS", "Friends updated. New size = " + friends.size());
+                    }
                 }
 
                 @Override
@@ -301,7 +320,5 @@ public class FirebaseAccount implements Account {
                 }
             });
         }
-        friends = tempFriends;
-        Log.d("FRIENDS", "Friends updated. New size = " + friends.size());
     }
 }
