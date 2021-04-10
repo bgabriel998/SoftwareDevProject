@@ -33,6 +33,14 @@ public class POIPoint extends Point {
         super(geoPoint.getLatitude(), geoPoint.getLongitude(), geoPoint.getAltitude());
     }
 
+    /**
+     * Constructor for POIPoint
+     * @param point POI point
+     */
+    public POIPoint(POI point) {
+        super(point.mLocation.getLatitude(), point.mLocation.getLongitude(), point.mLocation.getAltitude());
+        this.setName(point.mType);
+    }
 
     /**
      * Constructor for POI Point

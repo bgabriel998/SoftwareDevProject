@@ -1,11 +1,23 @@
 package com.github.bgabriel998.softwaredevproject;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
+import androidx.core.util.Pair;
+
+import com.github.ravifrancesco.softwaredevproject.POIPoint;
+import com.github.ravifrancesco.softwaredevproject.Point;
+
+import org.osmdroid.util.GeoPoint;
+
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * CompassView draws the compass on the display
@@ -33,6 +45,7 @@ public class CompassView extends View {
     private static final int MAIN_LINE_FACTOR = 5;
     private static final int SEC_LINE_FACTOR = 3;
     private static final int TER_LINE_FACTOR = 2;
+    private static final int MARKER_SIZE = 150;
 
     //Heading of the user
     private float horizontalDegrees;
@@ -42,9 +55,10 @@ public class CompassView extends View {
     private float pixDeg;
 
     //Range of the for-loop to draw the compass
-    private float rangeDegrees;
     private float minDegrees;
     private float maxDegrees;
+    private float rangeDegreesVertical;
+    private float rangeDegreesHorizontal;
 
     //Compass canvas
     private Canvas canvas;
@@ -57,6 +71,15 @@ public class CompassView extends View {
 
     //Height of the view in pixel
     private int height;
+
+    //Marker used to display mountains on camera-preview
+    private Bitmap mountainMarker;
+
+    //List that contains the POIPoints
+    private HashSet<POIPoint> POIPoints;
+
+    //Corresponds to the location of the user
+    private Point userPoint;
 
     /**
      * Constructor for the CompassView which initializes the widges like the font height and paints used
@@ -79,6 +102,10 @@ public class CompassView extends View {
         //Initialize fonts
         float screenDensity = getResources().getDisplayMetrics().scaledDensity;
         mainTextSize = (int) (MAIN_TEXT_FACTOR * screenDensity);
+
+        //Initialize mountain marker
+        mountainMarker = BitmapFactory.decodeResource(getResources(), R.drawable.mountain_marker);
+        mountainMarker = Bitmap.createScaledBitmap(mountainMarker, MARKER_SIZE, MARKER_SIZE, true);
 
         //Initialize paints
         //Paint used for the main text heading (N, E, S, W)
@@ -138,11 +165,17 @@ public class CompassView extends View {
     }
 
     /**
-     * Sets the range in degrees of the compass-view
-     * @param rangeDegrees range in degrees
+     * Sets the range in degrees of the compass-view, corresponds to the field of view of the camera
+     * @param cameraFieldOfView Pair containing the horizontal and vertical field of view
      */
-    public void setRange(float rangeDegrees) {
-        this.rangeDegrees = rangeDegrees;
+    public void setRange(Pair<Float, Float> cameraFieldOfView) {
+        int orientation = getResources().getConfiguration().orientation;
+
+        //Switch horizontal and vertical fov depending on the orientation
+        this.rangeDegreesHorizontal = orientation==Configuration.ORIENTATION_LANDSCAPE ?
+                cameraFieldOfView.first : cameraFieldOfView.second;
+        this.rangeDegreesVertical = orientation==Configuration.ORIENTATION_LANDSCAPE ?
+                cameraFieldOfView.second : cameraFieldOfView.first;
     }
 
     /**
@@ -173,11 +206,11 @@ public class CompassView extends View {
         terciaryLineHeight = secondaryLineHeight + mainTextSize;
 
         //Get the starting degree and ending degree of the compass
-        minDegrees = horizontalDegrees - rangeDegrees/2;
-        maxDegrees = horizontalDegrees + rangeDegrees/2;
+        minDegrees = horizontalDegrees - rangeDegreesHorizontal/2;
+        maxDegrees = horizontalDegrees + rangeDegreesHorizontal/2;
 
         //Calculate the width in pixel of one degree
-        pixDeg = width/rangeDegrees;
+        pixDeg = width/rangeDegreesHorizontal;
 
         //Draws the compass
         drawCanvas();
@@ -189,32 +222,45 @@ public class CompassView extends View {
     private void drawCanvas(){
         //Start going through the loop to draw the compass
         for(int i = (int)Math.floor(minDegrees); i <= Math.ceil(maxDegrees); i++){
+            //Draw the compass
+            drawCompass(i);
 
-            //Draw a main line for every 90°
-            if (i % 90 == 0){
-                //Draw the line,
-                //startX starts with 0 at the top left corner and increases when going from left to right
-                //startY also increases from top to bottom -> to start at the bottom,
-                // we will use the height of the compass-view.
-                //stopX is the same as startX since we want to draw a vertical line
-                //stopY is the height of the canvas minus some height to leave enough space to write the heading above
-                drawLine(i, mainLineHeight, mainLinePaint);
-
-                //Select the correct heading depending on the degree with selecHeadingString()
-                //Draw the heading with the mainTextPaint above the line
-                canvas.drawText(selectHeadingString(i), pixDeg * (i - minDegrees), textHeight, mainTextPaint);
+            //Draw the mountains on the canvas
+            if(POIPoints != null && !POIPoints.isEmpty()){
+                drawPOIs(i);
             }
+        }
+    }
 
-            //Draw a secondary line for every 45° excluding every 90° (45°, 135°, 225° ...)
-            else if (i % 45 == 0){
-                drawLine(i, secondaryLineHeight, secondaryLinePaint);
-                canvas.drawText(selectHeadingString(i), pixDeg * (i - minDegrees), textHeight, secondaryTextPaint);
-            }
+    /**
+     * Draws the compass on the canvas
+     * @param i degree of the compass
+     */
+    private void drawCompass(int i) {
+        //Draw a main line for every 90°
+        if (i % 90 == 0){
+            //Draw the line,
+            //startX starts with 0 at the top left corner and increases when going from left to right
+            //startY also increases from top to bottom -> to start at the bottom,
+            // we will use the height of the compass-view.
+            //stopX is the same as startX since we want to draw a vertical line
+            //stopY is the height of the canvas minus some height to leave enough space to write the heading above
+            drawLine(i, mainLineHeight, mainLinePaint);
 
-            //Draw tertiary line for every 15° excluding every 45° and 90° (15, 30, 60, 75, ...)
-            else if (i % 15 == 0){
-                drawLine(i, terciaryLineHeight, terciaryLinePaint);
-            }
+            //Select the correct heading depending on the degree with selecHeadingString()
+            //Draw the heading with the mainTextPaint above the line
+            canvas.drawText(selectHeadingString(i), pixDeg * (i - minDegrees), textHeight, mainTextPaint);
+        }
+
+        //Draw a secondary line for every 45° excluding every 90° (45°, 135°, 225° ...)
+        else if (i % 45 == 0){
+            drawLine(i, secondaryLineHeight, secondaryLinePaint);
+            canvas.drawText(selectHeadingString(i), pixDeg * (i - minDegrees), textHeight, secondaryTextPaint);
+        }
+
+        //Draw tertiary line for every 15° excluding every 45° and 90° (15, 30, 60, 75, ...)
+        else if (i % 15 == 0){
+            drawLine(i, terciaryLineHeight, terciaryLinePaint);
         }
     }
 
@@ -226,6 +272,42 @@ public class CompassView extends View {
      */
     private void drawLine(float degree, int lineHeight, Paint paint){
         canvas.drawLine(pixDeg * (degree - minDegrees), height, pixDeg * (degree - minDegrees), lineHeight, paint);
+    }
+
+    /**
+     * Set the POIs that will be drawn on the camera-preview
+     * @param POIPoints List of POIPoints
+     * @param userPoint location of the user
+     */
+    public void setPOIs(HashSet<POIPoint> POIPoints, Point userPoint){
+        this.POIPoints = POIPoints;
+        this.userPoint = userPoint;
+        invalidate();
+        requestLayout();
+    }
+
+    /**
+     * Draws the POIs on the display using the horizontal and vertical bearing of the mountain
+     * to the user
+     * @param actualDegree degree of the actual heading of the compass
+     */
+    private void drawPOIs(int actualDegree){
+        //Go through all POIPoints
+        for(POIPoint poiPoint : POIPoints){
+            int horizontalAngle = (int)ComputePOIPoints.getHorizontalBearing(userPoint, poiPoint);
+            if(horizontalAngle == actualDegree){
+                //Use both results and substract the actual vertical heading
+                float deltaVerticalAngle = (float) (ComputePOIPoints.getVerticalBearing(userPoint, poiPoint) - verticalDegrees);
+
+                //Calculate position in Pixel to display the mountainMarker
+                float mountainMarkerPosition = height * (rangeDegreesVertical - 2*deltaVerticalAngle) / (2*rangeDegreesVertical)
+                        - (float)mountainMarker.getHeight()/2;
+
+                //Draw the marker on the preview
+                canvas.drawBitmap(mountainMarker, pixDeg * (actualDegree - minDegrees),
+                         mountainMarkerPosition, null);
+            }
+        }
     }
 
     /**
