@@ -65,7 +65,7 @@ public class RankingsActivityTest {
 
         /* Make sure no user is signed in before a test */
         FirebaseAuth.getInstance().signOut();
-        Account.getAccount().synchronizeUsername();
+        Account.getAccount().synchronizeUserProfile();
         Thread.sleep(1500);
     }
 
