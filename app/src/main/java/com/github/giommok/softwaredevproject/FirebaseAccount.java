@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.github.bgabriel998.softwaredevproject.FriendItem;
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -22,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,6 +34,8 @@ public class FirebaseAccount implements Account {
     private static String username = "null";
     private static long score = 0;
     private static FirebaseAccount account = null;
+    /*local list of friends */
+    private static List<FriendItem> friends = new ArrayList<>();
     private static DatabaseReference dbRefUser = Database.refRoot.child("users/null");
     /*local list of discovered country highest point : key -> country name */
     private static HashMap<String, CountryHighPoint> discoveredCountryHighPoint = new HashMap<String, CountryHighPoint>();
@@ -50,6 +54,7 @@ public class FirebaseAccount implements Account {
             if(snapshot.hasChild(Database.CHILD_USERNAME))
                 syncGetUsernameFromProfile(snapshot.child(Database.CHILD_USERNAME).getValue(String.class));
             else username = "null";
+            syncFriendsFromProfile(snapshot.child(Database.CHILD_FRIENDS));
             if(snapshot.hasChild(Database.CHILD_SCORE))
                 syncGetUserScoreFromProfile(snapshot.child(Database.CHILD_SCORE).getValue(long.class));
             else score = 0;
@@ -113,6 +118,11 @@ public class FirebaseAccount implements Account {
     @Override
     public String getUsername() {
         return username;
+    }
+
+    @Override
+    public List<FriendItem> getFriends() {
+        return friends;
     }
 
     @Override
@@ -224,7 +234,7 @@ public class FirebaseAccount implements Account {
      * @param usernameFromHashMap username stored in the database
      */
     private static void syncGetUsernameFromProfile(String usernameFromHashMap){
-       username = usernameFromHashMap;
+        username = usernameFromHashMap;
     }
 
     /**
@@ -268,7 +278,46 @@ public class FirebaseAccount implements Account {
         for (Map.Entry<String, HashMap<String, String>> entry : entries.entrySet()){
             Object value = entry.getValue();
             long retrievedVal = ((ArrayList<Long>) value).get(0);
-             discoveredPeakHeights.add((int)retrievedVal);
+            discoveredPeakHeights.add((int)retrievedVal);
+        }
+    }
+
+    /**
+     * Synchronize the list of friends of the user.
+     * The list is automatically recreated from an empty one each time a change happens in the DB child.
+     * If the parent is empty, an empty list will be created.
+     * @param parent snapshot from the database userchild
+     */
+    private static void syncFriendsFromProfile(DataSnapshot parent) {
+        long parentSize = parent.getChildrenCount();
+        // If parent is empty
+        if(parentSize == 0) {
+            friends = new ArrayList<>();
+        }
+        // If parent is not empty
+        List<FriendItem> tempFriends = new CopyOnWriteArrayList<>();
+        for (DataSnapshot child : parent.getChildren()) {
+            String uidFriend = child.getKey();
+            DatabaseReference childRef = Database.refRoot.child(Database.CHILD_USERS + uidFriend);
+            childRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String usernameFriend = snapshot.child("username").getValue(String.class);
+                    Integer scoreFriend = snapshot.child("score").getValue(Integer.class);
+                    tempFriends.add(new FriendItem(uidFriend, usernameFriend, scoreFriend == null ? 0 : scoreFriend));
+                    if(parentSize == tempFriends.size()) {
+                        // Copy all the elements in an ArrayList
+                        List<FriendItem> newFriends = new ArrayList<>();
+                        newFriends.addAll(tempFriends);
+                        // Once the update is done, change the friends object reference
+                        friends = newFriends;
+
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
         }
     }
 }
