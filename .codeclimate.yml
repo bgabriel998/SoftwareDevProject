@@ -3,9 +3,6 @@ checks:
         enabled: true
         config:
             threshold: 25
-    identical-code:
-        config:
-            threshold: 4
 exclude_patterns:
 - "**/test/"
 - "**/androidTest/"
