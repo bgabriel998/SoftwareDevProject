@@ -72,4 +72,9 @@
     <string name="points__mountain_category">Points:</string>
     <string name="height_mountain_category">Height:</string>
     <string name="position_mountain_category">Position:</string>
+
+    <!-- TAKE PICTURE TOASTS -->
+    <string name="pictureTakenToast">Picture saved at: file:///storage/emulated/0/Android/media/com.github.bgabriel998.softwaredevproject/</string>
+    <string name="pictureSavedFailed">Failed to take picture:</string>
+    <string name="pictureSavedSuccessfully">Picture saved at:</string>
 </resources>
