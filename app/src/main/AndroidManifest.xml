@@ -22,8 +22,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:remove="android:appComponentFactory">
+        <activity android:name=".ImageActivity"/>
         <activity android:name=".MainActivity" />
-        <activity android:name=".GalleryActivity"></activity>
+        <activity android:name=".GalleryActivity" />
         <activity android:name=".CameraActivity" />
         <activity android:name=".MountainActivity" />
         <activity android:name=".CollectionActivity" />
@@ -43,10 +44,8 @@
         <activity android:name=".InitActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

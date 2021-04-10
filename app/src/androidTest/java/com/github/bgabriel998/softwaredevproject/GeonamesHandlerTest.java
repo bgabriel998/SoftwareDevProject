@@ -1,6 +1,7 @@
 package com.github.bgabriel998.softwaredevproject;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import androidx.test.core.app.ApplicationProvider;
@@ -58,8 +59,6 @@ public class GeonamesHandlerTest {
     private static final double MOCK_LOCATION_ALT_LAUSANNE = 220;
 
 
-
-
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -74,14 +73,19 @@ public class GeonamesHandlerTest {
                                             MOCK_LOCATION_LON_LAUSANNE,
                                             MOCK_LOCATION_ALT_LAUSANNE);
         startTimeMs = System.currentTimeMillis();
-        new GeonamesHandler(userPoint) {
+
+        GeonamesHandler handler = (GeonamesHandler) new GeonamesHandler(userPoint) {
             @Override
             public void onResponseReceived(Object result) {
                 resultPOI = (ArrayList<POI>) result;
                 queryTimeS = ((double) System.currentTimeMillis() - startTimeMs) / MILLI_SEC_TO_SEC;
             }
         }.execute();
-        Thread.sleep(DEFAULT_QUERY_TIMEOUT*MILLI_SEC_TO_SEC);
+
+
+
+        Thread.sleep(DEFAULT_QUERY_TIMEOUT*MILLI_SEC_TO_SEC*3);
+
     }
 
     /**
@@ -112,6 +116,7 @@ public class GeonamesHandlerTest {
      * are not empty strings. Only POI with valid names should
      * be returned
      */
+
     @Test
     public void testResultNameNonNull(){
         assertNotNull("testResultNameNonNull failed. Acquired POI List is empty...", resultPOI);
@@ -139,7 +144,7 @@ public class GeonamesHandlerTest {
      * set in the query (default value of the query is defined by DEFAULT_QUERY_MAX_RESULT
      * parameter in class GeonamesHandler.java
      */
-    @Test
+   @Test
     public void testResultListNotExceedLimit(){
         assertNotNull("testResultListNotExceedLimit failed. Acquired POI List is empty...", resultPOI);
         for(POI point : resultPOI){
@@ -151,11 +156,11 @@ public class GeonamesHandlerTest {
      * Checks that the query doesn't exceed the timeout set in the
      * query parameters. (default value of the query is defined by DEFAULT_QUERY_TIMEOUT)
      */
-    @Test
-    public void testResultListNotExceedTimeLimit(){
-//        assertThat(queryTimeS, lessThanOrEqualTo((double)DEFAULT_QUERY_TIMEOUT));
-//        assertNotNull(resultPOI);
-    }
+        @Test
+       public void testResultListNotExceedTimeLimit(){
+            assertThat(queryTimeS, lessThanOrEqualTo((double)DEFAULT_QUERY_TIMEOUT*3));
+            assertNotNull(resultPOI);
+        }
 
     /**
      * Check GeonamesHandler creation without valid parameters
