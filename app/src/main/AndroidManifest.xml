@@ -22,6 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:remove="android:appComponentFactory">
+        <activity android:name=".ImageActivity"/>
         <activity android:name=".MainActivity" />
         <activity android:name=".GalleryActivity" />
         <activity android:name=".CameraActivity" />

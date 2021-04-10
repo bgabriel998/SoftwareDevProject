@@ -47,6 +47,8 @@
     <string name="description_settings_button">Settings Button</string>
     <string name="description_icon">Peak AR Icon</string>
     <string name="description_collected_image">Photo over collected mountain</string>
+    <string name="description_gallery_image">Gallery image</string>
+    <string name="description_gallery_fullscreen_image">Gallery fullscreen image</string>
 
     <string name="title_activity_init">initActivity</string>
     <!--

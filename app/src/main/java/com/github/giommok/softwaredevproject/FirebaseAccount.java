@@ -214,7 +214,7 @@ public class FirebaseAccount implements Account {
                     ((HashMap<String, Long>) value).get(Database.CHILD_ATTRIBUTE_PEAK_ALTITUDE));
 
             //Check if the peak is already contain to avoid duplicate creation
-            if(!discoveredPeaks.contains(peak)) discoveredPeaks.add(peak);
+            discoveredPeaks.add(peak);
         }
     }
 
@@ -268,7 +268,7 @@ public class FirebaseAccount implements Account {
         for (Map.Entry<String, HashMap<String, String>> entry : entries.entrySet()){
             Object value = entry.getValue();
             long retrievedVal = ((ArrayList<Long>) value).get(0);
-            if(!discoveredPeakHeights.contains(retrievedVal)) discoveredPeakHeights.add((int)retrievedVal);
+             discoveredPeakHeights.add((int)retrievedVal);
         }
     }
 }
