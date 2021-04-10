@@ -67,16 +67,18 @@ public class UserScoreTest {
         inputArrayList.add(point_4);
 
 
-        userScore.updateUserScore(inputArrayList);
+        userScore.updateUserScoreAndDiscoveredPeaks(inputArrayList);
         long expectedUserScore = (long)(point_1.getAltitude() * ScoringConstants.PEAK_FACTOR +
                                 point_2.getAltitude() * ScoringConstants.PEAK_FACTOR +
                                 point_3.getAltitude() * ScoringConstants.PEAK_FACTOR +
                                 point_4.getAltitude() * ScoringConstants.PEAK_FACTOR)+
+                                ScoringConstants.BONUS_1st_3000_M_PEAK+
+                                ScoringConstants.BONUS_1st_4000_M_PEAK+
                                 ScoringConstants.BONUS_COUNTRY_TALLEST_PEAK;
 
         assertEquals(expectedUserScore,FirebaseAccount.getAccount().getUserScore());
         //remove child from database
-        Database.refRoot.child("users").child("null").removeValue();
+        Database.refRoot.child(Database.CHILD_USERS).child("null").removeValue();
     }
 
 
