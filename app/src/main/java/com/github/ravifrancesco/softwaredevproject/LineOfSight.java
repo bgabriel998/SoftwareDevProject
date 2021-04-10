@@ -3,7 +3,9 @@ package com.github.ravifrancesco.softwaredevproject;
 import android.util.Pair;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -18,9 +20,9 @@ public class LineOfSight {
 
     static final int ELEVATION_DIFFERENCE_THRESHOLD = 50; // in meters
 
-    private UserPoint userPoint;
+    private final UserPoint userPoint;
 
-    private ElevationMap elevationMap;
+    private final ElevationMap elevationMap;
     private double mapCellSize;
     private double boundingBoxWestLon;
 
@@ -55,6 +57,34 @@ public class LineOfSight {
         return poiPoints.parallelStream()
                 .filter(p -> isVisible(p, userIndexes, userLongitude, userAltitude))
                 .collect(Collectors.toList());
+
+    }
+
+    /**
+     * This method returns a map with the POIPoints labeled: <code>true</code>  the points is visible,
+     * <code>false</code>  otherwise.
+     *
+     * @param poiPoints a List of POIPoint to label.
+     * @return          a map with labeled POIPoints
+     */
+    public Map<POIPoint, Boolean>  getVisiblePointsLabeled(List<POIPoint> poiPoints) {
+
+        elevationMap.updateElevationMatrix();
+
+        this.mapCellSize = elevationMap.getMapCellSize();
+        this.boundingBoxWestLon = elevationMap.getBoundingBoxWestLong();
+
+        Pair<Integer, Integer> userIndexes = elevationMap
+                .getIndexesFromCoordinates(userPoint.getLatitude(), userPoint.getLongitude());
+        double userLongitude = userPoint.getLongitude();
+        int userAltitude = (int) userPoint.getAltitude();
+
+        Map<POIPoint, Boolean> pointMap = new HashMap<>();
+
+        poiPoints.parallelStream()
+                .forEach(p -> pointMap.put(p, isVisible(p, userIndexes, userLongitude, userAltitude)));
+
+        return pointMap;
 
     }
 
@@ -118,8 +148,7 @@ public class LineOfSight {
 
             // Slope error reached limit, time to
             // increment y and update slope error.
-            if (slope_error_new >= 0)
-            {
+            if (slope_error_new >= 0) {
                 y++;
                 slope_error_new -= 2 * (x2 - x1);
             }
