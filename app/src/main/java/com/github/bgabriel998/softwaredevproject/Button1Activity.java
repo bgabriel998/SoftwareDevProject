@@ -2,29 +2,22 @@ package com.github.bgabriel998.softwaredevproject;
 
 import android.content.Context;
 import android.content.res.Configuration;
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Point;
-
 import android.hardware.camera2.CameraAccessException;
-import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.util.Pair;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 public class Button1Activity extends AppCompatActivity{
@@ -97,17 +90,7 @@ public class Button1Activity extends AppCompatActivity{
             fovVertical.setText(String.format(Locale.ENGLISH, "%.1f °", cameraFieldOfView.second));
         }
 
-
-        //Get device orientation
-        int orientation = getResources().getConfiguration().orientation;
-
-        if (cameraFieldOfView != null && cameraFieldOfView.first != null && cameraFieldOfView.second != null && compassView != null) {
-            //Set range depending on the camera fov
-            //Switch horizontal and vertical fov depending on the orientation
-            compassView.setRange(orientation == Configuration.ORIENTATION_LANDSCAPE ?
-                    cameraFieldOfView.first : cameraFieldOfView.second);
-        }
-
+        compassView.setRange(cameraFieldOfView);
 
         //Create new compass
         compass = new Compass(this);
