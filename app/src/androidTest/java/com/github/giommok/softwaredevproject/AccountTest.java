@@ -175,9 +175,9 @@ public class AccountTest {
         Integer entry2 = ScoringConstants.BADGE_1st_3000_M_PEAK;
         DatabaseReference refAdd = Database.refRoot.child(Database.CHILD_USERS);
 
-        Database.setChildObject(Database.CHILD_USERS +  "null" +
+        Database.setChildObject(Database.CHILD_USERS +  "null/" +
                 Database.CHILD_DISCOVERED_PEAKS_HEIGHTS,Collections.singletonList(entry1));
-        Database.setChildObject(Database.CHILD_USERS +  "null" +
+        Database.setChildObject(Database.CHILD_USERS +  "null/" +
                 Database.CHILD_DISCOVERED_PEAKS_HEIGHTS,Collections.singletonList(entry2));
 
         Thread.sleep(1000);
