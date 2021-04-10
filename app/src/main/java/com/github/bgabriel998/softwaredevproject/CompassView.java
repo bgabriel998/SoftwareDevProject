@@ -14,6 +14,8 @@ import androidx.core.util.Pair;
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
 import com.github.ravifrancesco.softwaredevproject.Point;
 
+import org.osmdroid.util.GeoPoint;
+
 import java.util.HashSet;
 import java.util.List;
 
@@ -170,9 +172,9 @@ public class CompassView extends View {
         int orientation = getResources().getConfiguration().orientation;
 
         //Switch horizontal and vertical fov depending on the orientation
-        this.rangeDegreesHorizontal = orientation==Configuration.ORIENTATION_PORTRAIT ?
+        this.rangeDegreesHorizontal = orientation==Configuration.ORIENTATION_LANDSCAPE ?
                 cameraFieldOfView.first : cameraFieldOfView.second;
-        this.rangeDegreesHorizontal = orientation==Configuration.ORIENTATION_PORTRAIT ?
+        this.rangeDegreesVertical = orientation==Configuration.ORIENTATION_LANDSCAPE ?
                 cameraFieldOfView.second : cameraFieldOfView.first;
     }
 
