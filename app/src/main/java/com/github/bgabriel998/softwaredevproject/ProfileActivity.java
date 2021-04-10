@@ -105,13 +105,13 @@ public class ProfileActivity extends AppCompatActivity {
             snackbar.show();
         }
         // Finally, check if it is available
-        else Database.isPresent("users", "username", username, () -> {
+        else Database.isPresent(Database.CHILD_USERS, Database.CHILD_USERNAME, username, () -> {
             // Notify the user that the chosen username is already used
             Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.already_existing_username , Snackbar.LENGTH_LONG);
             snackbar.show();
         }, () -> {
             // Notify the user that the username has changed
-            Database.setChild("users/" + account.getId(), Arrays.asList("email", "username"), Arrays.asList(account.getEmail(), username));
+            Database.setChild(Database.CHILD_USERS + account.getId(), Arrays.asList(Database.CHILD_EMAIL, Database.CHILD_USERNAME), Arrays.asList(account.getEmail(), username));
             Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.available_username , Snackbar.LENGTH_LONG);
             snackbar.show();
             setUI();
@@ -137,7 +137,7 @@ public class ProfileActivity extends AppCompatActivity {
      * @param view
      */
     public void addFriendButton(View view) {
-        resetUI();
+        resetUI(true, false, true, true);
         findViewById(R.id.submitFriendButton).setVisibility(View.VISIBLE);
         findViewById(R.id.editTextFriend).setVisibility(View.VISIBLE);
     }
@@ -195,7 +195,7 @@ public class ProfileActivity extends AppCompatActivity {
      * @param view
      */
     public void friendsButton(View view) {
-
+        // TODO start friends activity when implemented
     }
 
     @Override
@@ -248,7 +248,7 @@ public class ProfileActivity extends AppCompatActivity {
     public void setUI() {
         if (account.isSignedIn()) setLoggedUI();
         else {
-            resetUI();
+            resetUI(true, true, true, false);
             findViewById(R.id.signInButton).setVisibility(View.VISIBLE);
         }
     }
@@ -257,7 +257,7 @@ public class ProfileActivity extends AppCompatActivity {
      * Sets what is visible on UI if the user is logged
      */
     public void setLoggedUI(){
-        resetUI();
+        resetUI(true, true, false, true);
         findViewById(R.id.signOutButton).setVisibility(View.VISIBLE);
         findViewById(R.id.changeUsernameButton).setVisibility(View.VISIBLE);
         findViewById(R.id.addFriendButton).setVisibility(View.VISIBLE);
@@ -265,26 +265,32 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * Hide all the buttons
-     */
-    public void resetUI() {
-        findViewById(R.id.submitFriendButton).setVisibility(View.GONE);
-        findViewById(R.id.editTextFriend).setVisibility(View.GONE);
-        findViewById(R.id.submitUsernameButton).setVisibility(View.GONE);
-        findViewById(R.id.editTextUsername).setVisibility(View.GONE);
-        findViewById(R.id.signInButton).setVisibility(View.GONE);
-        findViewById(R.id.signOutButton).setVisibility(View.GONE);
-        findViewById(R.id.changeUsernameButton).setVisibility(View.GONE);
-        findViewById(R.id.addFriendButton).setVisibility(View.GONE);
-        findViewById(R.id.friendsButton).setVisibility(View.GONE);
-    }
-
-    /**
      * Sets what is visible on UI after a username change is requested or required
      */
     public void setUsernameChoiceUI() {
-        resetUI();
+        resetUI(false, true, true, true );
         findViewById(R.id.submitUsernameButton).setVisibility(View.VISIBLE);
         findViewById(R.id.editTextUsername).setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Hide all the buttons
+     */
+    public void resetUI(boolean hideChangeUsername, boolean hideAddFriend, boolean hideMenu, boolean hideSignIn ) {
+        if(hideAddFriend) {
+            findViewById(R.id.submitFriendButton).setVisibility(View.GONE);
+            findViewById(R.id.editTextFriend).setVisibility(View.GONE);
+        }
+        if(hideChangeUsername) {
+            findViewById(R.id.submitUsernameButton).setVisibility(View.GONE);
+            findViewById(R.id.editTextUsername).setVisibility(View.GONE);
+        }
+        if(hideSignIn) findViewById(R.id.signInButton).setVisibility(View.GONE);
+        if(hideMenu) {
+            findViewById(R.id.signOutButton).setVisibility(View.GONE);
+            findViewById(R.id.changeUsernameButton).setVisibility(View.GONE);
+            findViewById(R.id.addFriendButton).setVisibility(View.GONE);
+            findViewById(R.id.friendsButton).setVisibility(View.GONE);
+        }
     }
 }

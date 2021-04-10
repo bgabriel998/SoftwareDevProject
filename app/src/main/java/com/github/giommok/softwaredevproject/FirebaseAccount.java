@@ -284,18 +284,15 @@ public class FirebaseAccount implements Account {
 
     private static void syncFriendsFromProfile(DataSnapshot parent) {
         long parentSize = parent.getChildrenCount();
-
         // If parent is empty
         if(parentSize == 0) {
             friends = new ArrayList<>();
             return;
         }
-
         // If parent is not empty
         List<FriendItem> tempFriends = new CopyOnWriteArrayList<>();
         for (DataSnapshot child : parent.getChildren()) {
             String uidFriend = child.getKey();
-            Log.d("FRIENDS", "Updating friends. Current size = " + friends.size());
             DatabaseReference childRef = Database.refRoot.child(Database.CHILD_USERS + uidFriend);
             childRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -303,15 +300,13 @@ public class FirebaseAccount implements Account {
                     String usernameFriend = snapshot.child("username").getValue(String.class);
                     Integer scoreFriend = snapshot.child("score").getValue(Integer.class);
                     tempFriends.add(new FriendItem(uidFriend, usernameFriend, scoreFriend == null ? 0 : scoreFriend));
-                    Log.d("FRIENDS", "Synch: Updated a friend item. New size = " + tempFriends.size());
                     if(parentSize == tempFriends.size()) {
-                        Log.d("FRIENDS", "Synch completed. Updating friends.");
                         // Copy all the elements in an ArrayList
                         List<FriendItem> newFriends = new ArrayList<>();
                         newFriends.addAll(tempFriends);
                         // Once the update is done, change the friends object reference
                         friends = newFriends;
-                        Log.d("FRIENDS", "Friends updated. New size = " + friends.size());
+
                     }
                 }
 
