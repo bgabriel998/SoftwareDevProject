@@ -337,4 +337,17 @@ public class CompassView extends View {
                 return "";
         }
     }
+
+    /**
+     * Get a bitmap of the compass-view
+     * @return a bitmap of the compass-view
+     */
+    public Bitmap getBitmap(){
+        CompassView compassView = (CompassView) findViewById(R.id.compass);
+        compassView.setDrawingCacheEnabled(true);
+        compassView.buildDrawingCache();
+        Bitmap bitmap = Bitmap.createBitmap(compassView.getDrawingCache());
+        compassView.setDrawingCacheEnabled(false);
+        return bitmap;
+    }
 }
