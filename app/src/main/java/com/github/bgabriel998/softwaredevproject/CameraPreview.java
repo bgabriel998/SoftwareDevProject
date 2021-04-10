@@ -114,9 +114,6 @@ public class CameraPreview extends Fragment{
         //Register display listener
         displayManager.registerDisplayListener(displayListener, null);
 
-        //Get outputdirectory to store image
-        //outputDirectory = Button1Activity.getOutputDirectory(requireContext());
-
         //Configure context
         context = getContext();
 
