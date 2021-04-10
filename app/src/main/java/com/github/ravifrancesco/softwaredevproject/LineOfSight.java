@@ -118,8 +118,7 @@ public class LineOfSight {
 
             // Slope error reached limit, time to
             // increment y and update slope error.
-            if (slope_error_new >= 0)
-            {
+            if (slope_error_new >= 0){
                 y++;
                 slope_error_new -= 2 * (x2 - x1);
             }
