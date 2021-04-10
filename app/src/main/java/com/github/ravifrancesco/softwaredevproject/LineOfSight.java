@@ -18,7 +18,7 @@ public class LineOfSight {
 
     static final int ELEVATION_DIFFERENCE_THRESHOLD = 50; // in meters
 
-    private UserPoint userPoint;
+    private final UserPoint userPoint;
 
     private ElevationMap elevationMap;
     private double mapCellSize;
