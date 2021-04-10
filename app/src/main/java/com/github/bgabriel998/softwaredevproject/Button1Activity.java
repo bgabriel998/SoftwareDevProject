@@ -2,10 +2,14 @@ package com.github.bgabriel998.softwaredevproject;
 
 import android.content.Context;
 import android.content.res.Configuration;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Point;
+
 import android.hardware.camera2.CameraAccessException;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -20,10 +24,10 @@ import androidx.core.util.Pair;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+
 import java.util.Locale;
 
-public class Button1Activity extends AppCompatActivity {
+public class Button1Activity extends AppCompatActivity{
 
     //Widgets
     private CameraPreview cameraPreview;
@@ -33,6 +37,7 @@ public class Button1Activity extends AppCompatActivity {
     private TextView fovHorizontal;
     private TextView fovVertical;
     private Compass compass;
+    private ComputePOIPoints computePOIPoints;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +72,9 @@ public class Button1Activity extends AppCompatActivity {
         //Create camera preview on the previewView
         cameraPreview = (CameraPreview) getSupportFragmentManager().findFragmentById(R.id.fragment_camera);
 
+        //Request the POIpoints
+        computePOIPoints = new ComputePOIPoints(this);
+
         //Setup the compass
         startCompass();
     }
@@ -89,6 +97,7 @@ public class Button1Activity extends AppCompatActivity {
             fovVertical.setText(String.format(Locale.ENGLISH, "%.1f °", cameraFieldOfView.second));
         }
 
+
         //Get device orientation
         int orientation = getResources().getConfiguration().orientation;
 
@@ -99,6 +108,7 @@ public class Button1Activity extends AppCompatActivity {
                     cameraFieldOfView.first : cameraFieldOfView.second);
         }
 
+
         //Create new compass
         compass = new Compass(this);
 
@@ -107,6 +117,9 @@ public class Button1Activity extends AppCompatActivity {
 
         //Bind the compassListener with the compass
         compass.setListener(compassListener);
+
+        //Set the POIs for the compass
+        compassView.setPOIs(ComputePOIPoints.POIPoints, computePOIPoints.userPoint);
     }
 
     /**
