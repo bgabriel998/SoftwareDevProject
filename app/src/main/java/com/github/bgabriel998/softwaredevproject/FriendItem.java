@@ -11,6 +11,7 @@ public class FriendItem {
 
     /**
      * Constructor
+     * @param uid of user
      * @param username of user.
      * @param points user has.
      */
@@ -18,14 +19,6 @@ public class FriendItem {
         this.uid = uid;
         this.username = username;
         this.points = points;
-    }
-
-    /**
-     * Getter of the friend item user id
-     * @return id of the user on the database
-     */
-    public String getUid() {
-        return uid;
     }
 
     /**
@@ -45,7 +38,7 @@ public class FriendItem {
     }
 
     /**
-     * Check if a friend item refer to a specific user
+     * Check if a friend item has a specific username
      * @param username
      * @return true if the user has the target username, false otherwise
      */

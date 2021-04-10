@@ -86,8 +86,10 @@ public class AccountTest {
      */
     @Test
     public void synchronizeFriends() throws InterruptedException {
-        Database.setChild(Database.CHILD_USERS+ "null", Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList("username@Test"));
-        Database.setChild(Database.CHILD_USERS+ "test", Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList("username2@Test"));
+        String nullUsername = "username@Test";
+        String testUsername = "username2@Test";
+        Database.setChild(Database.CHILD_USERS+ "null", Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(nullUsername));
+        Database.setChild(Database.CHILD_USERS+ "test", Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(testUsername));
         Thread.sleep(1500);
         Account account = Account.getAccount();
         // Test if no friend is present
@@ -97,7 +99,7 @@ public class AccountTest {
         // Test if a friend is present
         Database.setChild(Database.CHILD_USERS + "null" + Database.CHILD_FRIENDS, Collections.singletonList("test"), Collections.singletonList(""));
         Thread.sleep(2000);
-        assertEquals("test", account.getFriends().get(0).getUid());
+        assertEquals(testUsername, account.getFriends().get(0).getUsername());
         // Test if the friend is removed
         Database.refRoot.child(Database.CHILD_USERS + "null" + Database.CHILD_FRIENDS).removeValue();
         Thread.sleep(2000);
