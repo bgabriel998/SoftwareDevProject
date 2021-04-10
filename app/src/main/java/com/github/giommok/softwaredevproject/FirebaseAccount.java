@@ -173,7 +173,7 @@ public class FirebaseAccount implements Account {
     @Override
     public void setDiscoveredPeaks(ArrayList<POIPoint> newDiscoveredPeaks){
         Database.setChildObjectList(Database.CHILD_USERS + getId() +
-                        Database.CHILD_DISCOVERED_PEAKS,
+                Database.CHILD_DISCOVERED_PEAKS,
                 new ArrayList<Object>(newDiscoveredPeaks));
 
     }

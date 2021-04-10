@@ -43,8 +43,8 @@ public class ProfileActivityTest {
     @BeforeClass
     public static void init() throws InterruptedException {
         /* Make sure that mock users are not on the database before the tests*/
-        Database.refRoot.child("users").child("test").removeValue();
-        Database.refRoot.child("users").child("null").removeValue();
+        Database.refRoot.child(Database.CHILD_USERS).child("test").removeValue();
+        Database.refRoot.child(Database.CHILD_USERS).child("null").removeValue();
 
         /* Make sure no user is signed in before a test */
         FirebaseAuth.getInstance().signOut();
@@ -58,8 +58,8 @@ public class ProfileActivityTest {
     /* Make sure that mock users are not on the database after a test */
     @After
     public void removeTestUsers() throws InterruptedException {
-        Database.refRoot.child("users").child("test").removeValue();
-        Database.refRoot.child("users").child("null").removeValue();
+        Database.refRoot.child(Database.CHILD_USERS).child("test").removeValue();
+        Database.refRoot.child(Database.CHILD_USERS).child("null").removeValue();
         Thread.sleep(1500);
     }
 
@@ -110,7 +110,7 @@ public class ProfileActivityTest {
     @Test
     public void usernameAlreadyPresentTest() throws InterruptedException {
         final String usedUsername = "i3gn4u34o";
-        Database.setChild("users/test", Arrays.asList("username"), Arrays.asList(usedUsername));
+        Database.setChild("users/test", Arrays.asList(Database.CHILD_USERNAME), Arrays.asList(usedUsername));
 
         testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
         onView(withId(R.id.editTextUsername)).perform(typeText(usedUsername));

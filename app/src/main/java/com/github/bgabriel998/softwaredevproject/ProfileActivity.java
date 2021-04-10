@@ -70,7 +70,7 @@ public class ProfileActivity extends AppCompatActivity {
         // If the user is not logged
         if(!account.isSignedIn()) setUI();
         else {
-            Database.isPresent("users", "email", account.getEmail(), this::setUI, this::setUsernameChoiceUI);
+            Database.isPresent(Database.CHILD_USERS, Database.CHILD_EMAIL, account.getEmail(), this::setUI, this::setUsernameChoiceUI);
         }
     }
 
@@ -231,7 +231,7 @@ public class ProfileActivity extends AppCompatActivity {
                             Log.d("Firebase AUTH", "signInWithCredential:success");
                             account.synchronizeUserProfile();
                             // Check if the user is already registered on the database
-                            Database.isPresent("users", "email", account.getEmail(), () -> setUI(), () -> setUsernameChoiceUI());
+                            Database.isPresent(Database.CHILD_USERS, Database.CHILD_EMAIL, account.getEmail(), () -> setUI(), () -> setUsernameChoiceUI());
                         } else {
                             Log.w("Firebase AUTH", "signInWithCredential:failure", task.getException());
                         }
