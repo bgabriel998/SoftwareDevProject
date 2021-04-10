@@ -11,11 +11,12 @@ import com.github.ravifrancesco.softwaredevproject.UserPoint;
 import org.osmdroid.bonuspack.location.POI;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class ComputePOIPoints {
     private static List<POI> POIs;
-    public static List<POIPoint> POIPoints;
+    public static HashSet<POIPoint> POIPoints;
     public UserPoint userPoint;
 
     /**
@@ -23,7 +24,7 @@ public class ComputePOIPoints {
      * @param context Context of activity
      */
     public ComputePOIPoints(Context context){
-        POIPoints = new ArrayList<>();
+        POIPoints = new HashSet<>();
         userPoint = new UserPoint(context);
         userPoint.update();
         getPOIs(userPoint);
@@ -41,9 +42,7 @@ public class ComputePOIPoints {
                 if(POIs != null){
                     for(POI poi : POIs){
                         POIPoint poiPoint = new POIPoint(poi);
-                        if(!POIPoints.contains(poiPoint)){
-                            POIPoints.add(poiPoint);
-                        }
+                        POIPoints.add(poiPoint);
                     }
                 }
             }

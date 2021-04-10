@@ -14,6 +14,7 @@ import androidx.core.util.Pair;
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
 import com.github.ravifrancesco.softwaredevproject.Point;
 
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -42,6 +43,7 @@ public class CompassView extends View {
     private static final int MAIN_LINE_FACTOR = 5;
     private static final int SEC_LINE_FACTOR = 3;
     private static final int TER_LINE_FACTOR = 2;
+    private static final int MARKER_SIZE = 150;
 
     //Heading of the user
     private float horizontalDegrees;
@@ -72,7 +74,7 @@ public class CompassView extends View {
     private Bitmap mountainMarker;
 
     //List that contains the POIPoints
-    private List<POIPoint> POIPoints;
+    private HashSet<POIPoint> POIPoints;
 
     //Corresponds to the location of the user
     private Point userPoint;
@@ -101,7 +103,7 @@ public class CompassView extends View {
 
         //Initialize mountain marker
         mountainMarker = BitmapFactory.decodeResource(getResources(), R.drawable.mountain_marker);
-        mountainMarker = Bitmap.createScaledBitmap(mountainMarker, 150, 150, true);
+        mountainMarker = Bitmap.createScaledBitmap(mountainMarker, MARKER_SIZE, MARKER_SIZE, true);
 
         //Initialize paints
         //Paint used for the main text heading (N, E, S, W)
@@ -275,7 +277,7 @@ public class CompassView extends View {
      * @param POIPoints List of POIPoints
      * @param userPoint location of the user
      */
-    public void setPOIs(List<POIPoint> POIPoints, Point userPoint){
+    public void setPOIs(HashSet<POIPoint> POIPoints, Point userPoint){
         this.POIPoints = POIPoints;
         this.userPoint = userPoint;
         invalidate();
