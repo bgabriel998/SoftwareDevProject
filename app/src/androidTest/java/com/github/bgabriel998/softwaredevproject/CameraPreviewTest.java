@@ -2,6 +2,7 @@ package com.github.bgabriel998.softwaredevproject;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.graphics.ImageFormat;
 import android.media.Image;
 import android.media.ImageReader;
@@ -34,13 +35,20 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAvailableListener, Consumer<SurfaceRequest.Result> {
@@ -96,12 +104,14 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         Log.i("CameraPreviewTest", String.format("image: %d %s", imageNumber, image));
     }
 
+    @UiThreadTest
     @Before
     public void markCreated() {
         registry.setCurrentState(Lifecycle.State.INITIALIZED);
         registry.setCurrentState(Lifecycle.State.CREATED);
     }
 
+    @UiThreadTest
     @After
     public void markDestroyed() {
         registry.setCurrentState(Lifecycle.State.DESTROYED);
@@ -133,7 +143,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
 
         // select Back camera
         CameraSelector.Builder selectorBuilder = new CameraSelector.Builder();
-        Assert.assertTrue(provider.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA));
+        assertTrue(provider.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA));
         selectorBuilder.requireLensFacing(CameraSelector.LENS_FACING_BACK);
 
         // fit the preview size to ImageReader
@@ -153,7 +163,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         });
         // wait until onImageAvailable is invoked. retry several times
         for (int repeat=50; repeat>=0; repeat--) {
-            Thread.sleep(600);
+            Thread.sleep(1000);
             int value = counter.get();
             Log.i("CameraPreviewTest", String.format("count: %d", value));
             if (value > 0) return;
@@ -185,5 +195,77 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         assertEquals(compassView.selectHeadingString(315), "NW");
         assertEquals(compassView.selectHeadingString(360), "N");
         assertEquals(compassView.selectHeadingString(1), "");
+    }
+
+    /**
+     * Test that toast is displayed with correct text after taking a picture in portrait and landscape mode
+     */
+    @Test
+    public void takePictureTest() throws NoSuchMethodException, InterruptedException {
+        Context context = ApplicationProvider.getApplicationContext();
+        Assert.assertNotNull(context);
+        String pictureTakenCorrectly = context.getResources().getString(R.string.pictureTakenToast);
+
+        //Method to get the last displayed toast
+        Method getLastToast = Button1Activity.class.getDeclaredMethod("getLastToast");
+        getLastToast.setAccessible(true);
+
+        //Method to get the last displayed toast
+        Method setLastToast = Button1Activity.class.getDeclaredMethod("setLastToast", String.class);
+        getLastToast.setAccessible(true);
+
+        testRule.getScenario().onActivity(activity -> {
+            try {
+                //Check that last displayed toast is null
+                assertNull(getLastToast.invoke(activity));
+                //Set orientation to portrait
+                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            } catch (InvocationTargetException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        });
+
+        //Wait for the view to be correctly displayed
+        Thread.sleep(6000);
+
+        //Take a picture, needs to be done outside of onActivity
+        onView(withId(R.id.takePicture)).perform(click());
+
+        Thread.sleep(6000);
+
+        testRule.getScenario().onActivity(activity -> {
+            try {
+                //Check that correct toast was displayed
+                assertEquals(pictureTakenCorrectly, getLastToast.invoke(activity));
+                //Reset toast
+                setLastToast.invoke(activity, (Object) null);
+                //Check that last toast was reset
+                assertNull(getLastToast.invoke(activity));
+                //Rotate screen back to portrait
+                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                //Wait for orientation changes
+
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        });
+
+        //Wait for orientation changes
+        Thread.sleep(6000);
+
+        //Take a picture
+        onView(withId(R.id.takePicture)).perform(click());
+
+        //Wait for the toast to get displayed
+        Thread.sleep(6000);
+
+        testRule.getScenario().onActivity(activity -> {
+            try {
+                //Check that correct toast was displayed
+                assertEquals(pictureTakenCorrectly, getLastToast.invoke(activity));
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

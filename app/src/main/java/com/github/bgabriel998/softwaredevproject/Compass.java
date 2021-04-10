@@ -118,8 +118,8 @@ public class Compass implements SensorEventListener {
 
     /**
      * Not used
-     * @param sensor
-     * @param accuracy
+     * @param sensor Sensor
+     * @param accuracy Accuracy of sensor
      */
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
