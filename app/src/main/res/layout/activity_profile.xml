@@ -113,6 +113,7 @@
 
     <EditText
         android:id="@+id/editTextUsername"
+        android:autofillHints="username"
         style="@style/ButtonGrey"
         android:layout_width="300dp"
         android:layout_height="70dp"
@@ -127,6 +128,7 @@
 
     <EditText
         android:id="@+id/editTextFriend"
+        android:autofillHints="username"
         style="@style/ButtonGrey"
         android:layout_width="300dp"
         android:layout_height="70dp"

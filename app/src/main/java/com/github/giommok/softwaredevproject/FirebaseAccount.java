@@ -282,6 +282,12 @@ public class FirebaseAccount implements Account {
         }
     }
 
+    /**
+     * Synchronize the list of friends of the user.
+     * The list is automatically recreated from an empty one each time a change happens in the DB child.
+     * If the parent is empty, an empty list will be created.
+     * @param parent snapshot from the database userchild
+     */
     private static void syncFriendsFromProfile(DataSnapshot parent) {
         long parentSize = parent.getChildrenCount();
         // If parent is empty

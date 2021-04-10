@@ -38,6 +38,16 @@ public class ProfileActivity extends AppCompatActivity {
 
     private static final String  TOOLBAR_TITLE = "Profile";
 
+    // VIEW REFERENCES
+    private View submitFriendButton;
+    private View editTextFriend;
+    private View submitUsernameButton;
+    private View editTextUsername;
+    private View signInButton;
+    private View signOutButton;
+    private View loggedLayout;
+
+
     private static final int RC_SIGN_IN = 1;
     private GoogleSignInClient mGoogleSignInClient;
     private Account account;
@@ -46,6 +56,15 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        // Setup view variables
+        submitFriendButton = findViewById(R.id.submitFriendButton);
+        editTextFriend = findViewById(R.id.editTextFriend);
+        submitUsernameButton = findViewById(R.id.submitUsernameButton);
+        editTextUsername = findViewById(R.id.editTextUsername);
+        signInButton = findViewById(R.id.signInButton);
+        signOutButton = findViewById(R.id.signOutButton);
+        loggedLayout = findViewById(R.id.loggedLayout);
 
         // Setup the toolbar
         ToolbarHandler.SetupToolbar(this, TOOLBAR_TITLE);
@@ -96,7 +115,7 @@ public class ProfileActivity extends AppCompatActivity {
      * @param view
      */
     public void submitUsernameButton(View view) {
-        String username = ((EditText)findViewById(R.id.editTextUsername)).getText().toString();
+        String username = ((EditText)editTextUsername).getText().toString();
         String currentUsername = account.getUsername();
         Log.d("CURRENT_USERNAME", "onSubmit: " + currentUsername);
         // First, check if the username is valid or if it is already used by the user
@@ -137,9 +156,12 @@ public class ProfileActivity extends AppCompatActivity {
      * @param view
      */
     public void addFriendButton(View view) {
-        resetUI(true, false, true, true);
-        findViewById(R.id.submitFriendButton).setVisibility(View.VISIBLE);
-        findViewById(R.id.editTextFriend).setVisibility(View.VISIBLE);
+        showAddFriendUI(true);
+
+        // Hide everything else
+        showChangeUsernameUI(false);
+        showMenuUI(false);
+        showSignInUI(false);
     }
 
     /**
@@ -147,7 +169,7 @@ public class ProfileActivity extends AppCompatActivity {
      * @param view
      */
     public void submitFriendButton(View view) {
-        String username = ((EditText)findViewById(R.id.editTextFriend)).getText().toString();
+        String username = ((EditText)editTextFriend).getText().toString();
         String currentUsername = account.getUsername();
         Log.d("FRIENDS SIZE", "onSubmit: " + account.getFriends().size());
 
@@ -248,8 +270,12 @@ public class ProfileActivity extends AppCompatActivity {
     public void setUI() {
         if (account.isSignedIn()) setLoggedUI();
         else {
-            resetUI(true, true, true, false);
-            findViewById(R.id.signInButton).setVisibility(View.VISIBLE);
+            showSignInUI(true);
+
+            // Hide everything else
+            showMenuUI(false);
+            showChangeUsernameUI(false);
+            showAddFriendUI(false);
         }
     }
 
@@ -257,40 +283,54 @@ public class ProfileActivity extends AppCompatActivity {
      * Sets what is visible on UI if the user is logged
      */
     public void setLoggedUI(){
-        resetUI(true, true, false, true);
-        findViewById(R.id.signOutButton).setVisibility(View.VISIBLE);
-        findViewById(R.id.changeUsernameButton).setVisibility(View.VISIBLE);
-        findViewById(R.id.addFriendButton).setVisibility(View.VISIBLE);
-        findViewById(R.id.friendsButton).setVisibility(View.VISIBLE);
+        showMenuUI(true);
+
+        // Hide everything else
+        showChangeUsernameUI(false);
+        showAddFriendUI(false);
+        showSignInUI(false);
     }
 
     /**
      * Sets what is visible on UI after a username change is requested or required
      */
     public void setUsernameChoiceUI() {
-        findViewById(R.id.submitUsernameButton).setVisibility(View.VISIBLE);
-        findViewById(R.id.editTextUsername).setVisibility(View.VISIBLE);
-        resetUI(false, true, true, true );
+        showChangeUsernameUI(true);
+
+        // Hide everything else
+        showAddFriendUI(false);
+        showMenuUI(false);
+        showSignInUI(false);
     }
 
     /**
-     * Hide all the buttons
+     * Set add friend visibility
      */
-    public void resetUI(boolean hideChangeUsername, boolean hideAddFriend, boolean hideMenu, boolean hideSignIn ) {
-        if(hideAddFriend) {
-            findViewById(R.id.submitFriendButton).setVisibility(View.GONE);
-            findViewById(R.id.editTextFriend).setVisibility(View.GONE);
-        }
-        if(hideChangeUsername) {
-            findViewById(R.id.submitUsernameButton).setVisibility(View.GONE);
-            findViewById(R.id.editTextUsername).setVisibility(View.GONE);
-        }
-        if(hideSignIn) findViewById(R.id.signInButton).setVisibility(View.GONE);
-        if(hideMenu) {
-            findViewById(R.id.signOutButton).setVisibility(View.GONE);
-            findViewById(R.id.changeUsernameButton).setVisibility(View.GONE);
-            findViewById(R.id.addFriendButton).setVisibility(View.GONE);
-            findViewById(R.id.friendsButton).setVisibility(View.GONE);
-        }
+    public void showAddFriendUI(boolean visible) {
+        submitFriendButton.setVisibility(visible ? View.VISIBLE : View.GONE);
+        editTextFriend.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    /**
+     * Set change username visibility
+     */
+    public void showChangeUsernameUI(boolean visible) {
+        submitUsernameButton.setVisibility(visible ? View.VISIBLE : View.GONE);
+        editTextUsername.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    /**
+     * Set logged menu visibility
+     */
+    public void showMenuUI(boolean visible) {
+        loggedLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+        signOutButton.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    /**
+     * Set signed out views visibility
+     */
+    public void showSignInUI(boolean visible) {
+        signInButton.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 }
