@@ -287,33 +287,33 @@ public class FirebaseAccount implements Account {
         // If parent is empty
         if(parentSize == 0) {
             friends = new ArrayList<>();
-            return;
         }
-        // If parent is not empty
-        List<FriendItem> tempFriends = new CopyOnWriteArrayList<>();
-        for (DataSnapshot child : parent.getChildren()) {
-            String uidFriend = child.getKey();
-            DatabaseReference childRef = Database.refRoot.child(Database.CHILD_USERS + uidFriend);
-            childRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String usernameFriend = snapshot.child("username").getValue(String.class);
-                    Integer scoreFriend = snapshot.child("score").getValue(Integer.class);
-                    tempFriends.add(new FriendItem(uidFriend, usernameFriend, scoreFriend == null ? 0 : scoreFriend));
-                    if(parentSize == tempFriends.size()) {
-                        // Copy all the elements in an ArrayList
-                        List<FriendItem> newFriends = new ArrayList<>();
-                        newFriends.addAll(tempFriends);
-                        // Once the update is done, change the friends object reference
-                        friends = newFriends;
+        else {
+            List<FriendItem> tempFriends = new CopyOnWriteArrayList<>();
+            for (DataSnapshot child : parent.getChildren()) {
+                String uidFriend = child.getKey();
+                DatabaseReference childRef = Database.refRoot.child(Database.CHILD_USERS + uidFriend);
+                childRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String usernameFriend = snapshot.child("username").getValue(String.class);
+                        Integer scoreFriend = snapshot.child("score").getValue(Integer.class);
+                        tempFriends.add(new FriendItem(uidFriend, usernameFriend, scoreFriend == null ? 0 : scoreFriend));
+                        if (parentSize == tempFriends.size()) {
+                            // Copy all the elements in an ArrayList
+                            List<FriendItem> newFriends = new ArrayList<>();
+                            newFriends.addAll(tempFriends);
+                            // Once the update is done, change the friends object reference
+                            friends = newFriends;
 
+                        }
                     }
-                }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                }
-            });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+            }
         }
     }
 }

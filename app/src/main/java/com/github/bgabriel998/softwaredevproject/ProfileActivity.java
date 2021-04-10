@@ -268,9 +268,9 @@ public class ProfileActivity extends AppCompatActivity {
      * Sets what is visible on UI after a username change is requested or required
      */
     public void setUsernameChoiceUI() {
-        resetUI(false, true, true, true );
         findViewById(R.id.submitUsernameButton).setVisibility(View.VISIBLE);
         findViewById(R.id.editTextUsername).setVisibility(View.VISIBLE);
+        resetUI(false, true, true, true );
     }
 
     /**
