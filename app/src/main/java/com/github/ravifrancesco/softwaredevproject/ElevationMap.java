@@ -1,6 +1,7 @@
 package com.github.ravifrancesco.softwaredevproject;
 
 import android.util.Log;
+import android.util.Pair;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -23,8 +24,10 @@ import java.util.stream.IntStream;
  * (~90 meter) is obtained.
  *
  * A method to obtain an updated elevation map is provided.
+ * A method to obtain the altitude at a certain location (using coordinates or indexes is provided).
+ * A method to compute the indexes of coordinates for accessing the topography map is provided.
+ * A method to obtain the map cell size in arcs/s is provided.
  *
- * TODO create line of sight
  * TODO handle updates of the map (to do after implementation of other elements of the app)
  * TODO handle caching of the map
  * TODO decide if an async download is necessary
@@ -44,6 +47,7 @@ public class ElevationMap {
     private POIPoint boundingBoxCenter;
 
     private int[][] topographyMap;
+    private double mapCellSize;
 
     /**
      * Constructor for the ElevationMap.
@@ -107,11 +111,15 @@ public class ElevationMap {
      */
     private void buildMapGrid(int nRow, int nCol, Scanner responseObj) {
 
-        // skip lines to get to first row
-        int linesToSkip = 4;
-        for (int i =0; i < linesToSkip; i++) {
-            responseObj.nextLine();
-        }
+        // skip 2 lines (x, y corner)
+        responseObj.nextLine();
+        responseObj.nextLine();
+
+        // get cell size
+        this.mapCellSize = Double.parseDouble(responseObj.nextLine().replaceAll("[a-zA-Z]", ""));
+
+        // skip another line (NODATA_value)
+        responseObj.nextLine();
 
         // build matrix
         this.topographyMap = IntStream.range(0, nRow)
@@ -122,6 +130,7 @@ public class ElevationMap {
                 .toArray(int[][]::new);
 
         Log.d("3D MAP", "Generated Map with size (" + nRow + ", " + nCol +")");
+        Log.d("3D MAP", "Cell size = " + this.mapCellSize);
 
     }
 
@@ -132,7 +141,7 @@ public class ElevationMap {
      */
     public int[][] getTopographyMap() {
 
-        updateBoundingBox();
+        updateElevationMatrix();
         return topographyMap;
 
     }
@@ -144,7 +153,7 @@ public class ElevationMap {
      * If less than MINIMUM_DISTANCE_FOR_UPDATE no new map is downloaded, otherwise a new map is
      * downloaded.
      */
-    private void updateBoundingBox() {
+    public void updateElevationMatrix() {
 
         Log.d("3D MAP", "Distance from old bounding center: " + userPoint.computeFlatDistance(boundingBoxCenter));
 
@@ -199,4 +208,85 @@ public class ElevationMap {
 
     }
 
+    /**
+     * This method returns the altitude at a given location.
+     *
+     * @param latitude  latitude (in degrees).
+     * @param longitude longitude (in degrees).
+     * @return          elevation at the given location (in meters).
+     */
+    public int getAltitudeAtLocation(double latitude, double longitude) {
+
+        Pair<Integer, Integer> indexes = getIndexesFromCoordinates(latitude, longitude);
+
+        if (indexes != null) {
+            int row = indexes.first;
+            int col = indexes.second;
+            Log.d("3D MAP", "Accessing map at indexes (" + row + ", " + col + ")");
+            Log.d("3D MAP", "Height = " + this.topographyMap[row][col]);
+            return this.topographyMap[row][col];
+        } else {
+            return 0;
+        }
+
+    }
+
+    /**
+     * This method returns the altitude at a given location.
+     *
+     * @param row   row to access
+     * @param col   col to access
+     * @return      elevation at the given location (in meters).
+     */
+    public int getAltitudeAtLocation(int row, int col) {
+
+        int clampedRow = Math.max(0, Math.min(topographyMap.length-1, row));
+        int clampedCol = Math.max(0, Math.min(topographyMap[0].length-1, col));
+
+        Log.d("3D MAP", "Accessing map at indexes (" + clampedRow + ", " + clampedCol + ")");
+        Log.d("3D MAP", "Height = " + this.topographyMap[clampedRow][clampedCol]);
+        return this.topographyMap[clampedRow][clampedCol];
+
+    }
+
+    /**
+     * Method that converts coordinates into indexes for accessing the topography map matrix.
+     *
+     * @param latitude  latitude (in degrees).
+     * @param longitude longitude (in degrees).
+     * @return          returns a Pair with the first element being the row, the second the column.
+     */
+    public Pair<Integer, Integer> getIndexesFromCoordinates(double latitude, double longitude) {
+
+        if (topographyMap != null) {
+            double distanceFromCenterRow = latitude - boundingBox.getCenterLatitude();
+            double distanceFromCenterCol = longitude - boundingBox.getCenterLongitude();
+            int row = (int) (topographyMap.length / 2 - distanceFromCenterRow / this.mapCellSize);
+            int col = (int) (topographyMap[0].length / 2 + distanceFromCenterCol / this.mapCellSize);
+            return new Pair<>(
+                    Math.max(0, Math.min(topographyMap.length-1, row)),
+                    Math.max(0, Math.min(topographyMap[0].length-1, col)));
+        } else {
+            return null;
+        }
+
+    }
+
+    /**
+     * Getter for the map cell size
+     *
+     * @return double representing the size of the cells in arcs/s
+     */
+    public double getMapCellSize() {
+        return mapCellSize;
+    }
+
+    /**
+     * Getter for the west longitude of the bounding box
+     *
+     * @return  west longitude of the bounding box (in degrees)
+     */
+    public double getBoundingBoxWestLong() {
+        return boundingBox.getLonWest();
+    }
 }
