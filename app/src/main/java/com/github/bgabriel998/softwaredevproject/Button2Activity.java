@@ -11,7 +11,6 @@ import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
 
-
 public class Button2Activity extends AppCompatActivity {
 
     @Override
