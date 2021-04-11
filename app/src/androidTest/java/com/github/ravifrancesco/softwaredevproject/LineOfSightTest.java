@@ -16,6 +16,10 @@ import java.util.Map;
 
 public class LineOfSightTest {
 
+    /**
+     * THis tests checks if the POIPoints are filtered correctly by the
+     * getVisiblePoints method.
+     */
     @Test
     public void getVisiblePointsTest() {
 
@@ -45,15 +49,21 @@ public class LineOfSightTest {
         point4.setName("point4");
 
 
+        // Add the points to the points to check
         pointsToCheck.add(point1);
         pointsToCheck.add(point2);
         pointsToCheck.add(point3);
         pointsToCheck.add(point4);
 
+        // Check if the points are filtered correctly
         Assert.assertEquals(new HashSet<POIPoint>(lineOfSight.getVisiblePoints(pointsToCheck)), new HashSet<POIPoint>(visiblePoints));
 
     }
 
+    /**
+     * THis tests checks if the POIPoints are labeled correctly by the
+     * getVisiblePointsLabeled method.
+     */
     @Test
     public void getVisiblePointsLabeledTest() {
 
@@ -77,17 +87,20 @@ public class LineOfSightTest {
         point3.setName("point3");
         point4.setName("point4");
 
+        // Add the points to the points to check
         pointsToCheck.add(point1);
         pointsToCheck.add(point2);
         pointsToCheck.add(point3);
         pointsToCheck.add(point4);
 
+        // Create the test map
         Map<POIPoint, Boolean> labeledPOIPoints = new HashMap<>();
         labeledPOIPoints.put(point1, true);
         labeledPOIPoints.put(point2, true);
         labeledPOIPoints.put(point3, false);
         labeledPOIPoints.put(point4, false);
 
+        // Check if the points are labeled correctly
         Assert.assertEquals(labeledPOIPoints, lineOfSight.getVisiblePointsLabeled(pointsToCheck));
 
     }
