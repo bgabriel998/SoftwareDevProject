@@ -3,6 +3,8 @@ package com.github.ravifrancesco.softwaredevproject;
 import android.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,9 +81,9 @@ public class LineOfSight {
         double userLongitude = userPoint.getLongitude();
         int userAltitude = (int) userPoint.getAltitude();
 
-        Map<POIPoint, Boolean> labeledPOIPoints = new HashMap<>();
+        Map<POIPoint, Boolean> labeledPOIPoints = Collections.synchronizedMap(new HashMap<>());
 
-         poiPoints.parallelStream()
+        poiPoints.parallelStream()
                  .forEach(p -> labeledPOIPoints.put(p, isVisible(p, userIndexes, userLongitude, userAltitude)));
 
          return labeledPOIPoints;
