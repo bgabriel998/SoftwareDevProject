@@ -46,6 +46,7 @@ public class ProfileActivity extends AppCompatActivity {
     private View signInButton;
     private View signOutButton;
     private View loggedLayout;
+    private View loadingView;
 
 
     private static final int RC_SIGN_IN = 1;
@@ -65,7 +66,7 @@ public class ProfileActivity extends AppCompatActivity {
         signInButton = findViewById(R.id.signInButton);
         signOutButton = findViewById(R.id.signOutButton);
         loggedLayout = findViewById(R.id.loggedLayout);
-
+        loadingView = findViewById(R.id.loadingView);
         // Setup the toolbar
         ToolbarHandler.SetupToolbar(this, TOOLBAR_TITLE);
 
@@ -85,6 +86,7 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+        loadingView.setVisibility(View.GONE);
         account = FirebaseAccount.getAccount();
         // If the user is not logged
         if(!account.isSignedIn()) setUI();
@@ -223,9 +225,10 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
+            signInButton.setVisibility(View.GONE);
+            loadingView.setVisibility(View.VISIBLE);
             // The Task returned from this call is always completed, no need to attach
             // a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
@@ -323,6 +326,7 @@ public class ProfileActivity extends AppCompatActivity {
      * Set logged menu visibility
      */
     public void showMenuUI(boolean visible) {
+        loadingView.setVisibility(View.GONE);
         loggedLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
         signOutButton.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
