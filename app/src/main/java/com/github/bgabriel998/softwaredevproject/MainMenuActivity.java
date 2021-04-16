@@ -121,4 +121,14 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         }
     }
+
+    /**
+     * Override back button to go to home screen when the back button is pressed
+     * instead of going to the initActivity
+     */
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

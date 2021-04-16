@@ -32,8 +32,8 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".MainMenuActivity" />
-        <activity android:name=".Button1Activity" />
-        <activity android:name=".InitActivity">
+        <activity android:name=".InitActivity"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
