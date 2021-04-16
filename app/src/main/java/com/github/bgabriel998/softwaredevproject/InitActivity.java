@@ -25,8 +25,7 @@ public class InitActivity extends AppCompatActivity {
         initApp();
 
         //Opening the main menu
-        //TODO MainActivity.class should be replaced by MainMenuActivity.class in the future
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, MainMenuActivity.class);
         startActivity(intent);
 
     }

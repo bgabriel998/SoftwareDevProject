@@ -317,7 +317,7 @@ public class CameraPreview extends Fragment{
      */
     public void takePicture(){
         //Create the file
-        File photoFile = Button1Activity.createFile(context, FILENAME, PHOTO_EXTENSION);
+        File photoFile = CameraActivity.createFile(context, FILENAME, PHOTO_EXTENSION);
 
         //Configure output options
         ImageCapture.OutputFileOptions outputOptions = new ImageCapture.OutputFileOptions.Builder(

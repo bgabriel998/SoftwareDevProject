@@ -23,7 +23,6 @@
         android:theme="@style/AppTheme"
         tools:remove="android:appComponentFactory">
         <activity android:name=".ImageActivity"/>
-        <activity android:name=".MainActivity" />
         <activity android:name=".GalleryActivity" />
         <activity android:name=".CameraActivity" />
         <activity android:name=".MountainActivity" />
@@ -33,13 +32,6 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".MainMenuActivity" />
-        <activity android:name=".Button8Activity" />
-        <activity android:name=".Button7Activity" />
-        <activity android:name=".Button6Activity" />
-        <activity android:name=".Button5Activity" />
-        <activity android:name=".Button4Activity" />
-        <activity android:name=".Button3Activity" />
-        <activity android:name=".Button2Activity" />
         <activity android:name=".Button1Activity" />
         <activity android:name=".InitActivity">
             <intent-filter>
