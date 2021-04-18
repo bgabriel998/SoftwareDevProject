@@ -12,8 +12,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 
-import com.github.map.MapActivity;
-
 public class MainMenuActivity extends AppCompatActivity {
     private static final int CAMERA_REQUEST_CODE = 100;
     private static final String[] CAMERA_PERMISSION = new String[]{Manifest.permission.CAMERA};

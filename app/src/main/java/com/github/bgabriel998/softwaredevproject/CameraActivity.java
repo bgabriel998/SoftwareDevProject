@@ -2,7 +2,6 @@ package com.github.bgabriel998.softwaredevproject;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -14,8 +13,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
-
-import com.github.map.MapActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;

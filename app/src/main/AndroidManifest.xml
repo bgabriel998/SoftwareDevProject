@@ -28,7 +28,7 @@
         <activity android:name=".MountainActivity" />
         <activity android:name=".CollectionActivity" />
         <activity android:name=".RankingsActivity" />
-        <activity android:name="com.github.map.MapActivity" />
+        <activity android:name=".MapActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".MainMenuActivity" />
