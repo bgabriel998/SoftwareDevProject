@@ -18,6 +18,7 @@ import org.osmdroid.util.GeoPoint;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 /**
  * CompassView draws the compass on the display
@@ -73,10 +74,11 @@ public class CompassView extends View {
     private int height;
 
     //Marker used to display mountains on camera-preview
-    private Bitmap mountainMarker;
+    private Bitmap mountainMarkerVisible;
+    private Bitmap mountainMarkerNotVisible;
 
     //List that contains the POIPoints
-    private HashSet<POIPoint> POIPoints;
+    private Map<POIPoint, Boolean> POIPoints;
 
     //Corresponds to the location of the user
     private Point userPoint;
@@ -103,9 +105,13 @@ public class CompassView extends View {
         float screenDensity = getResources().getDisplayMetrics().scaledDensity;
         mainTextSize = (int) (MAIN_TEXT_FACTOR * screenDensity);
 
-        //Initialize mountain marker
-        mountainMarker = BitmapFactory.decodeResource(getResources(), R.drawable.mountain_marker);
-        mountainMarker = Bitmap.createScaledBitmap(mountainMarker, MARKER_SIZE, MARKER_SIZE, true);
+        //Initialize mountain marker that are in line of sight
+        mountainMarkerVisible = BitmapFactory.decodeResource(getResources(), R.drawable.mountain_marker);
+        mountainMarkerVisible = Bitmap.createScaledBitmap(mountainMarkerVisible, MARKER_SIZE, MARKER_SIZE, true);
+
+        //Initialize mountain marker that are not in line of sight
+        mountainMarkerNotVisible = BitmapFactory.decodeResource(getResources(), R.drawable.mountain_marker);
+        mountainMarkerNotVisible = Bitmap.createScaledBitmap(mountainMarkerVisible, MARKER_SIZE, MARKER_SIZE, true);
 
         //Initialize paints
         //Paint used for the main text heading (N, E, S, W)
@@ -279,7 +285,7 @@ public class CompassView extends View {
      * @param POIPoints List of POIPoints
      * @param userPoint location of the user
      */
-    public void setPOIs(HashSet<POIPoint> POIPoints, Point userPoint){
+    public void setPOIs(Map<POIPoint, Boolean> POIPoints, Point userPoint){
         this.POIPoints = POIPoints;
         this.userPoint = userPoint;
         invalidate();
@@ -293,17 +299,18 @@ public class CompassView extends View {
      */
     private void drawPOIs(int actualDegree){
         //Go through all POIPoints
-        for(POIPoint poiPoint : POIPoints){
-            int horizontalAngle = (int)ComputePOIPoints.getHorizontalBearing(userPoint, poiPoint);
+        for(Map.Entry<POIPoint, Boolean> poiPoint : POIPoints.entrySet()){
+            int horizontalAngle = (int)ComputePOIPoints.getHorizontalBearing(userPoint, poiPoint.getKey());
             if(horizontalAngle == actualDegree){
                 //Use both results and substract the actual vertical heading
-                float deltaVerticalAngle = (float) (ComputePOIPoints.getVerticalBearing(userPoint, poiPoint) - verticalDegrees);
+                float deltaVerticalAngle = (float) (ComputePOIPoints.getVerticalBearing(userPoint, poiPoint.getKey()) - verticalDegrees);
 
                 //Calculate position in Pixel to display the mountainMarker
                 float mountainMarkerPosition = height * (rangeDegreesVertical - 2*deltaVerticalAngle) / (2*rangeDegreesVertical)
-                        - (float)mountainMarker.getHeight()/2;
+                        - (float)mountainMarkerVisible.getHeight()/2;
 
-                //Draw the marker on the preview
+                //Draw the marker on the preview depending on the line of sight
+                Bitmap mountainMarker = poiPoint.getValue() ? mountainMarkerVisible : mountainMarkerNotVisible;
                 canvas.drawBitmap(mountainMarker, pixDeg * (actualDegree - minDegrees),
                          mountainMarkerPosition, null);
             }
