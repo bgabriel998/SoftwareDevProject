@@ -41,6 +41,11 @@ public class OSMMap {
     private final MapView mapView;
     private final Context context;
 
+    /**
+     * Class constructor
+     * @param context context
+     * @param view mapView
+     */
     public OSMMap(Context context, MapView view){
         this.context = context;
         Context applicationContext = context.getApplicationContext();
@@ -48,7 +53,6 @@ public class OSMMap {
         mapView = (MapView) view;
         initMapView();
     }
-
 
     /**
      * Initializes map layout, zoom, scaling factor etc...
@@ -62,6 +66,9 @@ public class OSMMap {
         mapView.setMultiTouchControls(true);
     }
 
+    /**
+     * Display user location on map
+     */
     public void displayUserLocation(){
         MyLocationNewOverlay mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context),mapView);
         Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_baseline_my_location_24);
@@ -134,7 +141,6 @@ public class OSMMap {
         mapView.invalidate();
     }
 
-
     /**
      * zoom animation on map
      * @param box bounding box to zoom into
@@ -163,9 +169,7 @@ public class OSMMap {
      * @return bounding box
      */
     private BoundingBox computeArea(ArrayList<POIPoint> points) {
-
         double nord = 0, sud = 0, ovest = 0, est = 0;
-
         for (int i = 0; i < points.size(); i++) {
             if (points.get(i) == null) continue;
 
@@ -176,7 +180,6 @@ public class OSMMap {
             if ((i == 0) || (lat < sud)) sud = lat;
             if ((i == 0) || (lon < ovest)) ovest = lon;
             if ((i == 0) || (lon > est)) est = lon;
-
         }
         return new BoundingBox(nord, est, sud, ovest);
 

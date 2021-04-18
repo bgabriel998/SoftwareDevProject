@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ListView;
 
+import com.github.giommok.softwaredevproject.FirebaseAccount;
+import com.github.giommok.softwaredevproject.ScoringConstants;
+import com.github.ravifrancesco.softwaredevproject.POIPoint;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -45,9 +49,12 @@ public class CollectionActivity extends AppCompatActivity {
      */
     private ArrayList<CollectedItem> getCollection(){
         ArrayList<CollectedItem> collectedItems = new ArrayList<>();
-
-        for (int i = 0; i < 20; i++){
-            collectedItems.add(new CollectedItem(String.format(Locale.getDefault(),"TEST_Mountain%d", i), 100 - i, 1000-i, 50+i,50-i));
+        //for (int i = 0; i < 20; i++){
+            //collectedItems.add(new CollectedItem(String.format(Locale.getDefault(),"TEST_Mountain%d", i), 100 - i, 1000-i, 50+i,50-i));
+        //}
+        FirebaseAccount account = FirebaseAccount.getAccount();
+        for(POIPoint poi : account.getDiscoveredPeaks()){
+            collectedItems.add(new CollectedItem(poi.getName(), (int)(poi.getAltitude()*ScoringConstants.PEAK_FACTOR), (int) (poi.getAltitude()), (float)poi.getLongitude(), (float)poi.getLatitude()));
         }
 
         return collectedItems;
