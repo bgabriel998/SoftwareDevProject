@@ -4,20 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CameraActivity">
+    tools:context=".CameraActivity"
+    android:id="@+id/cameraLayout">
 
-    <!-- Temp Camera, TODO Replace with real camera -->
-    <ImageView
-        android:id="@+id/tempCamera"
-        android:layout_width="938dp"
-        android:layout_height="1106dp"
-        android:layout_marginEnd="50dp"
+    <!-- Fragment placeholder for the camera fragment -->
+    <FrameLayout
+        android:id="@+id/fragment_camera"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <!-- Compass View-->
+    <com.github.bgabriel998.softwaredevproject.CompassView
+        android:id="@+id/compass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/temp_camera"
-        android:contentDescription="@null" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <!-- Back Icon button -->
     <ImageButton
@@ -43,18 +47,81 @@
         app:srcCompat="@drawable/ic_map"
         android:contentDescription="@string/description_map_button"/>
 
-    <!-- Camera button -->
+    <!-- Image button to take a picture, ratio of the button image is 1.3 -->
     <ImageButton
-        android:id="@+id/cameraButton"
-        android:layout_width="50dp"
+        android:id="@+id/takePicture"
+        android:layout_width="65dp"
         android:layout_height="50dp"
-        android:layout_marginEnd="40dp"
-        android:onClick="cameraButton"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/take_photo_button"
+        android:layout_marginBottom="10dp"
+        android:onClick="takePictureListener"
+        app:layout_constraintBottom_toBottomOf="@+id/compass"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@drawable/iconcircle"
-        app:srcCompat="@drawable/ic_camera"
-        android:contentDescription="@string/description_camera_button"/>
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!--TextView indicates the horizontal degrees and the direction in which the user is heading-->
+    <TextView
+        android:id="@+id/headingHorizontal"
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:gravity="top"
+        android:textColor="@color/White"
+        android:background="@color/Black"
+        android:text=""
+        android:layout_marginStart="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <!--TextView indicates the vertical degrees-->
+    <TextView
+        android:id="@+id/headingVertical"
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/headingHorizontal"
+        android:layout_below="@+id/headingHorizontal"
+        android:gravity="top"
+        android:textColor="@color/White"
+        android:background="@color/Black"
+        android:text=""
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/headingHorizontal" />
+
+    <!--TextView indicates the vertical degrees-->
+    <TextView
+        android:id="@+id/fovHorizontal"
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/headingVertical"
+        android:layout_below="@+id/headingVertical"
+        android:gravity="top"
+        android:textColor="@color/White"
+        android:background="@color/Black"
+        android:text=""
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/headingVertical" />
+
+    <!--TextView indicates the vertical degrees-->
+    <TextView
+        android:id="@+id/fovVertical"
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/fovHorizontal"
+        android:layout_below="@+id/fovHorizontal"
+        android:gravity="top"
+        android:textColor="@color/White"
+        android:background="@color/Black"
+        android:text=""
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fovHorizontal" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

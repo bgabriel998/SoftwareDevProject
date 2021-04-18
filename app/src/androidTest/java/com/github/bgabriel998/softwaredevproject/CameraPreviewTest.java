@@ -53,7 +53,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAvailableListener, Consumer<SurfaceRequest.Result> {
     @Rule
-    public ActivityScenarioRule<Button1Activity> testRule = new ActivityScenarioRule<>(Button1Activity.class);
+    public ActivityScenarioRule<CameraActivity> testRule = new ActivityScenarioRule<>(CameraActivity.class);
     @Rule
     public GrantPermissionRule grantCameraPermissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
 
@@ -207,11 +207,11 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         String pictureTakenCorrectly = context.getResources().getString(R.string.pictureTakenToast);
 
         //Method to get the last displayed toast
-        Method getLastToast = Button1Activity.class.getDeclaredMethod("getLastToast");
+        Method getLastToast = CameraActivity.class.getDeclaredMethod("getLastToast");
         getLastToast.setAccessible(true);
 
         //Method to get the last displayed toast
-        Method setLastToast = Button1Activity.class.getDeclaredMethod("setLastToast", String.class);
+        Method setLastToast = CameraActivity.class.getDeclaredMethod("setLastToast", String.class);
         getLastToast.setAccessible(true);
 
         testRule.getScenario().onActivity(activity -> {

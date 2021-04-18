@@ -63,17 +63,6 @@ public class UserPoint extends Point {
         }
     }
 
-    /**
-     * Update latitude and longitude for testing purposes
-     * This function is there to test the geonames file
-     * PLEASE DO NOT USE THIS FUNCTION IN CODE !!!
-     */
-    public void updateMock(){
-        super.setLatitude(45.87568373146456);
-        super.setLongitude( 6.861424540668386);
-        super.setAltitude(1300);
-    }
-
     /*
      *
      * @return accuracy of the current location (in meters)
