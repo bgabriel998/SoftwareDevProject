@@ -22,7 +22,7 @@ Requirements matching can be found [here](https://docs.google.com/document/d/1GI
 - Language used : Java
 
 ___
-## Usefull links
+## Useful links
 [Software Development Project Moodle](https://moodle.epfl.ch/course/view.php?id=16172)
 
 [Software Development Piazza](https://piazza.com/class/klgt5iozma44iy#)
