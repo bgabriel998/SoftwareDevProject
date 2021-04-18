@@ -27,7 +27,8 @@ public class Database {
     public static final String CHILD_DISCOVERED_PEAKS_HEIGHTS = "DiscoveredHeights";
     public static final String CHILD_USERNAME = "username";
     public static final String CHILD_SCORE = "score";
-    public static final String CHILD_COUNTRY_HIGH_POINT = "countryHighPoint";
+    public static final String CHILD_COUNTRY_HIGH_POINT = "CountryHighPoint";
+    public static final String CHILD_COUNTRY_HIGH_POINT_NAME = "countryHighPoint";
     public static final String CHILD_ATTRIBUTE_HIGH_POINT_HEIGHT = "highPointHeight";
     public static final String CHILD_ATTRIBUTE_COUNTRY_NAME = "countryName";
     public static final String CHILD_ATTRIBUTE_PEAK_NAME = "name";

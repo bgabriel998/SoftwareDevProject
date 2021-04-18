@@ -1,24 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MapActivity">
-
-    <!-- Temp MAp, TODO Replace with real map -->
-    <ImageView
-        android:id="@+id/tempMap"
-        android:layout_width="578dp"
-        android:layout_height="740dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/temp_map"
-        android:contentDescription="@null"/>
-
-    <!-- Toolbar -->
-    <include layout="@layout/toolbar"/>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    tools:context=".Button3Activity"
+    android:orientation="horizontal">
+    <org.osmdroid.views.MapView android:id="@+id/map"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+    </org.osmdroid.views.MapView>
+</RelativeLayout>

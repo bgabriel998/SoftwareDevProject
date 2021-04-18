@@ -10,6 +10,8 @@ import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.github.map.MapActivity;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;

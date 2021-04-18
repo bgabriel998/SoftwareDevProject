@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.github.map.MapActivity;
+
 public class MainMenuActivity extends AppCompatActivity {
 
     @Override
@@ -47,6 +49,12 @@ public class MainMenuActivity extends AppCompatActivity {
     /** Changes view to GalleryActivity */
     public void galleryButton(View view) {
         Intent intent = new Intent(this, GalleryActivity.class);
+        startActivity(intent);
+    }
+
+    /** Changes view to GalleryActivity */
+    public void mapButton(View view) {
+        Intent intent = new Intent(this, MapActivity.class);
         startActivity(intent);
     }
 }

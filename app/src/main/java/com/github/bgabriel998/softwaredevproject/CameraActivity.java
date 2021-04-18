@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.github.map.MapActivity;
+
 public class CameraActivity extends AppCompatActivity {
 
     @Override

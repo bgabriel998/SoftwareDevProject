@@ -3,5 +3,6 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">api.geonames.org</domain>
         <domain includeSubdomains="true">overpass-api.de</domain>
+        <domain includeSubdomains="true">b.tiles.wmflabs.org</domain>
     </domain-config>
 </network-security-config>

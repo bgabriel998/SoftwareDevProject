@@ -24,6 +24,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -64,6 +67,7 @@ public class FirebaseAccount implements Account {
             if(snapshot.hasChild(Database.CHILD_DISCOVERED_PEAKS_HEIGHTS))
                 syncGetDiscoveredHeight(snapshot.child(Database.CHILD_DISCOVERED_PEAKS_HEIGHTS));
             else discoveredPeakHeights = new HashSet<>();
+            Log.d("CALLBACK FIREBASE","END of the execution");
         }
         @Override
         public void onCancelled(@NonNull DatabaseError error) {
@@ -153,6 +157,19 @@ public class FirebaseAccount implements Account {
     @Override
     public HashMap<String, CountryHighPoint> getDiscoveredCountryHighPoint(){
         return discoveredCountryHighPoint;
+    }
+
+    /**
+     * Return only the names of the discovered country high points
+     * as a list of strings
+     * @return list of peak names
+     */
+    public List<String> getDiscoveredCountryHighPointNames(){
+        List<String> retList = new ArrayList<>();
+        for (Map.Entry<String, CountryHighPoint> highPoint : discoveredCountryHighPoint.entrySet()) {
+            retList.add(highPoint.getValue().getCountryHighPoint());
+        }
+        return retList;
     }
 
 
@@ -259,7 +276,7 @@ public class FirebaseAccount implements Account {
         for (Map.Entry<String, HashMap<String, String>> entry : entries.entrySet()) {
             Object value = entry.getValue();
             CountryHighPoint countryHighPoint = new CountryHighPoint(((HashMap<String, String>) value).get(Database.CHILD_ATTRIBUTE_COUNTRY_NAME),
-                    ((HashMap<String, String>) value).get(Database.CHILD_COUNTRY_HIGH_POINT),
+                    ((HashMap<String, String>) value).get(Database.CHILD_COUNTRY_HIGH_POINT_NAME),
                     ((HashMap<String, Long>) value).get(Database.CHILD_ATTRIBUTE_HIGH_POINT_HEIGHT));
             String countryName = ((HashMap<String, String>) value).get(Database.CHILD_ATTRIBUTE_COUNTRY_NAME);
             //Check if the country high point is already in the list to avoid duplicate
