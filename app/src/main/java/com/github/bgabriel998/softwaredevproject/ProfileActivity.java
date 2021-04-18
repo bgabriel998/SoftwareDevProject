@@ -118,6 +118,7 @@ public class ProfileActivity extends AppCompatActivity {
      */
     public void submitUsernameButton(View view) {
         String username = ((EditText)editTextUsername).getText().toString();
+        ((EditText)editTextUsername).getText().clear();
         String currentUsername = account.getUsername();
         Log.d("CURRENT_USERNAME", "onSubmit: " + currentUsername);
         // First, check if the username is valid or if it is already used by the user
@@ -172,6 +173,7 @@ public class ProfileActivity extends AppCompatActivity {
      */
     public void submitFriendButton(View view) {
         String username = ((EditText)editTextFriend).getText().toString();
+        ((EditText)editTextFriend).getText().clear();
         String currentUsername = account.getUsername();
         Log.d("FRIENDS SIZE", "onSubmit: " + account.getFriends().size());
 
@@ -200,6 +202,7 @@ public class ProfileActivity extends AppCompatActivity {
                         Database.setChild(Database.CHILD_USERS + account.getId() + Database.CHILD_FRIENDS, Collections.singletonList(friendUid), Collections.singletonList(""));
                         Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.friend_added, Snackbar.LENGTH_LONG);
                         snackbar.show();
+                        setUI();
                     }
                 }
                 else {
@@ -219,7 +222,8 @@ public class ProfileActivity extends AppCompatActivity {
      * @param view
      */
     public void friendsButton(View view) {
-        // TODO start friends activity when implemented
+        Intent intent = new Intent(this, FriendsActivity.class);
+        startActivity(intent);
     }
 
     @Override
