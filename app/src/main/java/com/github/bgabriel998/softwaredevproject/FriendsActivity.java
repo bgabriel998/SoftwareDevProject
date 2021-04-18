@@ -107,7 +107,7 @@ public class FriendsActivity extends AppCompatActivity {
     }
 
     /**
-     * Changes to mountain activity and providing intent with information
+     * Changes to friend item activity and providing intent with information
      * from the item that was clicked.
      * @param item the given item.
      */
