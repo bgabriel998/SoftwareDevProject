@@ -55,6 +55,15 @@ public class OSMMap {
     }
 
     /**
+     * MapView getter
+     * @return mapView object
+     */
+    public MapView getMapView(){
+        return mapView;
+    }
+
+
+    /**
      * Initializes map layout, zoom, scaling factor etc...
      */
     private void initMapView(){

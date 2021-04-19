@@ -49,9 +49,7 @@ public class CollectionActivity extends AppCompatActivity {
      */
     private ArrayList<CollectedItem> getCollection(){
         ArrayList<CollectedItem> collectedItems = new ArrayList<>();
-        //for (int i = 0; i < 20; i++){
-            //collectedItems.add(new CollectedItem(String.format(Locale.getDefault(),"TEST_Mountain%d", i), 100 - i, 1000-i, 50+i,50-i));
-        //}
+
         FirebaseAccount account = FirebaseAccount.getAccount();
         for(POIPoint poi : account.getDiscoveredPeaks()){
             collectedItems.add(new CollectedItem(poi.getName(), (int)(poi.getAltitude()*ScoringConstants.PEAK_FACTOR), (int) (poi.getAltitude()), (float)poi.getLongitude(), (float)poi.getLatitude()));

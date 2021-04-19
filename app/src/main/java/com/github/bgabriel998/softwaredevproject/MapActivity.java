@@ -22,7 +22,7 @@ import java.util.List;
 
 public class MapActivity extends AppCompatActivity {
 
-    private OSMMap osmMap = null;
+    public static OSMMap osmMap = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
