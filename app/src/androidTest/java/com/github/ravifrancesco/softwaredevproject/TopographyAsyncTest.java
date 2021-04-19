@@ -1,7 +1,6 @@
 package com.github.ravifrancesco.softwaredevproject;
 
 import android.content.Context;
-import android.os.AsyncTask;
 
 import androidx.core.util.Pair;
 import androidx.test.core.app.ApplicationProvider;
@@ -20,15 +19,18 @@ public class TopographyAsyncTest {
     private static Pair<int[][], Double> topographyPair;
     private static UserPoint userPoint;
     private ElevationMapAsync elevationMapAsync;
-    private AsyncTask downloadTask;
-    //private static List<POIPoint>
+
+    /**
+     * Download the topography map
+     * @throws InterruptedException if any thread has interrupted the current thread
+     */
     @Before
     public void setup() throws InterruptedException {
         Context mContext = ApplicationProvider.getApplicationContext();
 
         userPoint = new UserPoint(mContext);
         userPoint.setLocation(GPSTracker.DEFAULT_LAT, GPSTracker.DEFAULT_LON,GPSTracker.DEFAULT_ALT, GPSTracker.DEFAULT_ACC);
-        downloadTask = new DownloadTopographyTask(){
+        new DownloadTopographyTask(){
             @Override
             public void onResponseReceived(Pair<int[][], Double> topography) {
                 super.onResponseReceived(topography);
@@ -38,18 +40,20 @@ public class TopographyAsyncTest {
 
         //Wait for the map to be downloaded
         int counter=0;
-        while(topographyPair==null && counter<40){
-            Thread.sleep(500);
+        while(topographyPair==null && counter<20){
+            Thread.sleep(1000);
             counter++;
         }
-        //Wait for the map to be downloaded
         counter=0;
-        while(topographyPair.first==null && counter<40){
-            Thread.sleep(500);
+        while(topographyPair.first==null && counter<20){
+            Thread.sleep(1000);
             counter++;
         }
     }
 
+    /**
+     * Tests the ElevationMapAsyncClass when the topographyMap is null
+     */
     @Test
     public void topographyNull(){
         Pair<int[][], Double> topo = new Pair<>(null, 0.0);
@@ -58,6 +62,9 @@ public class TopographyAsyncTest {
         Assert.assertEquals(0, elevationMapAsync.getAltitudeAtLocation(userPoint.getLatitude(), userPoint.getLongitude()));
     }
 
+    /**
+     * Tests that the topographyMap is not null
+     */
     @Test
     public void topographyNotNull(){
         Assert.assertNotNull(topographyPair);
@@ -93,8 +100,8 @@ public class TopographyAsyncTest {
 
         //Wait for the map to be updated
         int counter=0;
-        while(elevationMap.getTopographyMap()==oldTopographyMap && counter<60){
-            Thread.sleep(500);
+        while(elevationMap.getTopographyMap()==oldTopographyMap && counter<30){
+            Thread.sleep(1000);
             counter++;
         }
 
@@ -107,28 +114,11 @@ public class TopographyAsyncTest {
 
     /**
      * Test LineOfSightAsync.getVisiblePoints to see if the POIPoints are correctly filtered
+     * @see LineOfSightTest
      *
      */
     @Test
     public void getVisiblePoints(){
-//        LineOfSightAsync lineOfSight = new LineOfSightAsync(topographyPair, userPoint);
-//        POIPoint p1 = new POIPoint("p1", userPoint.getLatitude()+0.1, userPoint.getLongitude()+0.1, (long) (userPoint.getAltitude() + 2000));
-//        POIPoint p2 = new POIPoint("p2", userPoint.getLatitude()+0.1, userPoint.getLongitude()-0.1, (long) (userPoint.getAltitude() + 2000));
-//        POIPoint p3 = new POIPoint("p3", userPoint.getLatitude()-0.1, userPoint.getLongitude()+0.1, (long) (userPoint.getAltitude() - 2000));
-//        POIPoint p4 = new POIPoint("p4", userPoint.getLatitude()-0.1, userPoint.getLongitude()-0.1, (long) (userPoint.getAltitude() - 2000));
-//        List<POIPoint> poiPoints = new ArrayList<>();
-//        poiPoints.add(p1);
-//        poiPoints.add(p2);
-//        poiPoints.add(p3);
-//        poiPoints.add(p4);
-//        List<POIPoint> visiblePOIPoints = lineOfSight.getVisiblePoints(poiPoints);
-//
-//        List<POIPoint> poiPointsVisible = new ArrayList<>();
-//        poiPointsVisible.add(p1);
-//        poiPointsVisible.add(p2);
-//
-//        Assert.assertEquals(poiPointsVisible, visiblePOIPoints);
-
         LineOfSightAsync lineOfSight = new LineOfSightAsync(topographyPair, userPoint);
 
         // PoiPoints to check
@@ -156,6 +146,6 @@ public class TopographyAsyncTest {
         pointsToCheck.add(point4);
 
         // Check if the points are filtered correctly
-        Assert.assertEquals(new HashSet<POIPoint>(lineOfSight.getVisiblePoints(pointsToCheck)), new HashSet<POIPoint>(visiblePoints));
+        Assert.assertEquals(new HashSet<>(lineOfSight.getVisiblePoints(pointsToCheck)), new HashSet<>(visiblePoints));
     }
 }
