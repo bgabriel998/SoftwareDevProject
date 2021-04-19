@@ -76,8 +76,6 @@ public class ProfileActivity extends AppCompatActivity {
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        // TODO MOVE TO MAIN MENU ACTIVITY
-        FirebaseApp.initializeApp(this);
     }
 
     /**
@@ -118,7 +116,6 @@ public class ProfileActivity extends AppCompatActivity {
      */
     public void submitUsernameButton(View view) {
         String username = ((EditText)editTextUsername).getText().toString();
-        ((EditText)editTextUsername).getText().clear();
         String currentUsername = account.getUsername();
         Log.d("CURRENT_USERNAME", "onSubmit: " + currentUsername);
         // First, check if the username is valid or if it is already used by the user
@@ -137,6 +134,7 @@ public class ProfileActivity extends AppCompatActivity {
             Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.available_username , Snackbar.LENGTH_LONG);
             snackbar.show();
             setUI();
+            ((EditText)editTextUsername).getText().clear();
         });
     }
 
@@ -173,7 +171,6 @@ public class ProfileActivity extends AppCompatActivity {
      */
     public void submitFriendButton(View view) {
         String username = ((EditText)editTextFriend).getText().toString();
-        ((EditText)editTextFriend).getText().clear();
         String currentUsername = account.getUsername();
         Log.d("FRIENDS SIZE", "onSubmit: " + account.getFriends().size());
 
@@ -203,6 +200,7 @@ public class ProfileActivity extends AppCompatActivity {
                         Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.friend_added, Snackbar.LENGTH_LONG);
                         snackbar.show();
                         setUI();
+                        ((EditText)editTextFriend).getText().clear();
                     }
                 }
                 else {
