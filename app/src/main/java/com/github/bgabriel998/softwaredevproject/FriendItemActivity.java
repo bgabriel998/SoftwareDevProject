@@ -35,7 +35,7 @@ public class FriendItemActivity extends AppCompatActivity {
     }
 
     /**
-     * Setup the information on the mountain activity from data of intent.
+     * Setup the information on the friend activity from data of intent.
      * @param intent given intent
      */
     private void setupInformation(Intent intent){
