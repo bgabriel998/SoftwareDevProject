@@ -96,12 +96,4 @@ public class FriendItem {
     public boolean hasUsername(String username) {
         return this.username.equals(username);
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        FriendItem that = (FriendItem) o;
-        return points == that.points && uid.equals(that.uid) && username.equals(that.username);
-    }
 }
