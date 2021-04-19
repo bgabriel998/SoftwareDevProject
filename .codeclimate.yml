@@ -3,6 +3,9 @@ checks:
         enabled: true
         config:
             threshold: 25
+    method-complexity:
+      config:
+        threshold: 6
 exclude_patterns:
 - "**/test/"
 - "**/androidTest/"
