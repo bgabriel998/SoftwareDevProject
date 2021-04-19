@@ -3,6 +3,8 @@ package com.github.ravifrancesco.softwaredevproject;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import androidx.core.util.Pair;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -17,30 +19,24 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.stream.IntStream;
 
-public class DownloadTopographyTask extends AsyncTask<Void, Void, int[][]> implements DownloadTopographyTaskIF {
+public class DownloadTopographyTask extends AsyncTask<UserPoint, Void, Pair<int[][], Double>> implements DownloadTopographyTaskIF {
     static final int BOUNDING_BOX_RANGE = 20; //range of the bounding box in km
 
     private final String BASE_URL = "https://portal.opentopography.org/API/globaldem";
     private final String DEM_TYPE = "SRTMGL3";
     private final String OUTPUT_FORMAT = "AAIGrid";
 
-    private final BoundingBox boundingBox;
-
-    /**
-     * Constructor for the ElevationMap.
-     *
-     * @param userPoint the user point around which the bounding box is computed.
-     */
-    public DownloadTopographyTask(UserPoint userPoint) {
-        this.boundingBox = userPoint.computeBoundingBox(BOUNDING_BOX_RANGE);
-    }
+    private BoundingBox boundingBox;
 
     /**
      * This method handles the download of the AAIGrid and building of the matrix representing
      * the elevation map.
+     * @param userPoints UserPoint
+     * @return Pair<int[][], Double> that contains the topographyMap and the mapCellSize
      */
     @Override
-    protected int[][] doInBackground(Void... voids) {
+    protected Pair<int[][], Double> doInBackground(UserPoint... userPoints) {
+        boundingBox = userPoints[0].computeBoundingBox(BOUNDING_BOX_RANGE);
         URL url = generateURL();
         try {
             HttpClient httpClient = HttpClientBuilder.create().build();
@@ -59,10 +55,14 @@ public class DownloadTopographyTask extends AsyncTask<Void, Void, int[][]> imple
         return null;
     }
 
+    /**
+     * After the download call onResponseReceived to
+     * @param topography Pair<int[][], Double> that contains the topographyMap and the mapCellSize
+     */
     @Override
-    protected void onPostExecute(int[][] ints) {
-        super.onPostExecute(ints);
-        onResponseReceived(ints);
+    protected void onPostExecute(Pair<int[][], Double> topography) {
+        super.onPostExecute(topography);
+        onResponseReceived(topography);
     }
 
 
@@ -72,7 +72,7 @@ public class DownloadTopographyTask extends AsyncTask<Void, Void, int[][]> imple
      *
      * @param response  HTTPResponse to parse.
      */
-    private int[][] parseResponse(HttpResponse response) {
+    private Pair<int[][], Double> parseResponse(HttpResponse response) {
         try {
             Scanner responseObj = new Scanner(response.getEntity().getContent());
             int nCol =  Integer.parseInt(responseObj.nextLine().replaceAll("[\\D]", ""));
@@ -91,7 +91,7 @@ public class DownloadTopographyTask extends AsyncTask<Void, Void, int[][]> imple
      * @param nCol          width of the matrix.
      * @param responseObj   Scanner to read the HTTPResponse.
      */
-    private int[][] buildMapGrid(int nRow, int nCol, Scanner responseObj) {
+    private Pair<int[][], Double> buildMapGrid(int nRow, int nCol, Scanner responseObj) {
 
         // skip 2 lines (x, y corner)
         responseObj.nextLine();
@@ -114,7 +114,7 @@ public class DownloadTopographyTask extends AsyncTask<Void, Void, int[][]> imple
         Log.d("3D MAP", "Generated Map with size (" + nRow + ", " + nCol +")");
         Log.d("3D MAP", "Cell size = " + mapCellSize);
 
-        return topographyMap;
+        return new Pair<>(topographyMap, mapCellSize);
     }
 
     /**
@@ -158,12 +158,12 @@ public class DownloadTopographyTask extends AsyncTask<Void, Void, int[][]> imple
 
 
     @Override
-    public void onResponseReceived(int[][] topography) {
+    public void onResponseReceived(Pair<int[][], Double> topography) {
     }
 
 
 }
 
 interface DownloadTopographyTaskIF {
-    public void onResponseReceived(int[][] topography);
+    void onResponseReceived(Pair<int[][], Double> topography);
 }

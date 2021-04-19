@@ -1,15 +1,10 @@
 package com.github.bgabriel998.softwaredevproject;
 
 import android.content.Context;
-import android.os.AsyncTask;
-import android.os.StrictMode;
 
 import androidx.core.util.Pair;
 
-import com.firebase.ui.auth.data.model.User;
 import com.github.ravifrancesco.softwaredevproject.DownloadTopographyTask;
-import com.github.ravifrancesco.softwaredevproject.ElevationMapAsync;
-import com.github.ravifrancesco.softwaredevproject.LineOfSight;
 import com.github.ravifrancesco.softwaredevproject.LineOfSightAsync;
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
 import com.github.ravifrancesco.softwaredevproject.Point;
@@ -18,18 +13,13 @@ import com.github.ravifrancesco.softwaredevproject.UserPoint;
 import org.osmdroid.bonuspack.location.POI;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
 public class ComputePOIPoints {
-    private static List<POI> POIs;
     public static List<POIPoint> POIPoints;
     public static Map<POIPoint, Boolean> POIPointsLineOfSight;
     public UserPoint userPoint;
-    private static LineOfSight lineOfSight;
 
     /**
      * Constructor of ComputePOIPoints, updates userPoint and gets the POIs for the userPoint
@@ -40,7 +30,6 @@ public class ComputePOIPoints {
         userPoint = new UserPoint(context);
         userPoint.update();
         getPOIs(userPoint);
-        //lineOfSight = new LineOfSight(userPoint);
     }
 
     /**
@@ -56,51 +45,25 @@ public class ComputePOIPoints {
                         POIPoint poiPoint = new POIPoint(poi);
                         POIPoints.add(poiPoint);
                     }
-                    getPOIsInLineOfSight(userPoint);
+                    getLabeledPOIs(userPoint);
                 }
             }
         }.execute();
     }
 
-    private static void getPOIsInLineOfSight(UserPoint userPoint){
-        //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-
-        //StrictMode.setThreadPolicy(policy);
-
-        //lineOfSight = new LineOfSight(userPoint);
-        //POIPointsLineOfSight = lineOfSight.getVisiblePointsLabeled(POIPoints);
-        //POIPointsLineOfSight = LineOfSightAsync.getVisiblePointsLabeled(POIPoints, userPoint);
-
-//        new ElevationMapAsync(userPoint){
-//            @Override
-//            public void onResponseReceived(int[][] topography) {
-//                super.onResponseReceived(topography);
-//
-//                android.util.Pair<Integer, Integer> userIndexes = ElevationMapAsync
-//                        .getIndexesFromCoordinates(userPoint.getLatitude(), userPoint.getLongitude(), topography);
-//                double userLongitude = userPoint.getLongitude();
-//                int userAltitude = (int) userPoint.getAltitude();
-//
-//                Map<POIPoint, Boolean> labeledPOIPoints = Collections.synchronizedMap(new HashMap<>());
-//
-//                //Boolean isVisible = LineOfSightAsync.isVisible(POIPoints.get(0), userIndexes, userLongitude, userAltitude, topography);
-//                //labeledPOIPoints.put(POIPoints.get(0), isVisible);
-//
-//                POIPoints.parallelStream()
-//                        .forEach(p -> labeledPOIPoints.put(p, LineOfSightAsync.isVisible(p, userIndexes, userLongitude, userAltitude, topography)));
-//
-//                POIPointsLineOfSight = labeledPOIPoints;
-//            }
-//        }.execute();
-
-        new DownloadTopographyTask(userPoint){
+    /**
+     * Gets the labeled POIs
+     * @param userPoint userPoint for which the labeled POIs are computed
+     */
+    private static void getLabeledPOIs(UserPoint userPoint){
+        new DownloadTopographyTask(){
             @Override
-            public void onResponseReceived(int[][] topography) {
+            public void onResponseReceived(Pair<int[][], Double> topography) {
                 super.onResponseReceived(topography);
                 LineOfSightAsync lineOfSight = new LineOfSightAsync(topography, userPoint);
                 POIPointsLineOfSight = lineOfSight.getVisiblePointsLabeled(POIPoints);
             }
-        }.execute();
+        }.execute(userPoint);
     }
 
     /**

@@ -7,20 +7,15 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
 import com.github.ravifrancesco.softwaredevproject.Point;
 
-import org.osmdroid.util.GeoPoint;
-
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -82,10 +77,11 @@ public class CompassView extends View {
     private Bitmap mountainMarkerNotVisible;
 
     //List that contains the POIPoints
-    private Map<POIPoint, Boolean> POIPoints;
+    private List<POIPoint> POIPoints;
 
     //Corresponds to the location of the user
     private Point userPoint;
+    private Map<POIPoint, Boolean> labeledPOIPoints;
 
     /**
      * Constructor for the CompassView which initializes the widges like the font height and paints used
@@ -245,11 +241,15 @@ public class CompassView extends View {
             drawCompass(i);
 
             //Draw the mountains on the canvas
-            if(POIPoints != null && !POIPoints.isEmpty()){
+            if(labeledPOIPoints != null && !labeledPOIPoints.isEmpty()){
+                drawLabeledPOIs(i);
+            }
+            else if(POIPoints != null && !POIPoints.isEmpty()){
                 drawPOIs(i);
+                labeledPOIPoints = ComputePOIPoints.POIPointsLineOfSight;
             }
             else{
-                POIPoints = ComputePOIPoints.POIPointsLineOfSight;
+                POIPoints = ComputePOIPoints.POIPoints;
             }
         }
     }
@@ -299,10 +299,12 @@ public class CompassView extends View {
     /**
      * Set the POIs that will be drawn on the camera-preview
      * @param POIPoints List of POIPoints
+     * @param labeledPOIPoints Map of the POIPoints with the line of sight boolean
      * @param userPoint location of the user
      */
-    public void setPOIs(Map<POIPoint, Boolean> POIPoints, Point userPoint){
+    public void setPOIs(List<POIPoint> POIPoints, Map<POIPoint, Boolean> labeledPOIPoints, Point userPoint){
         this.POIPoints = POIPoints;
+        this.labeledPOIPoints = labeledPOIPoints;
         this.userPoint = userPoint;
         invalidate();
         requestLayout();
@@ -311,26 +313,51 @@ public class CompassView extends View {
     /**
      * Draws the POIs on the display using the horizontal and vertical bearing of the mountain
      * to the user
-     * @param actualDegree degree of the actual heading of the compass
+     * @param actualDegree degree on which the POIPoint is drawn
      */
     private void drawPOIs(int actualDegree){
         //Go through all POIPoints
-        for(Map.Entry<POIPoint, Boolean> poiPoint : POIPoints.entrySet()){
-            int horizontalAngle = (int)ComputePOIPoints.getHorizontalBearing(userPoint, poiPoint.getKey());
+        for(POIPoint poiPoint : POIPoints){
+            int horizontalAngle = (int)ComputePOIPoints.getHorizontalBearing(userPoint, poiPoint);
             if(horizontalAngle == actualDegree){
-                //Use both results and substract the actual vertical heading
-                float deltaVerticalAngle = (float) (ComputePOIPoints.getVerticalBearing(userPoint, poiPoint.getKey()) - verticalDegrees);
-
-                //Calculate position in Pixel to display the mountainMarker
-                float mountainMarkerPosition = height * (rangeDegreesVertical - 2*deltaVerticalAngle) / (2*rangeDegreesVertical)
-                        - (float)mountainMarkerVisible.getHeight()/2;
-
-                //Draw the marker on the preview depending on the line of sight
-                Bitmap mountainMarker = poiPoint.getValue() ? mountainMarkerVisible : mountainMarkerNotVisible;
-                canvas.drawBitmap(mountainMarker, pixDeg * (actualDegree - minDegrees),
-                         mountainMarkerPosition, null);
+                drawMountainMarker(poiPoint, false, actualDegree);
             }
         }
+    }
+
+    /**
+     * Draws the POIs depending on their visibility on the display using the horizontal and
+     * vertical bearing of the mountain to the user
+     * @param actualDegree degree on which the POIPoint is drawn
+     */
+    private void drawLabeledPOIs(int actualDegree){
+        //Go through all POIPoints
+        for(Map.Entry<POIPoint, Boolean> poiPoint : labeledPOIPoints.entrySet()){
+            int horizontalAngle = (int)ComputePOIPoints.getHorizontalBearing(userPoint, poiPoint.getKey());
+            if(horizontalAngle == actualDegree){
+                drawMountainMarker(poiPoint.getKey(), poiPoint.getValue(), actualDegree);
+            }
+        }
+    }
+
+    /**
+     * Draws the mountain marker on the canvas depending on the visibility of the POIPoint
+     * @param poiPoint POIPoint that gets drawn
+     * @param isVisible Boolean that indicates if the POIPoint is visible or not
+     * @param actualDegree degree on which the POIPoint is drawn
+     */
+    private void drawMountainMarker(POIPoint poiPoint, Boolean isVisible, int actualDegree){
+        //Use both results and substract the actual vertical heading
+        float deltaVerticalAngle = (float) (ComputePOIPoints.getVerticalBearing(userPoint, poiPoint) - verticalDegrees);
+
+        //Calculate position in Pixel to display the mountainMarker
+        float mountainMarkerPosition = height * (rangeDegreesVertical - 2*deltaVerticalAngle) / (2*rangeDegreesVertical)
+                - (float)mountainMarkerVisible.getHeight()/2;
+
+        //Draw the marker on the preview depending on the line of sight
+        Bitmap mountainMarker = isVisible ? mountainMarkerVisible : mountainMarkerNotVisible;
+        canvas.drawBitmap(mountainMarker, pixDeg * (actualDegree - minDegrees),
+                mountainMarkerPosition, null);
     }
 
     /**
@@ -366,7 +393,7 @@ public class CompassView extends View {
      * @return a bitmap of the compass-view
      */
     public Bitmap getBitmap(){
-        CompassView compassView = (CompassView) findViewById(R.id.compass);
+        CompassView compassView = findViewById(R.id.compass);
         compassView.setDrawingCacheEnabled(true);
         compassView.buildDrawingCache();
         Bitmap bitmap = Bitmap.createBitmap(compassView.getDrawingCache());

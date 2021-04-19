@@ -1,9 +1,8 @@
 package com.github.ravifrancesco.softwaredevproject;
 
-import android.util.Pair;
+import androidx.core.util.Pair;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -23,9 +22,8 @@ public class LineOfSightAsync {
     static final int ELEVATION_DIFFERENCE_THRESHOLD = 50; // in meters
 
     private final UserPoint userPoint;
-    private final int[][] topographyMap;
 
-    private final ElevationMap elevationMap;
+    private final ElevationMapAsync elevationMap;
     private double mapCellSize;
     private double boundingBoxWestLon;
 
@@ -34,10 +32,10 @@ public class LineOfSightAsync {
      *
      * @param userPoint userPoint from wich the visible POIPoints are computed.
      */
-    public LineOfSightAsync(int[][] topographyMap, UserPoint userPoint) {
+    public LineOfSightAsync(Pair<int[][], Double> topography, UserPoint userPoint) {
         this.userPoint = userPoint;
-        this.topographyMap = topographyMap;
-        this.elevationMap = new ElevationMapAsync(this.topographyMap, this.userPoint);
+        this.mapCellSize = topography.second;
+        this.elevationMap = new ElevationMapAsync(topography, this.userPoint);
     }
 
     /**
@@ -89,7 +87,6 @@ public class LineOfSightAsync {
                 .forEach(p -> labeledPOIPoints.put(p, isVisible(p, userIndexes, userLongitude, userAltitude)));
 
         return labeledPOIPoints;
-
     }
 
     /**
