@@ -74,7 +74,6 @@ public class CameraActivity extends AppCompatActivity{
         //Request the POIpoints
         computePOIPoints = new ComputePOIPoints(this);
 
-        lineOfSight = new LineOfSight(computePOIPoints.userPoint);
 
         //Setup the compass
         startCompass();
@@ -110,8 +109,8 @@ public class CameraActivity extends AppCompatActivity{
         compass.setListener(compassListener);
 
         //Set the POIs for the compass
-        Map<POIPoint, Boolean> POIpoints = lineOfSight.getVisiblePointsLabeled((List<POIPoint>) ComputePOIPoints.POIPoints);
-        compassView.setPOIs(POIpoints, computePOIPoints.userPoint);
+        //Map<POIPoint, Boolean> POIpoints = lineOfSight.getVisiblePointsLabeled(ComputePOIPoints.POIPoints);
+        compassView.setPOIs(ComputePOIPoints.POIPointsLineOfSight, computePOIPoints.userPoint);
     }
 
     /**

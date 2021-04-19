@@ -6,9 +6,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
@@ -110,8 +114,7 @@ public class CompassView extends View {
         mountainMarkerVisible = Bitmap.createScaledBitmap(mountainMarkerVisible, MARKER_SIZE, MARKER_SIZE, true);
 
         //Initialize mountain marker that are not in line of sight
-        mountainMarkerNotVisible = BitmapFactory.decodeResource(getResources(), R.drawable.mountain_marker);
-        mountainMarkerNotVisible = Bitmap.createScaledBitmap(mountainMarkerVisible, MARKER_SIZE, MARKER_SIZE, true);
+        mountainMarkerNotVisible = getBitmapFromVectorDrawable(getContext(), R.drawable.ic_mountain_marker_resize);
 
         //Initialize paints
         //Paint used for the main text heading (N, E, S, W)
@@ -128,6 +131,16 @@ public class CompassView extends View {
 
         //Paint used for the terciary lines (15°, 30°, 60°, 75°, 105°, ...)
         terciaryLinePaint = configureLinePaint(TER_LINE_FACTOR*screenDensity);
+    }
+
+    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
+        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
     }
 
     /**
@@ -234,6 +247,9 @@ public class CompassView extends View {
             //Draw the mountains on the canvas
             if(POIPoints != null && !POIPoints.isEmpty()){
                 drawPOIs(i);
+            }
+            else{
+                POIPoints = ComputePOIPoints.POIPointsLineOfSight;
             }
         }
     }
