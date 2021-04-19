@@ -102,8 +102,6 @@ public class FriendItem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FriendItem that = (FriendItem) o;
-        return points == that.points &&
-                Objects.equals(uid, that.uid) &&
-                Objects.equals(username, that.username);
+        return points == that.points && uid.equals(that.uid) && username.equals(that.username);
     }
 }

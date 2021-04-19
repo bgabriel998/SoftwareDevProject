@@ -35,9 +35,7 @@ public class FriendsListAdapter extends ArrayAdapter<FriendItem> {
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            convertView = ListAdapterInflater.createLayout(resourceLayout, mContext, parent);
-        }
+        if (convertView == null) convertView = ListAdapterInflater.createLayout(resourceLayout, mContext, parent);
 
         setItemText(convertView, getItem(position));
 
