@@ -55,16 +55,6 @@ public class POIPoint extends Point {
 
     }
 
-
-    /**
-     * Override method for POIPoint HashSet comparison
-     * @return hashcode
-     */
-    @Override
-    public int hashCode() {
-        return name.hashCode();
-    }
-
     /**
      * Override method for POIPoint HashSet comparison
      * Compare only the name of the POI
