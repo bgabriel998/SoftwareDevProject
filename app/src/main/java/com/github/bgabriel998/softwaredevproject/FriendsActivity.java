@@ -37,7 +37,7 @@ public class FriendsActivity extends AppCompatActivity {
         String message = intent.getStringExtra(FriendItemActivity.INTENT_EXTRA_NAME);
         if(message != null) {
             // Notify the user that a friend has been removed
-            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), message , Snackbar.LENGTH_LONG);
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG);
             snackbar.show();
         }
 
@@ -47,18 +47,15 @@ public class FriendsActivity extends AppCompatActivity {
 
         // Set up refresh on scroll
         refreshLayout = findViewById(R.id.refresh_layout);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                List<FriendItem> currentFriends = friendsList;
-                updateFriends();
-                // Check if friends have been updated. If so, refresh the page
-                if(friendsList.size() != currentFriends.size() || currentFriends.stream().anyMatch(x -> friendsList.stream().noneMatch(x::equals))) {
-                    Log.d("FriendsRefresh", "onRefresh: update");
-                    fillFriendsList();
-                }
-                refreshLayout.setRefreshing(false);
+        refreshLayout.setOnRefreshListener(() -> {
+            List<FriendItem> currentFriends = friendsList;
+            updateFriends();
+            // Check if friends have been updated. If so, refresh the page
+            if(friendsList.size() != currentFriends.size() || currentFriends.stream().anyMatch(x -> friendsList.stream().noneMatch(x::equals))) {
+                Log.d("FriendsRefresh", "onRefresh: update");
+                fillFriendsList();
             }
+            refreshLayout.setRefreshing(false);
         });
     }
 
