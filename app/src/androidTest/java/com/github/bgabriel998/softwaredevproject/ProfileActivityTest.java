@@ -283,6 +283,7 @@ public class ProfileActivityTest {
         Espresso.onView(withId(R.id.signOutButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
     }
 
+    /* Test that FriendsActivity is started on button click */
     @Test
     public void friendsButtonTest() {
         Intents.init();

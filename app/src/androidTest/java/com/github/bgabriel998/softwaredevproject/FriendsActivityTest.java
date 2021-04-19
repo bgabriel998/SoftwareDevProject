@@ -167,6 +167,7 @@ public class FriendsActivityTest {
 
     }
 
+    /* Test press on friend item and test remove friend button */
     @Test
     public void FriendItemActivityTest() throws InterruptedException {
         // Set up the scenario
