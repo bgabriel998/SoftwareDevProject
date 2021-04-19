@@ -22,7 +22,6 @@ import java.util.List;
 public class FriendsActivity extends AppCompatActivity {
 
     private static final String  TOOLBAR_TITLE = "Friends";
-    private SwipeRefreshLayout refreshLayout;
     private FriendsListAdapter listAdapter;
     private List<FriendItem> friendsList = new ArrayList<>();
 
@@ -41,22 +40,8 @@ public class FriendsActivity extends AppCompatActivity {
             snackbar.show();
         }
 
-
         // Fill the friends list
         fillFriendsList();
-
-        // Set up refresh on scroll
-        refreshLayout = findViewById(R.id.refresh_layout);
-        refreshLayout.setOnRefreshListener(() -> {
-            List<FriendItem> currentFriends = friendsList;
-            updateFriends();
-            // Check if friends have been updated. If so, refresh the page
-            if(friendsList.size() != currentFriends.size() || currentFriends.stream().anyMatch(x -> friendsList.stream().noneMatch(x::equals))) {
-                Log.d("FriendsRefresh", "onRefresh: update");
-                fillFriendsList();
-            }
-            refreshLayout.setRefreshing(false);
-        });
     }
 
     /**
