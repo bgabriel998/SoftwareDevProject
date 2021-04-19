@@ -156,9 +156,11 @@ public class FriendsActivityTest {
                     .check(matches(withText(username)));
         }
 
-        // Change friend username
+        // Change friend username and points
         String newUsername = TESTING_USERNAME + "new";
+        int newScore = 20;
         Database.setChild(Database.CHILD_USERS + "test0", Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(newUsername));
+        Database.setChild(Database.CHILD_USERS + "test0", Collections.singletonList(Database.CHILD_SCORE), Collections.singletonList(newScore));
         Thread.sleep(1500);
 
         // Check username has been updated
