@@ -3,6 +3,8 @@ package com.github.bgabriel998.softwaredevproject;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.ImageView;
 
@@ -18,16 +20,17 @@ public class ImageActivity extends AppCompatActivity {
         ToolbarHandler.SetupToolbar(this, TOOLBAR_TITLE);
 
         Intent intent = getIntent();
-        setImage(intent.getIntExtra("image", -1));
+        setImage(intent.getStringExtra("imagePath"));
     }
 
     /**
      * Set the fullscreen image.
-     * TODO get path and find correct image in folder
-     * @param imageID id for image in resource
+     * @param imagePath path to image
      */
-    private void setImage(int imageID) {
+    private void setImage(String imagePath) {
         ImageView view = findViewById(R.id.fullscreen_image);
-        view.setImageResource(imageID);
+        Bitmap imageBitmap = BitmapFactory.decodeFile(imagePath);
+
+        view.setImageBitmap(imageBitmap);
     }
 }

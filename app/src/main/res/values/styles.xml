@@ -67,6 +67,12 @@
         <item name="android:textSize">30sp</item>
     </style>
 
+    <!-- Large Light Blue Text -->
+    <style name = "LargeLightBlueText" parent="android:style/Widget.Toolbar">
+        <item name="android:textColor">@color/LightBlue</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
     <!-- Large Dark Green Text -->
     <style name = "LargeDarkGreenText" parent="android:style/Widget.Toolbar">
         <item name="android:textColor">@color/DarkGreen</item>

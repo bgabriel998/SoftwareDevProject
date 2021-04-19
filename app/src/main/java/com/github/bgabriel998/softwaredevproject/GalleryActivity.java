@@ -6,7 +6,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,35 +29,37 @@ public class GalleryActivity extends AppCompatActivity {
 
     /**
      * Gets the recycler view and fills it up with all images.
-     * TODO images list should be paths instead.
      */
     private void setupGallery(){
-        RecyclerView recyclerView = findViewById(R.id.gallery_recyclerview);
+        List<String> imagePaths = getImagePaths();
+        if (!imagePaths.isEmpty()) {
+            findViewById(R.id.gallery_empty).setVisibility(View.GONE);
+        }
 
-        List<Integer> images = getImages();
-
-        GalleryAdapter galleryAdapter = new GalleryAdapter(this, images, image -> {
+        GalleryAdapter galleryAdapter = new GalleryAdapter(this, imagePaths, imagePath -> {
             Intent intent = new Intent(this, ImageActivity.class);
-            intent.putExtra("image", image);
+            intent.putExtra("imagePath", imagePath);
             startActivity(intent);
         });
 
+        RecyclerView recyclerView = findViewById(R.id.gallery_recyclerview);
         recyclerView.setLayoutManager(new GridLayoutManager(this, COLUMNS));
         recyclerView.setAdapter(galleryAdapter);
     }
 
     /**
-     * Retrieves all images and sends back a list of them.
-     * TODO Get all paths and send back a List<String>
-     * @return list of all images.
+     * Retrieves all paths the images and sends back a list of them.
+     * @return list of all image paths.
      */
-    private List<Integer> getImages(){
-        int numberOfTempImages = 20;
-        List<Integer> images = new ArrayList<>();
-        for (int i = 0; i < numberOfTempImages; i++) {
-            images.add(R.drawable.temp_camera);
+    private List<String> getImagePaths(){
+        List<String> imagePaths = new ArrayList<>();
+        File[] imgFiles = CameraActivity.getOutputDirectory(this).listFiles();
+        if (imgFiles != null)
+        {
+            for (File imgFile : imgFiles) {
+                imagePaths.add(imgFile.getPath());
+            }
         }
-
-        return images;
+        return imagePaths;
     }
 }

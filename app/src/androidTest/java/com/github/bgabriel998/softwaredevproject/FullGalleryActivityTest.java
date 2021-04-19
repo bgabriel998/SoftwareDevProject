@@ -1,40 +1,52 @@
 package com.github.bgabriel998.softwaredevproject;
 
-import android.app.Activity;
-
-import androidx.test.espresso.DataInteraction;
-import androidx.test.espresso.Espresso;
-import androidx.test.espresso.ViewInteraction;
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import java.util.Locale;
-
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
-import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static com.github.bgabriel998.softwaredevproject.UITestHelper.withDrawable;
+import static com.github.bgabriel998.softwaredevproject.UITestHelper.AddImageFile;
+import static com.github.bgabriel998.softwaredevproject.UITestHelper.ClearGallery;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.assertSame;
 
-public class GalleryActivityTest {
-
+/**
+ * Tests for a gallery activity with images
+ */
+@RunWith(AndroidJUnit4.class)
+public class FullGalleryActivityTest {
     @Rule
     public ActivityScenarioRule<GalleryActivity> testRule = new ActivityScenarioRule<>(GalleryActivity.class);
+
+    /* Fill gallery with images */
+    @BeforeClass
+    public static void fillGallery(){
+        for (int i = 0; i < 20; i++){
+            AddImageFile(String.format("TestImage%d", i));
+        }
+    }
+
+    /* Clear gallery */
+    @AfterClass
+    public static void removeGallery(){
+        ClearGallery();
+    }
 
     /* Create Intent */
     @Before
@@ -48,29 +60,21 @@ public class GalleryActivityTest {
         Intents.release();
     }
 
-    /* Test that the toolbar title is set as expected */
+    /* Test if that the gallery empty text is visible and contains correct text, when gallery is empty */
     @Test
-    public void TestToolbarTitle(){
-        String TOOLBAR_TITLE = "Gallery";
-        ViewInteraction greetingText = Espresso.onView(withId(R.id.toolbarTitle));
-        greetingText.check(matches(withText(TOOLBAR_TITLE)));
-    }
-
-    /* Test that the activity finishes when the toolbar back button is pressed. */
-    @Test
-    public void TestToolbarBackButton(){
-        onView(withId(R.id.toolbarBackButton)).perform(click());
-        assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
+    public void TestGalleryEmptyGone(){
+        onView(withId(R.id.gallery_empty)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
     }
 
     /* Test to scroll trough elements in recycler view and press last item, to see correct intent is sent */
     @Test
     public void TestPressLastItem(){
-        // TODO Redo test when actually using database.
+        String path = CameraActivity.getOutputDirectory(ApplicationProvider.getApplicationContext()) +
+                      "/TestImage19";
         onView(withId(R.id.gallery_recyclerview))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(19,
                         click()));
         intended(allOf(IntentMatchers.hasComponent(ImageActivity.class.getName()),
-                IntentMatchers.hasExtra("image", R.drawable.temp_camera)));
+                IntentMatchers.hasExtra("imagePath", path)));
     }
 }
