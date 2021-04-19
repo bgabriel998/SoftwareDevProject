@@ -168,6 +168,7 @@ public class FriendsActivityTest {
         Thread.sleep(1500);
 
         testRule.getScenario().recreate();
+        Thread.sleep(500);
 
         // Item at pos 0 looks like this
         FriendItem correctItem = new FriendItem(
@@ -178,6 +179,7 @@ public class FriendsActivityTest {
         // Get Item at pos 0 and click.
         DataInteraction listItem = onData(instanceOf(FriendItem.class)).atPosition(0);
         listItem.perform(ViewActions.click());
+        Thread.sleep(500);
 
         // Catch intent, and check information
         intended(allOf(IntentMatchers.hasComponent(FriendItemActivity.class.getName()),
