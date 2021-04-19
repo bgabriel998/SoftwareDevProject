@@ -49,26 +49,6 @@ import static org.junit.Assert.assertSame;
 public class FriendsActivityTest {
     private final static int FRIENDS_SIZE = 20;
 
-    // Helper method
-    public static ViewAction withCustomConstraints(final ViewAction action, final Matcher<View> constraints) {
-        return new ViewAction() {
-            @Override
-            public Matcher<View> getConstraints() {
-                return constraints;
-            }
-
-            @Override
-            public String getDescription() {
-                return action.getDescription();
-            }
-
-            @Override
-            public void perform(UiController uiController, View view) {
-                action.perform(uiController, view);
-            }
-        };
-    }
-
     /* Set up the environment */
     @BeforeClass
     public static void init() throws InterruptedException {
