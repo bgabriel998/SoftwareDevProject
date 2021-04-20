@@ -6,7 +6,7 @@ import androidx.core.util.Pair;
 import androidx.test.core.app.ApplicationProvider;
 
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.osmdroid.util.GeoPoint;
 
@@ -25,8 +25,8 @@ public class TopographyAsyncTest {
      * Download the topography map
      * @throws InterruptedException if any thread has interrupted the current thread
      */
-    @Before
-    public void setup() throws InterruptedException {
+    @BeforeClass
+    public static void setup() throws InterruptedException {
         Context mContext = ApplicationProvider.getApplicationContext();
 
         userPoint = new UserPoint(mContext);
