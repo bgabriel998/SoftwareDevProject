@@ -19,6 +19,13 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.stream.IntStream;
 
+/**
+ * DownloadTopographyTask is a async task that downloads the elevation map of the bounding box sorrounding the user.
+ * The Elevation map is retrieved using the OpenTopography API as an AAIGrid and then converted into
+ * an array of integers representing the height. Using the SRTMGL3 data a precision of 3 arc second
+ * (~90 meter) is obtained.
+ *
+ */
 public class DownloadTopographyTask extends AsyncTask<UserPoint, Void, Pair<int[][], Double>> implements DownloadTopographyTaskIF {
     static final int BOUNDING_BOX_RANGE = 20; //range of the bounding box in km
 
