@@ -5,7 +5,7 @@ import android.content.Context;
 import androidx.core.util.Pair;
 
 import com.github.ravifrancesco.softwaredevproject.DownloadTopographyTask;
-import com.github.ravifrancesco.softwaredevproject.LineOfSightAsync;
+import com.github.ravifrancesco.softwaredevproject.LineOfSight;
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
 import com.github.ravifrancesco.softwaredevproject.Point;
 import com.github.ravifrancesco.softwaredevproject.UserPoint;
@@ -60,7 +60,7 @@ public class ComputePOIPoints {
             @Override
             public void onResponseReceived(Pair<int[][], Double> topography) {
                 super.onResponseReceived(topography);
-                LineOfSightAsync lineOfSight = new LineOfSightAsync(topography, userPoint);
+                LineOfSight lineOfSight = new LineOfSight(topography, userPoint);
                 POIPointsLineOfSight = lineOfSight.getVisiblePointsLabeled(POIPoints);
             }
         }.execute(userPoint);

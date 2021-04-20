@@ -11,20 +11,14 @@ import com.github.ravifrancesco.softwaredevproject.Point;
 import com.github.ravifrancesco.softwaredevproject.UserPoint;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
-import org.osmdroid.bonuspack.location.POI;
-
-import java.util.ArrayList;
 
 import static java.lang.Double.NaN;
 import static org.junit.Assert.assertEquals;
 
 public class ComputePOIPointsTest {
-    private ComputePOIPoints computePOIPoints;
 
     @Rule
     public GrantPermissionRule grantCameraPermissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
