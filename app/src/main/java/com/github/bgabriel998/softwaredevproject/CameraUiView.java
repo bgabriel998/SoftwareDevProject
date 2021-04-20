@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * CompassView draws the compass on the display
  */
-public class CompassView extends View {
+public class CameraUiView extends View {
     //Paints used to draw the lines and heading of the compass on the camera-preview
     private Paint mainLinePaint;
     private Paint secondaryLinePaint;
@@ -88,7 +88,7 @@ public class CompassView extends View {
      * @param context Context of the activity on which the camera-preview is drawn
      * @param attrs AttributeSet so that the CompassView can be used from the xml directly
      */
-    public CompassView(Context context, AttributeSet attrs){
+    public CameraUiView(Context context, AttributeSet attrs){
         super(context, attrs);
 
         widgetInit();
@@ -407,11 +407,11 @@ public class CompassView extends View {
      * @return a bitmap of the compass-view
      */
     public Bitmap getBitmap(){
-        CompassView compassView = findViewById(R.id.compass);
-        compassView.setDrawingCacheEnabled(true);
-        compassView.buildDrawingCache();
-        Bitmap bitmap = Bitmap.createBitmap(compassView.getDrawingCache());
-        compassView.setDrawingCacheEnabled(false);
+        CameraUiView cameraUiView = findViewById(R.id.compass);
+        cameraUiView.setDrawingCacheEnabled(true);
+        cameraUiView.buildDrawingCache();
+        Bitmap bitmap = Bitmap.createBitmap(cameraUiView.getDrawingCache());
+        cameraUiView.setDrawingCacheEnabled(false);
         return bitmap;
     }
 }

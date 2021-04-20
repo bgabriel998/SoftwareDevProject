@@ -184,17 +184,17 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
     public void getCorrectOrientationString(){
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
-        CompassView compassView = new CompassView(context, null);
-        assertEquals(compassView.selectHeadingString(0), "N");
-        assertEquals(compassView.selectHeadingString(45), "NE");
-        assertEquals(compassView.selectHeadingString(90), "E");
-        assertEquals(compassView.selectHeadingString(135), "SE");
-        assertEquals(compassView.selectHeadingString(180), "S");
-        assertEquals(compassView.selectHeadingString(225), "SW");
-        assertEquals(compassView.selectHeadingString(270), "W");
-        assertEquals(compassView.selectHeadingString(315), "NW");
-        assertEquals(compassView.selectHeadingString(360), "N");
-        assertEquals(compassView.selectHeadingString(1), "");
+        CameraUiView cameraUiView = new CameraUiView(context, null);
+        assertEquals(cameraUiView.selectHeadingString(0), "N");
+        assertEquals(cameraUiView.selectHeadingString(45), "NE");
+        assertEquals(cameraUiView.selectHeadingString(90), "E");
+        assertEquals(cameraUiView.selectHeadingString(135), "SE");
+        assertEquals(cameraUiView.selectHeadingString(180), "S");
+        assertEquals(cameraUiView.selectHeadingString(225), "SW");
+        assertEquals(cameraUiView.selectHeadingString(270), "W");
+        assertEquals(cameraUiView.selectHeadingString(315), "NW");
+        assertEquals(cameraUiView.selectHeadingString(360), "N");
+        assertEquals(cameraUiView.selectHeadingString(1), "");
     }
 
     /**
