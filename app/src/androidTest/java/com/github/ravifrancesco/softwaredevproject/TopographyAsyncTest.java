@@ -76,30 +76,6 @@ public class TopographyAsyncTest {
     }
 
     /**
-     * Check that indexes for accessing the matrix are computed correctly
-     */
-    @Test
-    public void getIndexesTest() {
-
-        Context mContext = ApplicationProvider.getApplicationContext();
-
-        UserPoint userPoint = new UserPoint(mContext);
-        userPoint.setLocation(GPSTracker.DEFAULT_LAT, GPSTracker.DEFAULT_LON,GPSTracker.DEFAULT_ALT, GPSTracker.DEFAULT_ACC);
-
-        ElevationMap elevationMap = new ElevationMap(topographyPair, userPoint);
-
-        // check the indexes around the Everest Peak
-        Assert.assertEquals(new Pair<>(215, 244), elevationMap.getIndexesFromCoordinates(GPSTracker.DEFAULT_LAT, GPSTracker.DEFAULT_LON));
-
-        // set location near the Mont Blanc
-        userPoint.setLocation(45.802537, 6.850328, 0, 0);
-        elevationMap.updateElevationMatrix();
-
-        // check the indexes around the Mont Blanc Peak
-        Assert.assertEquals(new Pair<>(178, 326), elevationMap.getIndexesFromCoordinates(45.8326, 6.8652));
-    }
-
-    /**
      * Test that the map cell size is computed correctly
      */
     @Test
@@ -135,7 +111,7 @@ public class TopographyAsyncTest {
      * Checks if the altitude is calculated correctly and that the elevation map gets udated correctly
      */
     @Test
-    public void getAltitudeTest() throws InterruptedException {
+    public void getAltitudeAndIndexesTest() throws InterruptedException {
 
         Context mContext = ApplicationProvider.getApplicationContext();
 
@@ -148,6 +124,8 @@ public class TopographyAsyncTest {
         Assert.assertEquals(8849, elevationMap.getAltitudeAtLocation(GPSTracker.DEFAULT_LAT, GPSTracker.DEFAULT_LON), 200);
         // check the altitude around the Everest Peak using indexes
         Pair<Integer, Integer> indexes = elevationMap.getIndexesFromCoordinates(GPSTracker.DEFAULT_LAT, GPSTracker.DEFAULT_LON);
+        // check the indexes around the Everest Peak
+        Assert.assertEquals(new Pair<>(215, 244), indexes);
         Assert.assertNotNull(indexes);
         Assert.assertNotNull(indexes.first);
         Assert.assertNotNull(indexes.second);
@@ -170,6 +148,8 @@ public class TopographyAsyncTest {
         Assert.assertEquals(4808, elevationMap.getAltitudeAtLocation(45.8326, 6.8652), 200);
         // check the altitude around the Mont Blanc Peak using indexes
         indexes = elevationMap.getIndexesFromCoordinates(45.8326, 6.8652);
+        // check the indexes around the Mont Blanc Peak
+        Assert.assertEquals(new Pair<>(178, 326), indexes);
         Assert.assertNotNull(indexes);
         Assert.assertNotNull(indexes.first);
         Assert.assertNotNull(indexes.second);
