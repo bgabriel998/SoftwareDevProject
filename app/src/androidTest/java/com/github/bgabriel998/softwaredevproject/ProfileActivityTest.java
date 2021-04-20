@@ -76,9 +76,15 @@ public class ProfileActivityTest {
 
     /* Test that the activity finishes when the toolbar back button is pressed. */
     @Test
-    public void toolbarBackButtonTest(){
+    public void TestToolbarBackButton(){
         onView(withId(R.id.toolbarBackButton)).perform(click());
-        assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
+        try {
+            Thread.sleep(1000);
+            assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            fail("TestToolbarBackButton failed");
+        }
     }
 
     /* Test that if no account is signed the sign in button is visible */

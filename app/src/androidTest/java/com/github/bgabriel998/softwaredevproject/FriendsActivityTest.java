@@ -45,6 +45,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
 public class FriendsActivityTest {
     private final static int FRIENDS_SIZE = 20;
@@ -102,7 +103,13 @@ public class FriendsActivityTest {
     @Test
     public void TestToolbarBackButton(){
         onView(withId(R.id.toolbarBackButton)).perform(click());
-        assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
+        try {
+            Thread.sleep(1000);
+            assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            fail("TestToolbarBackButton failed");
+        }
     }
 
     /* Test that all elements in list view are at correct place and contains correct data */
