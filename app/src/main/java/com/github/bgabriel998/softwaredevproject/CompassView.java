@@ -18,6 +18,7 @@ import com.github.ravifrancesco.softwaredevproject.Point;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * CompassView draws the compass on the display
@@ -334,12 +335,9 @@ public class CompassView extends View {
      */
     private void drawLabeledPOIs(int actualDegree){
         //Go through all POIPoints
-        for(Map.Entry<POIPoint, Boolean> poiPoint : labeledPOIPoints.entrySet()){
-            int horizontalAngle = (int)ComputePOIPoints.getHorizontalBearing(userPoint, poiPoint.getKey());
-            if(horizontalAngle == actualDegree){
-                drawMountainMarker(poiPoint.getKey(), poiPoint.getValue(), actualDegree);
-            }
-        }
+        labeledPOIPoints.entrySet().stream()
+                .filter(p -> (int)ComputePOIPoints.getHorizontalBearing(userPoint, p.getKey()) == actualDegree)
+                        .forEach(p -> drawMountainMarker(p.getKey(), p.getValue(), actualDegree));
     }
 
     /**
