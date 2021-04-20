@@ -144,8 +144,7 @@ public class TopographyAsyncTest {
             counter++;
         }
 
-        // check the altitude around the Mont Blanc Peak using coordinates
-        Assert.assertEquals(4808, elevationMap.getAltitudeAtLocation(45.8326, 6.8652), 200);
+
         // check the altitude around the Mont Blanc Peak using indexes
         indexes = elevationMap.getIndexesFromCoordinates(45.8326, 6.8652);
         // check the indexes around the Mont Blanc Peak
@@ -154,6 +153,8 @@ public class TopographyAsyncTest {
         Assert.assertNotNull(indexes.first);
         Assert.assertNotNull(indexes.second);
         Assert.assertEquals(4808, elevationMap.getAltitudeAtLocation(indexes.first, indexes.second), 200);
+        // check the altitude around the Mont Blanc Peak using coordinates
+        Assert.assertEquals(4808, elevationMap.getAltitudeAtLocation(45.8326, 6.8652), 200);
     }
 
     /**
