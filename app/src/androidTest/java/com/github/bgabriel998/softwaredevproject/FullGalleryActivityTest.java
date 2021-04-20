@@ -70,7 +70,7 @@ public class FullGalleryActivityTest {
     @Test
     public void TestPressLastItem(){
         String path = CameraActivity.getOutputDirectory(ApplicationProvider.getApplicationContext()) +
-                      "/TestImage19";
+                      "/TestImage0";
         onView(withId(R.id.gallery_recyclerview))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(19,
                         click()));
