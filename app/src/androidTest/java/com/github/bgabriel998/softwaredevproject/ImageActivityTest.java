@@ -37,7 +37,7 @@ public class ImageActivityTest {
     static Intent intent;
     static {
         intent = new Intent(ApplicationProvider.getApplicationContext(), ImageActivity.class);
-        intent.putExtra("imagePath", imagePath);
+        intent.putExtra(ImageActivity.IMAGE_PATH_INTENT, imagePath);
     }
 
     /* Fill gallery with a image */
