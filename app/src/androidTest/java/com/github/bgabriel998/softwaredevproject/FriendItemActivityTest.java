@@ -19,6 +19,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
 public class FriendItemActivityTest {
 
@@ -46,7 +47,13 @@ public class FriendItemActivityTest {
     @Test
     public void TestToolbarBackButton(){
         onView(withId(R.id.toolbarBackButton)).perform(click());
-        assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
+        try {
+            Thread.sleep(1000);
+            assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            fail("TestToolbarBackButton failed");
+        }
     }
 
     /* Test that the points text is set as expected */

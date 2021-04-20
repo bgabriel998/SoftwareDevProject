@@ -1,6 +1,8 @@
 package com.github.bgabriel998.softwaredevproject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,20 +18,19 @@ import java.util.List;
  */
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
 
-    private final Context mContext;    
-    // TODO change to list of paths to images in folder
-    private final List<Integer> images;
+    private final Context mContext;
+    private final List<String> imagePaths;
     protected PhotoListener photoListener;
 
     /**
      * Constructor
      * @param mContext context to show images
-     * @param images list of all images that gallery should show
+     * @param imagePaths list of all images that gallery should show
      * @param photoListener interface with function that should get called when pressing imagethumbnail
      */
-    public GalleryAdapter(Context mContext, List<Integer> images, PhotoListener photoListener) {
+    public GalleryAdapter(Context mContext, List<String> imagePaths, PhotoListener photoListener) {
         this.mContext = mContext;
-        this.images = images;
+        this.imagePaths = imagePaths;
         this.photoListener = photoListener;
     }
 
@@ -49,18 +50,16 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
 
     /**
      * Overridden function to bind an image to image thumbnail.
-     * TODO take image from folder via path instead of image resource.
      * @param holder the layout to add the image to
      * @param position used to get correct image
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        int image = images.get(position);
+        String imagePath = imagePaths.get(position);
+        Bitmap imageBitmap = ImageActivity.getBitmapUpwards(imagePath);
 
-        holder.image.setImageResource(image);
-        //Glide.with(context).load(image).into(holder.image)
-
-        holder.itemView.setOnClickListener(v -> photoListener.onPhotoClick(image));
+        holder.image.setImageBitmap(imageBitmap);
+        holder.itemView.setOnClickListener(v -> photoListener.onPhotoClick(imagePath));
     }
 
     /**
@@ -69,7 +68,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
      */
     @Override
     public int getItemCount() {
-        return images.size();
+        return imagePaths.size();
     }
 
     /**
@@ -91,13 +90,12 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
 
     /**
      * Interface to be able to set function to be called when thumbnail is pressed.
-     * TODO Send path instead of int ID.
      */
     public interface PhotoListener {
         /**
          * Function that is called
-         * @param imageID to get the resource image.
+         * @param imagePath to get the image.
          */
-        void onPhotoClick(int imageID);
+        void onPhotoClick(String imagePath);
     }
 }

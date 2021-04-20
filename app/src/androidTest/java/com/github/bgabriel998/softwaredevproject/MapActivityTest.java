@@ -18,6 +18,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @RunWith(AndroidJUnit4.class)
 public class MapActivityTest {
@@ -37,6 +38,12 @@ public class MapActivityTest {
     @Test
     public void TestToolbarBackButton(){
         onView(withId(R.id.toolbarBackButton)).perform(click());
-        assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
+        try {
+            Thread.sleep(1000);
+            assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            fail("TestToolbarBackButton failed");
+        }
     }
 }

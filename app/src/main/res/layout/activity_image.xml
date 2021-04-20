@@ -10,6 +10,7 @@
         android:id="@+id/fullscreen_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingTop="80dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

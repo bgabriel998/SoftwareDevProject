@@ -80,4 +80,7 @@
     <string name="pictureTakenToast">Picture saved at: file:///storage/emulated/0/Android/media/com.github.bgabriel998.softwaredevproject/</string>
     <string name="pictureSavedFailed">Failed to take picture:</string>
     <string name="pictureSavedSuccessfully">Picture saved at:</string>
+
+    <!-- GALLERY TEXT -->
+    <string name="empty_gallery">Empty Gallery</string>
 </resources>
