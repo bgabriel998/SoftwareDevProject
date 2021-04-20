@@ -10,6 +10,7 @@ import android.view.View;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GalleryActivity extends AppCompatActivity {
@@ -38,7 +39,7 @@ public class GalleryActivity extends AppCompatActivity {
 
         GalleryAdapter galleryAdapter = new GalleryAdapter(this, imagePaths, imagePath -> {
             Intent intent = new Intent(this, ImageActivity.class);
-            intent.putExtra("imagePath", imagePath);
+            intent.putExtra(ImageActivity.IMAGE_PATH_INTENT, imagePath);
             startActivity(intent);
         });
 
@@ -54,12 +55,12 @@ public class GalleryActivity extends AppCompatActivity {
     private List<String> getImagePaths(){
         List<String> imagePaths = new ArrayList<>();
         File[] imgFiles = CameraActivity.getOutputDirectory(this).listFiles();
-        if (imgFiles != null)
-        {
+        if (imgFiles != null) {
             for (File imgFile : imgFiles) {
                 imagePaths.add(imgFile.getPath());
             }
         }
+        imagePaths.sort(Collections.reverseOrder());
         return imagePaths;
     }
 }
