@@ -17,6 +17,7 @@ import org.junit.Test;
 
 import static java.lang.Double.NaN;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class ComputePOIPointsTest {
 
@@ -79,5 +80,27 @@ public class ComputePOIPointsTest {
 
         verticalBearing = ComputePOIPoints.getVerticalBearing(userPoint, samePoint);
         assertEquals(NaN, verticalBearing, 1);
+    }
+
+    /**
+     * Test if ComputePOIPoints can get POIPoints and LabeledPOIPoints
+     * @throws InterruptedException if any thread has interrupted the current thread
+     */
+    @Test
+    public void getLabeledPOIPoints() throws InterruptedException {
+        Context mContext = ApplicationProvider.getApplicationContext();
+
+        new ComputePOIPoints(mContext);
+
+        int count=0;
+        //Wait for the map to be downloaded
+        while(count<20 && ComputePOIPoints.labeledPOIPoints==null){
+            Thread.sleep(1000);
+            count++;
+        }
+
+        //Check that POIPoints and labeledPOIPoints are not null
+        assertNotNull(ComputePOIPoints.POIPoints);
+        assertNotNull(ComputePOIPoints.labeledPOIPoints);
     }
 }

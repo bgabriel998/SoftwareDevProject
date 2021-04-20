@@ -31,19 +31,20 @@ public class ElevationMap {
     private POIPoint boundingBoxCenter;
 
     private static int[][] topographyMap;
-    private final double mapCellSize;
+    private static double mapCellSize;
 
     /**
      * Constructor for the ElevationMap.
      *
      * @param userPoint the user point around which the bounding box is computed.
      */
+    @SuppressWarnings("ConstantConditions")
     public ElevationMap(Pair<int[][], Double> topography, UserPoint userPoint) {
         this.userPoint = userPoint;
         this.boundingBox = userPoint.computeBoundingBox(BOUNDING_BOX_RANGE);
         this.boundingBoxCenter = new POIPoint(this.boundingBox.getCenterWithDateLine());
         topographyMap = topography.first;
-        this.mapCellSize = topography.second;
+        mapCellSize = topography.second;
     }
 
     /**
@@ -52,10 +53,12 @@ public class ElevationMap {
      */
     private static void downloadTopographyMap(UserPoint userPoint) {
         new DownloadTopographyTask(){
+            @SuppressWarnings("ConstantConditions")
             @Override
             public void onResponseReceived(androidx.core.util.Pair<int[][], Double> topography) {
                 super.onResponseReceived(topography);
                 topographyMap = topography.first;
+                mapCellSize = topography.second;
             }
         }.execute(userPoint);
     }
@@ -66,10 +69,8 @@ public class ElevationMap {
      * @return  an int[][] array representing the elevation map.
      */
     public int[][] getTopographyMap() {
-
         updateElevationMatrix();
         return topographyMap;
-
     }
 
     /**
