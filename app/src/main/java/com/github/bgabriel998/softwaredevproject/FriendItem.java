@@ -1,13 +1,21 @@
 package com.github.bgabriel998.softwaredevproject;
 
+import com.github.giommok.softwaredevproject.Database;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Objects;
+
 /**
  * Item holding user attributes
  * used to fill friends list.
  */
 public class FriendItem {
-    private String uid;
+    private final String uid;
     private String username;
     private int points;
+    private final DatabaseReference dbRef;
+    private ValueEventListener itemListener;
 
     /**
      * Constructor
@@ -19,6 +27,7 @@ public class FriendItem {
         this.uid = uid;
         this.username = username;
         this.points = points;
+        this.dbRef = Database.refRoot.child(Database.CHILD_USERS + uid);
     }
 
     /**
@@ -30,6 +39,13 @@ public class FriendItem {
     }
 
     /**
+     * Setter of the friend item username
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    /**
      * Getter of the friend item user points
      * @return points of the user
      */
@@ -38,8 +54,43 @@ public class FriendItem {
     }
 
     /**
+     * Setter of the friend item points
+     */
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    /**
+     * Getter of the friend item UId
+     */
+    public String getUid() {
+        return uid;
+    }
+
+    /**
+     * Getter of the friend item DB reference
+     */
+    public DatabaseReference getDbRef() {
+        return dbRef;
+    }
+
+    /**
+     * Set the listener of a friend item that will update the fields on DB changes
+     */
+    public void setListener(ValueEventListener listener) {
+        itemListener = listener;
+        dbRef.addValueEventListener(itemListener);
+    }
+
+    /**
+     * Remove the listener. Call this method when the friend item will not be used anymore
+     */
+    public void removeListener() {
+        dbRef.removeEventListener(itemListener);
+    }
+
+    /**
      * Check if a friend item has a specific username
-     * @param username
      * @return true if the user has the target username, false otherwise
      */
     public boolean hasUsername(String username) {

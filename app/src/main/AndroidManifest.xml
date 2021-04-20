@@ -21,6 +21,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:remove="android:appComponentFactory">
+        <activity android:name=".FriendItemActivity"/>
+        <activity android:name=".FriendsActivity"/>
         <activity android:name=".ImageActivity"/>
         <activity android:name=".GalleryActivity" />
         <activity android:name=".CameraActivity" />

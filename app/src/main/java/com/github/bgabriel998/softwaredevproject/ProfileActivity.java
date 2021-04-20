@@ -76,8 +76,6 @@ public class ProfileActivity extends AppCompatActivity {
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        // TODO MOVE TO MAIN MENU ACTIVITY
-        FirebaseApp.initializeApp(this);
     }
 
     /**
@@ -136,6 +134,7 @@ public class ProfileActivity extends AppCompatActivity {
             Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.available_username , Snackbar.LENGTH_LONG);
             snackbar.show();
             setUI();
+            ((EditText)editTextUsername).getText().clear();
         });
     }
 
@@ -200,6 +199,8 @@ public class ProfileActivity extends AppCompatActivity {
                         Database.setChild(Database.CHILD_USERS + account.getId() + Database.CHILD_FRIENDS, Collections.singletonList(friendUid), Collections.singletonList(""));
                         Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.friend_added, Snackbar.LENGTH_LONG);
                         snackbar.show();
+                        setUI();
+                        ((EditText)editTextFriend).getText().clear();
                     }
                 }
                 else {
@@ -219,7 +220,8 @@ public class ProfileActivity extends AppCompatActivity {
      * @param view
      */
     public void friendsButton(View view) {
-        // TODO start friends activity when implemented
+        Intent intent = new Intent(this, FriendsActivity.class);
+        startActivity(intent);
     }
 
     @Override
