@@ -197,6 +197,20 @@ public class CompassView extends View {
     }
 
     /**
+     * Set the POIs that will be drawn on the camera-preview
+     * @param POIPoints List of POIPoints
+     * @param labeledPOIPoints Map of the POIPoints with the line of sight boolean
+     * @param userPoint location of the user
+     */
+    public void setPOIs(List<POIPoint> POIPoints, Map<POIPoint, Boolean> labeledPOIPoints, Point userPoint){
+        this.POIPoints = POIPoints;
+        this.labeledPOIPoints = labeledPOIPoints;
+        this.userPoint = userPoint;
+        invalidate();
+        requestLayout();
+    }
+
+    /**
      * onDraw method is used to draw the compass on the screen.
      * To draw the compass, 3 different types of lines are used, mainLinePaint, secondaryLinePaint
      * and terciaryLinePaint. The compass is drawn by going through a for-loop starting from minDegree
@@ -244,16 +258,7 @@ public class CompassView extends View {
             drawCompass(i);
 
             //Draw the mountains on the canvas
-            if(labeledPOIPoints != null && !labeledPOIPoints.isEmpty()){
-                drawLabeledPOIs(i);
-            }
-            else if(POIPoints != null && !POIPoints.isEmpty()){
-                drawPOIs(i);
-                labeledPOIPoints = ComputePOIPoints.POIPointsLineOfSight;
-            }
-            else{
-                POIPoints = ComputePOIPoints.POIPoints;
-            }
+            drawMountains(i);
         }
     }
 
@@ -300,17 +305,22 @@ public class CompassView extends View {
     }
 
     /**
-     * Set the POIs that will be drawn on the camera-preview
-     * @param POIPoints List of POIPoints
-     * @param labeledPOIPoints Map of the POIPoints with the line of sight boolean
-     * @param userPoint location of the user
+     * Selects which source needs to be used and then calls either {@link #drawLabeledPOIs(int)}
+     * if the map has been downloaded, {@link #drawPOIs(int)} if the map has not been downloaded
+     * but the POIPoints are already available or checks if the POIPoints are available.
+     * @param i The degree for which the mountains need to be drawn
      */
-    public void setPOIs(List<POIPoint> POIPoints, Map<POIPoint, Boolean> labeledPOIPoints, Point userPoint){
-        this.POIPoints = POIPoints;
-        this.labeledPOIPoints = labeledPOIPoints;
-        this.userPoint = userPoint;
-        invalidate();
-        requestLayout();
+    private void drawMountains(int i){
+        if(labeledPOIPoints != null && !labeledPOIPoints.isEmpty()){
+            drawLabeledPOIs(i);
+        }
+        else if(POIPoints != null && !POIPoints.isEmpty()){
+            drawPOIs(i);
+            labeledPOIPoints = ComputePOIPoints.POIPointsLineOfSight;
+        }
+        else{
+            POIPoints = ComputePOIPoints.POIPoints;
+        }
     }
 
     /**
