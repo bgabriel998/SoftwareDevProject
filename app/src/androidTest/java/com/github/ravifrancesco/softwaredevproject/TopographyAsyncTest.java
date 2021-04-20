@@ -139,7 +139,7 @@ public class TopographyAsyncTest {
 
         //Wait for the map to be updated
         int counter=0;
-        while(elevationMap.getTopographyMap()==oldTopographyMap && counter<40){
+        while(elevationMap.getTopographyMap()==oldTopographyMap && counter<50){
             Thread.sleep(1000);
             counter++;
         }
