@@ -97,7 +97,7 @@ public class CameraActivity extends AppCompatActivity{
         compass.setListener(compassListener);
 
         //Set the POIs for the compass
-        compassView.setPOIs(ComputePOIPoints.POIPoints, ComputePOIPoints.POIPointsLineOfSight, ComputePOIPoints.userPoint);
+        compassView.setPOIs(ComputePOIPoints.POIPoints, ComputePOIPoints.labeledPOIPoints, ComputePOIPoints.userPoint);
     }
 
     /**

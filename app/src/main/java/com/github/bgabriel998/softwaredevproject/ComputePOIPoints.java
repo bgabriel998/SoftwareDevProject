@@ -16,9 +16,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Requests the POIPoints around the user location and then downloads the topography map once the
+ * POIPoints are available.
+ *
+ * To use, simply call ComputePOIPoints.POIPoints to get a List of POIPoints or
+ * ComputePOIPoints to get a map with the POIPoints as keys and a boolean indicating if the POIPoint
+ * is visible or not. If no points are available or if they are not computed yet, they will be null
+ */
 public class ComputePOIPoints {
     public static List<POIPoint> POIPoints;
-    public static Map<POIPoint, Boolean> POIPointsLineOfSight;
+    public static Map<POIPoint, Boolean> labeledPOIPoints;
     public static UserPoint userPoint;
 
     /**
@@ -61,7 +69,7 @@ public class ComputePOIPoints {
             public void onResponseReceived(Pair<int[][], Double> topography) {
                 super.onResponseReceived(topography);
                 LineOfSight lineOfSight = new LineOfSight(topography, userPoint);
-                POIPointsLineOfSight = lineOfSight.getVisiblePointsLabeled(POIPoints);
+                labeledPOIPoints = lineOfSight.getVisiblePointsLabeled(POIPoints);
             }
         }.execute(userPoint);
     }

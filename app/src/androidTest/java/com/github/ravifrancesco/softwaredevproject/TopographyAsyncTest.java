@@ -144,7 +144,6 @@ public class TopographyAsyncTest {
             counter++;
         }
 
-
         // check the altitude around the Mont Blanc Peak using indexes
         indexes = elevationMap.getIndexesFromCoordinates(45.8326, 6.8652);
         // check the indexes around the Mont Blanc Peak

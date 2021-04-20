@@ -18,7 +18,6 @@ import com.github.ravifrancesco.softwaredevproject.Point;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 /**
  * CompassView draws the compass on the display
@@ -306,19 +305,24 @@ public class CompassView extends View {
 
     /**
      * Selects which source needs to be used and then calls either {@link #drawLabeledPOIs(int)}
-     * if the map has been downloaded, {@link #drawPOIs(int)} if the map has not been downloaded
-     * but the POIPoints are already available or checks if the POIPoints are available.
+     * if the map has been downloaded to check if the POIPoint is in the line of sight or not,
+     * {@link #drawPOIs(int)} if the map has not been downloaded but the POIPoints are already
+     * available or checks if the POIPoints are available.
      * @param i The degree for which the mountains need to be drawn
      */
     private void drawMountains(int i){
         if(labeledPOIPoints != null && !labeledPOIPoints.isEmpty()){
+            //Draw the labeled POIs depending on their visibility
             drawLabeledPOIs(i);
         }
         else if(POIPoints != null && !POIPoints.isEmpty()){
+            //Draw all POIPoints as not visible since the map has not been downloaded
             drawPOIs(i);
-            labeledPOIPoints = ComputePOIPoints.POIPointsLineOfSight;
+            //Update the labeledPOIPoints
+            labeledPOIPoints = ComputePOIPoints.labeledPOIPoints;
         }
         else{
+            //Update the POIPoints
             POIPoints = ComputePOIPoints.POIPoints;
         }
     }
