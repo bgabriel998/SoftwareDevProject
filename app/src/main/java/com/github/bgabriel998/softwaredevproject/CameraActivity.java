@@ -2,7 +2,6 @@ package com.github.bgabriel998.softwaredevproject;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -15,16 +14,11 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 
-import com.github.ravifrancesco.softwaredevproject.LineOfSight;
-import com.github.ravifrancesco.softwaredevproject.POIPoint;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class CameraActivity extends AppCompatActivity{
 
@@ -36,8 +30,6 @@ public class CameraActivity extends AppCompatActivity{
     private TextView fovHorizontal;
     private TextView fovVertical;
     private Compass compass;
-    private ComputePOIPoints computePOIPoints;
-    private LineOfSight lineOfSight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,10 +62,6 @@ public class CameraActivity extends AppCompatActivity{
 
         //Create camera preview on the previewView
         cameraPreview = (CameraPreview) getSupportFragmentManager().findFragmentById(R.id.fragment_camera);
-
-        //Request the POIpoints
-        computePOIPoints = new ComputePOIPoints(this);
-
 
         //Setup the compass
         startCompass();
@@ -109,7 +97,7 @@ public class CameraActivity extends AppCompatActivity{
         compass.setListener(compassListener);
 
         //Set the POIs for the compass
-        compassView.setPOIs(ComputePOIPoints.POIPoints, ComputePOIPoints.POIPointsLineOfSight, computePOIPoints.userPoint);
+        compassView.setPOIs(ComputePOIPoints.POIPoints, ComputePOIPoints.POIPointsLineOfSight, ComputePOIPoints.userPoint);
     }
 
     /**

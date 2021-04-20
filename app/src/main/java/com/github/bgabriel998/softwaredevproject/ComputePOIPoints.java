@@ -19,7 +19,7 @@ import java.util.Map;
 public class ComputePOIPoints {
     public static List<POIPoint> POIPoints;
     public static Map<POIPoint, Boolean> POIPointsLineOfSight;
-    public UserPoint userPoint;
+    public static UserPoint userPoint;
 
     /**
      * Constructor of ComputePOIPoints, updates userPoint and gets the POIs for the userPoint
@@ -100,8 +100,11 @@ public class ComputePOIPoints {
         Point apGeodetic = ap.second;
         Point bpGeocentric = bp.first;
 
+        assert bpGeocentric != null;
+        assert apGeocentric != null;
         Point bma = normalizeVectorDiff(bpGeocentric, apGeocentric);
 
+        assert apGeodetic != null;
         double delta = bma.getLatitude() * apGeodetic.getLatitude() +
                 bma.getLongitude() * apGeodetic.getLongitude() + bma.getAltitude() * apGeodetic.getAltitude();
 

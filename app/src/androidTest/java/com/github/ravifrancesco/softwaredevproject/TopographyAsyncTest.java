@@ -45,6 +45,7 @@ public class TopographyAsyncTest {
             counter++;
         }
         counter=0;
+        Assert.assertNotNull(topographyPair);
         while(topographyPair.first==null && counter<20){
             Thread.sleep(1000);
             counter++;
@@ -90,6 +91,9 @@ public class TopographyAsyncTest {
         Assert.assertEquals(8849, elevationMap.getAltitudeAtLocation(GPSTracker.DEFAULT_LAT, GPSTracker.DEFAULT_LON), 200);
         // check the altitude around the Everest Peak using indexes
         Pair<Integer, Integer> indexes = elevationMap.getIndexesFromCoordinates(GPSTracker.DEFAULT_LAT, GPSTracker.DEFAULT_LON);
+        Assert.assertNotNull(indexes);
+        Assert.assertNotNull(indexes.first);
+        Assert.assertNotNull(indexes.second);
         Assert.assertEquals(8849, elevationMap.getAltitudeAtLocation(indexes.first, indexes.second), 200);
 
         int[][] oldTopographyMap = topographyPair.first;
@@ -109,6 +113,9 @@ public class TopographyAsyncTest {
         Assert.assertEquals(4808, elevationMap.getAltitudeAtLocation(45.8326, 6.8652), 200);
         // check the altitude around the Mont Blanc Peak using indexes
         indexes = elevationMap.getIndexesFromCoordinates(45.8326, 6.8652);
+        Assert.assertNotNull(indexes);
+        Assert.assertNotNull(indexes.first);
+        Assert.assertNotNull(indexes.second);
         Assert.assertEquals(4808, elevationMap.getAltitudeAtLocation(indexes.first, indexes.second), 200);
     }
 
