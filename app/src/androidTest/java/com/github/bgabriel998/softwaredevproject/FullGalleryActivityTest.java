@@ -75,6 +75,6 @@ public class FullGalleryActivityTest {
                 .perform(RecyclerViewActions.actionOnItemAtPosition(19,
                         click()));
         intended(allOf(IntentMatchers.hasComponent(ImageActivity.class.getName()),
-                IntentMatchers.hasExtra("imagePath", path)));
+                IntentMatchers.hasExtra(ImageActivity.IMAGE_PATH_INTENT, path)));
     }
 }
