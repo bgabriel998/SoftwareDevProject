@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.preference.PreferenceManager;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
@@ -13,13 +12,12 @@ import androidx.core.content.res.ResourcesCompat;
 
 import com.github.giommok.softwaredevproject.FirebaseAccount;
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
+
 import org.osmdroid.api.IMapController;
-import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
@@ -90,8 +88,8 @@ public class OSMMap {
      * Scan the list of discovered POIs and add a marker on the map for each of them
      * if the user account is invalid, no peaks are displayed
      */
-    public void setMarkersForDiscoveredPeaks(FirebaseAccount userAccount){
-        if(userAccount.isSignedIn()) {
+    public void setMarkersForDiscoveredPeaks(FirebaseAccount userAccount, boolean isSignedIn){
+        if(isSignedIn) {
             HashSet<POIPoint> discoveredPeaks = userAccount.getDiscoveredPeaks();
             List<String> countryHighPointsName = userAccount.getDiscoveredCountryHighPointNames();
             //iterate over all POI
@@ -116,7 +114,7 @@ public class OSMMap {
             setZoomBoundingBox(userAccount);
         }
         else{
-            Toast toast= Toast.makeText(context,context.getString(R.string.toast_no_account),Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(context,context.getString(R.string.toast_no_account),Toast.LENGTH_LONG);
             toast.show();
         }
     }

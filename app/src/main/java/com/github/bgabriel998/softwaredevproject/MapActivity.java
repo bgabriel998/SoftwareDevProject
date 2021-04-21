@@ -1,24 +1,10 @@
 package com.github.bgabriel998.softwaredevproject;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
-
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
-import com.github.giommok.softwaredevproject.FirebaseAccount;
-import com.github.ravifrancesco.softwaredevproject.POIPoint;
+import androidx.appcompat.app.AppCompatActivity;
 
-import org.osmdroid.api.IMapController;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.Marker;
-import org.osmdroid.views.overlay.infowindow.InfoWindow;
-import java.util.HashSet;
-import java.util.List;
+import com.github.giommok.softwaredevproject.FirebaseAccount;
 
 public class MapActivity extends AppCompatActivity {
 
@@ -34,9 +20,10 @@ public class MapActivity extends AppCompatActivity {
         //Get user account
         FirebaseAccount account = FirebaseAccount.getAccount();
         //Display markers on the map
-        osmMap.setMarkersForDiscoveredPeaks(account);
+        osmMap.setMarkersForDiscoveredPeaks(account,account.isSignedIn());
 
         osmMap.displayUserLocation();
+
     }
 }
 

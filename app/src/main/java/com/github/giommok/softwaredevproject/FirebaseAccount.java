@@ -110,7 +110,7 @@ public class FirebaseAccount implements Account {
     @Override
     public String getId() {
         if(isSignedIn()) return FirebaseAuth.getInstance().getCurrentUser().getUid();
-        return "null";
+        return "null/";
     }
 
     @Override
