@@ -11,24 +11,16 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
-import org.osmdroid.bonuspack.location.POI;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 /* Singleton class containing the only possible account connected */
@@ -110,7 +102,7 @@ public class FirebaseAccount implements Account {
     @Override
     public String getId() {
         if(isSignedIn()) return FirebaseAuth.getInstance().getCurrentUser().getUid();
-        return "null/";
+        return "null";
     }
 
     @Override

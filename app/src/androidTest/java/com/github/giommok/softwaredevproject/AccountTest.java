@@ -5,9 +5,8 @@ import android.net.Uri;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.google.firebase.auth.FirebaseAuth;
-
-
 import com.google.firebase.database.DatabaseReference;
+
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -15,10 +14,11 @@ import org.junit.runner.RunWith;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class AccountTest {
@@ -54,11 +54,11 @@ public class AccountTest {
 
         assertFalse(account.isSignedIn());
         assertTrue(account.getFriends().isEmpty());
-        assertEquals(account.getDisplayName(), "null");
-        assertEquals(account.getEmail(), "null");
-        assertEquals(account.getId(), "null");
-        assertEquals(account.getProviderId(), "null");
-        assertEquals(account.getPhotoUrl(), Uri.EMPTY);
+        assertEquals("null", account.getDisplayName());
+        assertEquals("null", account.getEmail());
+        assertEquals("null", account.getId());
+        assertEquals("null", account.getProviderId());
+        assertEquals(Uri.EMPTY, account.getPhotoUrl());
     }
 
     /**
