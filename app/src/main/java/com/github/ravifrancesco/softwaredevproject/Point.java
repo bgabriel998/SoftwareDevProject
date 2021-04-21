@@ -16,6 +16,9 @@ import androidx.core.util.Pair;
 public class Point {
 
     final static double EARTH_RADIUS = 6378137; // value in meters
+    private final double POLAR_RADIUS_EARTH = 6356752.3; //in meters
+    private final double ECCENTRICITY_SQUARED = 0.00669437999014; //in meters
+
 
     protected double latitude;
     protected double longitude;
@@ -243,9 +246,10 @@ public class Point {
     }
 
     /**
-     * Compute the location to the point
+     * Converts a Point of geodetic coordinate system to a geocentric coordinate system
      * @param c Point that gets computed
-     * @return new Point with computed location
+     * @return Pair<Point, Point></> the first point represents the geocentric point and the second
+     * Point the normal vector from the surface.
      */
     private Pair<Point, Point> locationToPoint(Point c){
         // Convert (lat, lon, elv) to (x, y, z).
@@ -288,14 +292,12 @@ public class Point {
      * @return Radius of the earth in meters
      */
     private double earthRadiusInMeters(double latitudeRadians){
-        double a = 6378137.0;  // equatorial radius in meters
-        double b = 6356752.3;  // polar radius in meters
         double cos = Math.cos (latitudeRadians);
         double sin = Math.sin (latitudeRadians);
-        double t1 = a * a * cos;
-        double t2 = b * b * sin;
-        double t3 = a * cos;
-        double t4 = b * sin;
+        double t1 = EARTH_RADIUS * EARTH_RADIUS * cos;
+        double t2 = POLAR_RADIUS_EARTH * POLAR_RADIUS_EARTH * sin;
+        double t3 = EARTH_RADIUS * cos;
+        double t4 = POLAR_RADIUS_EARTH * sin;
         return Math.sqrt ((t1*t1 + t2*t2) / (t3*t3 + t4*t4));
     }
 
@@ -307,8 +309,7 @@ public class Point {
      * @return Converted latitude in radian to geocentric latitude
      */
     private double geocentricLatitude(double lat){
-        double e2 = 0.00669437999014;
-        return Math.atan((1.0 - e2) * Math.tan(lat));
+        return Math.atan((1.0 - ECCENTRICITY_SQUARED) * Math.tan(lat));
     }
 
 }
