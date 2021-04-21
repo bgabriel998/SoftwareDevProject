@@ -41,6 +41,8 @@
     <string name='friend_already_added'>The user is already your friend.</string>
     <string name='friend_not_present_db'>The user does not exists.</string>
     <string name='friend_added'>Friend added!</string>
+    <string name="friend_removed">is no longer your friend.</string>
+
 
     <!-- RANKINGS HEADER -->
     <string name="header_position">Pos</string>
@@ -56,6 +58,7 @@
     <string name="description_camera_button">Camera Button</string>
     <string name="description_profile_button">Profile Button</string>
     <string name="description_settings_button">Settings Button</string>
+    <string name='description_remove_friend_button'>Remove friend button</string>
     <string name="description_icon">Peak AR Icon</string>
     <string name="description_collected_image">Photo over collected mountain</string>
     <string name="description_gallery_image">Gallery image</string>
@@ -79,8 +82,13 @@
     <string name="pictureSavedFailed">Failed to take picture:</string>
     <string name="pictureSavedSuccessfully">Picture saved at:</string>
 
+
     <!-- MAP MARKERS STRINGS -->
     <string name="marker_altitude">Altitude: %s m</string>
     <!-- MAP TOAST STRINGS -->
     <string name="toast_no_account">You are not logged in: no markers can be displayed</string>
+
+    <!-- GALLERY TEXT -->
+    <string name="empty_gallery">Empty Gallery</string>
+
 </resources>

@@ -4,9 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 
 import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
-import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.espresso.matcher.RootMatchers;
@@ -82,8 +80,6 @@ public class MainMenuActivityTest {
     /**
      * Test that the AlertDialog pops up and that the cameraPermission gets requested when the method
      * requestCameraPermission is executed.
-     * @Note I was not able to test permissions at runtime with espresso so I have to execute the method
-     * that gets called when the permission is not granted directly.
      */
     @Test
     public void cameraPermissionRequested() throws NoSuchMethodException {

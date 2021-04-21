@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 
 
-public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> implements GeonamesHandlerIF{
+public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>> implements GeonamesHandlerIF{
 
     //Query Constants
     private static final int DEFAULT_RANGE_IN_KM = 20;
@@ -107,14 +107,14 @@ public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> impl
     }
     /**
      * filterPOI : filter out point of interest list. The result list contains only peaks
-     * @param o list containing all points of interests around Geopoint
+     * @param pois list containing all points of interests around Geopoint
     */
     @Override
-    protected void onPostExecute(Object o) {
-        super.onPostExecute(o);
-        if(o != null) {
+    protected void onPostExecute(ArrayList<POI> pois) {
+        super.onPostExecute(pois);
+        if(pois != null) {
             //Filter out POI where the name or altitude is null
-            POIs = ((ArrayList<POI>) o).stream().filter(point -> point.mType != null && point.mLocation.getAltitude() != 0).collect(Collectors.toCollection(ArrayList::new));
+            POIs = ((ArrayList<POI>) pois).stream().filter(point -> point.mType != null && point.mLocation.getAltitude() != 0).collect(Collectors.toCollection(ArrayList::new));
             onResponseReceived(POIs);
         }
         else onResponseReceived(null);
@@ -122,11 +122,11 @@ public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> impl
 
     /**
      * returns the query result
-     * @param objects nothing
+     * @param voids nothing
      * @return list of POI
      */
     @Override
-    protected Object doInBackground(Object[] objects) {
+    protected ArrayList<POI> doInBackground(Void... voids) {
         ArrayList<POI> resList = null;
 
         while(this.retryNbr<= DEFAULT_NUMBER_OF_RETRY){
@@ -238,5 +238,5 @@ public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> impl
      * Callback function called when POI list is received
      * @param result ArrayList containing POI
      */
-    public abstract void onResponseReceived(Object result);
+    public abstract void onResponseReceived(ArrayList<POI> result);
 }
