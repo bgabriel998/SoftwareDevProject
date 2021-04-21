@@ -78,9 +78,7 @@ public class CameraUiView extends View {
 
     //List that contains the POIPoints
     private List<POIPoint> POIPoints;
-
-    //Corresponds to the location of the user
-    private Point userPoint;
+    //Map that contains the labeled POIPoints
     private Map<POIPoint, Boolean> labeledPOIPoints;
 
     /**
@@ -199,12 +197,10 @@ public class CameraUiView extends View {
      * Set the POIs that will be drawn on the camera-preview
      * @param POIPoints List of POIPoints
      * @param labeledPOIPoints Map of the POIPoints with the line of sight boolean
-     * @param userPoint location of the user
      */
-    public void setPOIs(List<POIPoint> POIPoints, Map<POIPoint, Boolean> labeledPOIPoints, Point userPoint){
+    public void setPOIs(List<POIPoint> POIPoints, Map<POIPoint, Boolean> labeledPOIPoints){
         this.POIPoints = POIPoints;
         this.labeledPOIPoints = labeledPOIPoints;
-        this.userPoint = userPoint;
         invalidate();
         requestLayout();
     }
@@ -335,8 +331,7 @@ public class CameraUiView extends View {
     private void drawPOIs(int actualDegree){
         //Go through all POIPoints
         for(POIPoint poiPoint : POIPoints){
-            int horizontalAngle = (int)ComputePOIPoints.getHorizontalBearing(userPoint, poiPoint);
-            if(horizontalAngle == actualDegree){
+            if((int)poiPoint.getHorizontalBearing() == actualDegree){
                 drawMountainMarker(poiPoint, false, actualDegree);
             }
         }
@@ -350,7 +345,7 @@ public class CameraUiView extends View {
     private void drawLabeledPOIs(int actualDegree){
         //Go through all POIPoints
         labeledPOIPoints.entrySet().stream()
-                .filter(p -> (int)ComputePOIPoints.getHorizontalBearing(userPoint, p.getKey()) == actualDegree)
+                .filter(p -> (int)p.getKey().getHorizontalBearing() == actualDegree)
                         .forEach(p -> drawMountainMarker(p.getKey(), p.getValue(), actualDegree));
     }
 
@@ -362,7 +357,7 @@ public class CameraUiView extends View {
      */
     private void drawMountainMarker(POIPoint poiPoint, Boolean isVisible, int actualDegree){
         //Use both results and substract the actual vertical heading
-        float deltaVerticalAngle = (float) (ComputePOIPoints.getVerticalBearing(userPoint, poiPoint) - verticalDegrees);
+        float deltaVerticalAngle = (float) (poiPoint.getVerticalBearing() - verticalDegrees);
 
         //Calculate position in Pixel to display the mountainMarker
         float mountainMarkerPosition = height * (rangeDegreesVertical - 2*deltaVerticalAngle) / (2*rangeDegreesVertical)

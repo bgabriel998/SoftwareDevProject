@@ -6,7 +6,6 @@ import android.content.Context;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.rule.GrantPermissionRule;
-
 import com.github.ravifrancesco.softwaredevproject.Point;
 import com.github.ravifrancesco.softwaredevproject.UserPoint;
 
@@ -49,13 +48,13 @@ public class ComputePOIPointsTest {
         Point southPoint = new Point(userPoint.getLatitude() - 1, userPoint.getLongitude(), userPoint.getAltitude());
         Point westPoint = new Point(userPoint.getLatitude(), userPoint.getLongitude() - 1, userPoint.getAltitude());
 
-        double horizontalBearing = ComputePOIPoints.getHorizontalBearing(userPoint, northPoint);
+        double horizontalBearing = northPoint.setHorizontalBearing(userPoint);
         assertEquals(0, horizontalBearing, 1);
-        horizontalBearing = ComputePOIPoints.getHorizontalBearing(userPoint, eastPoint);
+        horizontalBearing = eastPoint.setHorizontalBearing(userPoint);
         assertEquals(90, horizontalBearing, 1);
-        horizontalBearing = ComputePOIPoints.getHorizontalBearing(userPoint, southPoint);
+        horizontalBearing = southPoint.setHorizontalBearing(userPoint);
         assertEquals(180, horizontalBearing, 1);
-        horizontalBearing = ComputePOIPoints.getHorizontalBearing(userPoint, westPoint);
+        horizontalBearing = westPoint.setHorizontalBearing(userPoint);
         assertEquals(270, horizontalBearing, 1);
     }
 
@@ -69,16 +68,16 @@ public class ComputePOIPointsTest {
         Point sameHeight = new Point(userPoint.getLatitude()+0.1, userPoint.getLongitude(), userPoint.getAltitude());
         Point samePoint = new Point(userPoint.getLatitude(), userPoint.getLongitude(), userPoint.getAltitude());
 
-        double verticalBearing = ComputePOIPoints.getVerticalBearing(userPoint, above);
+        double verticalBearing = above.setVerticalBearing(userPoint);
         assertEquals(180, verticalBearing, 1);
 
-        verticalBearing = ComputePOIPoints.getVerticalBearing(userPoint, below);
+        verticalBearing = below.setVerticalBearing(userPoint);
         assertEquals(0, verticalBearing, 1);
 
-        verticalBearing = ComputePOIPoints.getVerticalBearing(userPoint, sameHeight);
+        verticalBearing = sameHeight.setVerticalBearing(userPoint);
         assertEquals(90, verticalBearing, 1);
 
-        verticalBearing = ComputePOIPoints.getVerticalBearing(userPoint, samePoint);
+        verticalBearing = samePoint.setVerticalBearing(userPoint);
         assertEquals(NaN, verticalBearing, 1);
     }
 
