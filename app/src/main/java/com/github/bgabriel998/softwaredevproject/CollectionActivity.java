@@ -47,7 +47,7 @@ public class CollectionActivity extends AppCompatActivity {
         ArrayList<CollectedItem> collectedItems = new ArrayList<>();
 
         for (int i = 0; i < 20; i++){
-            collectedItems.add(new CollectedItem(String.format(Locale.getDefault(),"TEST_Mountain%d", i), 100 - i, 1000-i, 50+i,50-i));
+            collectedItems.add(new CollectedItem(String.format(Locale.getDefault(),"Mont Blanc - Monte Bianco%d", i), 100 - i, 1000-i, 50+i,50-i));
         }
 
         return collectedItems;

@@ -5,40 +5,39 @@
     android:gravity="center">
 
     <!-- Container -->
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/ranking_item_container"
         android:layout_width="match_parent"
         android:layout_height="70dp"
+        android:orientation="horizontal"
         android:gravity="center_vertical"
         android:background="@color/LightGrey">
 
         <!-- Position -->
         <TextView
             android:id="@+id/ranking_item_position"
-            style="@style/DarkGreenText"
+            style="@style/StandardText.DarkGreen"
             android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="" />
+            android:layout_height="match_parent"
+            android:gravity="center"/>
 
         <!-- Username -->
         <TextView
             android:id="@+id/ranking_item_username"
-            style="@style/DarkGreenText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="70dp"
-            android:text="" />
+            style="@style/StandardText.DarkGreen"
+            android:layout_width="235dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:gravity="center_vertical"/>
 
         <!-- Points -->
         <TextView
             android:id="@+id/ranking_item_points"
-            style="@style/DarkGreenText"
+            style="@style/StandardText.DarkGreen"
             android:layout_width="100dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center"
-            android:layout_alignParentEnd="true"
-            android:text="" />
-    </RelativeLayout>
+            android:layout_marginStart="5dp"/>
+    </LinearLayout>
 
 </RelativeLayout>

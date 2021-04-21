@@ -81,7 +81,7 @@ public class CollectionActivityTest {
         for (int i = 0; i < 20; i++){
             DataInteraction listItem = interaction.atPosition(i);
 
-            String name = String.format(Locale.getDefault(),"TEST_Mountain%d", i);
+            String name = String.format(Locale.getDefault(),"Mont Blanc - Monte Bianco%d", i);
             String points = String.format("%d", 100 - i);
 
             listItem.onChildView(withId(R.id.collected_name))
@@ -95,7 +95,7 @@ public class CollectionActivityTest {
     public void TestPressCollected() {
         // Item at pos 10 looks like this
         CollectedItem correctItem = new CollectedItem(
-                String.format(Locale.getDefault(),"TEST_Mountain%d", 10),
+                String.format(Locale.getDefault(),"Mont Blanc - Monte Bianco%d", 10),
                 100-10,
                 1000-10,
                 50+10,

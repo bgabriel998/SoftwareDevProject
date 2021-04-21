@@ -21,16 +21,17 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <!-- HEADER -->
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:background="@color/LightBlue"
+            android:orientation="horizontal"
             android:gravity="center_vertical">
 
             <!-- Position -->
             <TextView
                 android:id="@+id/header_position"
-                style="@style/SmallLightGreyText"
+                style="@style/SmallText.LightGrey"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -39,23 +40,23 @@
             <!-- Username -->
             <TextView
                 android:id="@+id/header_username"
-                style="@style/SmallLightGreyText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="70dp"
+                style="@style/SmallText.LightGrey"
+                android:layout_width="235dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:gravity="center_vertical"
                 android:text="@string/header_username" />
 
             <!-- Points -->
             <TextView
                 android:id="@+id/header_points"
-                style="@style/SmallLightGreyText"
+                style="@style/SmallText.LightGrey"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
                 android:gravity="center"
                 android:text="@string/header_points" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <ListView
             android:id="@+id/rankings_list_view"
