@@ -14,7 +14,7 @@
         android:layout_height="match_parent"/>
 
     <!-- Compass View-->
-    <com.github.bgabriel998.softwaredevproject.CompassView
+    <com.github.bgabriel998.softwaredevproject.CameraUiView
         android:id="@+id/compass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
