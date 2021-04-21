@@ -25,13 +25,12 @@ public class CameraActivity extends AppCompatActivity{
 
     //Widgets
     private CameraPreview cameraPreview;
-    private CompassView compassView;
+    private CameraUiView cameraUiView;
     private TextView headingHorizontal;
     private TextView headingVertical;
     private TextView fovHorizontal;
     private TextView fovVertical;
     private Compass compass;
-    private ComputePOIPoints computePOIPoints;
 
 
     @Override
@@ -61,13 +60,10 @@ public class CameraActivity extends AppCompatActivity{
         fovVertical = findViewById(R.id.fovVertical);
 
         //Create compass view
-        compassView = findViewById(R.id.compass);
+        cameraUiView = findViewById(R.id.compass);
 
         //Create camera preview on the previewView
         cameraPreview = (CameraPreview) getSupportFragmentManager().findFragmentById(R.id.fragment_camera);
-
-        //Request the POIpoints
-        computePOIPoints = new ComputePOIPoints(this);
 
         //Setup the compass
         startCompass();
@@ -91,7 +87,7 @@ public class CameraActivity extends AppCompatActivity{
             fovVertical.setText(String.format(Locale.ENGLISH, "%.1f °", cameraFieldOfView.second));
         }
 
-        compassView.setRange(cameraFieldOfView);
+        cameraUiView.setRange(cameraFieldOfView);
 
         //Create new compass
         compass = new Compass(this);
@@ -103,7 +99,7 @@ public class CameraActivity extends AppCompatActivity{
         compass.setListener(compassListener);
 
         //Set the POIs for the compass
-        compassView.setPOIs(ComputePOIPoints.POIPoints, computePOIPoints.userPoint);
+        cameraUiView.setPOIs(ComputePOIPoints.POIPoints, ComputePOIPoints.labeledPOIPoints);
     }
 
     /**
@@ -117,7 +113,7 @@ public class CameraActivity extends AppCompatActivity{
             @Override
             public void onNewHeading(float heading, float headingV) {
                 //Update the compass when the heading changes
-                compassView.setDegrees(heading, headingV);
+                cameraUiView.setDegrees(heading, headingV);
                 //Update the textviews with the new headings
                 headingHorizontal.setText(String.format(Locale.ENGLISH, "%.1f °", heading));
                 headingVertical.setText(String.format(Locale.ENGLISH, "%.1f °", headingV));
@@ -168,7 +164,7 @@ public class CameraActivity extends AppCompatActivity{
         //Create a bitmap of the camera preview
         Bitmap cameraBitmap = cameraPreview.getBitmap();
         //Create a bitmap of the compass-view
-        Bitmap compassBitmap = compassView.getBitmap();
+        Bitmap compassBitmap = cameraUiView.getBitmap();
         //Combine the two bitmaps
         Bitmap bitmap = overlay(cameraBitmap, compassBitmap);
         //Store the bitmap on the user device

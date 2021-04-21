@@ -76,8 +76,8 @@ public class GeonamesHandlerTest {
 
         GeonamesHandler handler = (GeonamesHandler) new GeonamesHandler(userPoint) {
             @Override
-            public void onResponseReceived(Object result) {
-                resultPOI = (ArrayList<POI>) result;
+            public void onResponseReceived(ArrayList<POI> result) {
+                resultPOI = result;
                 queryTimeS = ((double) System.currentTimeMillis() - startTimeMs) / MILLI_SEC_TO_SEC;
             }
         }.execute();
@@ -176,7 +176,7 @@ public class GeonamesHandlerTest {
 
         new GeonamesHandler(userPoint) {
             @Override
-            public void onResponseReceived(Object result) {
+            public void onResponseReceived(ArrayList<POI> result) {
             }
         }.execute();
         try {
@@ -205,7 +205,7 @@ public class GeonamesHandlerTest {
                 GIVEN_QUERY_MAX_RESULT,
                 GIVEN_QUERY_TIMEOUT) {
             @Override
-            public void onResponseReceived(Object result) {
+            public void onResponseReceived(ArrayList<POI> result) {
             }
         }.execute();
         try {
@@ -232,8 +232,7 @@ public class GeonamesHandlerTest {
                 GIVEN_QUERY_MAX_RESULT,
                 GIVEN_QUERY_TIMEOUT) {
             @Override
-            public void onResponseReceived(Object result) {
-
+            public void onResponseReceived(ArrayList<POI> result) {
             }
         }.execute();
         try {
@@ -263,8 +262,7 @@ public class GeonamesHandlerTest {
                 0,
                 GIVEN_QUERY_TIMEOUT) {
             @Override
-            public void onResponseReceived(Object result) {
-
+            public void onResponseReceived(ArrayList<POI> result) {
             }
         }.execute();
         try {
@@ -292,8 +290,7 @@ public class GeonamesHandlerTest {
                 GIVEN_QUERY_MAX_RESULT,
                 0) {
             @Override
-            public void onResponseReceived(Object result) {
-
+            public void onResponseReceived(ArrayList<POI> result) {
             }
         }.execute();
         try {

@@ -6,25 +6,19 @@ import android.content.Context;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.rule.GrantPermissionRule;
-
 import com.github.ravifrancesco.softwaredevproject.Point;
 import com.github.ravifrancesco.softwaredevproject.UserPoint;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
-import org.osmdroid.bonuspack.location.POI;
-
-import java.util.ArrayList;
 
 import static java.lang.Double.NaN;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class ComputePOIPointsTest {
-    private ComputePOIPoints computePOIPoints;
 
     @Rule
     public GrantPermissionRule grantCameraPermissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
@@ -54,13 +48,13 @@ public class ComputePOIPointsTest {
         Point southPoint = new Point(userPoint.getLatitude() - 1, userPoint.getLongitude(), userPoint.getAltitude());
         Point westPoint = new Point(userPoint.getLatitude(), userPoint.getLongitude() - 1, userPoint.getAltitude());
 
-        double horizontalBearing = ComputePOIPoints.getHorizontalBearing(userPoint, northPoint);
+        double horizontalBearing = northPoint.setHorizontalBearing(userPoint);
         assertEquals(0, horizontalBearing, 1);
-        horizontalBearing = ComputePOIPoints.getHorizontalBearing(userPoint, eastPoint);
+        horizontalBearing = eastPoint.setHorizontalBearing(userPoint);
         assertEquals(90, horizontalBearing, 1);
-        horizontalBearing = ComputePOIPoints.getHorizontalBearing(userPoint, southPoint);
+        horizontalBearing = southPoint.setHorizontalBearing(userPoint);
         assertEquals(180, horizontalBearing, 1);
-        horizontalBearing = ComputePOIPoints.getHorizontalBearing(userPoint, westPoint);
+        horizontalBearing = westPoint.setHorizontalBearing(userPoint);
         assertEquals(270, horizontalBearing, 1);
     }
 
@@ -74,16 +68,38 @@ public class ComputePOIPointsTest {
         Point sameHeight = new Point(userPoint.getLatitude()+0.1, userPoint.getLongitude(), userPoint.getAltitude());
         Point samePoint = new Point(userPoint.getLatitude(), userPoint.getLongitude(), userPoint.getAltitude());
 
-        double verticalBearing = ComputePOIPoints.getVerticalBearing(userPoint, above);
+        double verticalBearing = above.setVerticalBearing(userPoint);
         assertEquals(180, verticalBearing, 1);
 
-        verticalBearing = ComputePOIPoints.getVerticalBearing(userPoint, below);
+        verticalBearing = below.setVerticalBearing(userPoint);
         assertEquals(0, verticalBearing, 1);
 
-        verticalBearing = ComputePOIPoints.getVerticalBearing(userPoint, sameHeight);
+        verticalBearing = sameHeight.setVerticalBearing(userPoint);
         assertEquals(90, verticalBearing, 1);
 
-        verticalBearing = ComputePOIPoints.getVerticalBearing(userPoint, samePoint);
+        verticalBearing = samePoint.setVerticalBearing(userPoint);
         assertEquals(NaN, verticalBearing, 1);
+    }
+
+    /**
+     * Test if ComputePOIPoints can get POIPoints and LabeledPOIPoints
+     * @throws InterruptedException if any thread has interrupted the current thread
+     */
+    @Test
+    public void getLabeledPOIPoints() throws InterruptedException {
+        Context mContext = ApplicationProvider.getApplicationContext();
+
+        new ComputePOIPoints(mContext);
+
+        int count=0;
+        //Wait for the map to be downloaded
+        while(count<20 && ComputePOIPoints.labeledPOIPoints==null){
+            Thread.sleep(1000);
+            count++;
+        }
+
+        //Check that POIPoints and labeledPOIPoints are not null
+        assertNotNull(ComputePOIPoints.POIPoints);
+        assertNotNull(ComputePOIPoints.labeledPOIPoints);
     }
 }
