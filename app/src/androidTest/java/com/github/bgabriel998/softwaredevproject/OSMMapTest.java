@@ -118,7 +118,6 @@ public class OSMMapTest {
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
         OSMMap osmMap = MapActivity.osmMap;
-        MapView mapView = osmMap.getMapView();
 
 
         //The following lines initializes a handler and a looper
