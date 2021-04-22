@@ -21,4 +21,5 @@
     <color name="White">#FFFFFF</color>
     <color name="BabyBlue">#89CFF0</color>
     <color name="RedMountainMarker">#FF5757</color>
+    <color name="Red">#FF0000</color>
 </resources>

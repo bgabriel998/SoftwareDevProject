@@ -3,7 +3,6 @@ package com.github.bgabriel998.softwaredevproject;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
@@ -14,7 +13,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
-import com.github.ravifrancesco.softwaredevproject.Point;
 
 import java.util.List;
 import java.util.Map;
@@ -44,7 +42,7 @@ public class CameraUiView extends View {
     //Rotation to be applied for the addition info of the mountains
     private static final int LABEL_ROTATION = -45;
     //Offset for the text to be above the marker
-    private static final float OFFSET_MOUNTAIN_INFO = 30;
+    private static final float OFFSET_MOUNTAIN_INFO = 15;
 
     //Factors for the sizes
     private static final int MAIN_TEXT_FACTOR = 20;
@@ -52,7 +50,6 @@ public class CameraUiView extends View {
     private static final int MAIN_LINE_FACTOR = 5;
     private static final int SEC_LINE_FACTOR = 3;
     private static final int TER_LINE_FACTOR = 2;
-    private static final int MARKER_SIZE = 150;
 
     //Heading of the user
     private float horizontalDegrees;
@@ -105,15 +102,14 @@ public class CameraUiView extends View {
     private void widgetInit(){
         //Initialize colors
         compassColor = R.color.Black;
-        mountainInfoColor = R.color.RedMountainMarker;
+        mountainInfoColor = R.color.Black;
 
         //Initialize fonts
         float screenDensity = getResources().getDisplayMetrics().scaledDensity;
         mainTextSize = (int) (MAIN_TEXT_FACTOR * screenDensity);
 
         //Initialize mountain marker that are in line of sight
-        mountainMarkerVisible = BitmapFactory.decodeResource(getResources(), R.drawable.mountain_marker);
-        mountainMarkerVisible = Bitmap.createScaledBitmap(mountainMarkerVisible, MARKER_SIZE, MARKER_SIZE, true);
+        mountainMarkerVisible = getBitmapFromVectorDrawable(getContext(), R.drawable.ic_mountain_marker_visible);
 
         //Initialize mountain marker that are not in line of sight
         mountainMarkerNotVisible = getBitmapFromVectorDrawable(getContext(), R.drawable.ic_mountain_marker_not_visible);
@@ -196,7 +192,6 @@ public class CameraUiView extends View {
      * Sets the range in degrees of the compass-view, corresponds to the field of view of the camera
      * @param cameraFieldOfView Pair containing the horizontal and vertical field of view
      */
-    @SuppressWarnings("ConstantConditions")
     public void setRange(Pair<Float, Float> cameraFieldOfView) {
         int orientation = getResources().getConfiguration().orientation;
 
@@ -382,17 +377,19 @@ public class CameraUiView extends View {
 
         //Draw the marker on the preview depending on the line of sight
         Bitmap mountainMarker = isVisible ? mountainMarkerVisible : mountainMarkerNotVisible;
-        mountainInfo.setColor(isVisible ? mountainInfoColor : compassColor);
+        mountainInfo.setColor(isVisible ? getResources().getColor(mountainInfoColor, null) : compassColor);
         mountainInfo.setAlpha(MAX_ALPHA);
 
         canvas.drawBitmap(mountainMarker, left, mountainMarkerPosition, null);
 
-        /*Save status before Screen Rotation*/
+        //Save status before Screen Rotation
         canvas.save();
         canvas.rotate(LABEL_ROTATION, left, mountainMarkerPosition);
-        /*Draw moutain label with a -45° rotation angle */
-        canvas.drawText(poiPoint.getName(), left + OFFSET_MOUNTAIN_INFO, mountainMarkerPosition + OFFSET_MOUNTAIN_INFO, mountainInfo);
-        /* Restore Previously saved Status */
+        canvas.drawText(poiPoint.getName() + " " + poiPoint.getAltitude() + "m",
+                left + mountainInfo.getTextSize() - OFFSET_MOUNTAIN_INFO,
+                mountainMarkerPosition + mountainInfo.getTextSize() + OFFSET_MOUNTAIN_INFO,
+                mountainInfo);
+        //Restore the saved state
         canvas.restore();
     }
 
