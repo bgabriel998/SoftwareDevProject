@@ -41,7 +41,6 @@ public class OSMMapTest {
     private static final String AIGUILLE_DU_PLAN = "Aiguille du Plan";
 
     @Rule
-    public ActivityTestRule<MapActivity> activityTestRule = new ActivityTestRule<>(MapActivity.class);
     public ActivityScenarioRule<MapActivity> activityActivityScenarioRule = new ActivityScenarioRule<>(MapActivity.class);
 
 
