@@ -8,10 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.giommok.softwaredevproject.FirebaseAccount;
 import com.github.giommok.softwaredevproject.ScoringConstants;
-import com.github.ravifrancesco.softwaredevproject.POIPoint;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 public class CollectionActivity extends AppCompatActivity {
 
@@ -44,17 +44,16 @@ public class CollectionActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO Get list from DB
      * @return array list of all collected items.
      */
     private ArrayList<CollectedItem> getCollection(){
-        ArrayList<CollectedItem> collectedItems = new ArrayList<>();
-
         FirebaseAccount account = FirebaseAccount.getAccount();
-        for(POIPoint poi : account.getDiscoveredPeaks()){
-            collectedItems.add(new CollectedItem(poi.getName(), (int)(poi.getAltitude()*ScoringConstants.PEAK_FACTOR), (int) (poi.getAltitude()), (float)poi.getLongitude(), (float)poi.getLatitude()));
-        }
-        Collections.sort(collectedItems, Collections.reverseOrder());
+        ArrayList<CollectedItem> collectedItems = ((ArrayList<CollectedItem>)
+                (account.getDiscoveredPeaks().stream().map(poi-> new CollectedItem(poi.getName(),
+                (int)(poi.getAltitude()*ScoringConstants.PEAK_FACTOR),
+                (int)(poi.getAltitude()), (float) poi.getLongitude(),
+                (float) poi.getLatitude())).collect(Collectors.toList())));
+        collectedItems.sort(Collections.reverseOrder());
         return collectedItems;
     }
 
