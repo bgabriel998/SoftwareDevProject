@@ -58,7 +58,6 @@ public class CustomInfoWindow extends InfoWindow {
         });
 
         //Handle hide and show Info window
-        Marker current = (Marker) arg0;
         toggleWindowVisibility(layout);
 
     }
@@ -75,4 +74,3 @@ public class CustomInfoWindow extends InfoWindow {
         }
     }
 }
-
