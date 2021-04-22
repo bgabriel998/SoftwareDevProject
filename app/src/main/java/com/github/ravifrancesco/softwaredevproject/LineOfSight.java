@@ -1,17 +1,8 @@
 package com.github.ravifrancesco.softwaredevproject;
 
-import android.content.Context;
-import android.util.Log;
-import android.util.Pair;
+import androidx.core.util.Pair;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.osmdroid.util.BoundingBox;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -41,14 +32,11 @@ public class LineOfSight {
      *
      * @param userPoint userPoint from wich the visible POIPoints are computed.
      */
-    public LineOfSight(UserPoint userPoint) {
+    @SuppressWarnings("ConstantConditions")
+    public LineOfSight(Pair<int[][], Double> topography, UserPoint userPoint) {
         this.userPoint = userPoint;
-        this.elevationMap = new ElevationMap(this.userPoint);
-    }
-
-    public LineOfSight(BoundingBox boundingBox) {
-        this.userPoint = null;
-        this.elevationMap = new ElevationMap(boundingBox);
+        this.mapCellSize = topography.second;
+        this.elevationMap = new ElevationMap(topography, this.userPoint);
     }
 
     /**
@@ -97,10 +85,9 @@ public class LineOfSight {
         Map<POIPoint, Boolean> labeledPOIPoints = Collections.synchronizedMap(new HashMap<>());
 
         poiPoints.parallelStream()
-                 .forEach(p -> labeledPOIPoints.put(p, isVisible(p, userIndexes, userLongitude, userAltitude)));
+                .forEach(p -> labeledPOIPoints.put(p, isVisible(p, userIndexes, userLongitude, userAltitude)));
 
-         return labeledPOIPoints;
-
+        return labeledPOIPoints;
     }
 
     /**
@@ -114,6 +101,7 @@ public class LineOfSight {
      * @return              <code>true</code> if the POIPoint is visible from the user's location.
      * 	                    <code>false</code> otherwise.
      */
+    @SuppressWarnings("ConstantConditions")
     private boolean isVisible(POIPoint poiPoint, Pair<Integer, Integer> userIndexes,
                               double userLongitude, int userAltitude) {
 
@@ -125,9 +113,9 @@ public class LineOfSight {
         double slope = (poiAltitude - userAltitude) / (poiLongitude - userLongitude);
 
         List<Pair<Integer, Integer>> line = bresenham(  userIndexes.first, userIndexes.second,
-                                                        poiIndexes.first, poiIndexes.second);
+                poiIndexes.first, poiIndexes.second);
 
-         return line.parallelStream()
+        return line.parallelStream()
                 .map(p -> elevationMap.getAltitudeAtLocation(p.first, p.second) -
                         computeMaxElevation(userLongitude, userAltitude, p.second, slope) >
                         ELEVATION_DIFFERENCE_THRESHOLD)
