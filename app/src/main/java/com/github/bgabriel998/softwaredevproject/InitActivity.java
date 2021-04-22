@@ -1,9 +1,5 @@
 package com.github.bgabriel998.softwaredevproject;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,11 +7,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.github.giommok.softwaredevproject.FirebaseAccount;
 import com.google.firebase.FirebaseApp;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
+import java.util.Arrays;
 
 public class InitActivity extends AppCompatActivity {
 
