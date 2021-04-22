@@ -125,12 +125,7 @@ public class OSMMapTest {
         //the setMarkersForDiscoveredPeaks method
         Looper.prepare();
         final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                osmMap.setMarkersForDiscoveredPeaks(account, true);
-            }
-        }, 100);
+        handler.postDelayed(() -> osmMap.setMarkersForDiscoveredPeaks(account, true), 100);
         //Wait for the handler to complete
         Thread.sleep(1000);
 
