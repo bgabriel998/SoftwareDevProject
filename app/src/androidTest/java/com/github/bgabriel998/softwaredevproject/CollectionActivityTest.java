@@ -27,7 +27,6 @@ import org.junit.runner.RunWith;
 import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -39,8 +38,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertSame;
-
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 
@@ -55,7 +52,7 @@ public class CollectionActivityTest {
     public ActivityScenarioRule<CollectionActivity> testRule = new ActivityScenarioRule<>(CollectionActivity.class);
 
     @BeforeClass
-    public static void setupUserAccount(){
+    public static void setupUserAccount() throws InterruptedException {
         //Write peaks to the database
         GeoPoint geoPoint_1 = new GeoPoint(45.8325,6.8641666666667,4810);
         POIPoint point_1 = new POIPoint(geoPoint_1);
@@ -83,6 +80,7 @@ public class CollectionActivityTest {
         FirebaseAccount account = FirebaseAccount.getAccount();
         UserScore userScore = new UserScore(ApplicationProvider.getApplicationContext(),account);
         userScore.updateUserScoreAndDiscoveredPeaks(inputArrayList);
+        Thread.sleep(3000);
     }
 
     @AfterClass
@@ -133,28 +131,22 @@ public class CollectionActivityTest {
 
         DataInteraction interaction =  onData(instanceOf(CollectedItem.class));
 
-        for (int i = 0; i < 20; i++){
+        for (int i = 0; i < 4; i++){
             DataInteraction listItem = interaction.atPosition(i);
-
-            String name = String.format(Locale.getDefault(),"TEST_Mountain%d", i);
-            String points = String.format("%d", 100 - i);
+            DataInteraction dataInteraction = listItem.onChildView(withId(R.id.collected_name));
 
             switch(i){
                 case 0:
-                    listItem.onChildView(withId(R.id.collected_name))
-                            .check(matches(withText(AIGUILLE_DU_PLAN)));
+                    dataInteraction.check(matches(withText(MONT_BLANC_NAME)));
                     break;
                 case 1:
-                    listItem.onChildView(withId(R.id.collected_name))
-                            .check(matches(withText(POINTE_DE_LAPAZ_NAME)));
+                    dataInteraction.check(matches(withText(DENT_DU_GEANT_NAME)));
                     break;
                 case 2:
-                    listItem.onChildView(withId(R.id.collected_name))
-                            .check(matches(withText(MONT_BLANC_NAME)));
+                    dataInteraction.check(matches(withText(AIGUILLE_DU_PLAN)));
                     break;
                 case 3:
-                    listItem.onChildView(withId(R.id.collected_name))
-                            .check(matches(withText(DENT_DU_GEANT_NAME)));
+                    dataInteraction.check(matches(withText(POINTE_DE_LAPAZ_NAME)));
                     break;
             }
         }
@@ -171,7 +163,7 @@ public class CollectionActivityTest {
                 45.891667f);
 
         // Get Item at pos 10 and click.
-        DataInteraction listItem = onData(instanceOf(CollectedItem.class)).atPosition(0);
+        DataInteraction listItem = onData(instanceOf(CollectedItem.class)).atPosition(2);
         listItem.perform(ViewActions.click());
 
         // Catch intent, and check information

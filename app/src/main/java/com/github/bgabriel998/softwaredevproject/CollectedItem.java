@@ -5,7 +5,7 @@ package com.github.bgabriel998.softwaredevproject;
  * collected points, collected height and position.
  * Used to fill collection list.
  */
-public class CollectedItem {
+public class CollectedItem implements Comparable< CollectedItem >{
     private String name;
     private int points;
     private int height;
@@ -32,7 +32,7 @@ public class CollectedItem {
         return name;
     }
 
-    public int getPoints() {
+    public Integer getPoints() {
         return points;
     }
 
@@ -46,5 +46,15 @@ public class CollectedItem {
 
     public float getLatitude() {
         return latitude;
+    }
+
+    /**
+     * Sort collection of CollectedItem by points
+     * @param c other collectedItem
+     * @return collected item with highest number of points
+     */
+    @Override
+    public int compareTo(CollectedItem c){
+        return this.getPoints().compareTo(c.getPoints());
     }
 }

@@ -1,17 +1,17 @@
 package com.github.bgabriel998.softwaredevproject;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ListView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.giommok.softwaredevproject.FirebaseAccount;
 import com.github.giommok.softwaredevproject.ScoringConstants;
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
 
 import java.util.ArrayList;
-import java.util.Locale;
+import java.util.Collections;
 
 public class CollectionActivity extends AppCompatActivity {
 
@@ -54,7 +54,7 @@ public class CollectionActivity extends AppCompatActivity {
         for(POIPoint poi : account.getDiscoveredPeaks()){
             collectedItems.add(new CollectedItem(poi.getName(), (int)(poi.getAltitude()*ScoringConstants.PEAK_FACTOR), (int) (poi.getAltitude()), (float)poi.getLongitude(), (float)poi.getLatitude()));
         }
-
+        Collections.sort(collectedItems, Collections.reverseOrder());
         return collectedItems;
     }
 

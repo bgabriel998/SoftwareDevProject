@@ -125,7 +125,7 @@ public class FirebaseAccount implements Account {
     public void setUserScore(long newScore) {
         //set local value
         score = newScore;
-        Database.setChild(Database.CHILD_USERS +  getId(),
+        Database.setChild(Database.CHILD_USERS +  getId() + "/",
                 Collections.singletonList(Database.CHILD_SCORE),
                 Collections.singletonList(score));
     }
@@ -141,7 +141,7 @@ public class FirebaseAccount implements Account {
             //Put entry in the account local copy
             discoveredCountryHighPoint.put(entry.getCountryName(), entry);
             //Put entry to the database
-            Database.setChildObject(Database.CHILD_USERS + getId() +
+            Database.setChildObject(Database.CHILD_USERS + getId() + "/"+
                     Database.CHILD_COUNTRY_HIGH_POINT,entry);
         }
     }
@@ -169,7 +169,7 @@ public class FirebaseAccount implements Account {
     public void setDiscoveredPeakHeights(int badge){
         if(!discoveredPeakHeights.contains(badge)){
             discoveredPeakHeights.add(badge);
-            Database.setChildObject(Database.CHILD_USERS +  getId() +
+            Database.setChildObject(Database.CHILD_USERS +  getId() + "/"+
                     Database.CHILD_DISCOVERED_PEAKS_HEIGHTS,Collections.singletonList(badge));
         }
     }
@@ -182,7 +182,7 @@ public class FirebaseAccount implements Account {
 
     @Override
     public void setDiscoveredPeaks(ArrayList<POIPoint> newDiscoveredPeaks){
-        Database.setChildObjectList(Database.CHILD_USERS + getId() +
+        Database.setChildObjectList(Database.CHILD_USERS + getId() + "/" +
                 Database.CHILD_DISCOVERED_PEAKS,
                 new ArrayList<Object>(newDiscoveredPeaks));
 
