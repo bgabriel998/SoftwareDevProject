@@ -1,49 +1,39 @@
 package com.github.bgabriel998.softwaredevproject;
 
 import android.app.Activity;
-import android.view.View;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.Espresso;
-import androidx.test.espresso.UiController;
-import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.github.giommok.softwaredevproject.Account;
 import com.github.giommok.softwaredevproject.Database;
 import com.google.firebase.auth.FirebaseAuth;
 
-import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Locale;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.swipeDown;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
@@ -55,7 +45,10 @@ public class FriendsActivityTest {
     public static void init() throws InterruptedException {
         /* Make sure that mock users are not on the database before the tests*/
         for(int i=0; i < FRIENDS_SIZE; i++) {
-            Database.refRoot.child("users").child("test" + i).removeValue();
+            String id = "test";
+            if(i < 10) id += "0";
+            id += i;
+            Database.refRoot.child("users").child("test" + ((i < 10) ? "0" + i : i)).removeValue();
         }
         Database.refRoot.child("users").child("null").removeValue();
         Thread.sleep(1500);
@@ -70,7 +63,7 @@ public class FriendsActivityTest {
     @After
     public void removeTestUsers() throws InterruptedException {
         for(int i=0; i < FRIENDS_SIZE; i++) {
-            Database.refRoot.child("users").child("test" + i).removeValue();
+            Database.refRoot.child("users").child("test" + ((i < 10) ? "0" + i : i)).removeValue();
         }
         Database.refRoot.child("users").child("null").removeValue();
         Thread.sleep(1500);
@@ -119,19 +112,19 @@ public class FriendsActivityTest {
         // Add mock users
         String TESTING_USERNAME = "username@Test";
         for(int i=0; i < FRIENDS_SIZE; i++) {
-            Database.setChild(Database.CHILD_USERS + "test" + i, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(TESTING_USERNAME + i));
+            Database.setChild(Database.CHILD_USERS + "test" + ((i < 10) ? "0" + i : i), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(TESTING_USERNAME + i));
         }
         Database.setChild(Database.CHILD_USERS + "null", Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(TESTING_USERNAME));
         Thread.sleep(1500);
 
         // Add mock users to the friends
         for(int i=0; i < FRIENDS_SIZE; i++) {
-            Database.setChild(Database.CHILD_USERS + "null" + Database.CHILD_FRIENDS, Collections.singletonList("test" + i), Collections.singletonList(""));
+            Database.setChild(Database.CHILD_USERS + "null" + Database.CHILD_FRIENDS, Collections.singletonList("test" + ((i < 10) ? "0" + i : i)), Collections.singletonList(""));
         }
         Thread.sleep(1500);
 
         testRule.getScenario().recreate();
-
+        Thread.sleep(1500);
         DataInteraction interaction =  onData(instanceOf(FriendItem.class));
 
         for (int i = 0; i < FRIENDS_SIZE; i++){
@@ -146,8 +139,8 @@ public class FriendsActivityTest {
         // Change friend username and points
         String newUsername = TESTING_USERNAME + "new";
         int newScore = 20;
-        Database.setChild(Database.CHILD_USERS + "test0", Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(newUsername));
-        Database.setChild(Database.CHILD_USERS + "test0", Collections.singletonList(Database.CHILD_SCORE), Collections.singletonList(newScore));
+        Database.setChild(Database.CHILD_USERS + "test00", Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(newUsername));
+        Database.setChild(Database.CHILD_USERS + "test00", Collections.singletonList(Database.CHILD_SCORE), Collections.singletonList(newScore));
         Thread.sleep(1500);
 
         // Check username has been updated
@@ -164,7 +157,7 @@ public class FriendsActivityTest {
         String TESTING_USERNAME = "username@Test";
         String TESTING_UID = "null";
         String FRIEND_USERNAME = TESTING_USERNAME + 0;
-        String FRIEND_UID = "test0";
+        String FRIEND_UID = "test00";
 
         Database.setChild(Database.CHILD_USERS + FRIEND_UID, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(FRIEND_USERNAME));
         Database.setChild(Database.CHILD_USERS + TESTING_UID, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(TESTING_USERNAME));

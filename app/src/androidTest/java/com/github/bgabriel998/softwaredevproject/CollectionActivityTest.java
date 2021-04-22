@@ -53,6 +53,8 @@ public class CollectionActivityTest {
 
     @BeforeClass
     public static void setupUserAccount() throws InterruptedException {
+        Database.refRoot.child(Database.CHILD_USERS).child("null").removeValue();
+        Thread.sleep(3000);
         //Write peaks to the database
         GeoPoint geoPoint_1 = new GeoPoint(45.8325,6.8641666666667,4810);
         POIPoint point_1 = new POIPoint(geoPoint_1);
@@ -126,11 +128,12 @@ public class CollectionActivityTest {
 
     /* Test that all elements in list view are at correct place and contains correct data */
     @Test
-    public void TestContentOfListView(){
+    public void TestContentOfListView() throws InterruptedException {
         //Write peaks to the database
 
         DataInteraction interaction =  onData(instanceOf(CollectedItem.class));
 
+        Thread.sleep(3000);
         for (int i = 0; i < 4; i++){
             DataInteraction listItem = interaction.atPosition(i);
             DataInteraction dataInteraction = listItem.onChildView(withId(R.id.collected_name));
@@ -153,7 +156,7 @@ public class CollectionActivityTest {
     }
 
     @Test
-    public void TestPressCollected() {
+    public void TestPressCollected() throws InterruptedException {
         // Item at pos 10 looks like this
         CollectedItem correctItem = new CollectedItem(
                 AIGUILLE_DU_PLAN,
@@ -165,6 +168,8 @@ public class CollectionActivityTest {
         // Get Item at pos 10 and click.
         DataInteraction listItem = onData(instanceOf(CollectedItem.class)).atPosition(2);
         listItem.perform(ViewActions.click());
+
+        Thread.sleep(3000);
 
         // Catch intent, and check information
         intended(allOf(IntentMatchers.hasComponent(MountainActivity.class.getName()),

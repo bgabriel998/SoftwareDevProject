@@ -125,7 +125,7 @@ public class FirebaseAccount implements Account {
     public void setUserScore(long newScore) {
         //set local value
         score = newScore;
-        Database.setChild(Database.CHILD_USERS +  getId() + "/",
+        Database.setChild(Database.CHILD_USERS +  getId(),
                 Collections.singletonList(Database.CHILD_SCORE),
                 Collections.singletonList(score));
     }
@@ -183,7 +183,7 @@ public class FirebaseAccount implements Account {
     @Override
     public void setDiscoveredPeaks(ArrayList<POIPoint> newDiscoveredPeaks){
         Database.setChildObjectList(Database.CHILD_USERS + getId() + "/" +
-                Database.CHILD_DISCOVERED_PEAKS,
+                        Database.CHILD_DISCOVERED_PEAKS,
                 new ArrayList<Object>(newDiscoveredPeaks));
 
     }
@@ -318,6 +318,7 @@ public class FirebaseAccount implements Account {
                         // Copy all the elements in an ArrayList
                         List<FriendItem> newFriends = new ArrayList<>();
                         newFriends.addAll(tempFriends);
+                        Collections.sort(newFriends, (o1, o2) -> o1.getUid().compareTo(o2.getUid()));
                         // Once the update is done, change the friends object reference
                         friends = newFriends;
 
