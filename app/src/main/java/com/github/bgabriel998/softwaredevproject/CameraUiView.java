@@ -42,7 +42,7 @@ public class CameraUiView extends View {
     //Rotation to be applied for the addition info of the mountains
     private static final int LABEL_ROTATION = -45;
     //Offset for the text to be above the marker
-    private static final float OFFSET_MOUNTAIN_INFO = 15;
+    private static final int OFFSET_MOUNTAIN_INFO = 15;
 
     //Factors for the sizes
     private static final int MAIN_TEXT_FACTOR = 20;
