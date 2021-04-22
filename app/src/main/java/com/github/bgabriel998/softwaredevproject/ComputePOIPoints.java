@@ -30,11 +30,19 @@ public class ComputePOIPoints {
         getPOIs(userPoint);
     }
 
-    /**
+    /** TODO take a look
+     * Constructor of ComputePOIPoints, updates userPoint and gets the POIs for the userPoint
+     */
+    public ComputePOIPoints(Point userPoint){
+        POIPoints = new HashSet<>();
+        getPOIs(userPoint);
+    }
+
+    /** TODO CHANGED TO PUBLIC
      * Gets the POIs for the userPoint
      * @param userPoint location of the user
      */
-    private static void getPOIs(UserPoint userPoint){
+    private static void getPOIs(Point userPoint){
         new GeonamesHandler(userPoint) {
             @Override
             public void onResponseReceived(Object result) {

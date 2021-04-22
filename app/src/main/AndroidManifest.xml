@@ -33,6 +33,7 @@
         <activity android:name=".MapActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".SettingsActivity" />
+        <activity android:name=".SettingsMapActivity" />
         <activity android:name=".MainMenuActivity" />
         <activity android:name=".InitActivity"
             android:noHistory="true">

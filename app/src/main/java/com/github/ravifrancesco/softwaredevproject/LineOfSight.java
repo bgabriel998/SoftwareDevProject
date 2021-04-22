@@ -1,7 +1,15 @@
 package com.github.ravifrancesco.softwaredevproject;
 
+import android.content.Context;
+import android.util.Log;
 import android.util.Pair;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.osmdroid.util.BoundingBox;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,6 +44,11 @@ public class LineOfSight {
     public LineOfSight(UserPoint userPoint) {
         this.userPoint = userPoint;
         this.elevationMap = new ElevationMap(this.userPoint);
+    }
+
+    public LineOfSight(BoundingBox boundingBox) {
+        this.userPoint = null;
+        this.elevationMap = new ElevationMap(boundingBox);
     }
 
     /**

@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
+import com.github.ravifrancesco.softwaredevproject.Point;
 import com.github.ravifrancesco.softwaredevproject.UserPoint;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -41,18 +42,18 @@ public abstract class GeonamesHandler extends AsyncTask<Object,Void,Object> impl
     // API used to retrieve peaks POI
     private final OverpassAPIProvider poiProvider;
 
-    private final UserPoint userLocation;
+    private final Point userLocation;
     private final double rangeInKm;
     private final int queryMaxResults;
     private final int queryTimeout;
     private String queryUrl;
     private int retryNbr;
 
-    /**
+    /** TODO UPDATE
      * Initializes provider
      * @param userLocation UserPoint containing user location inforamtions
      */
-    public GeonamesHandler(UserPoint userLocation) {
+    public GeonamesHandler(Point userLocation) {
         if(userLocation == null)
             throw new IllegalArgumentException("UserPoint user location can't be null");
         this.userLocation = userLocation;

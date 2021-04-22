@@ -1,5 +1,7 @@
 package com.github.ravifrancesco.softwaredevproject;
 
+import org.osmdroid.util.BoundingBox;
+
 /**
  * Point is a class that represents a general point on earth.
  * A point is described by three components:
@@ -14,6 +16,7 @@ package com.github.ravifrancesco.softwaredevproject;
 public class Point {
 
     final static double EARTH_RADIUS = 6378137; // value in meters
+    private final double ADJUST_COORDINATES = 0.008983112; // 1km in degrees at equator.
 
     protected double latitude;
     protected double longitude;
@@ -91,6 +94,20 @@ public class Point {
 
         return Math.sqrt(squaredDistance);
 
+    }
+
+    /**
+     * Computes bounding box around
+     * @param rangeInKm range around point to compute the bounding box (in km)
+     * @return Bounding box around user point
+     */
+    public BoundingBox computeBoundingBox(double rangeInKm){
+        double north = latitude + ( rangeInKm * ADJUST_COORDINATES);
+        double south = longitude - ( rangeInKm * ADJUST_COORDINATES);
+        double lngRatio = 1/Math.cos(Math.toRadians(latitude));
+        double east = longitude + (rangeInKm * ADJUST_COORDINATES) * lngRatio;
+        double west = longitude - (rangeInKm * ADJUST_COORDINATES) * lngRatio;
+        return new BoundingBox(north,east,south,west);
     }
 
     /**

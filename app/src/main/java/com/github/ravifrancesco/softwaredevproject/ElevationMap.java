@@ -34,7 +34,7 @@ import java.util.stream.IntStream;
  */
 public class ElevationMap {
 
-    static final int BOUNDING_BOX_RANGE = 20; //range of the bounding box in km
+    public static final int BOUNDING_BOX_RANGE = 20; //range of the bounding box in km
     static final int MINIMUM_DISTANCE_FOR_UPDATE = 2000;    // minimum distance in m between user and old
                                                             // bounding center to update bounding center
 
@@ -57,6 +57,13 @@ public class ElevationMap {
     public ElevationMap(UserPoint userPoint) {
         this.userPoint = userPoint;
         this.boundingBox = userPoint.computeBoundingBox(BOUNDING_BOX_RANGE);
+        this.boundingBoxCenter = new POIPoint(this.boundingBox.getCenterWithDateLine());
+        downloadTopographyMap();
+    }
+
+    public ElevationMap(BoundingBox boundingBox) {
+        this.userPoint = null;
+        this.boundingBox = boundingBox;
         this.boundingBoxCenter = new POIPoint(this.boundingBox.getCenterWithDateLine());
         downloadTopographyMap();
     }
