@@ -47,11 +47,13 @@ public class ElevationMap {
         mapCellSize = topography.second;
     }
 
-    public ElevationMap(BoundingBox boundingBox) {
+    /* added for downloading of offline content TODO change */
+    public ElevationMap(Pair<int[][], Double> topography, BoundingBox boundingBox) {
         this.userPoint = null;
         this.boundingBox = boundingBox;
         this.boundingBoxCenter = new POIPoint(this.boundingBox.getCenterWithDateLine());
-        downloadTopographyMap();
+        topographyMap = topography.first;
+        mapCellSize = topography.second;
     }
 
     /**

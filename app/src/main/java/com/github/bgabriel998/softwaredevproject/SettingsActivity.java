@@ -30,6 +30,10 @@ public class SettingsActivity extends AppCompatActivity {
         setupOfflineModeSwitch();
     }
 
+    /**
+     * This method controls the offlineModeSwitch.
+     * When turned on it will prompt the user to the SettingsMapActivity
+     */
     public void setupOfflineModeSwitch() {
         //Set a CheckedChange Listener for Switch Button
         offlineModeSwitch.setOnCheckedChangeListener((cb, on) -> {
@@ -37,7 +41,7 @@ public class SettingsActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, SettingsMapActivity.class);
                 startActivity(intent);
             } else {
-                //Do something when Switch is off/unchecked
+                // TODO handle
             }
         });
     }

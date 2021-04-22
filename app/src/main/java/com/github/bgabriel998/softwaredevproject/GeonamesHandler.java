@@ -49,7 +49,7 @@ public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>
     private String queryUrl;
     private int retryNbr;
 
-    /** TODO UPDATE
+    /** TODO look at modifications (Point instead of UserPoint)
      * Initializes provider
      * @param userLocation UserPoint containing user location inforamtions
      */
@@ -129,6 +129,8 @@ public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>
     @Override
     protected ArrayList<POI> doInBackground(Void... voids) {
         ArrayList<POI> resList = null;
+
+        Log.d("Debug", "Called");
 
         while(this.retryNbr<= DEFAULT_NUMBER_OF_RETRY){
             try {

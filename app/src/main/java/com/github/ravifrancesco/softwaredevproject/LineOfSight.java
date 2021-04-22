@@ -39,6 +39,13 @@ public class LineOfSight {
         this.elevationMap = new ElevationMap(topography, this.userPoint);
     }
 
+    /* created for downlaod of offline content TODO change */
+    public LineOfSight(Pair<int[][], Double> topography, Point userPoint) {
+        this.userPoint = null;
+        this.mapCellSize = topography.second;
+        this.elevationMap = new ElevationMap(topography, userPoint.computeBoundingBox(ElevationMap.BOUNDING_BOX_RANGE));
+    }
+
     /**
      * This method allows to filter the POIPoints that are not visible from the user's location.
      *

@@ -40,11 +40,17 @@ public class ComputePOIPoints {
         getPOIs(userPoint);
     }
 
+    /* added for download of offline content TODO change */
+    public ComputePOIPoints(Point point){
+        POIPoints = new ArrayList<>();
+        getPOIs(point);
+    }
+
     /**
      * Gets the POIs for the userPoint
      * @param userPoint location of the user
      */
-    private static void getPOIs(UserPoint userPoint){
+    private static void getPOIs(Point userPoint){
         new GeonamesHandler(userPoint){
             @Override
             public void onResponseReceived(ArrayList<POI> result) {
@@ -55,7 +61,7 @@ public class ComputePOIPoints {
                         poiPoint.setVerticalBearing(userPoint);
                         POIPoints.add(poiPoint);
                     }
-                    getLabeledPOIs(userPoint);
+                    getLabeledPOIsSelected(userPoint);
                 }
             }
         }.execute();
@@ -65,7 +71,7 @@ public class ComputePOIPoints {
      * Gets the labeled POIs
      * @param userPoint userPoint for which the labeled POIs are computed
      */
-    private static void getLabeledPOIs(UserPoint userPoint){
+    private static void getLabeledPOIsSelected(Point userPoint){
         new DownloadTopographyTask(){
             @Override
             public void onResponseReceived(Pair<int[][], Double> topography) {

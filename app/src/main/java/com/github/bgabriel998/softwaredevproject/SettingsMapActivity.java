@@ -1,13 +1,17 @@
 package com.github.bgabriel998.softwaredevproject;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.util.Pair;
 
+import com.github.ravifrancesco.softwaredevproject.DownloadTopographyTask;
 import com.github.ravifrancesco.softwaredevproject.ElevationMap;
 import com.github.ravifrancesco.softwaredevproject.LineOfSight;
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
@@ -19,6 +23,7 @@ import org.json.JSONObject;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 
 public class SettingsMapActivity extends AppCompatActivity {
 
@@ -40,7 +45,7 @@ public class SettingsMapActivity extends AppCompatActivity {
 
         this.okButton = findViewById(R.id.settingsMapOkButton);
         this.okButton.setOnClickListener(v -> {
-            saveToJson();
+            // saveToJson(); TODO fix this part
             this.finish();
         });
 
@@ -54,6 +59,8 @@ public class SettingsMapActivity extends AppCompatActivity {
 
     }
 
+    // TODO fix this part
+    @SuppressLint("StaticFieldLeak")
     public void saveToJson(){
 
         JSONObject json = new JSONObject();
@@ -61,11 +68,24 @@ public class SettingsMapActivity extends AppCompatActivity {
         if (selectedPoint == null) { Log.d("Debug" , "wat"); }
 
         ComputePOIPoints computePOIPoints = new ComputePOIPoints(selectedPoint);
-        HashSet<POIPoint> poiPoints = ComputePOIPoints.POIPoints;
+        List<POIPoint> poiPoints = ComputePOIPoints.POIPoints;
+
+        Log.d("Debug", String.valueOf(poiPoints.size()));
+
+        final Pair<int[][], Double>[] elevationMap = new Pair[1];
+
+        new DownloadTopographyTask(){
+            @Override
+            public void onResponseReceived(Pair<int[][], Double> topography) {
+                super.onResponseReceived(topography);
+                elevationMap[0] = topography;
+            }
+        }.execute(selectedPoint);
 
         try {
 
-            json.put("LineOfSight", new LineOfSight(selectedPoint.computeBoundingBox(ElevationMap.BOUNDING_BOX_RANGE)));
+            if (elevationMap[0] == null) { Log.d("Debug", "blind"); }
+            json.put("elevationMap", elevationMap[0]);
             json.put("POIPoints", poiPoints);
 
             String jsonString = json.toString();

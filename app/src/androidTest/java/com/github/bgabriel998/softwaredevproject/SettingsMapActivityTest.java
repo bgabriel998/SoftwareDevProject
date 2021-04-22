@@ -11,10 +11,13 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.io.File;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -74,5 +77,40 @@ public class SettingsMapActivityTest {
             fail("TestBackButton failed");
         }
     }
+
+    @Test
+    public void okButtonPressed() {
+        // performs long press
+        ViewInteraction mapView = onView(withId(R.id.settingsMapView));
+        mapView.perform(ViewActions.longClick());
+        // press the ok button
+        ViewInteraction view = onView(withId(R.id.settingsMapOkButton));
+        view.perform(ViewActions.click());
+        // Check if activity is stopped
+        try {
+            Thread.sleep(1000);
+            assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            fail("TestBackButton failed");
+        }
+
+    }
+
+    /* TODO  fix method first
+    @Test
+    public void saveJsonTest() {
+        // performs long press
+        ViewInteraction mapView = onView(withId(R.id.settingsMapView));
+        mapView.perform(ViewActions.longClick());
+        // press the ok button
+        ViewInteraction view = onView(withId(R.id.settingsMapOkButton));
+        view.perform(ViewActions.click());
+        // Check if the file exists
+        File file = new File("Save");
+        Assert.assertTrue(file.exists());
+
+    }
+     */
 
 }
