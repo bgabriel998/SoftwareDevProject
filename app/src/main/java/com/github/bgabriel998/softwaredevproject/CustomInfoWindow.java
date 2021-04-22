@@ -5,11 +5,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.github.bgabriel998.softwaredevproject.R;
-
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
-import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
 
 /**
@@ -62,29 +59,19 @@ public class CustomInfoWindow extends InfoWindow {
 
         //Handle hide and show Info window
         Marker current = (Marker) arg0;
-        toggleWindowVisibility(current, layout);
+        toggleWindowVisibility(layout);
 
     }
 
     /**
      * toggles the marker visibility
-     * @param marker info window marker
      * @param layout info window layout
      */
-    private void toggleWindowVisibility(Marker marker, LinearLayout layout){
-        for (int i = 0; i < mMapView.getOverlays().size(); ++i) {
-            Overlay o = mMapView.getOverlays().get(i);
-            if (o instanceof Marker) {
-                Marker m = (Marker) o;
-                if (m != marker) {
-                    //Toggle marker visibility
-                    if (layout.getVisibility() == View.GONE) {
-                        layout.setVisibility(View.VISIBLE);
-                    } else {
-                        layout.setVisibility(View.GONE);
-                    }
-                }
-            }
+    private void toggleWindowVisibility(LinearLayout layout){
+        if (layout.getVisibility() == View.GONE) {
+            layout.setVisibility(View.VISIBLE);
+        } else {
+            layout.setVisibility(View.GONE);
         }
     }
 }
