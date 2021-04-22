@@ -108,7 +108,7 @@ public class CameraUiView extends View {
         mountainMarkerVisible = Bitmap.createScaledBitmap(mountainMarkerVisible, MARKER_SIZE, MARKER_SIZE, true);
 
         //Initialize mountain marker that are not in line of sight
-        mountainMarkerNotVisible = getBitmapFromVectorDrawable(getContext(), R.drawable.ic_mountain_marker_resize);
+        mountainMarkerNotVisible = getBitmapFromVectorDrawable(getContext(), R.drawable.ic_mountain_marker_not_visible);
 
         //Initialize paints
         //Paint used for the main text heading (N, E, S, W)
