@@ -27,6 +27,7 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class OSMMap {
 
@@ -176,19 +177,17 @@ public class OSMMap {
      * @return bounding box
      */
     private BoundingBox computeArea(ArrayList<POIPoint> points) {
-        double nord = 0, sud = 0, ovest = 0, est = 0;
-        for (int i = 0; i < points.size(); i++) {
-            if (points.get(i) == null) continue;
-
-            double lat = points.get(i).getLatitude();
-            double lon = points.get(i).getLongitude();
-
-            if ((i == 0) || (lat > nord)) nord = lat;
-            if ((i == 0) || (lat < sud)) sud = lat;
-            if ((i == 0) || (lon < ovest)) ovest = lon;
-            if ((i == 0) || (lon > est)) est = lon;
-        }
-        return new BoundingBox(nord, est, sud, ovest);
-
+        AtomicReference<Double> north = new AtomicReference<>( points.get(0).getLatitude());
+        AtomicReference<Double> south = new AtomicReference<>( points.get(0).getLatitude());
+        AtomicReference<Double> west = new AtomicReference<>( points.get(0).getLongitude());
+        AtomicReference<Double> east = new AtomicReference<>( points.get(0).getLongitude());
+        points.forEach(loc -> {
+                    north.set(Math.max(loc.getLatitude(), north.get()));
+                    south.set(Math.min(loc.getLatitude(), south.get()));
+                    west.set(Math.min(loc.getLongitude(), west.get()));
+                    east.set(Math.max(loc.getLongitude(), east.get()));
+                }
+        );
+        return new BoundingBox(north.get(), east.get(), south.get(), west.get());
     }
 }
