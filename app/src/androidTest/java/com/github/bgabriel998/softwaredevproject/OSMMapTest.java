@@ -58,7 +58,7 @@ public class OSMMapTest {
 
     //Test creation of OSMmap object
     @Test
-    public void osmMapConstructorTest() throws NoSuchFieldException, IllegalAccessException {
+    public void osmMapConstructorTest() {
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
         OSMMap osmMap = MapActivity.osmMap;
