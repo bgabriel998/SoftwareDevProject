@@ -1,8 +1,6 @@
 package com.github.bgabriel998.softwaredevproject;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.view.ViewTreeObserver;
@@ -79,8 +77,6 @@ public class OSMMap {
      */
     public void displayUserLocation(){
         MyLocationNewOverlay mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context),mapView);
-        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_baseline_my_location_24);
-        mLocationOverlay.setPersonIcon(largeIcon);
         mLocationOverlay.enableMyLocation();
         mapView.getOverlays().add(mLocationOverlay);
     }
