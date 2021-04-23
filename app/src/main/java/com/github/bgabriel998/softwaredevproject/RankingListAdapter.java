@@ -76,11 +76,11 @@ public class RankingListAdapter extends ArrayAdapter<RankingItem> {
      */
     private void setItemColor(View view, TextView[] textViews, RankingItem item){
         int backgroundColor = R.color.LightGrey;
-        int textStyle = R.style.DarkGreenText;
+        int textStyle = R.style.StandardText_DarkGreen;
 
         if (item.getUid().equals(Account.getAccount().getId())) {
             backgroundColor = R.color.DarkGreen;
-            textStyle = R.style.LightGreyText;
+            textStyle = R.style.StandardText_LightGrey;
         }
 
         view.findViewById(R.id.ranking_item_container).setBackgroundResource(backgroundColor);

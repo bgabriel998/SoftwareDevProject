@@ -28,17 +28,18 @@
             android:orientation="horizontal">
 
             <TextView
-                style="@style/LargeDarkGreenText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/LargeText.DarkGreen"
+                android:layout_width="90dp"
+                android:layout_height="35dp"
+                android:gravity="center_vertical"
                 android:text="@string/points__mountain_category" />
 
             <TextView
                 android:id="@+id/pointText"
-                style="@style/LargeDarkGreenText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="120" />
+                style="@style/LargeText.DarkGreen"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:gravity="center_vertical"/>
         </LinearLayout>
 
         <!-- Height -->
@@ -48,17 +49,18 @@
             android:orientation="horizontal">
 
             <TextView
-                style="@style/LargeDarkGreenText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/LargeText.DarkGreen"
+                android:layout_width="90dp"
+                android:layout_height="35dp"
+                android:gravity="center_vertical"
                 android:text="@string/height_mountain_category" />
 
             <TextView
                 android:id="@+id/heightText"
-                style="@style/LargeDarkGreenText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="3,210m" />
+                style="@style/LargeText.DarkGreen"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:gravity="center_vertical"/>
         </LinearLayout>
 
         <!-- Position -->
@@ -68,17 +70,18 @@
             android:orientation="horizontal">
 
             <TextView
-                style="@style/LargeDarkGreenText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/LargeText.DarkGreen"
+                android:layout_width="110dp"
+                android:layout_height="35dp"
+                android:gravity="center_vertical"
                 android:text="@string/position_mountain_category" />
 
             <TextView
                 android:id="@+id/positionText"
-                style="@style/LargeDarkGreenText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="(120, 380)" />
+                style="@style/LargeText.DarkGreen"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:gravity="center_vertical"/>
         </LinearLayout>
 
     </LinearLayout>

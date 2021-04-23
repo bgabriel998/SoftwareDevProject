@@ -17,22 +17,40 @@
     <!-- Grey Button -->
     <style name="ButtonGrey" parent="android:style/Widget.Button">
         <item name="android:background">@drawable/button_light_grey</item>
+
+        <item name="autoSizeMaxTextSize">24sp</item>
+        <item name="autoSizeMinTextSize">18sp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="autoSizeTextType">uniform</item>
+
         <item name="android:textColor">@color/DarkGreen</item>
-        <item name="android:textSize">24sp</item>
     </style>
 
     <!-- Light green button -->
     <style name="ButtonLightGreen" parent="android:style/Widget.Button">
         <item name="android:background">@drawable/button_light_green</item>
+
+        <item name="autoSizeMaxTextSize">24sp</item>
+        <item name="autoSizeMinTextSize">18sp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="autoSizeTextType">uniform</item>
+
         <item name="android:textColor">@color/DarkGreen</item>
-        <item name="android:textSize">24sp</item>
     </style>
 
     <!-- Dark green button -->
     <style name="ButtonDarkGreen" parent="android:style/Widget.Button">
         <item name="android:background">@drawable/button_dark_green</item>
-        <item name="android:textColor">@color/LightGreen</item>
-        <item name="android:textSize">24sp</item>
+
+        <item name="autoSizeMaxTextSize">24sp</item>
+        <item name="autoSizeMinTextSize">18sp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="autoSizeTextType">uniform</item>
+
+        <item name="android:textColor">@color/LightGrey</item>
     </style>
 
     <!-- Icon button -->
@@ -43,52 +61,71 @@
     </style>
 
     <!-- ===== TEXTs ===== -->
+    <!-- === Standard Texts === -->
+    <style name="StandardText" parent="TextAppearance.AppCompat">
+        <item name="autoSizeMaxTextSize">24sp</item>
+        <item name="autoSizeMinTextSize">18sp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="autoSizeTextType">uniform</item>
+    </style>
+
     <!-- Standard Dark Green Text -->
-    <style name="DarkGreenText" parent="android:Widget.TextView">
+    <style name="StandardText.DarkGreen">
         <item name="android:textColor">@color/DarkGreen</item>
-        <item name="android:textSize">24sp</item>
     </style>
 
     <!-- Standard Light Grey Text -->
-    <style name="LightGreyText" parent="android:Widget.TextView">
+    <style name="StandardText.LightGrey">
         <item name="android:textColor">@color/LightGrey</item>
-        <item name="android:textSize">24sp</item>
     </style>
 
     <!-- Standard Light Blue Text -->
-    <style name="LightBlueText" parent="android:Widget.TextView">
+    <style name="StandardText.LightBlue">
         <item name="android:textColor">@color/LightBlue</item>
-        <item name="android:textSize">24sp</item>
+    </style>
+
+    <!-- === Large Texts === -->
+    <style name="LargeText" parent="TextAppearance.AppCompat">
+        <item name="autoSizeMaxTextSize">30sp</item>
+        <item name="autoSizeMinTextSize">24sp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="autoSizeTextType">uniform</item>
     </style>
 
     <!-- Large Light Grey Text -->
-    <style name = "LargeLightGreyText" parent="android:style/Widget.Toolbar">
+    <style name = "LargeText.LightGrey">
         <item name="android:textColor">@color/LightGrey</item>
-        <item name="android:textSize">30sp</item>
     </style>
 
     <!-- Large Light Blue Text -->
-    <style name = "LargeLightBlueText" parent="android:style/Widget.Toolbar">
+    <style name = "LargeText.LightBlue">
         <item name="android:textColor">@color/LightBlue</item>
-        <item name="android:textSize">30sp</item>
     </style>
 
     <!-- Large Dark Green Text -->
-    <style name = "LargeDarkGreenText" parent="android:style/Widget.Toolbar">
+    <style name = "LargeText.DarkGreen">
         <item name="android:textColor">@color/DarkGreen</item>
-        <item name="android:textSize">30sp</item>
+    </style>
+
+    <!-- === Small Texts === -->
+    <style name="SmallText" parent="TextAppearance.AppCompat">
+        <item name="autoSizeMaxTextSize">18sp</item>
+        <item name="autoSizeMinTextSize">12sp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="autoSizeTextType">uniform</item>
     </style>
 
     <!-- Small Light Grey Text -->
-    <style name="SmallLightGreyText" parent="android:Widget.TextView">
+    <style name="SmallText.LightGrey">
         <item name="android:textColor">@color/LightGrey</item>
-        <item name="android:textSize">18sp</item>
     </style>
 
     <!-- Small Light Blue Text -->
-    <style name="SmallLightBlueText" parent="android:Widget.TextView">
+    <style name="SmallText.LightBlue">
         <item name="android:textColor">@color/LightBlue</item>
-        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
