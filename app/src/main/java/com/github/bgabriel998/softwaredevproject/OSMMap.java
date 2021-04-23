@@ -34,6 +34,8 @@ public class OSMMap {
     private static final float DEFAULT_ZOOM_FACTOR = 3.5f;
     private static final float BOUNDING_BOX_ZOOM_FACTOR = 1.7f;
 
+    //public static final OnlineTileSourceBase MyMapTileSource = new XYTileSource("My Tile Source",ResourceProxy.string.mapnik, 0, 16, 256, ".png", "");
+
     /*Attributes*/
     private final MapView mapView;
     private final Context context;
@@ -70,6 +72,9 @@ public class OSMMap {
         mapController.setZoom(DEFAULT_ZOOM_FACTOR);
         mapView.setBuiltInZoomControls(false);
         mapView.setMultiTouchControls(true);
+        mapView.setHorizontalMapRepetitionEnabled(true);
+        mapView.setVerticalMapRepetitionEnabled(false);
+        mapView.setScrollableAreaLimitLatitude(MapView.getTileSystem().getMaxLatitude(), MapView.getTileSystem().getMinLatitude(), 0);
     }
 
     /**
