@@ -12,6 +12,8 @@ public class MapActivity extends AppCompatActivity {
 
     public static OSMMap osmMap = null;
     private ImageButton zoomOnUserLocationButton = null;
+    private ImageButton changeMapTileSourceButton = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,14 @@ public class MapActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 osmMap.zoomOnUserLocation();
+            }
+        });
+
+        changeMapTileSourceButton = (ImageButton) findViewById(R.id.changeMapTile);
+        changeMapTileSourceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                osmMap.changeMapTileSource(zoomOnUserLocationButton,changeMapTileSourceButton );
             }
         });
 

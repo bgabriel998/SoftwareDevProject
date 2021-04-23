@@ -1,18 +1,25 @@
 package com.github.bgabriel998.softwaredevproject;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.view.ViewTreeObserver;
+import android.widget.ImageButton;
 import android.widget.Toast;
+
 import androidx.core.content.res.ResourcesCompat;
+
 import com.github.giommok.softwaredevproject.FirebaseAccount;
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
+
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.util.MapTileIndex;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
@@ -35,6 +42,7 @@ public class OSMMap {
     private final MapView mapView;
     private final Context context;
     private MyLocationNewOverlay locationOverlay = null;
+    private boolean isSatellite = false;
 
     /**
      * Class constructor
@@ -89,6 +97,37 @@ public class OSMMap {
         if(locationOverlay != null) {
             mapView.getController().setZoom(13.0);
             mapView.getController().animateTo(locationOverlay.getMyLocation());
+        }
+    }
+
+    /**
+     * Zoom on user Location
+     * @param zoomOnUserLocationButton
+     * @param changeMapTileSourceButton
+     */
+    @SuppressLint("UseCompatLoadingForDrawables")
+    public void changeMapTileSource(ImageButton zoomOnUserLocationButton, ImageButton changeMapTileSourceButton){
+        if(isSatellite){
+            //Set default map
+            mapView.setTileSource(TileSourceFactory.MAPNIK);
+            zoomOnUserLocationButton.setBackground(context.getResources().getDrawable(R.drawable.button_bg_round));
+            changeMapTileSourceButton.setBackground(context.getResources().getDrawable(R.drawable.button_bg_round));
+            isSatellite = false;
+        }
+        else{
+            String[] urlArray = {"http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/"};
+            mapView.setTileSource(new OnlineTileSourceBase("ARCGisOnline", 0, 18, 256, "", urlArray) {
+                @Override
+                public String getTileURLString(long pMapTileIndex) {
+                    String mImageFilenameEnding = ".png";
+                    return getBaseUrl() + MapTileIndex.getZoom(pMapTileIndex) + "/"
+                            + MapTileIndex.getY(pMapTileIndex) + "/" + MapTileIndex.getX(pMapTileIndex)
+                            + mImageFilenameEnding;
+                }
+            });
+            zoomOnUserLocationButton.setBackground(context.getResources().getDrawable(R.drawable.button_bg_round_white));
+            changeMapTileSourceButton.setBackground(context.getResources().getDrawable(R.drawable.button_bg_round_white));
+            isSatellite = true;
         }
     }
 

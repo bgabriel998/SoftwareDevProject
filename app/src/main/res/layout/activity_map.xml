@@ -28,4 +28,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:srcCompat="@drawable/ic_baseline_my_location_24" />
+    <ImageButton
+        android:id="@+id/changeMapTile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/buttonGetUserLoc"
+        android:layout_marginLeft="16dp"
+        android:background="@drawable/button_bg_round"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/zoomOnUserLocation"
+        app:srcCompat="@drawable/ic_baseline_map_24" />
 </androidx.constraintlayout.widget.ConstraintLayout>
