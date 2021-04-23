@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
 
 /**
@@ -67,6 +68,12 @@ public class CustomInfoWindow extends InfoWindow {
      * @param layout info window layout
      */
     private void toggleWindowVisibility(LinearLayout layout){
+        //Close all potentially openned info windows
+        for(Overlay overlay : mMapView.getOverlays()){
+            if(overlay instanceof Marker){
+                ((Marker) overlay).closeInfoWindow();
+            }
+        }
         if (layout.getVisibility() == View.GONE) {
             layout.setVisibility(View.VISIBLE);
         } else {

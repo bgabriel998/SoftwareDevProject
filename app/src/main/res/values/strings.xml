@@ -85,6 +85,7 @@
 
     <!-- MAP MARKERS STRINGS -->
     <string name="marker_altitude">Altitude: %s m</string>
+    <string name="buttonGetUserLoc">Get user location</string>
     <!-- MAP TOAST STRINGS -->
     <string name="toast_no_account">You are not logged in: no markers can be displayed</string>
 

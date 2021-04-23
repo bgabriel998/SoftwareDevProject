@@ -39,6 +39,7 @@ public class OSMMap {
     /*Attributes*/
     private final MapView mapView;
     private final Context context;
+    private MyLocationNewOverlay locationOverlay = null;
 
     /**
      * Class constructor
@@ -81,9 +82,20 @@ public class OSMMap {
      * Display user location on map
      */
     public void displayUserLocation(){
-        MyLocationNewOverlay mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context),mapView);
-        mLocationOverlay.enableMyLocation();
-        mapView.getOverlays().add(mLocationOverlay);
+        locationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context),mapView);
+        locationOverlay.enableMyLocation();
+        mapView.getOverlays().add(locationOverlay);
+    }
+
+    /**
+     * Zoom on user Location
+     */
+    public void zoomOnUserLocation(){
+        if(locationOverlay != null) {
+            mapView.getController().setZoom(10.0);
+            mapView.getController().animateTo(locationOverlay.getMyLocation());
+            //mapView.getController().zoomToSpan(locationOverlay.getMyLocation().getLatitude(),locationOverlay.getMyLocation().getLongitude());
+        }
     }
 
     /**
