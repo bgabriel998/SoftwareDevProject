@@ -22,6 +22,7 @@ import java.util.Locale;
 
 public class CameraActivity extends AppCompatActivity{
 
+
     //Widgets
     private CameraPreview cameraPreview;
     private CameraUiView cameraUiView;
@@ -30,6 +31,7 @@ public class CameraActivity extends AppCompatActivity{
     private TextView fovHorizontal;
     private TextView fovVertical;
     private Compass compass;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

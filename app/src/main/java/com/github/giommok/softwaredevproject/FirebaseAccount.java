@@ -11,13 +11,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
-import org.osmdroid.bonuspack.location.POI;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 /* Singleton class containing the only possible account connected */
@@ -64,6 +59,7 @@ public class FirebaseAccount implements Account {
             if(snapshot.hasChild(Database.CHILD_DISCOVERED_PEAKS_HEIGHTS))
                 syncGetDiscoveredHeight(snapshot.child(Database.CHILD_DISCOVERED_PEAKS_HEIGHTS));
             else discoveredPeakHeights = new HashSet<>();
+            Log.d("CALLBACK FIREBASE","END of the execution");
         }
         @Override
         public void onCancelled(@NonNull DatabaseError error) {
@@ -145,7 +141,7 @@ public class FirebaseAccount implements Account {
             //Put entry in the account local copy
             discoveredCountryHighPoint.put(entry.getCountryName(), entry);
             //Put entry to the database
-            Database.setChildObject(Database.CHILD_USERS + getId() +
+            Database.setChildObject(Database.CHILD_USERS + getId() + "/"+
                     Database.CHILD_COUNTRY_HIGH_POINT,entry);
         }
     }
@@ -155,12 +151,25 @@ public class FirebaseAccount implements Account {
         return discoveredCountryHighPoint;
     }
 
+    /**
+     * Return only the names of the discovered country high points
+     * as a list of strings
+     * @return list of peak names
+     */
+    public List<String> getDiscoveredCountryHighPointNames(){
+        List<String> retList = new ArrayList<>();
+        for (Map.Entry<String, CountryHighPoint> highPoint : discoveredCountryHighPoint.entrySet()) {
+            retList.add(highPoint.getValue().getCountryHighPoint());
+        }
+        return retList;
+    }
+
 
     @Override
     public void setDiscoveredPeakHeights(int badge){
         if(!discoveredPeakHeights.contains(badge)){
             discoveredPeakHeights.add(badge);
-            Database.setChildObject(Database.CHILD_USERS +  getId() +
+            Database.setChildObject(Database.CHILD_USERS +  getId() + "/"+
                     Database.CHILD_DISCOVERED_PEAKS_HEIGHTS,Collections.singletonList(badge));
         }
     }
@@ -173,8 +182,8 @@ public class FirebaseAccount implements Account {
 
     @Override
     public void setDiscoveredPeaks(ArrayList<POIPoint> newDiscoveredPeaks){
-        Database.setChildObjectList(Database.CHILD_USERS + getId() +
-                Database.CHILD_DISCOVERED_PEAKS,
+        Database.setChildObjectList(Database.CHILD_USERS + getId() + "/" +
+                        Database.CHILD_DISCOVERED_PEAKS,
                 new ArrayList<Object>(newDiscoveredPeaks));
 
     }
@@ -259,7 +268,7 @@ public class FirebaseAccount implements Account {
         for (Map.Entry<String, HashMap<String, String>> entry : entries.entrySet()) {
             Object value = entry.getValue();
             CountryHighPoint countryHighPoint = new CountryHighPoint(((HashMap<String, String>) value).get(Database.CHILD_ATTRIBUTE_COUNTRY_NAME),
-                    ((HashMap<String, String>) value).get(Database.CHILD_COUNTRY_HIGH_POINT),
+                    ((HashMap<String, String>) value).get(Database.CHILD_COUNTRY_HIGH_POINT_NAME),
                     ((HashMap<String, Long>) value).get(Database.CHILD_ATTRIBUTE_HIGH_POINT_HEIGHT));
             String countryName = ((HashMap<String, String>) value).get(Database.CHILD_ATTRIBUTE_COUNTRY_NAME);
             //Check if the country high point is already in the list to avoid duplicate
@@ -309,6 +318,7 @@ public class FirebaseAccount implements Account {
                         // Copy all the elements in an ArrayList
                         List<FriendItem> newFriends = new ArrayList<>();
                         newFriends.addAll(tempFriends);
+                        Collections.sort(newFriends, (o1, o2) -> o1.getUid().compareTo(o2.getUid()));
                         // Once the update is done, change the friends object reference
                         friends = newFriends;
 

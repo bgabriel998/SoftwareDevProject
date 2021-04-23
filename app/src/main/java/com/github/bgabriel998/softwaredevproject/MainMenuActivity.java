@@ -63,6 +63,12 @@ public class MainMenuActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /** Changes view to GalleryActivity */
+    public void mapButton(View view) {
+        Intent intent = new Intent(this, MapActivity.class);
+        startActivity(intent);
+    }
+
     /**
      * Checks if the camera permission was already granted
      */

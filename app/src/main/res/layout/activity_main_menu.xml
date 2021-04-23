@@ -13,7 +13,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="65dp"
         android:layout_marginStart="55dp"
         android:layout_marginEnd="55dp"
         android:gravity="center"
@@ -67,6 +67,15 @@
             style="@style/ButtonGrey"
             android:text="@string/gallery_button"
             android:onClick="galleryButton" />
+
+        <Button
+            android:id="@+id/mapButton"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginTop="15dp"
+            style="@style/ButtonGrey"
+            android:text="@string/map_button"
+            android:onClick="mapButton" />
 
     </LinearLayout>
 

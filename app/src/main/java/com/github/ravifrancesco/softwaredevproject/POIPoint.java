@@ -1,9 +1,9 @@
 package com.github.ravifrancesco.softwaredevproject;
 
-import androidx.core.util.Pair;
-
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.util.GeoPoint;
+
+import java.util.Objects;
 
 /**
  * POIPoint is a class that extends Point.java and represents a POI in the map.
@@ -51,6 +51,15 @@ public class POIPoint extends Point {
         super(latitude, longitude, altitude);
         this.setName(name);
 
+    }
+
+    /**
+     * Override method for POIPoint HashSet comparison
+     * @return hashcode
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(name.hashCode(), this.getLatitude(), this.getLongitude(), this.getAltitude());
     }
 
     /**
