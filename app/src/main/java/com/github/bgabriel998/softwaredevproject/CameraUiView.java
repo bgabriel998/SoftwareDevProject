@@ -3,7 +3,6 @@ package com.github.bgabriel998.softwaredevproject;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
@@ -14,7 +13,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
-import com.github.ravifrancesco.softwaredevproject.Point;
 
 import java.util.List;
 import java.util.Map;
@@ -28,10 +26,12 @@ public class CameraUiView extends View {
     private Paint secondaryLinePaint;
     private Paint terciaryLinePaint;
     private Paint mainTextPaint;
+    private Paint mountainInfo;
     private Paint secondaryTextPaint;
 
     //Colors of the compass-view
     private int compassColor;
+    private int mountainInfoColor;
 
     //Font size of the text
     private int mainTextSize;
@@ -39,13 +39,17 @@ public class CameraUiView extends View {
     //Max opacity for the paints
     private static final int MAX_ALPHA = 255;
 
+    //Rotation to be applied for the addition info of the mountains
+    private static final int LABEL_ROTATION = -45;
+    //Offset for the text to be above the marker
+    private static final int OFFSET_MOUNTAIN_INFO = 15;
+
     //Factors for the sizes
     private static final int MAIN_TEXT_FACTOR = 20;
     private static final int SEC_TEXT_FACTOR = 15;
     private static final int MAIN_LINE_FACTOR = 5;
     private static final int SEC_LINE_FACTOR = 3;
     private static final int TER_LINE_FACTOR = 2;
-    private static final int MARKER_SIZE = 150;
 
     //Heading of the user
     private float horizontalDegrees;
@@ -98,19 +102,25 @@ public class CameraUiView extends View {
     private void widgetInit(){
         //Initialize colors
         compassColor = R.color.Black;
+        mountainInfoColor = R.color.Black;
 
         //Initialize fonts
         float screenDensity = getResources().getDisplayMetrics().scaledDensity;
         mainTextSize = (int) (MAIN_TEXT_FACTOR * screenDensity);
 
         //Initialize mountain marker that are in line of sight
-        mountainMarkerVisible = BitmapFactory.decodeResource(getResources(), R.drawable.mountain_marker);
-        mountainMarkerVisible = Bitmap.createScaledBitmap(mountainMarkerVisible, MARKER_SIZE, MARKER_SIZE, true);
+        mountainMarkerVisible = getBitmapFromVectorDrawable(getContext(), R.drawable.ic_mountain_marker_visible);
 
         //Initialize mountain marker that are not in line of sight
-        mountainMarkerNotVisible = getBitmapFromVectorDrawable(getContext(), R.drawable.ic_mountain_marker_resize);
+        mountainMarkerNotVisible = getBitmapFromVectorDrawable(getContext(), R.drawable.ic_mountain_marker_not_visible);
 
         //Initialize paints
+        mountainInfo = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mountainInfo.setTextAlign(Paint.Align.LEFT);
+        mountainInfo.setTextSize(MAIN_TEXT_FACTOR*screenDensity);
+        mountainInfo.setColor(compassColor);
+        mountainInfo.setAlpha(MAX_ALPHA);
+
         //Paint used for the main text heading (N, E, S, W)
         mainTextPaint = configureTextPaint(mainTextSize);
 
@@ -182,7 +192,6 @@ public class CameraUiView extends View {
      * Sets the range in degrees of the compass-view, corresponds to the field of view of the camera
      * @param cameraFieldOfView Pair containing the horizontal and vertical field of view
      */
-    @SuppressWarnings("ConstantConditions")
     public void setRange(Pair<Float, Float> cameraFieldOfView) {
         int orientation = getResources().getConfiguration().orientation;
 
@@ -363,10 +372,25 @@ public class CameraUiView extends View {
         float mountainMarkerPosition = height * (rangeDegreesVertical - 2*deltaVerticalAngle) / (2*rangeDegreesVertical)
                 - (float)mountainMarkerVisible.getHeight()/2;
 
+        //Calculate the horizontal position
+        float left = pixDeg * (actualDegree - minDegrees);
+
         //Draw the marker on the preview depending on the line of sight
         Bitmap mountainMarker = isVisible ? mountainMarkerVisible : mountainMarkerNotVisible;
-        canvas.drawBitmap(mountainMarker, pixDeg * (actualDegree - minDegrees),
-                mountainMarkerPosition, null);
+        mountainInfo.setColor(isVisible ? getResources().getColor(mountainInfoColor, null) : compassColor);
+        mountainInfo.setAlpha(MAX_ALPHA);
+
+        canvas.drawBitmap(mountainMarker, left, mountainMarkerPosition, null);
+
+        //Save status before Screen Rotation
+        canvas.save();
+        canvas.rotate(LABEL_ROTATION, left, mountainMarkerPosition);
+        canvas.drawText(poiPoint.getName() + " " + poiPoint.getAltitude() + "m",
+                left + mountainInfo.getTextSize() - OFFSET_MOUNTAIN_INFO,
+                mountainMarkerPosition + mountainInfo.getTextSize() + OFFSET_MOUNTAIN_INFO,
+                mountainInfo);
+        //Restore the saved state
+        canvas.restore();
     }
 
     /**
