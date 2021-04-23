@@ -5,12 +5,9 @@ import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
-
 import androidx.core.content.res.ResourcesCompat;
-
 import com.github.giommok.softwaredevproject.FirebaseAccount;
 import com.github.ravifrancesco.softwaredevproject.POIPoint;
-
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -33,8 +30,6 @@ public class OSMMap {
     private static final float TILE_SCALING_FACTOR = 1.5f;
     private static final float DEFAULT_ZOOM_FACTOR = 3.5f;
     private static final float BOUNDING_BOX_ZOOM_FACTOR = 1.7f;
-
-    //public static final OnlineTileSourceBase MyMapTileSource = new XYTileSource("My Tile Source",ResourceProxy.string.mapnik, 0, 16, 256, ".png", "");
 
     /*Attributes*/
     private final MapView mapView;
@@ -92,9 +87,8 @@ public class OSMMap {
      */
     public void zoomOnUserLocation(){
         if(locationOverlay != null) {
-            mapView.getController().setZoom(10.0);
+            mapView.getController().setZoom(13.0);
             mapView.getController().animateTo(locationOverlay.getMyLocation());
-            //mapView.getController().zoomToSpan(locationOverlay.getMyLocation().getLatitude(),locationOverlay.getMyLocation().getLongitude());
         }
     }
 

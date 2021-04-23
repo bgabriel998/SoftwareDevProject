@@ -54,7 +54,6 @@ public class CustomInfoWindow extends InfoWindow {
 
         layout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //... add here method to redirect to the collection of peaks (activity)
             }
         });
 
