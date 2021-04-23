@@ -1,13 +1,17 @@
 package com.github.bgabriel998.softwaredevproject;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ListView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.github.giommok.softwaredevproject.FirebaseAccount;
+import com.github.giommok.softwaredevproject.ScoringConstants;
+
 import java.util.ArrayList;
-import java.util.Locale;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 public class CollectionActivity extends AppCompatActivity {
 
@@ -40,16 +44,16 @@ public class CollectionActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO Get list from DB
      * @return array list of all collected items.
      */
     private ArrayList<CollectedItem> getCollection(){
-        ArrayList<CollectedItem> collectedItems = new ArrayList<>();
-
-        for (int i = 0; i < 20; i++){
-            collectedItems.add(new CollectedItem(String.format(Locale.getDefault(),"TEST_Mountain%d", i), 100 - i, 1000-i, 50+i,50-i));
-        }
-
+        FirebaseAccount account = FirebaseAccount.getAccount();
+        ArrayList<CollectedItem> collectedItems = ((ArrayList<CollectedItem>)
+                (account.getDiscoveredPeaks().stream().map(poi-> new CollectedItem(poi.getName(),
+                (int)(poi.getAltitude()*ScoringConstants.PEAK_FACTOR),
+                (int)(poi.getAltitude()), (float) poi.getLongitude(),
+                (float) poi.getLatitude())).collect(Collectors.toList())));
+        collectedItems.sort(Collections.reverseOrder());
         return collectedItems;
     }
 

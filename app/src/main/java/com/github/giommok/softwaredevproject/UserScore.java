@@ -78,6 +78,7 @@ public class UserScore {
             if(comparePeakNameWithCacheData(countryInfo, poiPoint) && !countryHighPointAlreadyDiscovered(poiPoint,country)) {
                 retValue += ScoringConstants.BONUS_COUNTRY_TALLEST_PEAK;
                 countryInfo.setCountryName(country);
+                countryInfo.setCountryHighPoint(poiPoint.getName());
                 fireBaseAccount.setDiscoveredCountryHighPoint(countryInfo);
             }
         }

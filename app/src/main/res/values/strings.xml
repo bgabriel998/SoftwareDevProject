@@ -18,6 +18,7 @@
     <string name="collection_button">Collection</string>
     <string name="ranking_button">Ranking</string>
     <string name="gallery_button">Gallery</string>
+    <string name="map_button">Map</string>
     <string name="sign_in_button">Sign In</string>
     <string name="sign_out_button">Sign Out</string>
     <string name="sign_up_button">Sign Up</string>
@@ -81,6 +82,13 @@
     <string name="pictureSavedFailed">Failed to take picture:</string>
     <string name="pictureSavedSuccessfully">Picture saved at:</string>
 
+
+    <!-- MAP MARKERS STRINGS -->
+    <string name="marker_altitude">Altitude: %s m</string>
+    <!-- MAP TOAST STRINGS -->
+    <string name="toast_no_account">You are not logged in: no markers can be displayed</string>
+
     <!-- GALLERY TEXT -->
     <string name="empty_gallery">Empty Gallery</string>
+
 </resources>
