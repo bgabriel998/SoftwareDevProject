@@ -118,16 +118,16 @@ public class FriendsActivityTest {
             Database.setChild(Database.CHILD_USERS + username + ((i < 10) ? "0" + i : i), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(username + i));
         }
         Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(username));
-        Thread.sleep(sleepTime);
+        Thread.sleep(longSleepTime);
 
         // Add mock users to the friends
         for(int i=0; i < FRIENDS_SIZE; i++) {
             Database.setChild(Database.CHILD_USERS + account.getId() + Database.CHILD_FRIENDS, Collections.singletonList(username + ((i < 10) ? "0" + i : i)), Collections.singletonList(""));
         }
-        Thread.sleep(longSleepTime);
+        Thread.sleep(longSleepTime * 2);
 
         testRule.getScenario().recreate();
-        Thread.sleep(longSleepTime);
+        Thread.sleep(longSleepTime * 2);
         DataInteraction interaction =  onData(instanceOf(FriendItem.class));
 
         for (int i = 0; i < FRIENDS_SIZE; i++){
@@ -143,7 +143,7 @@ public class FriendsActivityTest {
         String newUsername = username + "new";
         int newScore = 20;
         Database.setChild(Database.CHILD_USERS + username + "00", Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_SCORE), Arrays.asList(newUsername, newScore));
-        Thread.sleep(sleepTime);
+        Thread.sleep(sleepTime * 2);
 
         // Check username has been updated
         interaction.atPosition(0).onChildView(withId(R.id.friend_username))
@@ -163,10 +163,10 @@ public class FriendsActivityTest {
 
         // Add mock user to the friends
         Database.setChild(Database.CHILD_USERS + account.getId() + Database.CHILD_FRIENDS, Collections.singletonList(FRIEND_USER), Collections.singletonList(""));
-        Thread.sleep(longSleepTime);
+        Thread.sleep(longSleepTime * 2);
 
         testRule.getScenario().recreate();
-        Thread.sleep(longSleepTime);
+        Thread.sleep(longSleepTime * 2);
 
         // Item at pos 0 looks like this
         FriendItem correctItem = new FriendItem(
