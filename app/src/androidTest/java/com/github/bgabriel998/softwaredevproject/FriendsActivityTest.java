@@ -30,11 +30,13 @@ import java.util.Random;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static com.github.giommok.softwaredevproject.AccountTest.longSleepTime;
 import static com.github.giommok.softwaredevproject.AccountTest.registerTestUser;
 import static com.github.giommok.softwaredevproject.AccountTest.removeTestUser;
 import static com.github.giommok.softwaredevproject.AccountTest.sleepTime;
@@ -122,10 +124,10 @@ public class FriendsActivityTest {
         for(int i=0; i < FRIENDS_SIZE; i++) {
             Database.setChild(Database.CHILD_USERS + account.getId() + Database.CHILD_FRIENDS, Collections.singletonList(username + ((i < 10) ? "0" + i : i)), Collections.singletonList(""));
         }
-        Thread.sleep(sleepTime);
+        Thread.sleep(longSleepTime);
 
         testRule.getScenario().recreate();
-        Thread.sleep(sleepTime);
+        Thread.sleep(longSleepTime);
         DataInteraction interaction =  onData(instanceOf(FriendItem.class));
 
         for (int i = 0; i < FRIENDS_SIZE; i++){
@@ -161,10 +163,10 @@ public class FriendsActivityTest {
 
         // Add mock user to the friends
         Database.setChild(Database.CHILD_USERS + account.getId() + Database.CHILD_FRIENDS, Collections.singletonList(FRIEND_USER), Collections.singletonList(""));
-        Thread.sleep(sleepTime);
+        Thread.sleep(longSleepTime);
 
         testRule.getScenario().recreate();
-        Thread.sleep(sleepTime);
+        Thread.sleep(longSleepTime);
 
         // Item at pos 0 looks like this
         FriendItem correctItem = new FriendItem(
