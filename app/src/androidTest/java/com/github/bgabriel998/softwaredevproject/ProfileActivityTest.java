@@ -12,6 +12,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import com.github.giommok.softwaredevproject.Account;
 import com.github.giommok.softwaredevproject.Database;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.junit.After;
@@ -322,7 +323,13 @@ public class ProfileActivityTest {
         removeTestUser();
         onView(withId(R.id.signOutButton)).perform(click());
         Thread.sleep(sleepTime);
-        Espresso.onView(withId(R.id.signOutButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+        Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+
+        Intents.init();
+        onView(withId(R.id.signInButton)).perform(click());
+        Thread.sleep(sleepTime);
+        intended(IntentMatchers.hasComponent(com.google.android.gms.auth.api.signin.internal.SignInHubActivity.class.getName()));
+        Intents.release();
     }
 
     /* Test that FriendsActivity is started on button click */
