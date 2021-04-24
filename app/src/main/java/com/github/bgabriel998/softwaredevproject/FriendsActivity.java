@@ -50,9 +50,6 @@ public class FriendsActivity extends AppCompatActivity {
     private void fillFriendsList(){
         ListView friendsListView = findViewById(R.id.friends_list_view);
 
-        // Remove current friends listeners
-        friendsList.forEach(FriendItem::removeListener);
-
         // Update friends
         updateFriends();
 

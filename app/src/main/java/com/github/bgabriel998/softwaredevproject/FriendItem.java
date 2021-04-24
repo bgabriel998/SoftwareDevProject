@@ -68,25 +68,11 @@ public class FriendItem {
     }
 
     /**
-     * Getter of the friend item DB reference
-     */
-    public DatabaseReference getDbRef() {
-        return dbRef;
-    }
-
-    /**
      * Set the listener of a friend item that will update the fields on DB changes
      */
     public void setListener(ValueEventListener listener) {
         itemListener = listener;
         dbRef.addValueEventListener(itemListener);
-    }
-
-    /**
-     * Remove the listener. Call this method when the friend item will not be used anymore
-     */
-    public void removeListener() {
-        dbRef.removeEventListener(itemListener);
     }
 
     /**
