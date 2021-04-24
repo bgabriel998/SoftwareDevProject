@@ -27,7 +27,7 @@
         <activity android:name=".FriendItemActivity"/>
         <activity android:name=".FriendsActivity"/>
         <activity android:name=".ImageActivity"/>
-        <activity android:name=".GalleryActivity"/>
+        <activity android:name=".GalleryActivity" />
         <activity android:name=".CameraActivity" />
         <activity android:name=".MountainActivity" />
         <activity android:name=".CollectionActivity" />
