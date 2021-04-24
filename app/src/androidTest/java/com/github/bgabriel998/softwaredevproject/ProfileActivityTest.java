@@ -189,7 +189,9 @@ public class ProfileActivityTest {
 
     /* Test that the message inviting the user to write the username in the correct box is correct */
     @Test
-    public void addFriendTextTest() {
+    public void addFriendTextTest() throws InterruptedException {
+        testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
+        onView(withId(R.id.addFriendButton)).perform(click());
         ViewInteraction addFriendText = Espresso.onView(withId(R.id.editTextFriend));
         addFriendText.check(matches(withHint(R.string.insert_friend_button)));
     }
@@ -284,11 +286,12 @@ public class ProfileActivityTest {
 
     /* Test that FriendsActivity is started on button click */
     @Test
-    public void friendsButtonTest() {
+    public void friendsButtonTest() throws InterruptedException {
         Intents.init();
         testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
         onView(withId(R.id.friendsButton)).perform(click());
         intended(IntentMatchers.hasComponent(FriendsActivity.class.getName()));
+        Intents.release();
     }
 
     /* Test that AddFriendActivity is started on button click */
@@ -298,5 +301,6 @@ public class ProfileActivityTest {
         testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
         onView(withId(R.id.addFriendButton)).perform(click());
         intended(IntentMatchers.hasComponent(AddFriendActivity.class.getName()));
+        Intents.release();
     }
 }
