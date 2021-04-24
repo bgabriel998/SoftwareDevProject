@@ -52,8 +52,35 @@ public class ProfileActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private Account account = Account.getAccount();
 
-    private ActivityResultLauncher<Intent> signInLauncher;
-    private ActivityResultLauncher<Intent> addFriendLauncher;
+    private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                Log.d("Google Sign API", "signInButton: started callback");
+                // The Task returned from this call is always completed, no need to attach a listener.
+                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
+                try {
+                    firebaseAuthWithGoogle(task.getResult(ApiException.class).getIdToken());
+                } catch (ApiException e) {
+                    // The ApiException status code indicates the detailed failure reason.
+                    Log.w("Google Sign API", "signInResult:failed code=" + e.getStatusCode());
+                }
+            });
+    
+    private final ActivityResultLauncher<Intent> addFriendLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    // Retrieve the snack bar message
+                    Intent data = result.getData();
+                    String message = data.getStringExtra(AddFriendActivity.INTENT_EXTRA_NAME);
+
+                    Log.d("Friend added", "onActivityResult: message: " + message);
+
+                    // Show the snack bar
+                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,38 +103,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        // Register for activity results
-        signInLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    Log.d("Google Sign API", "signInButton: started callback");
-                    // The Task returned from this call is always completed, no need to attach a listener.
-                    Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
-                    try {
-                        firebaseAuthWithGoogle(task.getResult(ApiException.class).getIdToken());
-                    } catch (ApiException e) {
-                        // The ApiException status code indicates the detailed failure reason.
-                        Log.w("Google Sign API", "signInResult:failed code=" + e.getStatusCode());
-                    }
-                });
-
-        addFriendLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        // Retrieve the snack bar message
-                        Intent data = result.getData();
-                        String message = data.getStringExtra(AddFriendActivity.INTENT_EXTRA_NAME);
-
-                        Log.d("Friend added", "onActivityResult: message: " + message);
-
-                        // Show the snack bar
-                        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG);
-                        snackbar.show();
-                    }
-                });
-
     }
 
     /**
