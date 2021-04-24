@@ -18,6 +18,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static com.github.giommok.softwaredevproject.AccountTest.longSleepTime;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
@@ -58,7 +59,8 @@ public class FriendItemActivityTest {
 
     /* Test that the points text is set as expected */
     @Test
-    public void TestPointsText(){
+    public void TestPointsText() throws InterruptedException {
+        Thread.sleep(longSleepTime);
         ViewInteraction pointText = Espresso.onView(withId(R.id.pointText));
         pointText.check(matches(withText(String.format(Locale.getDefault(), " %d", testPoints))));
     }
