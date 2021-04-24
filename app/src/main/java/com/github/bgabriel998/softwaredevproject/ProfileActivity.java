@@ -65,7 +65,7 @@ public class ProfileActivity extends AppCompatActivity {
                     Log.w("Google Sign API", "signInResult:failed code=" + e.getStatusCode());
                 }
             });
-    
+
     private final ActivityResultLauncher<Intent> addFriendLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
