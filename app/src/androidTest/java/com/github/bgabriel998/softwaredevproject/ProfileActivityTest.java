@@ -2,6 +2,7 @@ package com.github.bgabriel998.softwaredevproject;
 
 import android.app.Activity;
 
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.Intents;
@@ -193,15 +194,6 @@ public class ProfileActivityTest {
         addFriendText.check(matches(withHint(R.string.insert_friend_button)));
     }
 
-    /* Test that UI is displayed correctly when friends button is pressed. */
-    @Test
-    public void addFriendButtonTest() throws InterruptedException {
-        testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
-        onView(withId(R.id.addFriendButton)).perform(click());
-        Thread.sleep(2000);
-        Espresso.onView(withId(R.id.submitFriendButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-    }
-
     /* Test that if the friend is already present the correct message is displayed */
     @Test
     public void friendAlreadyPresentTest() throws InterruptedException {
@@ -225,6 +217,7 @@ public class ProfileActivityTest {
     @Test
     public void addFriendTest() throws InterruptedException {
         final String username = "i3gn4u34o";
+        final String added_message = username + " " + ApplicationProvider.getApplicationContext().getResources().getString(R.string.friend_added);
 
         Database.setChild(Database.CHILD_USERS + "test", Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(username));
         Thread.sleep(1500);
@@ -235,7 +228,7 @@ public class ProfileActivityTest {
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());
         Thread.sleep(2000);
-        onView(withText(R.string.friend_added)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withText(added_message)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
     /* Test that if the friend username is the current username the correct message is displayed */
@@ -296,5 +289,14 @@ public class ProfileActivityTest {
         testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
         onView(withId(R.id.friendsButton)).perform(click());
         intended(IntentMatchers.hasComponent(FriendsActivity.class.getName()));
+    }
+
+    /* Test that AddFriendActivity is started on button click */
+    @Test
+    public void addFriendButtonTest() {
+        Intents.init();
+        testRule.getScenario().onActivity(ProfileActivity::setLoggedUI);
+        onView(withId(R.id.addFriendButton)).perform(click());
+        intended(IntentMatchers.hasComponent(AddFriendActivity.class.getName()));
     }
 }

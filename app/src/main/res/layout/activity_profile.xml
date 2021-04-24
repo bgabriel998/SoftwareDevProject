@@ -61,18 +61,6 @@
         android:text="@string/submit_username_button"
         android:onClick="submitUsernameButton" />
 
-    <!-- Submit friend -->
-    <Button
-        android:id="@+id/submitFriendButton"
-        android:layout_width="300dp"
-        android:layout_height="70dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        style="@style/ButtonDarkGreen"
-        android:text="@string/submit_friend_button"
-        android:onClick="submitFriendButton" />
 
     <LinearLayout
         android:id="@+id/loggedLayout"
@@ -133,6 +121,7 @@
         android:text="@string/sign_out_button"
         android:onClick="signOutButton" />
 
+    <!-- Username edit text -->
     <EditText
         android:id="@+id/editTextUsername"
         android:autofillHints="username"
@@ -141,21 +130,6 @@
         android:layout_height="70dp"
         android:ems="10"
         android:hint="@string/insert_username_button"
-        android:imeOptions="actionDone"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/editTextFriend"
-        android:autofillHints="username"
-        style="@style/ButtonGrey"
-        android:layout_width="300dp"
-        android:layout_height="70dp"
-        android:ems="10"
-        android:hint="@string/insert_friend_button"
         android:imeOptions="actionDone"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
