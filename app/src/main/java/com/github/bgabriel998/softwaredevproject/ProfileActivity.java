@@ -50,7 +50,7 @@ public class ProfileActivity extends AppCompatActivity {
     private View loadingView;
 
     private GoogleSignInClient mGoogleSignInClient;
-    private Account account;
+    private Account account = Account.getAccount();
 
     private ActivityResultLauncher<Intent> signInLauncher;
     private ActivityResultLauncher<Intent> addFriendLauncher;
@@ -117,11 +117,10 @@ public class ProfileActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         loadingView.setVisibility(View.GONE);
-        account = FirebaseAccount.getAccount();
         // If the user is not logged
-        if(!account.isSignedIn()) setUI();
+        if(!account.isSignedIn()) setMenuUI();
         else {
-            Database.isPresent(Database.CHILD_USERS, Database.CHILD_EMAIL, account.getEmail(), this::setUI, this::setUsernameChoiceUI);
+            checkUserOnDB();
         }
     }
 
@@ -172,7 +171,7 @@ public class ProfileActivity extends AppCompatActivity {
             Database.setChild(Database.CHILD_USERS + account.getId(), Arrays.asList(Database.CHILD_EMAIL, Database.CHILD_USERNAME), Arrays.asList(account.getEmail(), username));
             Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.available_username , Snackbar.LENGTH_LONG);
             snackbar.show();
-            setUI();
+            setMenuUI();
             ((EditText)editTextUsername).getText().clear();
         });
     }
@@ -186,7 +185,7 @@ public class ProfileActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     public void onComplete(Task<Void> task) {
                         account.synchronizeUserProfile();
-                        setUI();
+                        setMenuUI();
                     }
                 });
     }
@@ -222,12 +221,13 @@ public class ProfileActivity extends AppCompatActivity {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         FirebaseAuth.getInstance().signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
+                    loadingView.setVisibility(View.GONE);
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d("Firebase AUTH", "signInWithCredential:success");
                         account.synchronizeUserProfile();
                         // Check if the user is already registered on the database
-                        Database.isPresent(Database.CHILD_USERS, Database.CHILD_EMAIL, account.getEmail(), this::setUI, this::setUsernameChoiceUI);
+                        checkUserOnDB();
                     } else {
                         Log.w("Firebase AUTH", "signInWithCredential:failure", task.getException());
                     }
@@ -235,65 +235,49 @@ public class ProfileActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Check if the user is on the DB. If so, set the default UI. Otherwise, force a username change.
+     */
+    public void checkUserOnDB() {
+        Database.refRoot.child(Database.CHILD_USERS + account.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    setMenuUI();
+                }
+                else {
+                    setUsernameChoiceUI();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
     /* UI METHODS */
 
     /**
      * Sets what is visible on UI based on if the user is signed in or not.
      */
-    public void setUI() {
-        if (account.isSignedIn()) setLoggedUI();
-        else {
-            showSignInUI(true);
-
-            // Hide everything else
-            showMenuUI(false);
-            showChangeUsernameUI(false);
-        }
+    public void setMenuUI() {
+        loggedLayout.setVisibility(account.isSignedIn() ? View.VISIBLE : View.GONE);
+        signOutButton.setVisibility(account.isSignedIn() ? View.VISIBLE : View.GONE);
+        signInButton.setVisibility(account.isSignedIn() ? View.GONE : View.VISIBLE);
+        submitUsernameButton.setVisibility(View.GONE);
+        editTextUsername.setVisibility(View.GONE);
     }
 
     /**
-     * Sets what is visible on UI if the user is logged
-     */
-    public void setLoggedUI(){
-        showMenuUI(true);
-
-        // Hide everything else
-        showChangeUsernameUI(false);
-        showSignInUI(false);
-    }
-
-    /**
-     * Sets what is visible on UI after a username change is requested or required
+     * Set what is visible on UI after a username change is requested or required
      */
     public void setUsernameChoiceUI() {
-        showChangeUsernameUI(true);
-
-        // Hide everything else
-        showMenuUI(false);
-        showSignInUI(false);
-    }
-
-    /**
-     * Set change username visibility
-     */
-    public void showChangeUsernameUI(boolean visible) {
-        submitUsernameButton.setVisibility(visible ? View.VISIBLE : View.GONE);
-        editTextUsername.setVisibility(visible ? View.VISIBLE : View.GONE);
-    }
-
-    /**
-     * Set logged menu visibility
-     */
-    public void showMenuUI(boolean visible) {
-        loadingView.setVisibility(View.GONE);
-        loggedLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
-        signOutButton.setVisibility(visible ? View.VISIBLE : View.GONE);
-    }
-
-    /**
-     * Set signed out views visibility
-     */
-    public void showSignInUI(boolean visible) {
-        signInButton.setVisibility(visible ? View.VISIBLE : View.GONE);
+        loggedLayout.setVisibility(View.GONE);
+        signOutButton.setVisibility(View.GONE);
+        signInButton.setVisibility(View.GONE);
+        submitUsernameButton.setVisibility(View.VISIBLE);
+        editTextUsername.setVisibility(View.VISIBLE);
     }
 }

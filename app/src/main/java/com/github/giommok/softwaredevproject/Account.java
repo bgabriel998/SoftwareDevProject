@@ -11,6 +11,8 @@ import java.util.HashSet;
 import java.util.List;
 
 public interface Account {
+    int MAX_LENGHT = 15;
+    int MIN_LENGTH = 3;
 
     /**
      * @return the reference to the user account
@@ -61,7 +63,7 @@ public interface Account {
      * @return true if and only if the username is valid.
      */
     public static Boolean isValid(String username) {
-        return username != null && username.matches("\\w{3,15}");
+        return username != null && username.matches("\\w*") && username.length() >= 3 && username.length() <= 15;
     }
 
     /**

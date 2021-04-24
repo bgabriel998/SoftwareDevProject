@@ -1,8 +1,9 @@
 package com.github.giommok.softwaredevproject;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
-import com.github.bgabriel998.softwaredevproject.RankingItem;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -12,11 +13,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-class DatabaseException extends RuntimeException {
-    DatabaseException() {
-        super("Exception thrown by the Database class");
-    }
-}
 
 public class Database {
 
@@ -50,7 +46,7 @@ public class Database {
         DatabaseReference refAdd = refRoot.child(path);
 
         // If the names of the values to be updated and the values themselves have different sizes, the operation cannot be done
-        if(childKeys.size() != values.size()) throw new DatabaseException();
+        if(childKeys.size() != values.size()) throw new RuntimeException("Exception thrown by the Database class");
 
         // Updating the child keys with the given values
         for(int i = 0; i < childKeys.size(); i++) {
