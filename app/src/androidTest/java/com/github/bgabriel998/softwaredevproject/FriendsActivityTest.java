@@ -194,9 +194,9 @@ public class FriendsActivityTest {
         intended(allOf(IntentMatchers.hasComponent(FriendsActivity.class.getName()),
                 IntentMatchers.hasExtra(FriendItemActivity.INTENT_EXTRA_NAME, removeMessage)));
 
-        Intents.release();
-
         // Check snack bar
         onView(withText(removeMessage)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+
+        Intents.release();
     }
 }
