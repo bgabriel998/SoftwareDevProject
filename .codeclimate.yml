@@ -2,10 +2,13 @@ checks:
     method-count:
         enabled: true
         config:
-            threshold: 25
+            threshold: 30
     method-complexity:
-      config:
-        threshold: 6
+        config:
+            threshold: 15
+    method-lines:
+        config:
+            threshold: 40
 exclude_patterns:
 - "**/test/"
 - "**/androidTest/"
