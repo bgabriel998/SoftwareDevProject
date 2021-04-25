@@ -19,7 +19,7 @@ import org.junit.runner.RunWith;
 import static androidx.test.espresso.intent.Intents.intended;
 
 @RunWith(AndroidJUnit4.class)
-public class ActivityInitTest {
+public class InitActivityTest {
 
     /* Create Intent */
     @Before
