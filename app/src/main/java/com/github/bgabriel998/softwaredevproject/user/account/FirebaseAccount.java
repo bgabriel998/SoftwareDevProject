@@ -6,8 +6,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.github.bgabriel998.softwaredevproject.database.Database;
-import com.github.bgabriel998.softwaredevproject.map.CountryHighPoint;
-import com.github.bgabriel998.softwaredevproject.map.POIPoint;
+import com.github.bgabriel998.softwaredevproject.points.CountryHighPoint;
+import com.github.bgabriel998.softwaredevproject.points.POIPoint;
 import com.github.bgabriel998.softwaredevproject.user.friends.FriendItem;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;

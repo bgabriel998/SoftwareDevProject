@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.core.content.res.ResourcesCompat;
 
+import com.github.bgabriel998.softwaredevproject.points.POIPoint;
 import com.github.bgabriel998.softwaredevproject.user.account.FirebaseAccount;
 import com.github.bgabriel998.softwaredevproject.R;
 

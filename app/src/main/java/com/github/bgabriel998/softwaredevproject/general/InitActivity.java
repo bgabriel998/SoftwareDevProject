@@ -12,7 +12,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.github.bgabriel998.softwaredevproject.R;
-import com.github.bgabriel998.softwaredevproject.map.ComputePOIPoints;
+import com.github.bgabriel998.softwaredevproject.points.ComputePOIPoints;
 import com.github.bgabriel998.softwaredevproject.user.account.FirebaseAccount;
 import com.google.firebase.FirebaseApp;
 

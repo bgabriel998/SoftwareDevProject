@@ -1,4 +1,4 @@
-package com.github.bgabriel998.softwaredevproject.map;
+package com.github.bgabriel998.softwaredevproject.points;
 
 import android.Manifest;
 import android.content.Context;
@@ -7,9 +7,9 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.rule.GrantPermissionRule;
 
-import com.github.bgabriel998.softwaredevproject.map.ComputePOIPoints;
-import com.github.bgabriel998.softwaredevproject.map.Point;
-import com.github.bgabriel998.softwaredevproject.map.UserPoint;
+import com.github.bgabriel998.softwaredevproject.points.ComputePOIPoints;
+import com.github.bgabriel998.softwaredevproject.points.Point;
+import com.github.bgabriel998.softwaredevproject.points.UserPoint;
 
 import org.junit.After;
 import org.junit.Before;

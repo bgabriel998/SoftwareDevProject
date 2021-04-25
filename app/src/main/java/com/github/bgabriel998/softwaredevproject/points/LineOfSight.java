@@ -1,6 +1,8 @@
-package com.github.bgabriel998.softwaredevproject.map;
+package com.github.bgabriel998.softwaredevproject.points;
 
 import androidx.core.util.Pair;
+
+import com.github.bgabriel998.softwaredevproject.map.ElevationMap;
 
 import java.util.ArrayList;
 import java.util.Collections;

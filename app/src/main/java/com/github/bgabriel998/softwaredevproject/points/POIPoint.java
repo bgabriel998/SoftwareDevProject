@@ -1,4 +1,4 @@
-package com.github.bgabriel998.softwaredevproject.map;
+package com.github.bgabriel998.softwaredevproject.points;
 
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.util.GeoPoint;

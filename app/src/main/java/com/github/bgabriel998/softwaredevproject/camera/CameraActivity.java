@@ -14,7 +14,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 
-import com.github.bgabriel998.softwaredevproject.map.ComputePOIPoints;
+import com.github.bgabriel998.softwaredevproject.points.ComputePOIPoints;
 import com.github.bgabriel998.softwaredevproject.map.MapActivity;
 import com.github.bgabriel998.softwaredevproject.R;
 

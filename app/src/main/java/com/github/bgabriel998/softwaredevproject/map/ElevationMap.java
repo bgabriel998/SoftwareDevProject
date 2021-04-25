@@ -4,6 +4,9 @@ import android.util.Log;
 
 import androidx.core.util.Pair;
 
+import com.github.bgabriel998.softwaredevproject.points.POIPoint;
+import com.github.bgabriel998.softwaredevproject.points.UserPoint;
+
 import org.osmdroid.util.BoundingBox;
 
 /**

@@ -5,7 +5,7 @@ import android.net.Uri;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.github.bgabriel998.softwaredevproject.database.Database;
-import com.github.bgabriel998.softwaredevproject.map.CountryHighPoint;
+import com.github.bgabriel998.softwaredevproject.points.CountryHighPoint;
 import com.github.bgabriel998.softwaredevproject.user.account.Account;
 import com.github.bgabriel998.softwaredevproject.user.score.ScoringConstants;
 import com.google.firebase.auth.FirebaseAuth;

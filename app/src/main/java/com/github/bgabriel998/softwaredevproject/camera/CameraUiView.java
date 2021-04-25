@@ -12,8 +12,8 @@ import android.view.View;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 
-import com.github.bgabriel998.softwaredevproject.map.ComputePOIPoints;
-import com.github.bgabriel998.softwaredevproject.map.POIPoint;
+import com.github.bgabriel998.softwaredevproject.points.ComputePOIPoints;
+import com.github.bgabriel998.softwaredevproject.points.POIPoint;
 import com.github.bgabriel998.softwaredevproject.R;
 
 import java.util.List;

@@ -5,7 +5,7 @@ import android.content.Context;
 import androidx.test.core.app.ApplicationProvider;
 
 import com.github.bgabriel998.softwaredevproject.database.Database;
-import com.github.bgabriel998.softwaredevproject.map.POIPoint;
+import com.github.bgabriel998.softwaredevproject.points.POIPoint;
 import com.github.bgabriel998.softwaredevproject.user.account.FirebaseAccount;
 import com.github.bgabriel998.softwaredevproject.user.score.ScoringConstants;
 import com.github.bgabriel998.softwaredevproject.user.score.UserScore;

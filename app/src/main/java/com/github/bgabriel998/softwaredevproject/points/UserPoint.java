@@ -1,9 +1,6 @@
-package com.github.bgabriel998.softwaredevproject.map;
+package com.github.bgabriel998.softwaredevproject.points;
 
 import android.content.Context;
-
-import com.github.bgabriel998.softwaredevproject.map.GPSTracker;
-import com.github.bgabriel998.softwaredevproject.map.Point;
 
 import org.osmdroid.util.BoundingBox;
 

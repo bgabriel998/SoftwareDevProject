@@ -5,6 +5,11 @@ import android.content.Context;
 import androidx.core.util.Pair;
 import androidx.test.core.app.ApplicationProvider;
 
+import com.github.bgabriel998.softwaredevproject.points.GPSTracker;
+import com.github.bgabriel998.softwaredevproject.points.LineOfSight;
+import com.github.bgabriel998.softwaredevproject.points.POIPoint;
+import com.github.bgabriel998.softwaredevproject.points.UserPoint;
+
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;

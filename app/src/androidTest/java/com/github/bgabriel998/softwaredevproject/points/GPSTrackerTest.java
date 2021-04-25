@@ -1,4 +1,4 @@
-package com.github.bgabriel998.softwaredevproject.map;
+package com.github.bgabriel998.softwaredevproject.points;
 
 
 import android.content.Context;
@@ -6,6 +6,9 @@ import android.content.Context;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
+
+import com.github.bgabriel998.softwaredevproject.points.GPSTracker;
+import com.github.bgabriel998.softwaredevproject.points.UserPoint;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

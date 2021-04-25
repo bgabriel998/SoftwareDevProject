@@ -1,10 +1,9 @@
-package com.github.bgabriel998.softwaredevproject.camera;
+package com.github.bgabriel998.softwaredevproject.points;
 
 
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.github.bgabriel998.softwaredevproject.map.UserPoint;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

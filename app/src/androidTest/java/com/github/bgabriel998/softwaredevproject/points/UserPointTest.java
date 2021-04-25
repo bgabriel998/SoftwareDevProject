@@ -1,10 +1,10 @@
-package com.github.bgabriel998.softwaredevproject.map;
+package com.github.bgabriel998.softwaredevproject.points;
 
 import android.content.Context;
 
 import androidx.test.core.app.ApplicationProvider;
 
-import com.github.bgabriel998.softwaredevproject.map.UserPoint;
+import com.github.bgabriel998.softwaredevproject.points.UserPoint;
 
 import org.junit.Assert;
 import org.junit.Test;

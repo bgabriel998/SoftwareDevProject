@@ -5,10 +5,10 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.util.Log;
 
-import com.github.bgabriel998.softwaredevproject.map.CountryHighPoint;
+import com.github.bgabriel998.softwaredevproject.points.CountryHighPoint;
 import com.github.bgabriel998.softwaredevproject.database.DataBaseHelper;
 import com.github.bgabriel998.softwaredevproject.user.account.FirebaseAccount;
-import com.github.bgabriel998.softwaredevproject.map.POIPoint;
+import com.github.bgabriel998.softwaredevproject.points.POIPoint;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,10 +1,10 @@
-package com.github.bgabriel998.softwaredevproject.map;
+package com.github.bgabriel998.softwaredevproject.points;
 
 import android.content.Context;
 
 import androidx.core.util.Pair;
 
-import com.github.bgabriel998.softwaredevproject.camera.GeonamesHandler;
+import com.github.bgabriel998.softwaredevproject.map.DownloadTopographyTask;
 
 import org.osmdroid.bonuspack.location.POI;
 

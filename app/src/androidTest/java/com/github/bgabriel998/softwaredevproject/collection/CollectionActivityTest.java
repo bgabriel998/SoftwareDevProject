@@ -14,11 +14,8 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.github.bgabriel998.softwaredevproject.R;
-import com.github.bgabriel998.softwaredevproject.collection.CollectedItem;
-import com.github.bgabriel998.softwaredevproject.collection.CollectionActivity;
-import com.github.bgabriel998.softwaredevproject.collection.MountainActivity;
 import com.github.bgabriel998.softwaredevproject.database.Database;
-import com.github.bgabriel998.softwaredevproject.map.POIPoint;
+import com.github.bgabriel998.softwaredevproject.points.POIPoint;
 import com.github.bgabriel998.softwaredevproject.user.account.FirebaseAccount;
 import com.github.bgabriel998.softwaredevproject.user.score.UserScore;
 

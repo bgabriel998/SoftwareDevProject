@@ -9,6 +9,7 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import com.github.bgabriel998.softwaredevproject.database.Database;
+import com.github.bgabriel998.softwaredevproject.points.POIPoint;
 import com.github.bgabriel998.softwaredevproject.user.account.FirebaseAccount;
 import com.github.bgabriel998.softwaredevproject.user.score.UserScore;
 

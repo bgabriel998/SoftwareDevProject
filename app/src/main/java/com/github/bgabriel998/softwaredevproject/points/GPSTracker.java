@@ -1,4 +1,4 @@
-package com.github.bgabriel998.softwaredevproject.map;
+package com.github.bgabriel998.softwaredevproject.points;
 
 import android.Manifest;
 import android.app.Activity;

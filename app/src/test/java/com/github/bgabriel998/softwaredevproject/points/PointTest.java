@@ -1,6 +1,6 @@
-package com.github.bgabriel998.softwaredevproject;
+package com.github.bgabriel998.softwaredevproject.points;
 
-import com.github.bgabriel998.softwaredevproject.map.Point;
+import com.github.bgabriel998.softwaredevproject.points.Point;
 
 import org.junit.Test;
 

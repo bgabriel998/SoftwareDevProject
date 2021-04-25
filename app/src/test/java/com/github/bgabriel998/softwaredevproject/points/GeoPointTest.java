@@ -1,4 +1,4 @@
-package com.github.bgabriel998.softwaredevproject;
+package com.github.bgabriel998.softwaredevproject.points;
 
 import org.junit.Test;
 import org.osmdroid.util.GeoPoint;

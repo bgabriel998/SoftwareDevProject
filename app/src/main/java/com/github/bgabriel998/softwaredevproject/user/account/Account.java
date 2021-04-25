@@ -2,8 +2,8 @@ package com.github.bgabriel998.softwaredevproject.user.account;
 
 import android.net.Uri;
 
-import com.github.bgabriel998.softwaredevproject.map.CountryHighPoint;
-import com.github.bgabriel998.softwaredevproject.map.POIPoint;
+import com.github.bgabriel998.softwaredevproject.points.CountryHighPoint;
+import com.github.bgabriel998.softwaredevproject.points.POIPoint;
 import com.github.bgabriel998.softwaredevproject.user.friends.FriendItem;
 
 import java.util.ArrayList;

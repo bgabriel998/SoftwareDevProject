@@ -1,11 +1,12 @@
-package com.github.bgabriel998.softwaredevproject.camera;
+package com.github.bgabriel998.softwaredevproject.points;
 
 import android.content.Context;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.github.bgabriel998.softwaredevproject.map.UserPoint;
+import com.github.bgabriel998.softwaredevproject.points.GeonamesHandler;
+import com.github.bgabriel998.softwaredevproject.points.UserPoint;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
