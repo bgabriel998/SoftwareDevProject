@@ -25,15 +25,14 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class AccountTest {
-    public final static String basicUsername = "username@test";
+    public final static String BASIC_USERNAME = "username@test";
     public final static int SHORT_SLEEP_TIME = 500;
-    public final static int MEDIUM_SLEEP_TIME = 1000;
     public final static int LONG_SLEEP_TIME = 1500;
 
     private static final int userOffset = new Random().nextInt();
 
-    private static final String user1 = basicUsername + userOffset;;
-    private static final String user2 = basicUsername + userOffset + 1;
+    private static final String user1 = BASIC_USERNAME + userOffset;;
+    private static final String user2 = BASIC_USERNAME + userOffset + 1;
 
     // Helper method, register a new test user using a certain random offset given as input
     public static void registerTestUser() {

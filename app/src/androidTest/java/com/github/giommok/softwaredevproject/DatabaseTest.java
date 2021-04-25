@@ -9,7 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static com.github.giommok.softwaredevproject.AccountTest.basicUsername;
+import static com.github.giommok.softwaredevproject.AccountTest.BASIC_USERNAME;
 import static com.github.giommok.softwaredevproject.AccountTest.SHORT_SLEEP_TIME;
 import static org.junit.Assert.*;
 
@@ -23,7 +23,7 @@ public class DatabaseTest {
     private static Context context;
 
     private static final int userOffset = new Random().nextInt();
-    private static final String user1 = basicUsername + userOffset;
+    private static final String user1 = BASIC_USERNAME + userOffset;
 
     /* Make sure that mock users are not on the database after a test */
     @After
