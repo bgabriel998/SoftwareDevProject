@@ -263,7 +263,7 @@ public class AccountTest {
         Thread.sleep(SHORT_SLEEP_TIME);
         String s1 = account.getDiscoveredCountryHighPoint().get("France").toString();
         String s2 = newEntry.toString();
-        assertEquals(s1, s2);
+        assertEquals(s2, s1);
     }
 
     @Test
