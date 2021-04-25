@@ -22,8 +22,8 @@ import java.util.Random;
 public class DatabaseTest {
     private static Context context;
 
-    private static final int userOffset = new Random().nextInt();
-    private static final String user1 = BASIC_USERNAME + userOffset;
+    private static final int USER_OFFSET = new Random().nextInt();
+    private static final String user1 = BASIC_USERNAME + USER_OFFSET;
 
     /* Make sure that mock users are not on the database after a test */
     @After

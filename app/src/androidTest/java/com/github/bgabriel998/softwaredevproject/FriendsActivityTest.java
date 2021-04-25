@@ -45,9 +45,9 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
 public class FriendsActivityTest {
-    private static final Integer userOffset = new Random().nextInt();
+    private static final Integer USER_OFFSET = new Random().nextInt();
     private static final Account account = Account.getAccount();
-    private static final String username = ("test" + userOffset).substring(0, Math.min(("test" + userOffset).length(), Account.MAX_LENGHT - 2));
+    private static final String username = ("test" + USER_OFFSET).substring(0, Math.min(("test" + USER_OFFSET).length(), Account.MAX_LENGHT - 2));
     private final static int FRIENDS_SIZE = 20;
 
     /* Set up the environment */

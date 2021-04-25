@@ -24,14 +24,14 @@ import static org.junit.Assert.fail;
 
 public class FriendItemActivityTest {
 
-    private static final String testName = "TEST_NAME";
-    private static final int testPoints = 100;
+    private static final String TEST_NAME = "TEST_NAME";
+    private static final int TEST_POINTS = 100;
 
     static Intent intent;
     static {
         intent = new Intent(ApplicationProvider.getApplicationContext(), FriendItemActivity.class);
-        intent.putExtra("username", testName);
-        intent.putExtra("points", testPoints);
+        intent.putExtra("username", TEST_NAME);
+        intent.putExtra("points", TEST_POINTS);
     }
 
     @Rule
@@ -41,7 +41,7 @@ public class FriendItemActivityTest {
     @Test
     public void TestToolbarTitle(){
         ViewInteraction toolbarTitle = Espresso.onView(withId(R.id.toolbarTitle));
-        toolbarTitle.check(matches(withText(testName)));
+        toolbarTitle.check(matches(withText(TEST_NAME)));
     }
 
     /* Test that the activity finishes when the toolbar back button is pressed. */
@@ -62,6 +62,6 @@ public class FriendItemActivityTest {
     public void TestPointsText() throws InterruptedException {
         Thread.sleep(LONG_SLEEP_TIME);
         ViewInteraction pointText = Espresso.onView(withId(R.id.pointText));
-        pointText.check(matches(withText(String.format(Locale.getDefault(), " %d", testPoints))));
+        pointText.check(matches(withText(String.format(Locale.getDefault(), " %d", TEST_POINTS))));
     }
 }

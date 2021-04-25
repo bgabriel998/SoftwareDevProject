@@ -29,10 +29,10 @@ public class AccountTest {
     public final static int SHORT_SLEEP_TIME = 500;
     public final static int LONG_SLEEP_TIME = 1500;
 
-    private static final int userOffset = new Random().nextInt();
+    private static final int USER_OFFSET = new Random().nextInt();
 
-    private static final String user1 = BASIC_USERNAME + userOffset;;
-    private static final String user2 = BASIC_USERNAME + userOffset + 1;
+    private static final String user1 = BASIC_USERNAME + USER_OFFSET;;
+    private static final String user2 = BASIC_USERNAME + USER_OFFSET + 1;
 
     // Helper method, register a new test user using a certain random offset given as input
     public static void registerTestUser() {

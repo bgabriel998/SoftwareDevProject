@@ -49,7 +49,6 @@ public class RankingsActivityTest {
 
     private static final Integer MAXIMUM_POINTS = Integer.MAX_VALUE;
     private static final String TESTING_USERNAME = "invalid@username";
-    private static final Integer FIRST_POSITION = 1;
     private static final List<Integer> mockPoints = IntStream.rangeClosed(MAXIMUM_POINTS-19, MAXIMUM_POINTS-1).boxed().collect(Collectors.toList());
     private static final List<Integer> mockPositions = IntStream.rangeClosed(2, 20).boxed().collect(Collectors.toList());
 
