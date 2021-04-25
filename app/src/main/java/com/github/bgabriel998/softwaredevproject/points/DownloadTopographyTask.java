@@ -1,11 +1,9 @@
-package com.github.bgabriel998.softwaredevproject.map;
+package com.github.bgabriel998.softwaredevproject.points;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
 import androidx.core.util.Pair;
-
-import com.github.bgabriel998.softwaredevproject.points.UserPoint;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;

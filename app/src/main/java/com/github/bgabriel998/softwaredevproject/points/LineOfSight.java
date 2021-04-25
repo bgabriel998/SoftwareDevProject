@@ -2,8 +2,6 @@ package com.github.bgabriel998.softwaredevproject.points;
 
 import androidx.core.util.Pair;
 
-import com.github.bgabriel998.softwaredevproject.map.ElevationMap;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

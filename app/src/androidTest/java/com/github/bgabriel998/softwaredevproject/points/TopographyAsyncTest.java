@@ -1,10 +1,12 @@
-package com.github.bgabriel998.softwaredevproject.map;
+package com.github.bgabriel998.softwaredevproject.points;
 
 import android.content.Context;
 
 import androidx.core.util.Pair;
 import androidx.test.core.app.ApplicationProvider;
 
+import com.github.bgabriel998.softwaredevproject.points.DownloadTopographyTask;
+import com.github.bgabriel998.softwaredevproject.points.ElevationMap;
 import com.github.bgabriel998.softwaredevproject.points.GPSTracker;
 import com.github.bgabriel998.softwaredevproject.points.LineOfSight;
 import com.github.bgabriel998.softwaredevproject.points.POIPoint;

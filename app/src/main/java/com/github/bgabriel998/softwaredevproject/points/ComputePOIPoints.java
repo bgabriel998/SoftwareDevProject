@@ -4,8 +4,6 @@ import android.content.Context;
 
 import androidx.core.util.Pair;
 
-import com.github.bgabriel998.softwaredevproject.map.DownloadTopographyTask;
-
 import org.osmdroid.bonuspack.location.POI;
 
 import java.util.ArrayList;
