@@ -40,7 +40,7 @@
     <string name='add_current_username'>You can\'t add yourself to your friends!</string>
     <string name='friend_already_added'>The user is already your friend.</string>
     <string name='friend_not_present_db'>The user does not exists.</string>
-    <string name='friend_added'>Friend added!</string>
+    <string name='friend_added'>is now your friend!</string>
     <string name="friend_removed">is no longer your friend.</string>
 
 

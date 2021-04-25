@@ -14,6 +14,8 @@ import androidx.core.content.ContextCompat;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.matcher.BoundedMatcher;
 
+import com.github.bgabriel998.softwaredevproject.camera.CameraActivity;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
