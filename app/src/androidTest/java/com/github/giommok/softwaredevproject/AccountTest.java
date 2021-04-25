@@ -28,6 +28,7 @@ public class AccountTest {
     public final static String BASIC_USERNAME = "username@test";
     public final static int SHORT_SLEEP_TIME = 500;
     public final static int LONG_SLEEP_TIME = 1500;
+    public final static int USER_SCORE = 200000;
 
     private static final int USER_OFFSET = new Random().nextInt();
 
@@ -183,16 +184,15 @@ public class AccountTest {
      */
     @Test
     public void setAndGetUserScoreTest() throws InterruptedException{
-        final int userScore = 200000;
         /* Get account */
         Account account = Account.getAccount();
 
         Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(SHORT_SLEEP_TIME);
 
-        account.setUserScore(userScore);
+        account.setUserScore(USER_SCORE);
         Thread.sleep(SHORT_SLEEP_TIME);
-        assertEquals(userScore, account.getUserScore());
+        assertEquals(USER_SCORE, account.getUserScore());
     }
 
     /**
@@ -200,7 +200,6 @@ public class AccountTest {
      */
     @Test
     public void synchronizeUserScoreTest()throws InterruptedException{
-        final int userScore = 200000;
         /* Get account */
         Account account = Account.getAccount();
         Thread.sleep(SHORT_SLEEP_TIME);
@@ -213,9 +212,9 @@ public class AccountTest {
         Thread.sleep(SHORT_SLEEP_TIME);
 
 
-        refAdd.child(account.getId()).child(Database.CHILD_SCORE).setValue(userScore);
+        refAdd.child(account.getId()).child(Database.CHILD_SCORE).setValue(USER_SCORE);
         Thread.sleep(SHORT_SLEEP_TIME);
-        assertEquals(userScore, account.getUserScore());
+        assertEquals(USER_SCORE, account.getUserScore());
 
     }
 
