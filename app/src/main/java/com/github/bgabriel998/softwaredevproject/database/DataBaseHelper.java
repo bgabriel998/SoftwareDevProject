@@ -106,10 +106,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     public String queryHighestPeakName(String country){
-        SQLiteDatabase rdb = getReadableDatabase();
-        String selection = "Country" + " = ?";
-
         String[] selectionArgs = { country };
+        String selection = "Country" + " = ?";
+        SQLiteDatabase rdb = getReadableDatabase();
+
 
         Cursor cursor = rdb.query(TABLE,null,selection,selectionArgs,null,null, null);
         cursor.moveToNext();
