@@ -31,10 +31,10 @@ import androidx.core.app.ActivityCompat;
 public class GPSTracker extends Service implements LocationListener {
 
     // fixed coordinates
-    static final double DEFAULT_LAT = 27.988056;
-    static final double DEFAULT_LON = 86.925278;
-    static final double DEFAULT_ALT = 8848.86;
-    static final double DEFAULT_ACC = 0.0;
+    public static final double DEFAULT_LAT = 27.988056;
+    public static final double DEFAULT_LON = 86.925278;
+    public static final double DEFAULT_ALT = 8848.86;
+    public static final double DEFAULT_ACC = 0.0;
 
     // current app context
     private final Context mContext;
