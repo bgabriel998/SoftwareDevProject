@@ -13,9 +13,11 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.github.bgabriel998.softwaredevproject.map.MapActivity;
 import com.github.bgabriel998.softwaredevproject.R;
+import com.github.bgabriel998.softwaredevproject.points.ComputePOIPointsTest;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +35,12 @@ public class CameraActivityTest {
 
     @Rule
     public ActivityScenarioRule<CameraActivity> testRule = new ActivityScenarioRule<>(CameraActivity.class);
+
+    /* Setup environment */
+    @BeforeClass
+    public static void computePOIPoints(){
+        new ComputePOIPointsTest();
+    }
 
     /* Create Intent */
     @Before
