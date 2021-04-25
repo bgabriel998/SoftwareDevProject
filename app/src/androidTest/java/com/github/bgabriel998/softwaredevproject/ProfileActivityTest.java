@@ -42,10 +42,10 @@ import static com.github.giommok.softwaredevproject.AccountTest.SHORT_SLEEP_TIME
 import static org.junit.Assert.*;
 
 public class ProfileActivityTest {
-    private static final Integer userOffset = new Random().nextInt();
+    private static final Integer USER_OFFSET = new Random().nextInt();
     private static final Account account = Account.getAccount();
-    private static final String user1 = BASIC_USERNAME + userOffset;
-    private static final String user2 = BASIC_USERNAME + userOffset + 1;
+    private static final String user1 = BASIC_USERNAME + USER_OFFSET;
+    private static final String user2 = BASIC_USERNAME + USER_OFFSET + 1;
     private static String username;
 
 
