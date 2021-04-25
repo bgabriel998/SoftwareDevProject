@@ -7,12 +7,11 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.rule.GrantPermissionRule;
 
-import com.github.bgabriel998.softwaredevproject.points.ComputePOIPoints;
-import com.github.bgabriel998.softwaredevproject.points.Point;
-import com.github.bgabriel998.softwaredevproject.points.UserPoint;
+import com.firebase.ui.auth.data.model.User;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -24,14 +23,17 @@ public class ComputePOIPointsTest {
 
     @Rule
     public GrantPermissionRule grantCameraPermissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
-    private UserPoint userPoint;
+    private static UserPoint userPoint;
+
+    @BeforeClass
+    public static void setUserPoint(){
+        //Set userPoint to the mont blanc
+        userPoint = new UserPoint(45.802537, 6.850328, 4809);
+    }
 
     @Before
     public void setup(){
         Intents.init();
-        Context context = ApplicationProvider.getApplicationContext();
-        userPoint = new UserPoint(context);
-        userPoint.update();
     }
 
     @After
@@ -66,7 +68,7 @@ public class ComputePOIPointsTest {
     @Test
     public void computeVerticalBearing(){
         Point above = new Point(userPoint.getLatitude(), userPoint.getLongitude(), userPoint.getAltitude() + 1000);
-        Point below = new Point(userPoint.getLatitude(), userPoint.getLongitude(), 0);
+        Point below = new Point(userPoint.getLatitude(), userPoint.getLongitude(), userPoint.getAltitude() - 1000);
         Point sameHeight = new Point(userPoint.getLatitude()+0.1, userPoint.getLongitude(), userPoint.getAltitude());
         Point samePoint = new Point(userPoint.getLatitude(), userPoint.getLongitude(), userPoint.getAltitude());
 
