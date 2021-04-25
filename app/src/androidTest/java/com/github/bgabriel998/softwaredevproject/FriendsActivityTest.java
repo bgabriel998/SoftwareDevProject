@@ -30,16 +30,15 @@ import java.util.Random;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static com.github.giommok.softwaredevproject.AccountTest.longSleepTime;
+import static com.github.giommok.softwaredevproject.AccountTest.LONG_SLEEP_TIME;
 import static com.github.giommok.softwaredevproject.AccountTest.registerTestUser;
 import static com.github.giommok.softwaredevproject.AccountTest.removeTestUser;
-import static com.github.giommok.softwaredevproject.AccountTest.sleepTime;
+import static com.github.giommok.softwaredevproject.AccountTest.SHORT_SLEEP_TIME;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertSame;
@@ -56,7 +55,7 @@ public class FriendsActivityTest {
     public static void init() throws InterruptedException {
         /* Make sure no user is signed in before a test */
         FirebaseAuth.getInstance().signOut();
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
 
         registerTestUser();
     }
@@ -82,7 +81,7 @@ public class FriendsActivityTest {
         for(int i=0; i < FRIENDS_SIZE; i++) {
             Database.refRoot.child(Database.CHILD_USERS).child(username + ((i < 10) ? "0" + i : i)).removeValue();
         }
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
     }
 
     @Rule
@@ -118,16 +117,16 @@ public class FriendsActivityTest {
             Database.setChild(Database.CHILD_USERS + username + ((i < 10) ? "0" + i : i), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(username + i));
         }
         Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(username));
-        Thread.sleep(longSleepTime);
+        Thread.sleep(LONG_SLEEP_TIME);
 
         // Add mock users to the friends
         for(int i=0; i < FRIENDS_SIZE; i++) {
             Database.setChild(Database.CHILD_USERS + account.getId() + Database.CHILD_FRIENDS, Collections.singletonList(username + ((i < 10) ? "0" + i : i)), Collections.singletonList(""));
         }
-        Thread.sleep(longSleepTime * 2);
+        Thread.sleep(LONG_SLEEP_TIME * 2);
 
         testRule.getScenario().recreate();
-        Thread.sleep(longSleepTime * 2);
+        Thread.sleep(LONG_SLEEP_TIME * 2);
         DataInteraction interaction =  onData(instanceOf(FriendItem.class));
 
         for (int i = 0; i < FRIENDS_SIZE; i++){
@@ -143,7 +142,7 @@ public class FriendsActivityTest {
         String newUsername = username + "new";
         int newScore = 20;
         Database.setChild(Database.CHILD_USERS + username + "00", Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_SCORE), Arrays.asList(newUsername, newScore));
-        Thread.sleep(sleepTime * 2);
+        Thread.sleep(SHORT_SLEEP_TIME * 2);
 
         // Check username has been updated
         interaction.atPosition(0).onChildView(withId(R.id.friend_username))
@@ -163,10 +162,10 @@ public class FriendsActivityTest {
 
         // Add mock user to the friends
         Database.setChild(Database.CHILD_USERS + account.getId() + Database.CHILD_FRIENDS, Collections.singletonList(FRIEND_USER), Collections.singletonList(""));
-        Thread.sleep(longSleepTime * 2);
+        Thread.sleep(LONG_SLEEP_TIME * 2);
 
         testRule.getScenario().recreate();
-        Thread.sleep(longSleepTime * 2);
+        Thread.sleep(LONG_SLEEP_TIME * 2);
 
         // Item at pos 0 looks like this
         FriendItem correctItem = new FriendItem(
@@ -179,7 +178,7 @@ public class FriendsActivityTest {
         // Get Item at pos 0 and click.
         DataInteraction listItem = onData(instanceOf(FriendItem.class)).atPosition(0);
         listItem.perform(ViewActions.click());
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
 
         // Catch intent, and check information
         intended(allOf(IntentMatchers.hasComponent(FriendItemActivity.class.getName()),

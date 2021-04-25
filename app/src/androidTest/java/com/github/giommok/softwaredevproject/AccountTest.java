@@ -4,11 +4,6 @@ import android.net.Uri;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.firebase.ui.auth.AuthUI;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
@@ -31,8 +26,9 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class AccountTest {
     public final static String basicUsername = "username@test";
-    public final static int sleepTime = 500;
-    public final static int longSleepTime = 1500;
+    public final static int SHORT_SLEEP_TIME = 500;
+    public final static int MEDIUM_SLEEP_TIME = 1000;
+    public final static int LONG_SLEEP_TIME = 1500;
 
     private static final int userOffset = new Random().nextInt();
 
@@ -46,14 +42,14 @@ public class AccountTest {
         // Generate user
         FirebaseAuth.getInstance().signInAnonymously();
         try {
-            Thread.sleep(longSleepTime);
+            Thread.sleep(LONG_SLEEP_TIME);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         // Synchronize
         account.synchronizeUserProfile();
         try {
-            Thread.sleep(longSleepTime);
+            Thread.sleep(LONG_SLEEP_TIME);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -69,7 +65,7 @@ public class AccountTest {
         FirebaseAuth.getInstance().getCurrentUser().delete();
 
         try {
-            Thread.sleep(longSleepTime);
+            Thread.sleep(LONG_SLEEP_TIME);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -77,7 +73,7 @@ public class AccountTest {
         Account.getAccount().synchronizeUserProfile();
 
         try {
-            Thread.sleep(longSleepTime);
+            Thread.sleep(LONG_SLEEP_TIME);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -88,10 +84,10 @@ public class AccountTest {
     public static void init() throws InterruptedException {
         /* Make sure no user is signed in before a test */
         FirebaseAuth.getInstance().signOut();
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
 
         Account.getAccount().synchronizeUserProfile();
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
     }
 
     /* Clean environment */
@@ -111,7 +107,7 @@ public class AccountTest {
     public void removeTestUsers() throws InterruptedException {
         Database.refRoot.child(Database.CHILD_USERS).child(Account.getAccount().getId()).removeValue();
         Database.refRoot.child(Database.CHILD_USERS).child(user2).removeValue();
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
     }
 
     /**
@@ -142,16 +138,16 @@ public class AccountTest {
 
         // Add username
         Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
 
 
         // Check username
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
         assertEquals(user1, account.getUsername());
 
         // Now it will test that if username is removed, it produces a "null" username
         Database.refRoot.child(Database.CHILD_USERS).child(account.getId()).removeValue();
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
         assertEquals("null", account.getUsername());
     }
 
@@ -166,19 +162,19 @@ public class AccountTest {
 
         Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Database.setChild(Database.CHILD_USERS + user2, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user2));
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
 
         // Test if no friend is present
         assertTrue(account.getFriends().isEmpty());
 
         // Test if a friend is present
         Database.setChild(Database.CHILD_USERS + account.getId() + Database.CHILD_FRIENDS, Collections.singletonList(user2), Collections.singletonList(""));
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
         assertEquals(user2, account.getFriends().get(0).getUsername());
 
         // Test if the friend is removed
         Database.refRoot.child(Database.CHILD_USERS + account.getId() + Database.CHILD_FRIENDS).removeValue();
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
         assertTrue(account.getFriends().isEmpty());
     }
 
@@ -193,10 +189,10 @@ public class AccountTest {
         Account account = Account.getAccount();
 
         Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
 
         account.setUserScore(userScore);
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
         assertEquals(userScore, account.getUserScore());
     }
 
@@ -208,18 +204,18 @@ public class AccountTest {
         final int userScore = 200000;
         /* Get account */
         Account account = Account.getAccount();
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
 
         Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
 
         //Set user score to zero
         DatabaseReference refAdd = Database.refRoot.child(Database.CHILD_USERS);
         refAdd.child(account.getId()).child(Database.CHILD_SCORE).setValue(0);
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
 
 
         refAdd.child(account.getId()).child(Database.CHILD_SCORE).setValue(userScore);
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
         assertEquals(userScore, account.getUserScore());
 
     }
@@ -233,14 +229,14 @@ public class AccountTest {
     public void setAndGetDiscoveredCountryHighPoints()throws InterruptedException{
         /* Get account */
         Account account = Account.getAccount();
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
 
         Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
 
         CountryHighPoint newEntry = new CountryHighPoint("France","Mont Blanc",4810);
         account.setDiscoveredCountryHighPoint(newEntry);
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
 
         assertEquals(newEntry.toString(), account.getDiscoveredCountryHighPoint().get("France").toString());
     }
@@ -254,17 +250,17 @@ public class AccountTest {
     public void synchronizeDiscoveredCountryHighPointsTest() throws InterruptedException{
         /* Get account */
         Account account = Account.getAccount();
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
 
         Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         CountryHighPoint newEntry = new CountryHighPoint("France","Mont Blanc",4810);
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
 
         //Set value to the database manually
         DatabaseReference refAdd = Database.refRoot.child(Database.CHILD_USERS);
         refAdd.child(account.getId()).child(Database.CHILD_COUNTRY_HIGH_POINT).push().setValue(newEntry);
 
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
         String s1 = account.getDiscoveredCountryHighPoint().get("France").toString();
         String s2 = newEntry.toString();
         assertEquals(s1, s2);
@@ -274,10 +270,10 @@ public class AccountTest {
     public void synchronizeDiscoveredHeights() throws InterruptedException {
         /* Get account */
         Account account = Account.getAccount();
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
 
         Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
 
         //Set value to the database manually
         Integer entry1 = ScoringConstants.BADGE_1st_4000_M_PEAK;
@@ -288,7 +284,7 @@ public class AccountTest {
         Database.setChildObject(Database.CHILD_USERS +  account.getId() + "/" +
                 Database.CHILD_DISCOVERED_PEAKS_HEIGHTS,Collections.singletonList(entry2));
 
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
         assertTrue(account.getDiscoveredPeakHeights().contains(entry1) && account.getDiscoveredPeakHeights().contains(entry2));
     }
     

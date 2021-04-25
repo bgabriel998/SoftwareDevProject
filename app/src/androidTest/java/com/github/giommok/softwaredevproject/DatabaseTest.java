@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static com.github.giommok.softwaredevproject.AccountTest.basicUsername;
-import static com.github.giommok.softwaredevproject.AccountTest.sleepTime;
+import static com.github.giommok.softwaredevproject.AccountTest.SHORT_SLEEP_TIME;
 import static org.junit.Assert.*;
 
 
@@ -29,35 +29,34 @@ public class DatabaseTest {
     @After
     public void removeTestUsers() throws InterruptedException {
         Database.refRoot.child(Database.CHILD_USERS).child(user1).removeValue();
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
     }
 
     /* Test that isPresent method works */
     @Test
     public void isPresentTest() throws InterruptedException {
         Database.setChild(Database.CHILD_USERS + user1, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
 
         Database.isPresent(Database.CHILD_USERS, Database.CHILD_USERNAME, "", Assert::fail, () -> assertTrue("Correct behavior", true));
         Database.isPresent(Database.CHILD_USERS, Database.CHILD_USERNAME, user1, () -> assertTrue("Correct behavior", true),  Assert::fail);
-        Thread.sleep(sleepTime);
+        Thread.sleep(SHORT_SLEEP_TIME);
     }
 
     /* Test that setChild method works */
     @Test
     public void setChildTest() throws InterruptedException {
         Database.isPresent(Database.CHILD_USERS, Database.CHILD_USERNAME, user1, Assert::fail, () -> assertTrue("Correct behavior", true));
-        Thread.sleep(1500);
+        Thread.sleep(SHORT_SLEEP_TIME);
         Database.setChild(Database.CHILD_USERS + user1, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
-        Thread.sleep(1500);
+        Thread.sleep(SHORT_SLEEP_TIME);
         Database.isPresent(Database.CHILD_USERS, Database.CHILD_USERNAME, user1, () -> assertTrue("Correct behavior", true), Assert::fail);
-        Thread.sleep(1500);
+        Thread.sleep(SHORT_SLEEP_TIME);
     }
 
     /* Test that exception is thrown if different list sizes are provided */
     @Test(expected = RuntimeException.class)
     public void differentSizes_SetChildTest() throws InterruptedException {
         Database.setChild(Database.CHILD_USERS + user1, Arrays.asList("string1", "string2"), Collections.singletonList(""));
-        Thread.sleep(1000);
     }
 }
