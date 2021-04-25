@@ -9,6 +9,9 @@ checks:
     method-lines:
         config:
             threshold: 40
+    argument-count:
+        config:
+            threshold: 5
 exclude_patterns:
 - "**/test/"
 - "**/androidTest/"
