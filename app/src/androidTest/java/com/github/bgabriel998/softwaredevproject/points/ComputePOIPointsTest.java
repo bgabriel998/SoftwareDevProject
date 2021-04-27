@@ -24,11 +24,13 @@ public class ComputePOIPointsTest {
     @Rule
     public GrantPermissionRule grantCameraPermissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
     private static UserPoint userPoint;
+    private static Context mContext;
 
     @BeforeClass
     public static void setUserPoint(){
         //Set userPoint to the mont blanc
-        UserPoint userPoint = UserPoint.getInstance(null); // TODO check if working properly
+        mContext = ApplicationProvider.getApplicationContext();
+        UserPoint userPoint = UserPoint.getInstance(mContext); // TODO check if working properly
         userPoint.setLocation(46.519251915333676, 6.558563221333525, 220, 0);
     }
 

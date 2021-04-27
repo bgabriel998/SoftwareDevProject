@@ -131,7 +131,6 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
             case SurfaceRequest.Result.RESULT_SURFACE_ALREADY_PROVIDED:
             case SurfaceRequest.Result.RESULT_WILL_NOT_PROVIDE_SURFACE:
                 Log.e("CameraPreviewTest", result.toString());
-                break;
         }
     }
 
