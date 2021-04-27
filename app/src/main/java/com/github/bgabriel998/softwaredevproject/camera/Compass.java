@@ -6,6 +6,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import com.github.bgabriel998.softwaredevproject.utils.AngleLowpassFilter;
+
 public class Compass implements SensorEventListener {
     //Compass listener to update the compass heading
     private CompassListener compassListener;
@@ -13,15 +15,16 @@ public class Compass implements SensorEventListener {
     //SensorManager to access the sensors
     private final SensorManager sensorManager;
 
-    //Low-pass filter constants
-    private static final float ALPHA = 0.8f;
+    //Low-pass filter constant
+    private static final float ALPHA = 0.5f;
 
     //rotation Matrix
     private final float[] rotMat = new float[16];
     //orientation Matrix
     private final float[] orientationMat = new float[3];
-    //orientation vector
-    private final float[] orientationVector = new float[4];
+
+    private final AngleLowpassFilter horizontalFilter = new AngleLowpassFilter();
+    private final AngleLowpassFilter verticalFilter = new AngleLowpassFilter();
 
     /**
      * Compass constructor, initializes the device sensors and registers the listener
@@ -63,9 +66,6 @@ public class Compass implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         //Get the rotation vector data
         if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
-            //Apply low-pass filter to the event.values
-            updateSensorValues(orientationVector, event);
-
             //Matrix to cache the rotation vector
             float[] rotMatFromVector = new float[16];
 
@@ -79,15 +79,18 @@ public class Compass implements SensorEventListener {
             //Compute the device orientation with the rotation matrix
             SensorManager.getOrientation(rotMat, orientationMat);
 
+            //Apply low-pass filter to the event.values
+            applyLowPassFilter(orientationMat);
+
             //Convert values to degrees
             convertArrToDegrees(orientationMat);
 
             //Add 360° to only get positive values
-            float headingHorizontal = (orientationMat[0] + 360) % 360;
+            float headingHorizontal =  (orientationMat[0] + 360) % 360;
 
             //Multiply by -1 to get increasing values when inclining the device
             //Add 90° to get values from 0° to 180°
-            float headingVertical = (orientationMat[1]*(-1) + 90) % 360;
+            float headingVertical = orientationMat[1]*(-1) + 90;
 
             //Update the horizontal and vertical heading
             if (compassListener != null) {
@@ -107,18 +110,15 @@ public class Compass implements SensorEventListener {
     }
 
     /**
-     * Applies a low-pass filter on the SensorEvent values
-     * @param mat Output matrix
-     * @param event Input sensor event
+     * Applies a low-pass filter on the sensor values and updates the last sensor values
+     * @param mat Matrix for which the lowpass filter gets applied
      */
-    private void updateSensorValues(float [] mat, SensorEvent event){
-        for(int i=0; i<mat.length; i++){
-            double newSin = ALPHA * Math.sin(mat[i]) + (1 - ALPHA) *
-                    Math.sin(event.values[i]);
-            double newCos = ALPHA * ALPHA * Math.cos(mat[i]) + (1 - ALPHA) *
-                    Math.cos(event.values[i]);
-            mat[i] = (float) Math.atan2(newSin, newCos);
-        }
+    private void applyLowPassFilter(float[] mat){
+        horizontalFilter.add(mat[0]);
+        verticalFilter.add(mat[1]);
+
+        mat[0] = horizontalFilter.average();
+        mat[1] = verticalFilter.average();
     }
 
     /**
