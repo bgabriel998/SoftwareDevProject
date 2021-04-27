@@ -7,7 +7,7 @@
     android:background="@color/Black"
     tools:context=".gallery.ImageActivity">
 
-    <ImageView
+    <com.github.bgabriel998.softwaredevproject.gallery.ZoomableImageView
         android:id="@+id/fullscreen_image"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
