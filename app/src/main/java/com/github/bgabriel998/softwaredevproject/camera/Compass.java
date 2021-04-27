@@ -14,20 +14,14 @@ public class Compass implements SensorEventListener {
     private final SensorManager sensorManager;
 
     //Low-pass filter constants
-    private final float ALPHA = 0.8f;
-    private final float SMOOTH_FACTOR_COMPASS = 0.2f;
-    private final float SMOOTH_THRESHOLD_COMPASS = 20f;
+    private static final float ALPHA = 0.8f;
 
     //rotation Matrix
     private final float[] rotMat = new float[16];
     //orientation Matrix
     private final float[] orientationMat = new float[3];
-    //orientation Matrix
-    private final float[] oldOrientationMat = new float[3];
     //orientation vector
     private final float[] orientationVector = new float[4];
-
-
 
     /**
      * Compass constructor, initializes the device sensors and registers the listener
@@ -88,15 +82,12 @@ public class Compass implements SensorEventListener {
             //Convert values to degrees
             convertArrToDegrees(orientationMat);
 
-            //Apply low-pass filter
-            //lowPassFilter(orientationMat, oldOrientationMat);
-
             //Add 360° to only get positive values
             float headingHorizontal = (orientationMat[0] + 360) % 360;
 
             //Multiply by -1 to get increasing values when inclining the device
             //Add 90° to get values from 0° to 180°
-            float headingVertical = (orientationMat[1] + 90) % 360;
+            float headingVertical = (orientationMat[1]*(-1) + 90) % 360;
 
             //Update the horizontal and vertical heading
             if (compassListener != null) {
@@ -111,8 +102,7 @@ public class Compass implements SensorEventListener {
      */
     private void convertArrToDegrees(float[] orientationMat) {
         for(int i=0; i<orientationMat.length; i++){
-            //orientationMat[i] = (float)(Math.toDegrees(orientationMat[i]) + 360) % 360;
-            orientationMat[i] = (float)(Math.toDegrees(orientationMat[i]) + 360) % 360;
+            orientationMat[i] = (float)(Math.toDegrees(orientationMat[i]));
         }
     }
 
@@ -128,40 +118,6 @@ public class Compass implements SensorEventListener {
             double newCos = ALPHA * ALPHA * Math.cos(mat[i]) + (1 - ALPHA) *
                     Math.cos(event.values[i]);
             mat[i] = (float) Math.atan2(newSin, newCos);
-        }
-    }
-
-    /**
-     * Applies a low-pass filter on the sensor values and updates the oldMat array
-     * @param newMat Output matrix that contains new values
-     * @param oldMat old values
-     */
-    private void lowPassFilter(float[] newMat, float[] oldMat){
-        for(int i=0; i<newMat.length; i++) {
-//            if (Math.abs(newMat[i] - oldMat[i]) < 180) {
-//                if (Math.abs(newMat[i] - oldMat[i]) > SMOOTH_THRESHOLD_COMPASS) {
-//                    newMat[i] = newMat[i];
-//                }
-//                else {
-//                    newMat[i] = oldMat[i] + SMOOTH_FACTOR_COMPASS * (newMat[i] - oldMat[i]);
-//                }
-//            }
-//            else {
-//                if (360.0 - Math.abs(newMat[i] - oldMat[i]) < SMOOTH_THRESHOLD_COMPASS) {
-//                    if (newMat[i] > oldMat[i]) {
-//                        newMat[i] = (newMat[i] + SMOOTH_FACTOR_COMPASS * ((360 + oldMat[i] - newMat[i]) % 360) + 360) % 360;
-//                    }
-//                    else {
-//                        newMat[i] = (newMat[i] - SMOOTH_FACTOR_COMPASS * ((360 - oldMat[i] + newMat[i]) % 360) + 360) % 360;
-//                    }
-//                }
-//            }
-            double newSin = ALPHA * Math.sin(Math.toRadians(oldMat[i])) + (1 - ALPHA) *
-                    Math.sin(Math.toRadians(newMat[i]));
-            double newCos = ALPHA * Math.cos(Math.toRadians(oldMat[i])) + (1 - ALPHA) *
-                    Math.cos(Math.toRadians(newMat[i]));
-            newMat[i] = (float) Math.toDegrees(Math.atan2(newSin, newCos));
-            oldMat[i] = newMat[i];
         }
     }
 
