@@ -371,7 +371,7 @@ public class CameraUiView extends View {
         float deltaVerticalAngle = (float) (poiPoint.getVerticalBearing() - verticalDegrees);
 
         //Calculate position in Pixel to display the mountainMarker
-        float mountainMarkerPosition = height * (rangeDegreesVertical - 2*deltaVerticalAngle) / (2*rangeDegreesVertical)
+        float mountainMarkerPosition = height * (rangeDegreesVertical + 2*deltaVerticalAngle) / (2*rangeDegreesVertical)
                 - (float)mountainMarkerVisible.getHeight()/2;
 
         //Calculate the horizontal position
