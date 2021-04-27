@@ -1,6 +1,4 @@
-package com.github.bgabriel998.softwaredevproject;
-
-import com.github.bgabriel998.softwaredevproject.utils.AngleLowpassFilter;
+package com.github.bgabriel998.softwaredevproject.utils;
 
 import org.junit.Test;
 
