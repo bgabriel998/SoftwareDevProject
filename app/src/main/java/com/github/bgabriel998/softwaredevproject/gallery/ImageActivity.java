@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.os.Bundle;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.github.bgabriel998.softwaredevproject.R;
@@ -18,7 +19,6 @@ import java.io.IOException;
 public class ImageActivity extends AppCompatActivity {
 
     public static final String IMAGE_PATH_INTENT = "imagePath";
-    private static final String TOOLBAR_TITLE = "Image";
     private static final int ROTATE_DEGREES = 90;
 
     @Override
@@ -26,10 +26,12 @@ public class ImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
 
-        ToolbarHandler.SetupToolbar(this, TOOLBAR_TITLE);
-
         Intent intent = getIntent();
         setImage(intent.getStringExtra(IMAGE_PATH_INTENT));
+
+        //Hide status-bar
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     /**
