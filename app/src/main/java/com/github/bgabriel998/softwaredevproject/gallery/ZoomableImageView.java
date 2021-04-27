@@ -5,7 +5,6 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 
@@ -21,7 +20,7 @@ public class ZoomableImageView extends androidx.appcompat.widget.AppCompatImageV
     private final static float MIN_SCALE = 1f;
     private final static float MAX_SCALE = 3f;
 
-    // The view can be in different stages to controll zooming
+    // The view can be in different stages to control zooming
     private enum Mode {
         None, Drag, Zoom
     }
@@ -40,6 +39,7 @@ public class ZoomableImageView extends androidx.appcompat.widget.AppCompatImageV
     private int viewWidth, viewHeight;
     private float origWidth, origHeight;
     private float currWidth, currHeight;
+    private float oldMeasuredWidth, oldMeasuredHeight;
 
     /**
      * Constructor
@@ -196,36 +196,36 @@ public class ZoomableImageView extends androidx.appcompat.widget.AppCompatImageV
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
         // Rescale if rotated
-        if (viewWidth != MeasureSpec.getSize(widthMeasureSpec) ||
-                viewHeight != MeasureSpec.getSize(heightMeasureSpec)) {
+        if (MeasureSpec.getSize(widthMeasureSpec) != viewWidth ||
+                MeasureSpec.getSize(heightMeasureSpec) != viewHeight) {
             viewWidth = MeasureSpec.getSize(widthMeasureSpec);
             viewHeight = MeasureSpec.getSize(heightMeasureSpec);
             rescale();
         }
+
     }
 
     /**
      * Rescale everything The full image
      */
     private void rescale() {
-        if ((viewWidth != 0 && viewHeight != 0) && currScale == 1 ){
+        if (viewWidth != 0 && viewHeight != 0 && currScale == 1){
             Drawable drawable = getDrawable();
             if (drawable != null && drawable.getIntrinsicWidth() != 0 &&
                     drawable.getIntrinsicHeight() != 0) {
-                int bmWidth = drawable.getIntrinsicWidth();
-                int bmHeight = drawable.getIntrinsicHeight();
+                float bmWidth = (float) drawable.getIntrinsicWidth();
+                float bmHeight = (float) drawable.getIntrinsicHeight();
 
-                Log.d("bmSize", "bmWidth: " + bmWidth + " bmHeight : " + bmHeight);
-
-                float scaleX = (float) (viewWidth / bmWidth);
-                float scaleY = (float) (viewHeight / bmHeight);
+                float scaleX = (float) viewWidth / bmWidth;
+                float scaleY = (float) viewHeight / bmHeight;
                 float scale = Math.min(scaleX, scaleY);
                 imageMatrix.setScale(scale, scale);
 
                 // Center Image
-                float redundantX = (float) (viewWidth - (scale * bmWidth)) / 2;
-                float redundantY = (float) (viewHeight - (scale * bmHeight)) / 2;
+                float redundantX = ((float) viewWidth - (scale * bmWidth)) / 2;
+                float redundantY = ((float) viewHeight - (scale * bmHeight)) / 2;
                 imageMatrix.postTranslate(redundantX, redundantY);
 
                 origWidth = viewWidth - 2 * redundantX;
