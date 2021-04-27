@@ -7,6 +7,8 @@ import androidx.test.core.app.ApplicationProvider;
 import com.github.bgabriel998.softwaredevproject.points.UserPoint;
 
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Random;
@@ -15,11 +17,17 @@ import java.util.concurrent.TimeoutException;
 
 public class UserPointTest {
 
+    private static Context mContext;
+    private static UserPoint userPoint;
+
+    @BeforeClass
+    public static void createInstance() {
+        mContext = ApplicationProvider.getApplicationContext();
+        userPoint = UserPoint.getInstance(mContext);
+    }
+
     @Test
     public void getLocationTest() {
-
-        Context mContext = ApplicationProvider.getApplicationContext();
-        UserPoint userPoint = new UserPoint(mContext);
 
         // check if customLocation is off
         Assert.assertFalse(userPoint.isCustomLocation());
@@ -39,10 +47,6 @@ public class UserPointTest {
 
     @Test
     public void setLocationTest() throws TimeoutException {
-
-        Context mContext = ApplicationProvider.getApplicationContext();
-
-        UserPoint userPoint = new UserPoint(mContext);
 
         Random r = new Random();
 

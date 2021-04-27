@@ -28,7 +28,8 @@ public class ComputePOIPointsTest {
     @BeforeClass
     public static void setUserPoint(){
         //Set userPoint to the mont blanc
-        userPoint = new UserPoint(45.802537, 6.850328, 4809);
+        UserPoint userPoint = UserPoint.getInstance(null); // TODO check if working properly
+        userPoint.setLocation(46.519251915333676, 6.558563221333525, 220, 0);
     }
 
     @Before

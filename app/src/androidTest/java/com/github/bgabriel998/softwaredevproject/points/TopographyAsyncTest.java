@@ -36,7 +36,7 @@ public class TopographyAsyncTest {
     public static void setup() throws InterruptedException {
         Context mContext = ApplicationProvider.getApplicationContext();
 
-        userPoint = new UserPoint(mContext);
+        userPoint = UserPoint.getInstance(mContext);
         userPoint.setLocation(GPSTracker.DEFAULT_LAT, GPSTracker.DEFAULT_LON,GPSTracker.DEFAULT_ALT, GPSTracker.DEFAULT_ACC);
         new DownloadTopographyTask(){
             @Override
@@ -90,7 +90,7 @@ public class TopographyAsyncTest {
 
         Context mContext = ApplicationProvider.getApplicationContext();
 
-        UserPoint userPoint = new UserPoint(mContext);
+        UserPoint userPoint = UserPoint.getInstance(mContext);
         userPoint.setLocation(GPSTracker.DEFAULT_LAT, GPSTracker.DEFAULT_LON,GPSTracker.DEFAULT_ALT, GPSTracker.DEFAULT_ACC);
 
         ElevationMap elevationMap = new ElevationMap(topographyPair, userPoint);
@@ -106,7 +106,7 @@ public class TopographyAsyncTest {
 
         Context mContext = ApplicationProvider.getApplicationContext();
 
-        UserPoint userPoint = new UserPoint(mContext);
+        UserPoint userPoint = UserPoint.getInstance(mContext);
         userPoint.setLocation(GPSTracker.DEFAULT_LAT, GPSTracker.DEFAULT_LON,GPSTracker.DEFAULT_ALT, GPSTracker.DEFAULT_ACC);
 
         ElevationMap elevationMap = new ElevationMap(topographyPair, userPoint);
@@ -122,7 +122,7 @@ public class TopographyAsyncTest {
 
         Context mContext = ApplicationProvider.getApplicationContext();
 
-        UserPoint userPoint = new UserPoint(mContext);
+        UserPoint userPoint = UserPoint.getInstance(mContext);
         userPoint.setLocation(GPSTracker.DEFAULT_LAT, GPSTracker.DEFAULT_LON,GPSTracker.DEFAULT_ALT, GPSTracker.DEFAULT_ACC);
 
         ElevationMap elevationMap = new ElevationMap(topographyPair, userPoint);
@@ -209,7 +209,7 @@ public class TopographyAsyncTest {
         Context mContext = ApplicationProvider.getApplicationContext();
 
         // setting location near everest peak
-        UserPoint userPoint = new UserPoint(mContext);
+        UserPoint userPoint = UserPoint.getInstance(mContext);
         userPoint.setLocation(28.000490, 86.921267,7500, 0);
 
         LineOfSight lineOfSight = new LineOfSight(topographyPair, userPoint);

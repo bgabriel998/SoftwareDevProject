@@ -29,7 +29,7 @@ public class ComputePOIPoints {
      */
     public ComputePOIPoints(Context context){
         POIPoints = new ArrayList<>();
-        userPoint = new UserPoint(context);
+        userPoint = UserPoint.getInstance(context);
         userPoint.update();
         getPOIs(userPoint);
     }
