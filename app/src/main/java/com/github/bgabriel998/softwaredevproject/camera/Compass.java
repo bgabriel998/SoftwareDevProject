@@ -15,14 +15,11 @@ public class Compass implements SensorEventListener {
     //SensorManager to access the sensors
     private final SensorManager sensorManager;
 
-    //Low-pass filter constant
-    private static final float ALPHA = 0.5f;
-
     //rotation Matrix
     private final float[] rotMat = new float[16];
     //orientation Matrix
     private final float[] orientationMat = new float[3];
-
+    //Horizontal and vertical lowpass filters
     private final AngleLowpassFilter horizontalFilter = new AngleLowpassFilter();
     private final AngleLowpassFilter verticalFilter = new AngleLowpassFilter();
 
@@ -86,7 +83,7 @@ public class Compass implements SensorEventListener {
             convertArrToDegrees(orientationMat);
 
             //Add 360° to only get positive values
-            float headingHorizontal =  (orientationMat[0] + 360) % 360;
+            float headingHorizontal = (orientationMat[0] + 360) % 360;
 
             //Multiply by -1 to get increasing values when inclining the device
             //Add 90° to get values from 0° to 180°
@@ -100,7 +97,7 @@ public class Compass implements SensorEventListener {
     }
 
     /**
-     * Convert all values of array to degrees and makes the values go from 0 to 360 degrees
+     * Convert all values of array to degrees
      * @param orientationMat Array of values that gets converted from radians to degrees
      */
     private void convertArrToDegrees(float[] orientationMat) {
@@ -110,7 +107,8 @@ public class Compass implements SensorEventListener {
     }
 
     /**
-     * Applies a low-pass filter on the sensor values and updates the last sensor values
+     * Adds the horizontal and vertical angle to their respective lowpass filter and updates
+     * the given matrix
      * @param mat Matrix for which the lowpass filter gets applied
      */
     private void applyLowPassFilter(float[] mat){
