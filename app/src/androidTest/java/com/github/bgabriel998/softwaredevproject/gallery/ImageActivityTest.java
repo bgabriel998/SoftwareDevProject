@@ -62,4 +62,11 @@ public class ImageActivityTest {
     public void TestImageView(){
         onView(withId(R.id.fullscreen_image)).check(matches(withImagePath(imagePath)));
     }
+
+    /* Test that the image view still can be clicked after zoom. */
+    @Test
+    public void TestClickImageView(){
+        onView(withId(R.id.fullscreen_image)).perform(click());
+        onView(withId(R.id.fullscreen_image)).check(matches(withImagePath(imagePath)));
+    }
 }
