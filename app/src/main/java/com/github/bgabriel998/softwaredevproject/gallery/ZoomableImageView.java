@@ -16,9 +16,9 @@ import androidx.annotation.Nullable;
  */
 public class ZoomableImageView extends androidx.appcompat.widget.AppCompatImageView {
 
-    private final static int CLICK_DISTANCE_TRESH = 3;
+    private final static int CLICK_DISTANCE_THRESH = 3;
     private final static float MIN_SCALE = 1f;
-    private final static float MAX_SCALE = 3f;
+    private final static float MAX_SCALE = 10f;
 
     // The view can be in different stages to control zooming
     private enum Mode {
@@ -39,7 +39,6 @@ public class ZoomableImageView extends androidx.appcompat.widget.AppCompatImageV
     private int viewWidth, viewHeight;
     private float origWidth, origHeight;
     private float currWidth, currHeight;
-    private float oldMeasuredWidth, oldMeasuredHeight;
 
     /**
      * Constructor
@@ -107,8 +106,8 @@ public class ZoomableImageView extends androidx.appcompat.widget.AppCompatImageV
                     mode = Mode.None;
                     int xDiff = (int) Math.abs(currTouch.x - start.x);
                     int yDiff = (int) Math.abs(currTouch.y - start.y);
-                    if (xDiff < CLICK_DISTANCE_TRESH &&
-                            yDiff < CLICK_DISTANCE_TRESH) {
+                    if (xDiff < CLICK_DISTANCE_THRESH &&
+                            yDiff < CLICK_DISTANCE_THRESH) {
                         v.performClick();
                     }
                     break;
@@ -193,6 +192,12 @@ public class ZoomableImageView extends androidx.appcompat.widget.AppCompatImageV
         return 0;
     }
 
+    /**
+     * Called when view is not fitting bounds.
+     * Sets new sizes and rescales if needed.
+     * @param widthMeasureSpec width
+     * @param heightMeasureSpec height
+     */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -264,7 +269,7 @@ public class ZoomableImageView extends androidx.appcompat.widget.AppCompatImageV
 
             if (currWidth <= viewWidth || currHeight <= viewHeight) {
                 imageMatrix.postScale(scaleFactor, scaleFactor,
-                        viewWidth / 2, viewHeight / 2);
+                        (float) viewWidth / 2, (float) viewHeight / 2);
             }
             else {
                 imageMatrix.postScale(scaleFactor, scaleFactor,
