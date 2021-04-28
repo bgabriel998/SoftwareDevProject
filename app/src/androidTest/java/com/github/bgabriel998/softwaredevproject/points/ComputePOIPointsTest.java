@@ -30,7 +30,7 @@ public class ComputePOIPointsTest {
     public static void setUserPoint(){
         //Set userPoint to the mont blanc
         mContext = ApplicationProvider.getApplicationContext();
-        userPoint = UserPoint.getInstance(mContext); // TODO check if working properly
+        userPoint = UserPoint.getInstance(mContext); 
         userPoint.setLocation(45.802537, 6.850328, 4809, 0);
     }
 
