@@ -69,7 +69,7 @@ public class GeonamesHandlerTest {
         UserPoint userPoint = UserPoint.getInstance(context);
         userPoint.setLocation(MOCK_LOCATION_LAT_LAUSANNE,
                 MOCK_LOCATION_LON_LAUSANNE,
-                MOCK_LOCATION_LON_LAUSANNE,
+                MOCK_LOCATION_ALT_LAUSANNE,
                 0);
 
         startTimeMs = System.currentTimeMillis();
