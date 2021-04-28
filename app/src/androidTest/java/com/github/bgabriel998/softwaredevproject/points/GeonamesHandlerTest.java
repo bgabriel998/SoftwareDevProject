@@ -286,7 +286,7 @@ public class GeonamesHandlerTest {
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
         UserPoint userPoint = UserPoint.getInstance(context);
-        userPoint.setLocation(46.519251915333676, 6.558563221333525, 220, 0);
+        userPoint.setLocation(MOCK_LOCATION_LAT_LAUSANNE, MOCK_LOCATION_LON_LAUSANNE, MOCK_LOCATION_ALT_LAUSANNE, 0);
 
         new GeonamesHandler(userPoint,
                 GIVEN_RANGE_IN_KM,
