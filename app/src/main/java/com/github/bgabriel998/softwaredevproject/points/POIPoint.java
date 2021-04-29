@@ -10,7 +10,7 @@ import java.util.Objects;
  *
  * It provides a constructor to build a POIPoint from a org.osmdroid.util.GeoPoint.
  */
-public class POIPoint extends Point {
+public class POIPoint extends Point implements Comparable<POIPoint> {
 
     public String getName() {
         return name;
@@ -75,5 +75,11 @@ public class POIPoint extends Point {
         if (obj == this)
             return true;
         return getName().equals(((POIPoint)obj).getName());
+    }
+
+
+    @Override
+    public int compareTo(POIPoint o) {
+        return this.altitude >= o.altitude ? 1 : 0;
     }
 }

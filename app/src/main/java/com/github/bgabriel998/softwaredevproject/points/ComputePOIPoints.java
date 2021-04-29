@@ -7,8 +7,14 @@ import androidx.core.util.Pair;
 import org.osmdroid.bonuspack.location.POI;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 /**
  * Requests the POIPoints around the user location and then downloads the topography map once the
@@ -21,6 +27,7 @@ import java.util.Map;
 public class ComputePOIPoints {
     public static List<POIPoint> POIPoints;
     public static Map<POIPoint, Boolean> labeledPOIPoints;
+    public static Map<POIPoint, Boolean> highestPOIPoints;
     public static UserPoint userPoint;
 
     /**
@@ -66,7 +73,36 @@ public class ComputePOIPoints {
                 super.onResponseReceived(topography);
                 LineOfSight lineOfSight = new LineOfSight(topography, userPoint);
                 labeledPOIPoints = lineOfSight.getVisiblePointsLabeled(POIPoints);
+
+                highestPOIPoints = filterHighestPOIs(labeledPOIPoints);
+
+                userPoint.update();
             }
         }.execute(userPoint);
+    }
+
+    private static Map<POIPoint, Boolean> filterHighestPOIs(Map<POIPoint, Boolean> labeledPOIPoints) {
+        Map<POIPoint, Boolean> sortedPoisByAlt = labeledPOIPoints.entrySet().stream()
+                .sorted(Collections.reverseOrder(Comparator.comparingDouble(p -> p.getKey().altitude)))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+
+        Map<POIPoint, Boolean> filteredPOIs = new HashMap<>();
+
+        Boolean addPoiPoint;
+        for (Map.Entry<POIPoint, Boolean> poiPoints : sortedPoisByAlt.entrySet()) {
+            addPoiPoint = true;
+            for (Map.Entry<POIPoint, Boolean> resPoiPoints : filteredPOIs.entrySet()) {
+                if(Math.abs(poiPoints.getKey().getHorizontalBearing()
+                        - resPoiPoints.getKey().getHorizontalBearing()) <= 5){
+                    addPoiPoint = false;
+                }
+            }
+            if(addPoiPoint){
+                filteredPOIs.put(poiPoints.getKey(), poiPoints.getValue());
+            }
+        }
+
+        return filteredPOIs;
     }
 }
