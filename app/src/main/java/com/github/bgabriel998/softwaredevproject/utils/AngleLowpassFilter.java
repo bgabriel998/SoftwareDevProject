@@ -5,7 +5,7 @@ import java.util.ArrayDeque;
 /**
  * Lowpass filter for angles. Converts radians into sum of sine and cosine to overcome the problem
  * that angle values are cyclic. For example when the angles changes from 2*pi to 0 or from -pi to pi
- * See https://stackoverflow.com/a/18911252
+ * See <a href="StackOverflow">https://stackoverflow.com/a/18911252</a>
  */
 public class AngleLowpassFilter {
     //Defines the length of the queue
