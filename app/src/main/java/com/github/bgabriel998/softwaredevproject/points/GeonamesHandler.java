@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>> implements GeonamesHandlerIF{
 
     //Query Constants
-    private static final int DEFAULT_RANGE_IN_KM = 20;
+    public static final int DEFAULT_RANGE_IN_KM = 20;
     private static final int DEFAULT_QUERY_MAX_RESULT = 300;
     private static final int DEFAULT_QUERY_TIMEOUT = 10;
 
