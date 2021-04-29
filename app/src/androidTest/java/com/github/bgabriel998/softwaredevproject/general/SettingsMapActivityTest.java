@@ -1,8 +1,6 @@
 package com.github.bgabriel998.softwaredevproject.general;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import androidx.test.core.app.ApplicationProvider;
@@ -23,9 +21,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -125,7 +120,7 @@ public class SettingsMapActivityTest {
     }
 
     /* Helper method to read .txt file */
-    private String readFromFile() {
+    private void readFromFile() {
 
         String ret = "";
 
@@ -135,7 +130,7 @@ public class SettingsMapActivityTest {
             if ( inputStream != null ) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString = "";
+                String receiveString;
                 StringBuilder stringBuilder = new StringBuilder();
 
                 while ( (receiveString = bufferedReader.readLine()) != null ) {
@@ -145,15 +140,11 @@ public class SettingsMapActivityTest {
                 inputStream.close();
                 ret = stringBuilder.toString();
             }
-        }
-        catch (FileNotFoundException e) {
-            fail();
         } catch (IOException e) {
             fail();
         }
 
         Log.d("Debug", ret);
-        return ret;
     }
 
 }
