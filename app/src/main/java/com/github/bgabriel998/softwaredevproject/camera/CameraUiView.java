@@ -59,7 +59,6 @@ public class CameraUiView extends View {
 
     //Number of pixels per degree
     private float pixDeg;
-    private int lastMountain;
 
     //Range of the for-loop to draw the compass
     private float minDegrees;
@@ -328,7 +327,8 @@ public class CameraUiView extends View {
             //Draw all POIPoints as not visible since the map has not been downloaded
             drawPOIs(i);
             //Update the labeledPOIPoints
-            labeledPOIPoints = ComputePOIPoints.labeledPOIPoints;
+            //TODO check in the settings which mountains to display
+            labeledPOIPoints = ComputePOIPoints.highestPOIPoints;
         }
         else{
             //Update the POIPoints
@@ -369,11 +369,6 @@ public class CameraUiView extends View {
      * @param actualDegree degree on which the POIPoint is drawn
      */
     private void drawMountainMarker(POIPoint poiPoint, Boolean isVisible, int actualDegree){
-        //If there was a mountain near skip the mountain
-        if((actualDegree >= (lastMountain - 3)) && (actualDegree <= (lastMountain + 3))){
-            return;
-        }
-
         //Use both results and substract the actual vertical heading
         float deltaVerticalAngle = (float) (poiPoint.getVerticalBearing() - verticalDegrees);
 
@@ -400,9 +395,6 @@ public class CameraUiView extends View {
                 mountainInfo);
         //Restore the saved state
         canvas.restore();
-
-        //Update degree of last mountain
-        lastMountain = actualDegree;
     }
 
     /**
