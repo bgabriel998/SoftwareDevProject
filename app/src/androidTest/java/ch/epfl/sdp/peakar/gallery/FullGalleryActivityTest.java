@@ -8,7 +8,7 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.github.bgabriel998.softwaredevproject.R;
+import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.camera.CameraActivity;
 
 import org.junit.After;

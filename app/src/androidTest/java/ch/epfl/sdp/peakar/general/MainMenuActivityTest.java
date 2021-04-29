@@ -13,7 +13,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 
-import com.github.bgabriel998.softwaredevproject.R;
+import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.collection.CollectionActivity;
 import ch.epfl.sdp.peakar.gallery.GalleryActivity;

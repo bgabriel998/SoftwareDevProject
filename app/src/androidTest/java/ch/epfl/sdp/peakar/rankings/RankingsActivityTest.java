@@ -8,9 +8,6 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.github.bgabriel998.softwaredevproject.R;
-import ch.epfl.sdp.peakar.database.Database;
-import ch.epfl.sdp.peakar.user.account.Account;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.junit.After;
@@ -25,7 +22,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.UITestHelper;
+import ch.epfl.sdp.peakar.database.Database;
+import ch.epfl.sdp.peakar.user.account.Account;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -33,7 +33,6 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;

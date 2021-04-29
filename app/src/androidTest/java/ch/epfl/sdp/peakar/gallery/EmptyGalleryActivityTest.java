@@ -8,13 +8,12 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.github.bgabriel998.softwaredevproject.R;
-
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.UITestHelper;
 
 import static androidx.test.espresso.Espresso.onView;
