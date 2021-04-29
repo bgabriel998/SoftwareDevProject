@@ -5,9 +5,9 @@ import android.os.Handler;
 import android.os.Looper;
 
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.rule.ActivityTestRule;
 
 import com.github.giommok.softwaredevproject.Database;
 import com.github.giommok.softwaredevproject.FirebaseAccount;
@@ -19,6 +19,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.osmdroid.tileprovider.MapTileProviderBase;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
@@ -28,6 +29,12 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.util.ArrayList;
 import java.util.List;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
@@ -168,6 +175,42 @@ public class OSMMapTest {
         Database.refRoot.child(Database.CHILD_USERS).child("null").removeValue();
     }
 
+
+    /*Test switch between normal map and satellite view*/
+    @Test
+    public void pressSatelliteNormalMapButton() throws InterruptedException {
+        OSMMap osmMap = MapActivity.osmMap;
+        //Originally the map is set to default
+        //A press on the button will change the map tile for satellite
+
+        MapView mapView = osmMap.getMapView();
+        MapTileProviderBase tileProviderBase = mapView.getTileProvider();
+        assertEquals("Mapnik", tileProviderBase.getTileSource().name());
+        //Click on button
+        ViewInteraction button = onView(withId(R.id.changeMapTile));
+        button.perform(click());
+        //Check that the provider has changed
+        tileProviderBase = mapView.getTileProvider();
+        assertEquals("ARCGisOnline", tileProviderBase.getTileSource().name());
+    }
+
+    /* Check that a press on "zoom on user location button effectively zooms on user loc"*/
+    @Test
+    public void pressZoomOnUserLocationButton() throws InterruptedException {
+        OSMMap osmMap = MapActivity.osmMap;
+        MapView mapView = osmMap.getMapView();
+        //Get map center at start
+        GeoPoint geoPointStart = (GeoPoint) mapView.getMapCenter();
+        //Wait 5 Sec for the provider to get the location
+        Thread.sleep(5000);
+
+        ViewInteraction button = onView(withId(R.id.zoomOnUserLocation));
+        button.perform(click());
+        //Get center of the map after zoom
+        GeoPoint geoPointEnd = (GeoPoint)  mapView.getMapCenter();
+        //Compare two map centers
+        assertThat(geoPointStart, is(not(geoPointEnd)));
+    }
 
 
 }

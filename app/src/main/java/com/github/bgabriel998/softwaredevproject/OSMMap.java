@@ -190,7 +190,7 @@ public class OSMMap {
      */
     private void setZoomBoundingBox(FirebaseAccount userAccount){
         //Create a bounding box and zoom in
-        if(userAccount.getDiscoveredPeaks().size() == 0) {
+        if(userAccount.getDiscoveredPeaks().size() != 0) {
             BoundingBox boundingBox = computeArea(new ArrayList<>(userAccount.getDiscoveredPeaks()));
             zoomToBounds(boundingBox.increaseByScale(BOUNDING_BOX_ZOOM_FACTOR));
             mapView.invalidate();
