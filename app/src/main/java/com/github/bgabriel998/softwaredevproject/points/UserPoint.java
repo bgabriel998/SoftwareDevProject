@@ -43,6 +43,7 @@ public final class UserPoint extends Point {
         super(GPSTracker.DEFAULT_LAT, GPSTracker.DEFAULT_LON, GPSTracker.DEFAULT_ALT);
         gpsTracker = new GPSTracker(mContext, this);
         customLocation = false;
+        single_instance = this;
     }
 
     /**
