@@ -32,6 +32,22 @@ import java.util.List;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.AIGUILLE_DU_PLAN;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.AIGUILLE_DU_PLAN_ALT;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.AIGUILLE_DU_PLAN_LAT;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.AIGUILLE_DU_PLAN_LONG;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.DENT_DU_GEANT_ALT;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.DENT_DU_GEANT_LAT;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.DENT_DU_GEANT_LONG;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.DENT_DU_GEANT_NAME;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.MONT_BLANC_ALT;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.MONT_BLANC_LAT;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.MONT_BLANC_LONG;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.MONT_BLANC_NAME;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.POINTE_DE_LAPAZ_ALT;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.POINTE_DE_LAPAZ_LAT;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.POINTE_DE_LAPAZ_LONG;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.POINTE_DE_LAPAZ_NAME;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -40,12 +56,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 public class OSMMapTest {
-    //Constants
-    private static final float TILE_SCALING_FACTOR = 1.5f;
-    private static final String MONT_BLANC_NAME = "Mont Blanc - Monte Bianco";
-    private static final String DENT_DU_GEANT_NAME = "Dent du Geant";
-    private static final String POINTE_DE_LAPAZ_NAME = "Pointe de Lapaz";
-    private static final String AIGUILLE_DU_PLAN = "Aiguille du Plan";
 
     @Rule
     public ActivityScenarioRule<MapActivity> activityActivityScenarioRule = new ActivityScenarioRule<>(MapActivity.class);
@@ -71,7 +81,7 @@ public class OSMMapTest {
         OSMMap osmMap = MapActivity.osmMap;
         MapView mapView = osmMap.getMapView();
         //Check map initialization
-        assertEquals(TILE_SCALING_FACTOR, mapView.getTilesScaleFactor(),0.0f);
+        assertEquals(TestingConstants.TILE_SCALING_FACTOR, mapView.getTilesScaleFactor(),0.0f);
     }
 
 
@@ -95,19 +105,19 @@ public class OSMMapTest {
     @Test
     public void setMarkersForDiscoveredPeaksTest() throws InterruptedException {
         //Write peaks to the database
-        GeoPoint geoPoint_1 = new GeoPoint(45.8325,6.8641666666667,4810);
+        GeoPoint geoPoint_1 = new GeoPoint(MONT_BLANC_LAT,MONT_BLANC_LONG,MONT_BLANC_ALT);
         POIPoint point_1 = new POIPoint(geoPoint_1);
         point_1.setName(MONT_BLANC_NAME);
 
-        GeoPoint geoPoint_2 = new GeoPoint(45.86355980599387, 6.951348205683087,4013);
+        GeoPoint geoPoint_2 = new GeoPoint(DENT_DU_GEANT_LAT, DENT_DU_GEANT_LONG,DENT_DU_GEANT_ALT);
         POIPoint point_2 = new POIPoint(geoPoint_2);
         point_2.setName(DENT_DU_GEANT_NAME);
 
-        GeoPoint geoPoint_3 = new GeoPoint(45.891667, 6.907222,3673);
+        GeoPoint geoPoint_3 = new GeoPoint(AIGUILLE_DU_PLAN_LAT, AIGUILLE_DU_PLAN_LONG,AIGUILLE_DU_PLAN_ALT);
         POIPoint point_3 = new POIPoint(geoPoint_3);
         point_3.setName(AIGUILLE_DU_PLAN);
 
-        GeoPoint geoPoint_4 = new GeoPoint(45.920774986207014, 6.812914656881065,3660);
+        GeoPoint geoPoint_4 = new GeoPoint(POINTE_DE_LAPAZ_LAT, POINTE_DE_LAPAZ_LONG,POINTE_DE_LAPAZ_ALT);
         POIPoint point_4 = new POIPoint(geoPoint_4);
         point_4.setName(POINTE_DE_LAPAZ_NAME);
 
