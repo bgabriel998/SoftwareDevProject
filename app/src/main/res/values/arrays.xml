@@ -1,12 +1,44 @@
 <resources>
-    <!-- Reply Preference -->
-    <string-array name="reply_entries">
-        <item>Reply</item>
-        <item>Reply to all</item>
+    <!-- range Preference -->
+    <string-array name="range_entries">
+        <item>5 km</item>
+        <item>10 km</item>
+        <item>20 km</item>
+        <item>30 km</item>
+        <item>50 km</item>
     </string-array>
 
-    <string-array name="reply_values">
-        <item>reply</item>
-        <item>reply_all</item>
+    <string-array name="range_values">
+        <item>first_range</item>
+        <item>sec_range</item>
+        <item>third_range</item>
+        <item>fourth_range</item>
+        <item>fifth_range</item>
+    </string-array>
+
+    <!-- range Preference -->
+    <string-array name="measSys_entries">
+        <item>Meters/Kilometers</item>
+        <item>Feet/Miles</item>
+    </string-array>
+
+    <string-array name="measSys_values">
+        <item>siSystem</item>
+        <item>usSystem</item>
+    </string-array>
+
+    <!-- language Preference -->
+    <string-array name="language_entries">
+        <item>English</item>
+        <item>Français</item>
+        <item>Deutsch</item>
+        <item>Svenska</item>
+    </string-array>
+
+    <string-array name="language_values">
+        <item>english</item>
+        <item>french</item>
+        <item>german</item>
+        <item>swedish</item>
     </string-array>
 </resources>

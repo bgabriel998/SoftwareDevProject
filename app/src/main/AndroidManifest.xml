@@ -4,13 +4,14 @@
     package="com.github.bgabriel998.softwaredevproject">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <uses-feature android:name="android.hardware.camera.any" />
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"  />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -22,9 +23,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:remove="android:appComponentFactory">
-        <activity android:name=".FriendItemActivity"/>
-        <activity android:name=".FriendsActivity"/>
-        <activity android:name=".ImageActivity"/>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"></activity>
+        <activity android:name=".FriendItemActivity" />
+        <activity android:name=".FriendsActivity" />
+        <activity android:name=".ImageActivity" />
         <activity android:name=".GalleryActivity" />
         <activity android:name=".CameraActivity" />
         <activity android:name=".MountainActivity" />
@@ -32,14 +36,16 @@
         <activity android:name=".RankingsActivity" />
         <activity android:name=".MapActivity" />
         <activity android:name=".ProfileActivity" />
-        <activity android:name=".SettingsActivity" />
         <activity android:name=".MainMenuActivity" />
-        <activity android:name=".InitActivity"
+        <activity
+            android:name=".InitActivity"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
+
 </manifest>
