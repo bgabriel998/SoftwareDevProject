@@ -3,12 +3,15 @@ package com.github.bgabriel998.softwaredevproject.map;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import androidx.core.content.res.ResourcesCompat;
 
 import com.github.bgabriel998.softwaredevproject.points.POIPoint;
+import com.github.bgabriel998.softwaredevproject.points.Point;
 import com.github.bgabriel998.softwaredevproject.user.account.FirebaseAccount;
 import com.github.bgabriel998.softwaredevproject.R;
 
@@ -18,7 +21,11 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.Projection;
+import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Overlay;
+import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -27,6 +34,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 public class OSMMap {
 
@@ -189,4 +197,48 @@ public class OSMMap {
         );
         return new BoundingBox(north.get(), east.get(), south.get(), west.get());
     }
+
+    // TODO documentation
+    public void enablePinOnClick(Runnable listener, Consumer<Point> pointUpdater) {
+
+        Overlay touchOverlay = new Overlay(){
+
+            ItemizedIconOverlay<OverlayItem> anotherItemizedIconOverlay = null;
+
+            @Override
+            public boolean onLongPress(final MotionEvent e, final MapView mapView) {
+
+                final Drawable marker = context.getResources().getDrawable(R.drawable.pushpin_marker);
+                Projection proj = mapView.getProjection();
+
+                GeoPoint loc = (GeoPoint) proj.fromPixels((int)e.getX(), (int)e.getY());
+                Log.d("OSMMAP", "Coordinates: (Latitude = " + loc.getLatitude() + ", Longitude = " + loc.getLongitude());
+                ArrayList<OverlayItem> overlayArray = new ArrayList<>();
+                GeoPoint addedGeoPoint = new GeoPoint(loc.getLatitude(), loc.getLongitude());
+                OverlayItem mapItem = new OverlayItem("", "", addedGeoPoint);
+
+                pointUpdater.accept(new POIPoint(addedGeoPoint));
+                mapItem.setMarker(marker);
+                overlayArray.add(mapItem);
+
+                if (anotherItemizedIconOverlay!=null) {
+                    mapView.getOverlays().remove(anotherItemizedIconOverlay);
+                    mapView.invalidate();
+                }
+
+                anotherItemizedIconOverlay = new ItemizedIconOverlay<>(context, overlayArray,null);
+                mapView.getOverlays().add(anotherItemizedIconOverlay);
+                mapView.invalidate();
+
+                listener.run();
+                return true;
+            }
+
+        };
+
+        // TODO add bounding box drawing
+        mapView.getOverlays().add(touchOverlay);
+
+    }
+
 }
