@@ -342,7 +342,7 @@ public class CameraUiView extends View {
     private void drawPOIs(int actualDegree){
         //Go through all POIPoints
         for(POIPoint poiPoint : POIPoints){
-            if((int)poiPoint.getHorizontalBearing() == actualDegree){
+            if((int)poiPoint.getHorizontalBearing() == (actualDegree + 360) % 360){
                 drawMountainMarker(poiPoint, false, actualDegree);
             }
         }
@@ -356,7 +356,7 @@ public class CameraUiView extends View {
     private void drawLabeledPOIs(int actualDegree){
         //Go through all POIPoints
         labeledPOIPoints.entrySet().stream()
-                .filter(p -> (int)p.getKey().getHorizontalBearing() == actualDegree)
+                .filter(p -> (int)p.getKey().getHorizontalBearing() == (actualDegree + 360) % 360)
                         .forEach(p -> drawMountainMarker(p.getKey(), p.getValue(), actualDegree));
     }
 
