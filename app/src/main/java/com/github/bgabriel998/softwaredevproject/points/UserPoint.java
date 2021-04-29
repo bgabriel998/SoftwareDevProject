@@ -24,7 +24,7 @@ import org.osmdroid.util.BoundingBox;
  */
 public final class UserPoint extends Point {
 
-    private static final UserPoint single_instance = null; // singleton instance
+    private static UserPoint single_instance = null; // singleton instance
   
     private GPSTracker gpsTracker;
 
