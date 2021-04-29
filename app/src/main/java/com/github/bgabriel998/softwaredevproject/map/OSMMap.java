@@ -198,7 +198,14 @@ public class OSMMap {
         return new BoundingBox(north.get(), east.get(), south.get(), west.get());
     }
 
-    // TODO documentation
+    /**
+     * This method allows to select a point on the map. It allows to pass to the caller
+     * the coordinates of the selected point and it will display a PushPint on the selected
+     * point.
+     *
+     * @param listener      listener for the long press.
+     * @param pointUpdater  used to pass the selected point to the caller.
+     */
     public void enablePinOnClick(Runnable listener, Consumer<Point> pointUpdater) {
 
         Overlay touchOverlay = new Overlay(){
