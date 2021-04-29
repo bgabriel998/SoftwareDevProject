@@ -79,17 +79,21 @@ public class ImageActivityTest {
 
             // Test zoom in
             device.findObject(imageSelector).pinchOut(zoomPercent,zoomSteps);
-            //device.findObject(imageSelector).pinchOut(50,10);
+            Thread.sleep(1000);
             onView(withId(R.id.fullscreen_image)).check(matches(withScaleGreaterThan(1)));
 
             // Test zoom out
-            device.findObject(imageSelector).pinchIn(2 * zoomPercent,zoomSteps);
-            //device.findObject(imageSelector).pinchIn(100,10);
+            device.findObject(imageSelector).pinchIn(2*zoomPercent,zoomSteps);
+            Thread.sleep(1000);
             onView(withId(R.id.fullscreen_image)).check(matches(withScaleEqualTo(1)));
         }
         catch (UiObjectNotFoundException e) {
             e.printStackTrace();
             fail("Could not find image to zoom.");
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+            fail("thread sleep failed in zoom test.");
         }
     }
 }

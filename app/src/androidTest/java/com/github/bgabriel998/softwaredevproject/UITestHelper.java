@@ -121,15 +121,15 @@ public class UITestHelper {
     }
 
     /**
-     * Matcher for ZoomableImageView, test if current scale is given value
+     * Matcher for ZoomableImageView, test if current scale is equal to given value
      * @param expectedScale the expected scale value
-     * @return true if current scale is as expected
+     * @return true if current scale is expected value
      */
     public static Matcher<View> withScaleEqualTo(final float expectedScale) {
         return new BoundedMatcher<View, ZoomableImageView>(ZoomableImageView.class) {
             @Override
             protected boolean matchesSafely(ZoomableImageView view) {
-                return view.getCurrentScale() == expectedScale;
+                return view.getCurrentScale() <= expectedScale;
             }
 
             @Override
