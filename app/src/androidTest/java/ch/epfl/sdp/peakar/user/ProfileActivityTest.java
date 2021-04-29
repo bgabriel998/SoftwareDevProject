@@ -10,7 +10,7 @@ import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
-import com.github.bgabriel998.softwaredevproject.R;
+import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.user.account.Account;
 import ch.epfl.sdp.peakar.user.friends.AddFriendActivity;

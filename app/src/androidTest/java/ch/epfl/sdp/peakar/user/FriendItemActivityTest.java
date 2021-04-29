@@ -9,7 +9,7 @@ import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
-import com.github.bgabriel998.softwaredevproject.R;
+import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.collection.MountainActivity;
 import ch.epfl.sdp.peakar.user.friends.FriendItemActivity;
 
