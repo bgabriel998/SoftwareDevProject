@@ -7,6 +7,10 @@ import org.osmdroid.util.BoundingBox;
 
 /**
  * UserPoint is a class that represents a general point on earth.
+ *
+ * This class is a singleton: only one instance of this class is available on the
+ * entire program.
+ *
  * It adds a component to represent the accuracy of the user's location and customLocation:
  * <ul>
  * <li>accuracy accuracy in meters of the user location
@@ -18,7 +22,9 @@ import org.osmdroid.util.BoundingBox;
  *
  * This class should be used as a observer that observes a GPSTracker.
  */
-public class UserPoint extends Point {
+public final class UserPoint extends Point {
+
+    private static UserPoint single_instance = null; // singleton instance
   
     private GPSTracker gpsTracker;
 
@@ -29,24 +35,31 @@ public class UserPoint extends Point {
     private boolean customLocation;
 
     /**
-     * Constructor for the UserPoint.
+     * Constructor for the UserPoint. Private because it is a singleton.
      *
      * @param mContext  the current context of the app
      */
-    public UserPoint(Context mContext) {
+    private UserPoint(Context mContext) {
         super(GPSTracker.DEFAULT_LAT, GPSTracker.DEFAULT_LON, GPSTracker.DEFAULT_ALT);
         gpsTracker = new GPSTracker(mContext, this);
         customLocation = false;
+        single_instance = this;
     }
 
-    public UserPoint(double lat, double lon, double alt){
-        super(lat,lon,alt);
+    /**
+     * Method to get the singleton instance of this class. If the class was already
+     * initialized the parameter will be ignored.
+     *
+     * @param mContext  context of the application.
+     * @return          single instance of the user point.
+     */
+    public static UserPoint getInstance(Context mContext) {
+        return single_instance == null ? new UserPoint(mContext) : single_instance;
     }
 
     /**
      * Method that is used to update the current user location.
      */
-
     public void update() {
         if (!customLocation) {
             super.setLatitude(gpsTracker.getLatitude());
@@ -57,6 +70,7 @@ public class UserPoint extends Point {
     }
 
     /*
+     * Getter for the accuracy.
      *
      * @return accuracy of the current location (in meters)
      */

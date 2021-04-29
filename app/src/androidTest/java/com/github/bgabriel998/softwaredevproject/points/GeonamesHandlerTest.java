@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.firebase.ui.auth.data.model.User;
 import com.github.bgabriel998.softwaredevproject.points.GeonamesHandler;
 import com.github.bgabriel998.softwaredevproject.points.UserPoint;
 
@@ -65,9 +66,12 @@ public class GeonamesHandlerTest {
     public static void setup() throws InterruptedException {
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
-        UserPoint userPoint = new UserPoint(MOCK_LOCATION_LAT_LAUSANNE,
-                                            MOCK_LOCATION_LON_LAUSANNE,
-                                            MOCK_LOCATION_ALT_LAUSANNE);
+        UserPoint userPoint = UserPoint.getInstance(context);
+        userPoint.setLocation(MOCK_LOCATION_LAT_LAUSANNE,
+                MOCK_LOCATION_LON_LAUSANNE,
+                MOCK_LOCATION_ALT_LAUSANNE,
+                0);
+
         startTimeMs = System.currentTimeMillis();
 
         GeonamesHandler handler = (GeonamesHandler) new GeonamesHandler(userPoint) {
@@ -222,7 +226,8 @@ public class GeonamesHandlerTest {
         thrown.expectMessage("BoundingBoxRangeKm can't be null or negative (also not under 100m)");
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
-        UserPoint userPoint = new UserPoint(46.519251915333676,6.558563221333525,220);
+        UserPoint userPoint = UserPoint.getInstance(context);
+        userPoint.setLocation(MOCK_LOCATION_LAT_LAUSANNE, MOCK_LOCATION_LON_LAUSANNE, MOCK_LOCATION_ALT_LAUSANNE, 0);
         new GeonamesHandler(userPoint,
                 0.01,
                 GIVEN_QUERY_MAX_RESULT,
@@ -251,7 +256,8 @@ public class GeonamesHandlerTest {
 
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
-        UserPoint userPoint = new UserPoint(46.519251915333676,6.558563221333525,220);
+        UserPoint userPoint = UserPoint.getInstance(context);
+        userPoint.setLocation(MOCK_LOCATION_LAT_LAUSANNE, MOCK_LOCATION_LON_LAUSANNE, MOCK_LOCATION_ALT_LAUSANNE, 0);
 
         new GeonamesHandler(userPoint,
                 GIVEN_RANGE_IN_KM,
@@ -279,7 +285,8 @@ public class GeonamesHandlerTest {
         thrown.expectMessage("QueryTimeout parameter can't be less than 1 sec");
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
-        UserPoint userPoint = new UserPoint(46.519251915333676,6.558563221333525,220);
+        UserPoint userPoint = UserPoint.getInstance(context);
+        userPoint.setLocation(MOCK_LOCATION_LAT_LAUSANNE, MOCK_LOCATION_LON_LAUSANNE, MOCK_LOCATION_ALT_LAUSANNE, 0);
 
         new GeonamesHandler(userPoint,
                 GIVEN_RANGE_IN_KM,

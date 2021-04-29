@@ -27,7 +27,7 @@ public class GPSTrackerTest {
 
         Context mContext = ApplicationProvider.getApplicationContext();
 
-        UserPoint userPoint = new UserPoint(mContext);
+        UserPoint userPoint = UserPoint.getInstance(mContext);
         GPSTracker mGpsTracker = new GPSTracker(mContext, userPoint);
 
         // if the gps tracker is able to get the location, the test passes, otherwise
