@@ -124,6 +124,14 @@ public class ZoomableImageView extends androidx.appcompat.widget.AppCompatImageV
     }
 
     /**
+     * Gets the current scale, used to test zoom functionality
+     * @return current scale.
+     */
+    public float getCurrentScale() {
+        return currScale;
+    }
+
+    /**
      * Called on first touch
      * Sets mode and touch positions.
      * @param currTouch the current/first touch
