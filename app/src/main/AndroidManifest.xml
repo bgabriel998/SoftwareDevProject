@@ -23,22 +23,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:remove="android:appComponentFactory">
-        <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
-        <activity android:name=".FriendItemActivity" />
-        <activity android:name=".FriendsActivity" />
-        <activity android:name=".ImageActivity" />
-        <activity android:name=".GalleryActivity" />
-        <activity android:name=".CameraActivity" />
-        <activity android:name=".MountainActivity" />
-        <activity android:name=".CollectionActivity" />
-        <activity android:name=".RankingsActivity" />
-        <activity android:name=".MapActivity" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".MainMenuActivity" />
-        <activity
-            android:name=".InitActivity"
+
+        <activity android:name=".user.friends.AddFriendActivity"/>
+        <activity android:name=".user.friends.FriendItemActivity"/>
+        <activity android:name=".user.friends.FriendsActivity"/>
+        <activity android:name=".gallery.ImageActivity"/>
+        <activity android:name=".gallery.GalleryActivity" />
+        <activity android:name=".camera.CameraActivity" />
+        <activity android:name=".collection.MountainActivity" />
+        <activity android:name=".collection.CollectionActivity" />
+        <activity android:name=".rankings.RankingsActivity" />
+        <activity android:name=".map.MapActivity" />
+        <activity android:name=".user.profile.ProfileActivity" />
+        <activity android:name=".general.SettingsActivity" />
+        <activity android:name=".general.MainMenuActivity" />
+        <activity android:name=".general.InitActivity"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

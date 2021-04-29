@@ -5,7 +5,7 @@
     android:id="@+id/cameraFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CameraPreview">
+    tools:context=".camera.CameraPreview">
 
     <!-- Camera-preview -->
     <androidx.camera.view.PreviewView
