@@ -42,5 +42,16 @@ public class ComputePOIPointsUnitTest {
         highestPoi = (POIPoint) filteredPois.keySet().toArray()[0];
         //Highest point should now be the POI in the line of sight
         assertEquals(3, highestPoi.altitude, 0);
+
+        //Add POIPoint that is outside the 6° range
+        POIPoint poiOutside6 = new POIPoint("poiOutside6", 45, 38, 0);
+        poiOutside6.setHorizontalBearing(startPoint);
+        pois.put(poiOutside6, false);
+        filteredPois = ComputePOIPoints.filterHighestPOIs(pois);
+        //Check that the size increased
+        assertEquals(2, filteredPois.size());
+        POIPoint newlyAdded = (POIPoint) filteredPois.keySet().toArray()[1];
+        //Newly added name should be name of poiOutside6
+        assertEquals("poiOutside6", newlyAdded.getName());
     }
 }
