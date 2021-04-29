@@ -1,7 +1,11 @@
 package com.github.bgabriel998.softwaredevproject.general;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
@@ -12,10 +16,19 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.github.bgabriel998.softwaredevproject.R;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -76,6 +89,7 @@ public class SettingsMapActivityTest {
         }
     }
 
+    /* Tests that the activity is terminated after the ok button is pressed. */
     @Test
     public void okButtonPressed() {
         // performs long press
@@ -95,9 +109,9 @@ public class SettingsMapActivityTest {
 
     }
 
-    /* TODO  fix method first
+    /* checks if the offline content is saved after the ok button is pressed */
     @Test
-    public void saveJsonTest() {
+    public void saveJsonTest() throws InterruptedException {
         // performs long press
         ViewInteraction mapView = onView(withId(R.id.settingsMapView));
         mapView.perform(ViewActions.longClick());
@@ -105,9 +119,41 @@ public class SettingsMapActivityTest {
         ViewInteraction view = onView(withId(R.id.settingsMapOkButton));
         view.perform(ViewActions.click());
         // Check if the file exists
-        File file = new File("Save");
-        Assert.assertTrue(file.exists());
+        Thread.sleep(15000);
+        readFromFile();
+        Assert.assertTrue(true);
     }
-     */
+
+    /* Helper method to read .txt file */
+    private String readFromFile() {
+
+        String ret = "";
+
+        try {
+            InputStream inputStream =  ApplicationProvider.getApplicationContext().openFileInput("save.txt");
+
+            if ( inputStream != null ) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append(receiveString);
+                }
+
+                inputStream.close();
+                ret = stringBuilder.toString();
+            }
+        }
+        catch (FileNotFoundException e) {
+            fail();
+        } catch (IOException e) {
+            fail();
+        }
+
+        Log.d("Debug", ret);
+        return ret;
+    }
 
 }
