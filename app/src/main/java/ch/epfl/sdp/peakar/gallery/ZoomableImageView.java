@@ -1,4 +1,4 @@
-package com.github.bgabriel998.softwaredevproject.gallery;
+package ch.epfl.sdp.peakar.gallery;
 
 import android.content.Context;
 import android.graphics.Matrix;

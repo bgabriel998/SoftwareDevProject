@@ -14,14 +14,8 @@ import androidx.core.content.ContextCompat;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.matcher.BoundedMatcher;
 
-<<<<<<< HEAD:app/src/androidTest/java/ch/epfl/sdp/peakar/UITestHelper.java
-import com.github.bgabriel998.softwaredevproject.R;
-
 import ch.epfl.sdp.peakar.camera.CameraActivity;
-=======
-import com.github.bgabriel998.softwaredevproject.camera.CameraActivity;
-import com.github.bgabriel998.softwaredevproject.gallery.ZoomableImageView;
->>>>>>> 5586ab2e5fa6a9c8e544aa316b8536f4986d3438:app/src/androidTest/java/com/github/bgabriel998/softwaredevproject/UITestHelper.java
+import ch.epfl.sdp.peakar.gallery.ZoomableImageView;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;

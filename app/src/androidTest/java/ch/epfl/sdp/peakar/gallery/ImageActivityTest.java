@@ -10,35 +10,21 @@ import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
 
-import com.github.bgabriel998.softwaredevproject.R;
-<<<<<<< HEAD:app/src/androidTest/java/ch/epfl/sdp/peakar/gallery/ImageActivityTest.java
-import ch.epfl.sdp.peakar.camera.CameraActivity;
-=======
-import com.github.bgabriel998.softwaredevproject.camera.CameraActivity;
->>>>>>> 5586ab2e5fa6a9c8e544aa316b8536f4986d3438:app/src/androidTest/java/com/github/bgabriel998/softwaredevproject/gallery/ImageActivityTest.java
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.UITestHelper;
+import ch.epfl.sdp.peakar.camera.CameraActivity;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-<<<<<<< HEAD:app/src/androidTest/java/ch/epfl/sdp/peakar/gallery/ImageActivityTest.java
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.junit.Assert.assertSame;
-=======
-import static com.github.bgabriel998.softwaredevproject.UITestHelper.AddImageFile;
-import static com.github.bgabriel998.softwaredevproject.UITestHelper.ClearGallery;
-import static com.github.bgabriel998.softwaredevproject.UITestHelper.withImagePath;
-import static com.github.bgabriel998.softwaredevproject.UITestHelper.withScaleEqualTo;
-import static com.github.bgabriel998.softwaredevproject.UITestHelper.withScaleGreaterThan;
->>>>>>> 5586ab2e5fa6a9c8e544aa316b8536f4986d3438:app/src/androidTest/java/com/github/bgabriel998/softwaredevproject/gallery/ImageActivityTest.java
+import static ch.epfl.sdp.peakar.UITestHelper.withScaleEqualTo;
+import static ch.epfl.sdp.peakar.UITestHelper.withScaleGreaterThan;
 import static org.junit.Assert.fail;
 
 @RunWith(AndroidJUnit4.class)
