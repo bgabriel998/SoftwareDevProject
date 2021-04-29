@@ -2,6 +2,8 @@ package com.github.bgabriel998.softwaredevproject.points;
 
 import androidx.core.util.Pair;
 
+import org.osmdroid.util.BoundingBox;
+
 /**
  * Point is a class that represents a general point on earth.
  * A point is described by three components:
@@ -18,7 +20,7 @@ public class Point {
     final static double EARTH_RADIUS = 6378137; // value in meters
     private final double POLAR_RADIUS_EARTH = 6356752.3; //in meters
     private final double ECCENTRICITY_SQUARED = 0.00669437999014; //in meters
-
+    private final double ADJUST_COORDINATES = 0.008983112; // 1km in degrees at equator.
 
     protected double latitude;
     protected double longitude;
@@ -64,12 +66,7 @@ public class Point {
      * @return      a value in meters representing the distance
      */
     public double computeFlatDistance(Point other) {
-
-        double rThis = EARTH_RADIUS;
-        double rOther = EARTH_RADIUS;
-
-        return computeSphericalDistance(other, rThis, rOther);
-
+        return computeSphericalDistance(other, EARTH_RADIUS, EARTH_RADIUS);
     }
 
     /**
@@ -310,6 +307,20 @@ public class Point {
      */
     private double geocentricLatitude(double lat){
         return Math.atan((1.0 - ECCENTRICITY_SQUARED) * Math.tan(lat));
+    }
+
+    /**
+     * Computes bounding box around
+     * @param rangeInKm range around user point to compute the bounding box (in km)
+     * @return Bounding box around point
+     */
+    public BoundingBox computeBoundingBox(double rangeInKm){
+        double north = latitude + ( rangeInKm * ADJUST_COORDINATES);
+        double south = latitude - ( rangeInKm * ADJUST_COORDINATES);
+        double lngRatio = 1/Math.cos(Math.toRadians(latitude));
+        double east = longitude + (rangeInKm * ADJUST_COORDINATES) * lngRatio;
+        double west = longitude - (rangeInKm * ADJUST_COORDINATES) * lngRatio;
+        return new BoundingBox(north,east,south,west);
     }
 
 }
