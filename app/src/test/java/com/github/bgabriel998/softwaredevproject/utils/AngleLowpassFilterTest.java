@@ -5,6 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class AngleLowpassFilterTest {
+    private static final int QUEUE_LENGTH = 5;
 
     // Tests the average between 0 and PI/2
     @Test
@@ -22,36 +23,27 @@ public class AngleLowpassFilterTest {
     @Test
     public void lowpassFilterFullTest() {
         AngleLowpassFilter lowpassFilter = new AngleLowpassFilter();
-        lowpassFilter.add(0);
-        float sumSin = 0;
-        float sumCos = 1;
-        assertEquals(Math.atan2(sumSin, sumCos), lowpassFilter.average(), 0.01);
 
-        lowpassFilter.add((float) Math.PI/2);
-        sumSin += 1;
-        sumCos += 0;
-        assertEquals(Math.atan2(sumSin/2, sumCos/2), lowpassFilter.average(), 0.01);
+        //Fill the queue of the filter with values from 0 until Pi with steps of PI/4
+        for(int i=0; i<QUEUE_LENGTH; i++){
+            //Increase everytime angle by PI/4
+            lowpassFilter.add((float) (i*Math.PI/4));
+        }
+        assertEquals(Math.PI/2, lowpassFilter.average(), 0.01);
 
-        lowpassFilter.add((float) Math.PI/2);
-        sumSin += Math.sin(Math.PI/2);
-        sumCos += Math.cos(Math.PI/2);
-        assertEquals(Math.atan2(sumSin/3, sumCos/3), lowpassFilter.average(), 0.01);
-
-        lowpassFilter.add((float) Math.PI/4);
-        sumSin += Math.sin(Math.PI/4);
-        sumCos += Math.cos(Math.PI/4);
-        assertEquals(Math.atan2(sumSin/4, sumCos/4), lowpassFilter.average(), 0.01);
-
-        lowpassFilter.add((float) Math.PI/6);
-        sumSin += Math.sin(Math.PI/6);
-        sumCos += Math.cos(Math.PI/6);
-        assertEquals(Math.atan2(sumSin/5, sumCos/5), lowpassFilter.average(), 0.01);
-
-        lowpassFilter.add((float) Math.PI * 2);
-        sumSin += Math.sin(Math.PI*2);
-        sumCos += Math.cos(Math.PI*2);
-        sumSin -= Math.sin(0);
-        sumCos -= Math.cos(0);
-        assertEquals(Math.atan2(sumSin/5, sumCos/5), lowpassFilter.average(), 0.01);
+        //Add a few elements to check that the oldest elements are removed
+        for(int i=0; i<QUEUE_LENGTH; i++){
+            //Continue increasing angle by PI/4
+            lowpassFilter.add((float) ((i+5)*Math.PI/4));
+            //Average angle should move by PI/4 everytime incrementing the angle by PI/4
+            if((i+3)*Math.PI/4 <= Math.PI){
+                assertEquals((i+3)*Math.PI/4, lowpassFilter.average(), 0.01);
+            }
+            //AngleLowPassFilter returns values between -180° and 180°, so we need to check the negative
+            //values when the result is greater then PI
+            else{
+                assertEquals((i-QUEUE_LENGTH)*Math.PI/4, lowpassFilter.average(), 0.01);
+            }
+        }
     }
 }
