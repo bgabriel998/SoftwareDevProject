@@ -14,9 +14,14 @@ import androidx.core.content.ContextCompat;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.matcher.BoundedMatcher;
 
+<<<<<<< HEAD:app/src/androidTest/java/ch/epfl/sdp/peakar/UITestHelper.java
 import com.github.bgabriel998.softwaredevproject.R;
 
 import ch.epfl.sdp.peakar.camera.CameraActivity;
+=======
+import com.github.bgabriel998.softwaredevproject.camera.CameraActivity;
+import com.github.bgabriel998.softwaredevproject.gallery.ZoomableImageView;
+>>>>>>> 5586ab2e5fa6a9c8e544aa316b8536f4986d3438:app/src/androidTest/java/com/github/bgabriel998/softwaredevproject/UITestHelper.java
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -117,6 +122,46 @@ public class UITestHelper {
             public void describeTo(final Description description) {
                 description.appendText("with image id: ");
                 description.appendValue(expectedImageId);
+            }
+        };
+    }
+
+    /**
+     * Matcher for ZoomableImageView, test if current scale is equal to given value
+     * @param expectedScale the expected scale value
+     * @return true if current scale is expected value
+     */
+    public static Matcher<View> withScaleEqualTo(final float expectedScale) {
+        return new BoundedMatcher<View, ZoomableImageView>(ZoomableImageView.class) {
+            @Override
+            protected boolean matchesSafely(ZoomableImageView view) {
+                return view.getCurrentScale() <= expectedScale;
+            }
+
+            @Override
+            public void describeTo(final Description description) {
+                description.appendText("zoom views scale is equal to: ");
+                description.appendValue(expectedScale);
+            }
+        };
+    }
+
+    /**
+     * Matcher for ZoomableImageView, test if current scale is greater than given value
+     * @param expectedScale the expected scale value
+     * @return true if current scale is greater then expected value
+     */
+    public static Matcher<View> withScaleGreaterThan(final float expectedScale) {
+        return new BoundedMatcher<View, ZoomableImageView>(ZoomableImageView.class) {
+            @Override
+            protected boolean matchesSafely(ZoomableImageView view) {
+                return view.getCurrentScale() > expectedScale;
+            }
+
+            @Override
+            public void describeTo(final Description description) {
+                description.appendText("zoom views scale is not greater than: ");
+                description.appendValue(expectedScale);
             }
         };
     }
