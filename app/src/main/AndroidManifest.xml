@@ -35,6 +35,7 @@
         <activity android:name=".map.MapActivity" />
         <activity android:name=".user.profile.ProfileActivity" />
         <activity android:name=".general.SettingsActivity" />
+        <activity android:name=".general.SettingsMapActivity" />
         <activity android:name=".general.MainMenuActivity" />
         <activity android:name=".general.InitActivity"
             android:noHistory="true">
