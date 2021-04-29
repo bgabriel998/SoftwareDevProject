@@ -14,7 +14,6 @@
             android:layout_width="163dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="finish"
             android:text="BACK" />
 
         <Button
