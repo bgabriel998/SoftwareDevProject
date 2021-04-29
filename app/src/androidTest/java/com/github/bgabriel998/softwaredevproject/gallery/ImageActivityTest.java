@@ -36,9 +36,9 @@ public class ImageActivityTest {
     private static final String imagePath = CameraActivity.getOutputDirectory(ApplicationProvider.getApplicationContext()) +
                                                 "/TestImage";
 
-    private static final String imageDescription = "Gallery fullscreen image";
-    private static final int zoomPercent = 100;
-    private static final int zoomSteps = 10;
+    private static final String IMAGE_DESCRIPTION = "Gallery fullscreen image";
+    private static final int ZOOM_PERCENT = 100;
+    private static final int ZOOM_STEPS = 10;
 
 
     static Intent intent;
@@ -73,18 +73,18 @@ public class ImageActivityTest {
     public void TestZoomIn(){
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         try {
-            UiSelector imageSelector = new UiSelector().descriptionContains(imageDescription);
+            UiSelector imageSelector = new UiSelector().descriptionContains(IMAGE_DESCRIPTION);
             // Check scale before test
             onView(withId(R.id.fullscreen_image)).check(matches(withScaleEqualTo(1)));
 
             // Test zoom in
-            device.findObject(imageSelector).pinchOut(zoomPercent,zoomSteps);
+            device.findObject(imageSelector).pinchOut(ZOOM_PERCENT, ZOOM_STEPS);
             Thread.sleep(1000);
             onView(withId(R.id.fullscreen_image)).check(matches(withScaleGreaterThan(1)));
 
             // Test zoom out, twice to make sure it is completely out zoomed.
-            device.findObject(imageSelector).pinchIn(zoomPercent,zoomSteps);
-            device.findObject(imageSelector).pinchIn(zoomPercent,zoomSteps);
+            device.findObject(imageSelector).pinchIn(ZOOM_PERCENT, ZOOM_STEPS);
+            device.findObject(imageSelector).pinchIn(ZOOM_PERCENT, ZOOM_STEPS);
             Thread.sleep(1000);
             onView(withId(R.id.fullscreen_image)).check(matches(withScaleEqualTo(1)));
         }
