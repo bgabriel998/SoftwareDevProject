@@ -53,10 +53,7 @@ public final class UserPoint extends Point {
      * @return          single instance of the user point.
      */
     public static UserPoint getInstance(Context mContext) {
-        if (single_instance == null) {
-            return new UserPoint(mContext);
-        }
-        return single_instance;
+        return single_instance == null ? new UserPoint(mContext) : single_instance;
     }
 
     /**
