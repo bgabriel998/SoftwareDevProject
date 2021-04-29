@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:336515442370:android:f01266083c05cf22fdfd5b",
         "android_client_info": {
-          "package_name": "com.github.bgabriel998.softwaredevproject"
+          "package_name": "ch.epfl.sdp.peakar"
         }
       },
       "oauth_client": [
