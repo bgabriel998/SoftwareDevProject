@@ -37,7 +37,7 @@ public class ImageActivityTest {
                                                 "/TestImage";
 
     private static final String imageDescription = "Gallery fullscreen image";
-    private static final int zoomPercent = 50;
+    private static final int zoomPercent = 100;
     private static final int zoomSteps = 10;
 
 
@@ -82,8 +82,9 @@ public class ImageActivityTest {
             Thread.sleep(1000);
             onView(withId(R.id.fullscreen_image)).check(matches(withScaleGreaterThan(1)));
 
-            // Test zoom out
-            device.findObject(imageSelector).pinchIn(2*zoomPercent,zoomSteps);
+            // Test zoom out, twice to make sure it is completely out zoomed.
+            device.findObject(imageSelector).pinchIn(zoomPercent,zoomSteps);
+            device.findObject(imageSelector).pinchIn(zoomPercent,zoomSteps);
             Thread.sleep(1000);
             onView(withId(R.id.fullscreen_image)).check(matches(withScaleEqualTo(1)));
         }
