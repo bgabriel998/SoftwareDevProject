@@ -234,7 +234,6 @@ public class SettingsActivityTest{
         onView(withText(activity.getResources().getStringArray(R.array.language_entries)[0])).perform(click());
         //Let activity retrieves stability point
 
-=======
     public void TestToolbarTitle(){
         String TOOLBAR_TITLE = "Settings";
         ViewInteraction greetingText = Espresso.onView(ViewMatchers.withId(R.id.toolbarTitle));
