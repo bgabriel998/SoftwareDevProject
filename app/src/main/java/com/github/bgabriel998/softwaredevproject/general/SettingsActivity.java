@@ -1,5 +1,6 @@
 package com.github.bgabriel998.softwaredevproject.general;
 
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -12,8 +13,14 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
 
 import com.github.bgabriel998.softwaredevproject.R;
+import com.github.bgabriel998.softwaredevproject.collection.CollectionActivity;
 import com.github.bgabriel998.softwaredevproject.utils.ToolbarHandler;
 
 import java.util.Locale;
@@ -162,4 +169,12 @@ public class SettingsActivity extends AppCompatActivity {
         Intent setIntent = new Intent(this,MainMenuActivity.class);
         startActivity(setIntent);
     }
+
+
+    /** Changes view to SettingsMapActivity */
+    public void offlineModeButton(View view) {
+        Intent intent = new Intent(this, SettingsMapActivity.class);
+        startActivity(intent);
+    }
 }
+
