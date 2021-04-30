@@ -52,9 +52,7 @@ public class SettingsMapActivity extends AppCompatActivity {
         this.backButton.setOnClickListener(v -> this.finish());
 
         this.okButton = findViewById(R.id.settingsMapOkButton);
-        this.okButton.setOnClickListener(v -> {
-            saveToJson();
-        });
+        this.okButton.setOnClickListener(v -> saveToJson());
 
         this.thisActivity = this;
 
