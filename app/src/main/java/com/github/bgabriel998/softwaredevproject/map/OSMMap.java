@@ -245,7 +245,7 @@ public class OSMMap {
 
         // TODO add bounding box drawing
         mapView.getOverlays().add(touchOverlay);
-
+mapView.invalidate();
     }
 
 }
