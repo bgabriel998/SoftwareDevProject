@@ -76,7 +76,6 @@ public class SettingsMapActivity extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
     public void saveToJson() {
 
-        AtomicInteger lock = new AtomicInteger(2);
         JSONObject json = new JSONObject();
 
         addBoundingBoxToJson(json, selectedPoint);
