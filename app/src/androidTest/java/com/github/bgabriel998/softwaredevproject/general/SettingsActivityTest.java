@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-<<<<<<< HEAD:app/src/androidTest/java/com/github/bgabriel998/softwaredevproject/SettingsActivityTest.java
 import androidx.preference.PreferenceManager;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
