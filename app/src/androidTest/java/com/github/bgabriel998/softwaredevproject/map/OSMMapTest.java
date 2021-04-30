@@ -9,6 +9,7 @@ import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
+import com.github.bgabriel998.softwaredevproject.R;
 import com.github.bgabriel998.softwaredevproject.database.Database;
 import com.github.bgabriel998.softwaredevproject.points.POIPoint;
 import com.github.bgabriel998.softwaredevproject.user.account.FirebaseAccount;
@@ -32,7 +33,23 @@ import java.util.List;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static com.github.bgabriel998.softwaredevproject.TestingConstants.*;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.AIGUILLE_DU_PLAN;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.AIGUILLE_DU_PLAN_ALT;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.AIGUILLE_DU_PLAN_LAT;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.AIGUILLE_DU_PLAN_LONG;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.DENT_DU_GEANT_ALT;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.DENT_DU_GEANT_LAT;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.DENT_DU_GEANT_LONG;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.DENT_DU_GEANT_NAME;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.MONT_BLANC_ALT;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.MONT_BLANC_LAT;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.MONT_BLANC_LONG;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.MONT_BLANC_NAME;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.POINTE_DE_LAPAZ_ALT;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.POINTE_DE_LAPAZ_LAT;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.POINTE_DE_LAPAZ_LONG;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.POINTE_DE_LAPAZ_NAME;
+import static com.github.bgabriel998.softwaredevproject.TestingConstants.TILE_SCALING_FACTOR;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -66,7 +83,7 @@ public class OSMMapTest {
         OSMMap osmMap = MapActivity.osmMap;
         MapView mapView = osmMap.getMapView();
         //Check map initialization
-        assertEquals(TestingConstants.TILE_SCALING_FACTOR, mapView.getTilesScaleFactor(),0.0f);
+        assertEquals(TILE_SCALING_FACTOR, mapView.getTilesScaleFactor(),0.0f);
     }
 
 

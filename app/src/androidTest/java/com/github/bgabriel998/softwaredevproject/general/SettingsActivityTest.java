@@ -6,11 +6,6 @@ import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
 import androidx.test.core.app.ApplicationProvider;
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-
-import org.junit.Before;
-import org.junit.BeforeClass;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.matcher.ViewMatchers;
@@ -18,8 +13,9 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.github.bgabriel998.softwaredevproject.R;
-import com.github.bgabriel998.softwaredevproject.general.SettingsActivity;
 
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +24,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -186,7 +183,6 @@ public class SettingsActivityTest{
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
 
-
         //Open selector window
         onView(withText(activity.getResources().getString(R.string.language_title))).perform(click());
         Thread.sleep(1000);
@@ -233,6 +229,7 @@ public class SettingsActivityTest{
         //select first option
         onView(withText(activity.getResources().getStringArray(R.array.language_entries)[0])).perform(click());
         //Let activity retrieves stability point
+    }
 
     public void TestToolbarTitle(){
         String TOOLBAR_TITLE = "Settings";
