@@ -215,7 +215,8 @@ public class OSMMap {
             @Override
             public boolean onLongPress(final MotionEvent e, final MapView mapView) {
 
-                final Drawable marker = context.getResources().getDrawable(R.drawable.pushpin_marker);
+                final Drawable marker = ResourcesCompat.getDrawable(context.getResources(), 
+                        R.drawable.pushpin_marker, null);
                 Projection proj = mapView.getProjection();
 
                 GeoPoint loc = (GeoPoint) proj.fromPixels((int)e.getX(), (int)e.getY());
@@ -245,7 +246,7 @@ public class OSMMap {
 
         // TODO add bounding box drawing
         mapView.getOverlays().add(touchOverlay);
-
+mapView.invalidate();
     }
 
 }

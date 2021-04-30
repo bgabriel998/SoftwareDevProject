@@ -3,14 +3,10 @@ package com.github.bgabriel998.softwaredevproject.general;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
@@ -26,13 +22,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.bonuspack.location.POI;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Activity that allows the user to select a point around which compute and
@@ -42,8 +35,8 @@ public class SettingsMapActivity extends AppCompatActivity {
 
     private OSMMap osmMap = null;
 
-    Button backButton;
-    Button okButton;
+    private Button backButton;
+    private Button okButton;
 
     Activity thisActivity;
 
@@ -59,9 +52,7 @@ public class SettingsMapActivity extends AppCompatActivity {
         this.backButton.setOnClickListener(v -> this.finish());
 
         this.okButton = findViewById(R.id.settingsMapOkButton);
-        this.okButton.setOnClickListener(v -> {
-            saveToJson();
-        });
+        this.okButton.setOnClickListener(v -> saveToJson());
 
         this.thisActivity = this;
 
@@ -81,7 +72,6 @@ public class SettingsMapActivity extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
     public void saveToJson() {
 
-        AtomicInteger lock = new AtomicInteger(2);
         JSONObject json = new JSONObject();
 
         addBoundingBoxToJson(json, selectedPoint);
