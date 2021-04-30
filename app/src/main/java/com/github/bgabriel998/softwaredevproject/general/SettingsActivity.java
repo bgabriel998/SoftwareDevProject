@@ -28,27 +28,24 @@ public class SettingsActivity extends AppCompatActivity {
      * has been modified
      */
     private final SharedPreferences.OnSharedPreferenceChangeListener listener =
-            new SharedPreferences.OnSharedPreferenceChangeListener() {
-                @Override
-                public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-                    switch (key){
-                        case "measSys_preference":
-                            measurementSystemChanged();
-                            break;
-                        case "range_preference":
-                            rangeChanged();
-                            break;
-                        case "language_preference":
-                            languageChanged((String) prefs.getAll().get("language_preference"));
-                            break;
-                        case "disable_caching":
-                            disableCachingChanged();
-                            break;
-                        case "offline_mode_key":
-                            offlineModeChanged();
-                    }
+            (prefs, key) -> {
+                switch (key){
+                    case "measSys_preference":
+                        measurementSystemChanged();
+                        break;
+                    case "range_preference":
+                        rangeChanged();
+                        break;
+                    case "language_preference":
+                        languageChanged((String) prefs.getAll().get("language_preference"));
+                        break;
+                    case "disable_caching":
+                        disableCachingChanged();
+                        break;
+                    case "offline_mode_key":
+                        offlineModeChanged();
                 }
-    };
+            };
 
 
     @Override
@@ -102,7 +99,6 @@ public class SettingsActivity extends AppCompatActivity {
      * Change language
      */
     private void languageChanged(String value){
-        Locale locale = new Locale("en");
         switch (value){
             case "german":
                 setLocale("de");
@@ -135,7 +131,7 @@ public class SettingsActivity extends AppCompatActivity {
         Resources res = getResources();
         DisplayMetrics dm = res.getDisplayMetrics();
         Configuration conf = res.getConfiguration();
-        conf.locale = myLocale;
+        conf.setLocale(myLocale);
         //update locale configuration with new language
         res.updateConfiguration(conf, dm);
         finish();

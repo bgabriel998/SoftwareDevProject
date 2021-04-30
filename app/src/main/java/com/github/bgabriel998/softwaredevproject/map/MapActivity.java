@@ -1,13 +1,12 @@
 package com.github.bgabriel998.softwaredevproject.map;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.github.bgabriel998.softwaredevproject.user.account.FirebaseAccount;
 import com.github.bgabriel998.softwaredevproject.R;
+import com.github.bgabriel998.softwaredevproject.user.account.FirebaseAccount;
 
 public class MapActivity extends AppCompatActivity {
 
@@ -35,20 +34,10 @@ public class MapActivity extends AppCompatActivity {
         osmMap.displayUserLocation();
 
         zoomOnUserLocationButton = (ImageButton) findViewById(R.id.zoomOnUserLocation);
-        zoomOnUserLocationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                osmMap.zoomOnUserLocation();
-            }
-        });
+        zoomOnUserLocationButton.setOnClickListener(v -> osmMap.zoomOnUserLocation());
 
         changeMapTileSourceButton = (ImageButton) findViewById(R.id.changeMapTile);
-        changeMapTileSourceButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                osmMap.changeMapTileSource(zoomOnUserLocationButton,changeMapTileSourceButton );
-            }
-        });
+        changeMapTileSourceButton.setOnClickListener(v -> osmMap.changeMapTileSource(zoomOnUserLocationButton,changeMapTileSourceButton ));
 
     }
 

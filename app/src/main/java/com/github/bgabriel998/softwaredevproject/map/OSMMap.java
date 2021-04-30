@@ -113,8 +113,8 @@ public class OSMMap {
         if(isSatellite){
             //Set default map
             mapView.setTileSource(TileSourceFactory.MAPNIK);
-            zoomOnUserLocationButton.setBackground(context.getResources().getDrawable(R.drawable.button_bg_round));
-            changeMapTileSourceButton.setBackground(context.getResources().getDrawable(R.drawable.button_bg_round));
+            zoomOnUserLocationButton.setBackground(context.getResources().getDrawable(R.drawable.button_bg_round,null));
+            changeMapTileSourceButton.setBackground(context.getResources().getDrawable(R.drawable.button_bg_round,null));
             isSatellite = false;
         }
         else{
@@ -128,8 +128,8 @@ public class OSMMap {
                             + mImageFilenameEnding;
                 }
             });
-            zoomOnUserLocationButton.setBackground(context.getResources().getDrawable(R.drawable.button_bg_round_white));
-            changeMapTileSourceButton.setBackground(context.getResources().getDrawable(R.drawable.button_bg_round_white));
+            zoomOnUserLocationButton.setBackground(context.getResources().getDrawable(R.drawable.button_bg_round_white,null));
+            changeMapTileSourceButton.setBackground(context.getResources().getDrawable(R.drawable.button_bg_round_white,null));
             isSatellite = true;
         }
     }
