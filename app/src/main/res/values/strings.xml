@@ -76,7 +76,7 @@
     <string name="position_mountain_category">Position:</string>
 
     <!-- TAKE PICTURE TOASTS -->
-    <string name="pictureTakenToast">Picture saved at: file:///storage/emulated/0/Android/media/com.github.bgabriel998.softwaredevproject/</string>
+    <string name="pictureTakenToast">Picture saved at: file:///storage/emulated/0/Android/media/ch.epfl.sdp.peakar/</string>
     <string name="pictureSavedFailed">Failed to take picture:</string>
     <string name="pictureSavedSuccessfully">Picture saved at:</string>
 

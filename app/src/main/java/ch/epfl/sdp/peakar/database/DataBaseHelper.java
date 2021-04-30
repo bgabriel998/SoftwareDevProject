@@ -14,7 +14,7 @@ import java.io.OutputStream;
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     private static final String TABLE = "countryHighPoint";
-    private static final String DB_PATH = "/data/data/com.github.bgabriel998.softwaredevproject/databases/";
+    private static final String DB_PATH = "/data/data/ch.epfl.sdp.peakar/databases/";
     private static final String DB_NAME = "CountryHighPoints.db";
 
     private SQLiteDatabase myDataBase;
