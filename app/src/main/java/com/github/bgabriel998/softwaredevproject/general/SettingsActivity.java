@@ -13,12 +13,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
-
-import java.util.Locale;
-
-
 import com.github.bgabriel998.softwaredevproject.R;
 import com.github.bgabriel998.softwaredevproject.utils.ToolbarHandler;
+
+import java.util.Locale;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -110,6 +108,9 @@ public class SettingsActivity extends AppCompatActivity {
             case "german":
                 setLocale("de");
                 break;
+            case "italian":
+                setLocale("it");
+                break;
             case "french":
                 setLocale("fr");
                 break;
@@ -124,7 +125,10 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     /**
-     * Change application language
+     * Change application language by changing global configuration
+     * This function reloads the activity to see the change directly
+     * To avoid the activity-change animation, this function also
+     * overrides the transition
      * @param lang language code
      */
     public void setLocale(String lang) {
@@ -133,8 +137,10 @@ public class SettingsActivity extends AppCompatActivity {
         DisplayMetrics dm = res.getDisplayMetrics();
         Configuration conf = res.getConfiguration();
         conf.locale = myLocale;
+        //update locale configuration with new language
         res.updateConfiguration(conf, dm);
         finish();
+        //Override transition and restart activity
         overridePendingTransition(0, 0);
         startActivity(getIntent());
         overridePendingTransition(0, 0);

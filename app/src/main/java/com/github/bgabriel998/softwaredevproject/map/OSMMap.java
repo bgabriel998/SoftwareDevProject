@@ -38,6 +38,8 @@ public class OSMMap {
     private static final float TILE_SCALING_FACTOR = 1.5f;
     private static final float DEFAULT_ZOOM_FACTOR = 3.5f;
     private static final float BOUNDING_BOX_ZOOM_FACTOR = 1.7f;
+    //Provider URL for satellite view
+    private static final String SATELLITE_MAP_PROVIDER = "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/";
 
     /*Attributes*/
     private final MapView mapView;
@@ -116,7 +118,7 @@ public class OSMMap {
             isSatellite = false;
         }
         else{
-            String[] urlArray = {"http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/"};
+            String[] urlArray = {SATELLITE_MAP_PROVIDER};
             mapView.setTileSource(new OnlineTileSourceBase("ARCGisOnline", 0, 18, 256, "", urlArray) {
                 @Override
                 public String getTileURLString(long pMapTileIndex) {
