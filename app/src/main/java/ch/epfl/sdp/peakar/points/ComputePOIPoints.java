@@ -29,7 +29,8 @@ public class ComputePOIPoints {
     public static Map<POIPoint, Boolean> highestPOIPoints;
     public static UserPoint userPoint;
 
-    private static final int HALF_MARKER_SIZE = 3;
+    private static final int HALF_MARKER_SIZE_WIDTH = 3;
+    private static final int HALF_MARKER_SIZE_HEIGHT = 5;
 
     /**
      * Constructor of ComputePOIPoints, updates userPoint and gets the POIs for the userPoint
@@ -109,7 +110,14 @@ public class ComputePOIPoints {
                 //If the difference between one of the filtered POIPoints and the actual POIPoint
                 //is less than HALF_MARKER_SIZE then do no add the marker
                 if(Math.abs(poiPoints.getKey().getHorizontalBearing()
-                        - resPoiPoints.getKey().getHorizontalBearing()) <= HALF_MARKER_SIZE){
+                        - resPoiPoints.getKey().getHorizontalBearing()) <= HALF_MARKER_SIZE_WIDTH){
+
+                    //Break if the markers are not close vertically
+                    if(Math.abs(poiPoints.getKey().getVerticalBearing()
+                            - resPoiPoints.getKey().getVerticalBearing()) >= HALF_MARKER_SIZE_HEIGHT){
+                        break;
+                    }
+
                     //If the POIPoint in the filtered Map is in the line of sight or the actual
                     //POIPoint is not in the line of sight
                     if(resPoiPoints.getValue() || !poiPoints.getValue()){
