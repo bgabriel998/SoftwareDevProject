@@ -1,11 +1,13 @@
 package com.github.bgabriel998.softwaredevproject.map;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewTreeObserver;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.core.content.res.ResourcesCompat;
@@ -17,9 +19,11 @@ import com.github.bgabriel998.softwaredevproject.R;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.util.MapTileIndex;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.Projection;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
@@ -42,10 +46,14 @@ public class OSMMap {
     private static final float TILE_SCALING_FACTOR = 1.5f;
     private static final float DEFAULT_ZOOM_FACTOR = 3.5f;
     private static final float BOUNDING_BOX_ZOOM_FACTOR = 1.7f;
+    //Provider URL for satellite view
+    private static final String SATELLITE_MAP_PROVIDER = "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/";
 
     /*Attributes*/
     private final MapView mapView;
     private final Context context;
+    private MyLocationNewOverlay locationOverlay = null;
+    private boolean isSatellite = false;
 
     /**
      * Class constructor
@@ -79,15 +87,59 @@ public class OSMMap {
         mapController.setZoom(DEFAULT_ZOOM_FACTOR);
         mapView.setBuiltInZoomControls(false);
         mapView.setMultiTouchControls(true);
+        mapView.setHorizontalMapRepetitionEnabled(true);
+        mapView.setVerticalMapRepetitionEnabled(false);
+        mapView.setScrollableAreaLimitLatitude(MapView.getTileSystem().getMaxLatitude(), MapView.getTileSystem().getMinLatitude(), 0);
     }
 
     /**
      * Display user location on map
      */
     public void displayUserLocation(){
-        MyLocationNewOverlay mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context),mapView);
-        mLocationOverlay.enableMyLocation();
-        mapView.getOverlays().add(mLocationOverlay);
+        locationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context),mapView);
+        locationOverlay.enableMyLocation();
+        mapView.getOverlays().add(locationOverlay);
+    }
+
+    /**
+     * Zoom on user Location
+     */
+    public void zoomOnUserLocation(){
+        if(locationOverlay != null) {
+            mapView.getController().setZoom(13.0);
+            mapView.getController().animateTo(locationOverlay.getMyLocation());
+        }
+    }
+
+    /**
+     * Zoom on user Location
+     * @param zoomOnUserLocationButton
+     * @param changeMapTileSourceButton
+     */
+    @SuppressLint("UseCompatLoadingForDrawables")
+    public void changeMapTileSource(ImageButton zoomOnUserLocationButton, ImageButton changeMapTileSourceButton){
+        if(isSatellite){
+            //Set default map
+            mapView.setTileSource(TileSourceFactory.MAPNIK);
+            zoomOnUserLocationButton.setBackground(context.getResources().getDrawable(R.drawable.button_bg_round,null));
+            changeMapTileSourceButton.setBackground(context.getResources().getDrawable(R.drawable.button_bg_round,null));
+            isSatellite = false;
+        }
+        else{
+            String[] urlArray = {SATELLITE_MAP_PROVIDER};
+            mapView.setTileSource(new OnlineTileSourceBase("ARCGisOnline", 0, 18, 256, "", urlArray) {
+                @Override
+                public String getTileURLString(long pMapTileIndex) {
+                    String mImageFilenameEnding = ".png";
+                    return getBaseUrl() + MapTileIndex.getZoom(pMapTileIndex) + "/"
+                            + MapTileIndex.getY(pMapTileIndex) + "/" + MapTileIndex.getX(pMapTileIndex)
+                            + mImageFilenameEnding;
+                }
+            });
+            zoomOnUserLocationButton.setBackground(context.getResources().getDrawable(R.drawable.button_bg_round_white,null));
+            changeMapTileSourceButton.setBackground(context.getResources().getDrawable(R.drawable.button_bg_round_white,null));
+            isSatellite = true;
+        }
     }
 
     /**
@@ -149,7 +201,7 @@ public class OSMMap {
      */
     private void setZoomBoundingBox(FirebaseAccount userAccount){
         //Create a bounding box and zoom in
-        if(userAccount.getDiscoveredPeaks().size() == 0) {
+        if(userAccount.getDiscoveredPeaks().size() != 0) {
             BoundingBox boundingBox = computeArea(new ArrayList<>(userAccount.getDiscoveredPeaks()));
             zoomToBounds(boundingBox.increaseByScale(BOUNDING_BOX_ZOOM_FACTOR));
             mapView.invalidate();

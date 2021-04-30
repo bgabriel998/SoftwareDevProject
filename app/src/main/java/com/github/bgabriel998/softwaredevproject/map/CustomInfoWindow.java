@@ -9,6 +9,7 @@ import com.github.bgabriel998.softwaredevproject.R;
 
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
 
 /**
@@ -55,7 +56,6 @@ public class CustomInfoWindow extends InfoWindow {
 
         layout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //... add here method to redirect to the collection of peaks (activity)
             }
         });
 
@@ -69,6 +69,12 @@ public class CustomInfoWindow extends InfoWindow {
      * @param layout info window layout
      */
     private void toggleWindowVisibility(LinearLayout layout){
+        //Close all potentially openned info windows
+        for(Overlay overlay : mMapView.getOverlays()){
+            if(overlay instanceof Marker){
+                ((Marker) overlay).closeInfoWindow();
+            }
+        }
         if (layout.getVisibility() == View.GONE) {
             layout.setVisibility(View.VISIBLE);
         } else {
