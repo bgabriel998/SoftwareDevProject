@@ -1,24 +1,35 @@
 package ch.epfl.sdp.peakar.map;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.ViewTreeObserver;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.core.content.res.ResourcesCompat;
 
 import ch.epfl.sdp.peakar.points.POIPoint;
+import ch.epfl.sdp.peakar.points.Point;
 import ch.epfl.sdp.peakar.user.account.FirebaseAccount;
 import ch.epfl.sdp.peakar.R;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.util.MapTileIndex;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.Projection;
+import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Overlay;
+import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -27,6 +38,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 public class OSMMap {
 
@@ -34,10 +46,14 @@ public class OSMMap {
     private static final float TILE_SCALING_FACTOR = 1.5f;
     private static final float DEFAULT_ZOOM_FACTOR = 3.5f;
     private static final float BOUNDING_BOX_ZOOM_FACTOR = 1.7f;
+    //Provider URL for satellite view
+    private static final String SATELLITE_MAP_PROVIDER = "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/";
 
     /*Attributes*/
     private final MapView mapView;
     private final Context context;
+    private MyLocationNewOverlay locationOverlay = null;
+    private boolean isSatellite = false;
 
     /**
      * Class constructor
@@ -71,15 +87,59 @@ public class OSMMap {
         mapController.setZoom(DEFAULT_ZOOM_FACTOR);
         mapView.setBuiltInZoomControls(false);
         mapView.setMultiTouchControls(true);
+        mapView.setHorizontalMapRepetitionEnabled(true);
+        mapView.setVerticalMapRepetitionEnabled(false);
+        mapView.setScrollableAreaLimitLatitude(MapView.getTileSystem().getMaxLatitude(), MapView.getTileSystem().getMinLatitude(), 0);
     }
 
     /**
      * Display user location on map
      */
     public void displayUserLocation(){
-        MyLocationNewOverlay mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context),mapView);
-        mLocationOverlay.enableMyLocation();
-        mapView.getOverlays().add(mLocationOverlay);
+        locationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context),mapView);
+        locationOverlay.enableMyLocation();
+        mapView.getOverlays().add(locationOverlay);
+    }
+
+    /**
+     * Zoom on user Location
+     */
+    public void zoomOnUserLocation(){
+        if(locationOverlay != null) {
+            mapView.getController().setZoom(13.0);
+            mapView.getController().animateTo(locationOverlay.getMyLocation());
+        }
+    }
+
+    /**
+     * Zoom on user Location
+     * @param zoomOnUserLocationButton
+     * @param changeMapTileSourceButton
+     */
+    @SuppressLint("UseCompatLoadingForDrawables")
+    public void changeMapTileSource(ImageButton zoomOnUserLocationButton, ImageButton changeMapTileSourceButton){
+        if(isSatellite){
+            //Set default map
+            mapView.setTileSource(TileSourceFactory.MAPNIK);
+            zoomOnUserLocationButton.setBackground(context.getResources().getDrawable(R.drawable.button_bg_round,null));
+            changeMapTileSourceButton.setBackground(context.getResources().getDrawable(R.drawable.button_bg_round,null));
+            isSatellite = false;
+        }
+        else{
+            String[] urlArray = {SATELLITE_MAP_PROVIDER};
+            mapView.setTileSource(new OnlineTileSourceBase("ARCGisOnline", 0, 18, 256, "", urlArray) {
+                @Override
+                public String getTileURLString(long pMapTileIndex) {
+                    String mImageFilenameEnding = ".png";
+                    return getBaseUrl() + MapTileIndex.getZoom(pMapTileIndex) + "/"
+                            + MapTileIndex.getY(pMapTileIndex) + "/" + MapTileIndex.getX(pMapTileIndex)
+                            + mImageFilenameEnding;
+                }
+            });
+            zoomOnUserLocationButton.setBackground(context.getResources().getDrawable(R.drawable.button_bg_round_white,null));
+            changeMapTileSourceButton.setBackground(context.getResources().getDrawable(R.drawable.button_bg_round_white,null));
+            isSatellite = true;
+        }
     }
 
     /**
@@ -141,7 +201,7 @@ public class OSMMap {
      */
     private void setZoomBoundingBox(FirebaseAccount userAccount){
         //Create a bounding box and zoom in
-        if(userAccount.getDiscoveredPeaks().size() == 0) {
+        if(userAccount.getDiscoveredPeaks().size() != 0) {
             BoundingBox boundingBox = computeArea(new ArrayList<>(userAccount.getDiscoveredPeaks()));
             zoomToBounds(boundingBox.increaseByScale(BOUNDING_BOX_ZOOM_FACTOR));
             mapView.invalidate();
@@ -189,4 +249,56 @@ public class OSMMap {
         );
         return new BoundingBox(north.get(), east.get(), south.get(), west.get());
     }
+
+    /**
+     * This method allows to select a point on the map. It allows to pass to the caller
+     * the coordinates of the selected point and it will display a PushPint on the selected
+     * point.
+     *
+     * @param listener      listener for the long press.
+     * @param pointUpdater  used to pass the selected point to the caller.
+     */
+    public void enablePinOnClick(Runnable listener, Consumer<Point> pointUpdater) {
+
+        Overlay touchOverlay = new Overlay(){
+
+            ItemizedIconOverlay<OverlayItem> anotherItemizedIconOverlay = null;
+
+            @Override
+            public boolean onLongPress(final MotionEvent e, final MapView mapView) {
+
+                final Drawable marker = ResourcesCompat.getDrawable(context.getResources(), 
+                        R.drawable.pushpin_marker, null);
+                Projection proj = mapView.getProjection();
+
+                GeoPoint loc = (GeoPoint) proj.fromPixels((int)e.getX(), (int)e.getY());
+                Log.d("OSMMAP", "Coordinates: (Latitude = " + loc.getLatitude() + ", Longitude = " + loc.getLongitude());
+                ArrayList<OverlayItem> overlayArray = new ArrayList<>();
+                GeoPoint addedGeoPoint = new GeoPoint(loc.getLatitude(), loc.getLongitude());
+                OverlayItem mapItem = new OverlayItem("", "", addedGeoPoint);
+
+                pointUpdater.accept(new POIPoint(addedGeoPoint));
+                mapItem.setMarker(marker);
+                overlayArray.add(mapItem);
+
+                if (anotherItemizedIconOverlay!=null) {
+                    mapView.getOverlays().remove(anotherItemizedIconOverlay);
+                    mapView.invalidate();
+                }
+
+                anotherItemizedIconOverlay = new ItemizedIconOverlay<>(context, overlayArray,null);
+                mapView.getOverlays().add(anotherItemizedIconOverlay);
+                mapView.invalidate();
+
+                listener.run();
+                return true;
+            }
+
+        };
+
+        // TODO add bounding box drawing
+        mapView.getOverlays().add(touchOverlay);
+mapView.invalidate();
+    }
+
 }

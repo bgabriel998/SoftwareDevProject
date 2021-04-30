@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/settingsMapBackButton"
+            android:layout_width="163dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="BACK" />
+
+        <Button
+            android:id="@+id/settingsMapOkButton"
+            android:layout_width="205dp"
+            android:layout_height="wrap_content"
+            android:text="DOWNLOAD"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <org.osmdroid.views.MapView android:id="@+id/settingsMapView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+</LinearLayout>

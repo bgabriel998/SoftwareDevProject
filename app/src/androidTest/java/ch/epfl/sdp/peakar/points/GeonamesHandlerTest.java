@@ -15,16 +15,15 @@ import org.osmdroid.bonuspack.location.POI;
 
 import java.util.ArrayList;
 
+
+import static ch.epfl.sdp.peakar.TestingConstants.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 
@@ -36,20 +35,6 @@ public class GeonamesHandlerTest {
 
     private static long startTimeMs;
     private static double queryTimeS;
-
-
-    private static final int MILLI_SEC_TO_SEC = 1000;
- 
-    private static final int DEFAULT_QUERY_MAX_RESULT = 300;
-    private static final int DEFAULT_QUERY_TIMEOUT = 10;
-
-    private static final int GIVEN_RANGE_IN_KM = 20;
-    private static final int GIVEN_QUERY_MAX_RESULT = 30;
-    private static final int GIVEN_QUERY_TIMEOUT = 10;
-
-    private static final double MOCK_LOCATION_LAT_LAUSANNE = 46.519251915333676;
-    private static final double MOCK_LOCATION_LON_LAUSANNE = 6.558563221333525;
-    private static final double MOCK_LOCATION_ALT_LAUSANNE = 220;
 
 
     @Rule
@@ -80,7 +65,7 @@ public class GeonamesHandlerTest {
 
 
 
-        Thread.sleep(DEFAULT_QUERY_TIMEOUT*MILLI_SEC_TO_SEC*3);
+        Thread.sleep(DEFAULT_QUERY_TIMEOUT* MILLI_SEC_TO_SEC*3);
 
     }
 
@@ -154,7 +139,7 @@ public class GeonamesHandlerTest {
      */
         @Test
        public void testResultListNotExceedTimeLimit(){
-            assertThat(queryTimeS, lessThanOrEqualTo((double)DEFAULT_QUERY_TIMEOUT*3));
+            assertThat(queryTimeS, lessThanOrEqualTo((double) DEFAULT_QUERY_TIMEOUT*3));
             assertNotNull(resultPOI);
         }
 
@@ -176,7 +161,7 @@ public class GeonamesHandlerTest {
             }
         }.execute();
         try {
-            Thread.sleep(DEFAULT_QUERY_TIMEOUT*MILLI_SEC_TO_SEC);
+            Thread.sleep(DEFAULT_QUERY_TIMEOUT* MILLI_SEC_TO_SEC);
         } catch (InterruptedException e) {
             e.printStackTrace();
             fail("testGeonamesObjCreationException failed");
@@ -205,7 +190,7 @@ public class GeonamesHandlerTest {
             }
         }.execute();
         try {
-            Thread.sleep(GIVEN_QUERY_TIMEOUT*MILLI_SEC_TO_SEC);
+            Thread.sleep(GIVEN_QUERY_TIMEOUT* MILLI_SEC_TO_SEC);
         } catch (InterruptedException e) {
             e.printStackTrace();
             fail("testGeonamesObjCreationExceptionCustom_Arg_1 failed");
@@ -222,6 +207,7 @@ public class GeonamesHandlerTest {
         thrown.expectMessage("BoundingBoxRangeKm can't be null or negative (also not under 100m)");
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
+
         UserPoint userPoint = UserPoint.getInstance(context);
         userPoint.setLocation(MOCK_LOCATION_LAT_LAUSANNE, MOCK_LOCATION_LON_LAUSANNE, MOCK_LOCATION_ALT_LAUSANNE, 0);
         new GeonamesHandler(userPoint,
@@ -233,7 +219,7 @@ public class GeonamesHandlerTest {
             }
         }.execute();
         try {
-            Thread.sleep(GIVEN_QUERY_TIMEOUT*MILLI_SEC_TO_SEC);
+            Thread.sleep(GIVEN_QUERY_TIMEOUT* MILLI_SEC_TO_SEC);
         } catch (InterruptedException e) {
             e.printStackTrace();
             fail("testGeonamesObjCreationExceptionCustom_Arg_2 failed");
@@ -254,6 +240,7 @@ public class GeonamesHandlerTest {
         Assert.assertNotNull(context);
         UserPoint userPoint = UserPoint.getInstance(context);
         userPoint.setLocation(MOCK_LOCATION_LAT_LAUSANNE, MOCK_LOCATION_LON_LAUSANNE, MOCK_LOCATION_ALT_LAUSANNE, 0);
+
 
         new GeonamesHandler(userPoint,
                 GIVEN_RANGE_IN_KM,

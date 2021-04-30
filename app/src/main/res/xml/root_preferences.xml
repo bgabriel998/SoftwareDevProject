@@ -1,0 +1,64 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/general_header">
+        <ListPreference
+
+            android:defaultValue="20 km"
+            android:entries="@array/range_entries"
+            android:entryValues="@array/range_values"
+            android:key="@string/range_key"
+            android:title="@string/range_title"
+            app:useSimpleSummaryProvider="true"
+            android:dialogIcon="@drawable/ic_baseline_distance_24"
+            android:icon="@drawable/ic_baseline_distance_24"/>
+        <ListPreference
+            android:defaultValue="Meters/Kilometers"
+            android:entries="@array/measSys_entries"
+            android:entryValues="@array/measSys_values"
+            android:key="@string/measSys_key"
+            android:title="@string/measSys_title"
+            app:useSimpleSummaryProvider="true"
+            android:dialogIcon="@drawable/ic_baseline_moving_24"
+            android:icon="@drawable/ic_baseline_moving_24"/>
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/night_mode_key"
+            android:title="@string/night_mode_title"
+            android:icon="@drawable/ic_baseline_nightlight_24"/>
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/offline_mode_key"
+            android:title="@string/offline_mode_title"
+            android:summary="@string/offline_mode_summary"
+            android:icon="@drawable/ic_baseline_signal_cellular_off_24"/>
+    </PreferenceCategory>
+
+
+
+    <PreferenceCategory app:title="@string/language_header">
+
+        <ListPreference
+            android:defaultValue="English"
+            android:entries="@array/language_entries"
+            android:entryValues="@array/language_values"
+            android:key="@string/language_key"
+            android:title="@string/language_title"
+            app:useSimpleSummaryProvider="true"
+            android:dialogIcon="@drawable/ic_baseline_language_24"
+            android:icon="@drawable/ic_baseline_language_24"/>
+    </PreferenceCategory>We
+
+    <PreferenceCategory app:title="@string/storage_header">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/disable_caching_key"
+            android:title="@string/caching_title"
+            android:summary="@string/caching_summary"
+            android:icon="@drawable/ic_baseline_storage_24"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

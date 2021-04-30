@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>> implements GeonamesHandlerIF{
 
     //Query Constants
-    private static final int DEFAULT_RANGE_IN_KM = 20;
+    public static final int DEFAULT_RANGE_IN_KM = 20;
     private static final int DEFAULT_QUERY_MAX_RESULT = 300;
     private static final int DEFAULT_QUERY_TIMEOUT = 10;
 
@@ -37,7 +37,7 @@ public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>
     // API used to retrieve peaks POI
     private final OverpassAPIProvider poiProvider;
 
-    private final UserPoint userLocation;
+    private final Point userLocation;
     private final double rangeInKm;
     private final int queryMaxResults;
     private final int queryTimeout;
@@ -46,9 +46,9 @@ public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>
 
     /**
      * Initializes provider
-     * @param userLocation UserPoint containing user location inforamtions
+     * @param userLocation Point containing user location inforamtions
      */
-    public GeonamesHandler(UserPoint userLocation) {
+    public GeonamesHandler(Point userLocation) {
         if(userLocation == null)
             throw new IllegalArgumentException("UserPoint user location can't be null");
         this.userLocation = userLocation;
@@ -69,7 +69,7 @@ public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>
      * @param queryMaxResults max results that the query should return (please do not exceed 500)
      * @param queryTimeout query timeout
      */
-    public GeonamesHandler(UserPoint userLocation, double boundingBoxRangeKm, int queryMaxResults, int queryTimeout){
+    public GeonamesHandler(Point userLocation, double boundingBoxRangeKm, int queryMaxResults, int queryTimeout){
         if(userLocation == null)
             throw new IllegalArgumentException("UserPoint user location can't be null");
         if(boundingBoxRangeKm <= 0.1)

@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"  />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -23,20 +23,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:remove="android:appComponentFactory">
-        <activity android:name="ch.epfl.sdp.peakar.user.friends.AddFriendActivity"/>
-        <activity android:name="ch.epfl.sdp.peakar.user.friends.FriendItemActivity"/>
-        <activity android:name="ch.epfl.sdp.peakar.user.friends.FriendsActivity"/>
-        <activity android:name="ch.epfl.sdp.peakar.gallery.ImageActivity"/>
-        <activity android:name="ch.epfl.sdp.peakar.gallery.GalleryActivity" />
-        <activity android:name="ch.epfl.sdp.peakar.camera.CameraActivity" />
-        <activity android:name="ch.epfl.sdp.peakar.collection.MountainActivity" />
-        <activity android:name="ch.epfl.sdp.peakar.collection.CollectionActivity" />
-        <activity android:name="ch.epfl.sdp.peakar.rankings.RankingsActivity" />
-        <activity android:name="ch.epfl.sdp.peakar.map.MapActivity" />
-        <activity android:name="ch.epfl.sdp.peakar.user.profile.ProfileActivity" />
-        <activity android:name="ch.epfl.sdp.peakar.general.SettingsActivity" />
-        <activity android:name="ch.epfl.sdp.peakar.general.MainMenuActivity" />
-        <activity android:name="ch.epfl.sdp.peakar.general.InitActivity"
+        <activity android:name=".user.friends.AddFriendActivity"/>
+        <activity android:name=".user.friends.FriendItemActivity"/>
+        <activity android:name=".user.friends.FriendsActivity"/>
+        <activity android:name=".gallery.ImageActivity"/>
+        <activity android:name=".gallery.GalleryActivity" />
+        <activity android:name=".camera.CameraActivity" />
+        <activity android:name=".collection.MountainActivity" />
+        <activity android:name=".collection.CollectionActivity" />
+        <activity android:name=".rankings.RankingsActivity" />
+        <activity android:name=".map.MapActivity" />
+        <activity android:name=".user.profile.ProfileActivity" />
+        <activity android:name=".general.SettingsActivity" />
+        <activity android:name=".general.SettingsMapActivity" />
+        <activity android:name=".general.MainMenuActivity" />
+        <activity android:name=".general.InitActivity"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

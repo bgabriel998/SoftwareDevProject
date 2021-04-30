@@ -5,9 +5,11 @@ import android.os.Handler;
 import android.os.Looper;
 
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
+import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.user.account.FirebaseAccount;
@@ -18,6 +20,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.osmdroid.tileprovider.MapTileProviderBase;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
@@ -27,17 +30,18 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.util.ArrayList;
 import java.util.List;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static ch.epfl.sdp.peakar.TestingConstants.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 public class OSMMapTest {
-    //Constants
-    private static final float TILE_SCALING_FACTOR = 1.5f;
-    private static final String MONT_BLANC_NAME = "Mont Blanc - Monte Bianco";
-    private static final String DENT_DU_GEANT_NAME = "Dent du Geant";
-    private static final String POINTE_DE_LAPAZ_NAME = "Pointe de Lapaz";
-    private static final String AIGUILLE_DU_PLAN = "Aiguille du Plan";
 
     @Rule
     public ActivityScenarioRule<MapActivity> activityActivityScenarioRule = new ActivityScenarioRule<>(MapActivity.class);
@@ -87,19 +91,19 @@ public class OSMMapTest {
     @Test
     public void setMarkersForDiscoveredPeaksTest() throws InterruptedException {
         //Write peaks to the database
-        GeoPoint geoPoint_1 = new GeoPoint(45.8325,6.8641666666667,4810);
+        GeoPoint geoPoint_1 = new GeoPoint(MONT_BLANC_LAT,MONT_BLANC_LONG,MONT_BLANC_ALT);
         POIPoint point_1 = new POIPoint(geoPoint_1);
         point_1.setName(MONT_BLANC_NAME);
 
-        GeoPoint geoPoint_2 = new GeoPoint(45.86355980599387, 6.951348205683087,4013);
+        GeoPoint geoPoint_2 = new GeoPoint(DENT_DU_GEANT_LAT, DENT_DU_GEANT_LONG,DENT_DU_GEANT_ALT);
         POIPoint point_2 = new POIPoint(geoPoint_2);
         point_2.setName(DENT_DU_GEANT_NAME);
 
-        GeoPoint geoPoint_3 = new GeoPoint(45.891667, 6.907222,3673);
+        GeoPoint geoPoint_3 = new GeoPoint(AIGUILLE_DU_PLAN_LAT, AIGUILLE_DU_PLAN_LONG,AIGUILLE_DU_PLAN_ALT);
         POIPoint point_3 = new POIPoint(geoPoint_3);
         point_3.setName(AIGUILLE_DU_PLAN);
 
-        GeoPoint geoPoint_4 = new GeoPoint(45.920774986207014, 6.812914656881065,3660);
+        GeoPoint geoPoint_4 = new GeoPoint(POINTE_DE_LAPAZ_LAT, POINTE_DE_LAPAZ_LONG,POINTE_DE_LAPAZ_ALT);
         POIPoint point_4 = new POIPoint(geoPoint_4);
         point_4.setName(POINTE_DE_LAPAZ_NAME);
 
@@ -167,6 +171,42 @@ public class OSMMapTest {
         Database.refRoot.child(Database.CHILD_USERS).child("null").removeValue();
     }
 
+
+    /*Test switch between normal map and satellite view*/
+    @Test
+    public void pressSatelliteNormalMapButton() {
+        OSMMap osmMap = MapActivity.osmMap;
+        //Originally the map is set to default
+        //A press on the button will change the map tile for satellite
+
+        MapView mapView = osmMap.getMapView();
+        MapTileProviderBase tileProviderBase = mapView.getTileProvider();
+        assertEquals("Mapnik", tileProviderBase.getTileSource().name());
+        //Click on button
+        ViewInteraction button = onView(withId(R.id.changeMapTile));
+        button.perform(click());
+        //Check that the provider has changed
+        tileProviderBase = mapView.getTileProvider();
+        assertEquals("ARCGisOnline", tileProviderBase.getTileSource().name());
+    }
+
+    /* Check that a press on "zoom on user location button effectively zooms on user loc"*/
+    @Test
+    public void pressZoomOnUserLocationButton() throws InterruptedException {
+        OSMMap osmMap = MapActivity.osmMap;
+        MapView mapView = osmMap.getMapView();
+        //Get map center at start
+        GeoPoint geoPointStart = (GeoPoint) mapView.getMapCenter();
+        //Wait 5 Sec for the provider to get the location
+        Thread.sleep(5000);
+
+        ViewInteraction button = onView(withId(R.id.zoomOnUserLocation));
+        button.perform(click());
+        //Get center of the map after zoom
+        GeoPoint geoPointEnd = (GeoPoint)  mapView.getMapCenter();
+        //Compare two map centers
+        assertThat(geoPointStart, is(not(geoPointEnd)));
+    }
 
 
 }

@@ -1,17 +1,15 @@
 <resources>
-    <string name="app_name">PeakAR</string>
+    <string name="app_name" translatable="false">PeakAR</string>
 
     <!-- Google -->
     <!-- Sign-in status messages -->
-    <string name="mountain_info">Mont Blanc - Monte Bianco lat: 45.8325 lon: 6.8641666666667 alt: 4810 <br /><br />
+    <string name="mountain_info" translatable="false">Mont Blanc - Monte Bianco lat: 45.8325 lon: 6.8641666666667 alt: 4810 <br /><br />
                                  Dent du Geant lat:45.86355980599387 lon:6.951348205683087 alt: 4013<br /><br />
                                  Aiguille du plan lat:45.891667 lon:6.907222 alt: 3673<br /><br />
                                  Pointe de Lapaz lat:45.920774986207014 lon:6.812914656881065 alt: 3660</string>
     <!-- Sign-in button labels and other strings -->
-    <string name="compute_user_score">Compute user Score</string>
 
-
-    <string name="title_activity_main_menu">MainMenuActivity</string>
+    <string name="title_activity_main_menu" translatable="false">MainMenuActivity</string>
 
     <!-- BUTTON TITLES -->
     <string name="start_button">Start Peak AR</string>
@@ -35,7 +33,7 @@
     <!-- FRIENDS SYSTEM -->
     <string name='add_friend_button'>Add a friend</string>
     <string name='friends_button'>Friends</string>
-    <string name='insert_friend_button'>Insert here</string>
+    <string name='insert_friend_button' translatable="false">Insert here</string>
     <string name='submit_friend_button'>Add</string>
     <string name='add_current_username'>You can\'t add yourself to your friends!</string>
     <string name='friend_already_added'>The user is already your friend.</string>
@@ -45,31 +43,31 @@
 
 
     <!-- RANKINGS HEADER -->
-    <string name="header_position">Pos</string>
+    <string name="header_position" translatable="false">Pos</string>
     <string name="header_username">Username</string>
     <string name="header_points">Points</string>
 
     <!-- COLLECTION SEPARATOR -->
-    <string name="separator">Uncollected</string>
+    <string name="separator" translatable="false">Uncollected</string>
 
     <!-- Image Descriptions -->
-    <string name="description_back_button">Back Button</string>
-    <string name="description_map_button">Map Button</string>
-    <string name="description_camera_button">Camera Button</string>
-    <string name="description_profile_button">Profile Button</string>
-    <string name="description_settings_button">Settings Button</string>
-    <string name='description_remove_friend_button'>Remove friend button</string>
-    <string name="description_icon">Peak AR Icon</string>
-    <string name="description_collected_image">Photo over collected mountain</string>
-    <string name="description_gallery_image">Gallery image</string>
-    <string name="description_gallery_fullscreen_image">Gallery fullscreen image</string>
+    <string name="description_back_button" translatable="false">Back Button</string>
+    <string name="description_map_button" translatable="false">Map Button</string>
+    <string name="description_camera_button" translatable="false">Camera Button</string>
+    <string name="description_profile_button" translatable="false">Profile Button</string>
+    <string name="description_settings_button" translatable="false">Settings Button</string>
+    <string name='description_remove_friend_button' translatable="false">Remove friend button</string>
+    <string name="description_icon" translatable="false">Peak AR Icon</string>
+    <string name="description_collected_image" translatable="false">Photo over collected mountain</string>
+    <string name="description_gallery_image" translatable="false">Gallery image</string>
+    <string name="description_gallery_fullscreen_image" translatable="false">Gallery fullscreen image</string>
 
-    <string name="title_activity_init">initActivity</string>
+    <string name="title_activity_init" translatable="false">initActivity</string>
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
     -->
-    <string name="hello_world">Hello Square World!</string>
+    <string name="hello_world" translatable="false">Hello Square World!</string>
 
 
     <!-- MOUNTAIN CATEGORIES -->
@@ -85,10 +83,43 @@
 
     <!-- MAP MARKERS STRINGS -->
     <string name="marker_altitude">Altitude: %s m</string>
+    <string name="buttonGetUserLoc" translatable="false">Get user location</string>
     <!-- MAP TOAST STRINGS -->
     <string name="toast_no_account">You are not logged in: no markers can be displayed</string>
 
     <!-- GALLERY TEXT -->
-    <string name="empty_gallery">Empty Gallery</string>
+    <string name="empty_gallery" translatable="false">Empty Gallery</string>
+    <string name="title_activity_settings" translatable="false">SettingsActivity</string>
 
+    <!-- Preference Titles -->
+    <string name="general_header">General</string>
+    <string name="language_header">Language preference</string>
+    <string name="storage_header">Storage</string>
+
+    <!-- Language Preferences -->
+    <string name="language_title">Language</string>
+
+    <!-- Range Preferences -->
+    <string name="range_title">Discovery distance</string>
+    <string name="range_summary">Maximum distance used for peak detection</string>
+
+    <!-- Measuring system Preferences -->
+    <string name="measSys_title">Measuring system</string>
+
+    <!-- Night mode Preferences -->
+    <string name="night_mode_title">Night mode</string>
+
+    <!-- Night mode Preferences -->
+    <string name="offline_mode_title">Offline mode</string>
+
+    <!-- Caching Preferences -->
+    <string name="caching_title">Allow caching</string>
+    <string name="caching_summary">Use device storage to cache application data. Enabling this options increase the speed of the application.</string>
+    <string name="measSys_key" translatable="false">measSys_preference</string>
+    <string name="night_mode_key" translatable="false">night_mode_preference</string>
+    <string name="offline_mode_key" translatable="false">offline_mode_preference</string>
+    <string name="range_key" translatable="false">range_preference</string>
+    <string name="language_key" translatable="false">language_preference</string>
+    <string name="disable_caching_key" translatable="false">disable_caching</string>
+    <string name="offline_mode_summary">Opens the editor to select an area to download. This allows the application to work without internet connexion</string>
 </resources>
