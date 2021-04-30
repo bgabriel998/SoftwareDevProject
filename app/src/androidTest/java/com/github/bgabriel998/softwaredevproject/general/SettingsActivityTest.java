@@ -8,7 +8,7 @@ import androidx.preference.PreferenceManager;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
-import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -25,6 +25,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -80,7 +82,9 @@ public class SettingsActivityTest{
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         //Open selector window
-        onView(withText(activity.getResources().getString(R.string.range_title))).perform(click());
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.range_title))),
+                        click()));
         Thread.sleep(1000);
         //select first option
         onView(withText(activity.getResources().getStringArray(R.array.range_entries)[0])).perform(click());
@@ -88,7 +92,9 @@ public class SettingsActivityTest{
         String startString = prefs.getString(activity.getResources().getString(R.string.range_key), "");
 
         // TEST 10KM
-        onView(withText(activity.getResources().getString(R.string.range_title))).perform(click());
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.range_title))),
+                        click()));
         Thread.sleep(1000);
         //select first option
         onView(withText(activity.getResources().getStringArray(R.array.range_entries)[1])).perform(click());
@@ -100,7 +106,9 @@ public class SettingsActivityTest{
         startString = endString;
 
         // TEST 20KM
-        onView(withText(activity.getResources().getString(R.string.range_title))).perform(click());
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.range_title))),
+                        click()));
         Thread.sleep(1000);
         //select first option
         onView(withText(activity.getResources().getStringArray(R.array.range_entries)[2])).perform(click());
@@ -112,7 +120,9 @@ public class SettingsActivityTest{
         startString = endString;
 
         // TEST 30KM
-        onView(withText(activity.getResources().getString(R.string.range_title))).perform(click());
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.range_title))),
+                        click()));
         Thread.sleep(1000);
         //select first option
         onView(withText(activity.getResources().getStringArray(R.array.range_entries)[3])).perform(click());
@@ -124,7 +134,9 @@ public class SettingsActivityTest{
         startString = endString;
 
         // TEST 50KM
-        onView(withText(activity.getResources().getString(R.string.range_title))).perform(click());
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.range_title))),
+                        click()));
         Thread.sleep(1000);
         //select first option
         onView(withText(activity.getResources().getStringArray(R.array.range_entries)[4])).perform(click());
@@ -142,7 +154,9 @@ public class SettingsActivityTest{
         String startString = prefs.getString(activity.getResources().getString(R.string.measSys_key), "");
 
         //Open selector window
-        onView(withText(activity.getResources().getString(R.string.measSys_title))).perform(click());
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.measSys_title))),
+                        click()));
         Thread.sleep(1000);
         //Select the opposite preference
         if(startString.equals(activity.getResources().getStringArray(R.array.measSys_values)[1]))
@@ -172,7 +186,11 @@ public class SettingsActivityTest{
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         //Get selected value
         Boolean startVal = prefs.getBoolean(activity.getResources().getString(R.string.offline_mode_key), false);
-        onView(withText(activity.getResources().getString(R.string.offline_mode_title))).perform(click());
+
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.offline_mode_title))),
+                        click()));
+
         Boolean endVal = prefs.getBoolean(activity.getResources().getString(R.string.offline_mode_key), false);
         assertThat(startVal, not(is(endVal)));
     }
@@ -184,7 +202,9 @@ public class SettingsActivityTest{
 
 
         //Open selector window
-        onView(withText(activity.getResources().getString(R.string.language_title))).perform(click());
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.language_title))),
+                        click()));
         Thread.sleep(1000);
         //select first option
         onView(withText(activity.getResources().getStringArray(R.array.language_entries)[0])).perform(click());
@@ -192,7 +212,9 @@ public class SettingsActivityTest{
         String startString = prefs.getString(activity.getResources().getString(R.string.language_key), "");
 
 
-        onView(withText(activity.getResources().getString(R.string.language_title))).perform(click());
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.language_title))),
+                        click()));
         Thread.sleep(1000);
         //select first option
         onView(withText(activity.getResources().getStringArray(R.array.language_entries)[1])).perform(click());
@@ -203,7 +225,9 @@ public class SettingsActivityTest{
 
         startString = endString;
         //Test GERMAN
-        onView(withText(activity.getResources().getString(R.string.language_title))).perform(click());
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.language_title))),
+                        click()));
         Thread.sleep(1000);
         //select first option
         onView(withText(activity.getResources().getStringArray(R.array.language_entries)[2])).perform(click());
@@ -214,7 +238,9 @@ public class SettingsActivityTest{
 
         startString = endString;
         //Test SWEDISH
-        onView(withText(activity.getResources().getString(R.string.language_title))).perform(click());
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.language_title))),
+                        click()));
         Thread.sleep(1000);
         //select first option
         onView(withText(activity.getResources().getStringArray(R.array.language_entries)[3])).perform(click());
@@ -224,7 +250,9 @@ public class SettingsActivityTest{
         assertThat(startString, not(is(endString)));
 
         //Open selector window
-        onView(withText(activity.getResources().getString(R.string.language_title))).perform(click());
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.language_title))),
+                        click()));
         Thread.sleep(1000);
         //select first option
         onView(withText(activity.getResources().getStringArray(R.array.language_entries)[0])).perform(click());
@@ -233,17 +261,21 @@ public class SettingsActivityTest{
 
     public void TestToolbarTitle(){
         String TOOLBAR_TITLE = "Settings";
-        ViewInteraction greetingText = Espresso.onView(ViewMatchers.withId(R.id.toolbarTitle));
+        ViewInteraction greetingText = Espresso.onView(withId(R.id.toolbarTitle));
         greetingText.check(matches(withText(TOOLBAR_TITLE)));
     }
 
     /*Test preference allow caching button click*/
     @Test
     public void TestAllowCachingButton(){
+
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         //Get selected value
         Boolean startVal = prefs.getBoolean(activity.getResources().getString(R.string.disable_caching_key), false);
-        onView(withText(activity.getResources().getString(R.string.caching_title))).perform(click());
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.caching_title))),
+                        click()));
         Boolean endVal = prefs.getBoolean(activity.getResources().getString(R.string.disable_caching_key), false);
         assertThat(startVal, not(is(endVal)));
     }
