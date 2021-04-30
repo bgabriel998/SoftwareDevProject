@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/Black"
-    tools:context=".gallery.ImageActivity">
+    tools:context="ch.epfl.sdp.peakar.gallery.ImageActivity">
 
-    <com.github.bgabriel998.softwaredevproject.gallery.ZoomableImageView
+    <ch.epfl.sdp.peakar.gallery.ZoomableImageView
         android:id="@+id/fullscreen_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

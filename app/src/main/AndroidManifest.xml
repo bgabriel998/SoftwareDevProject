@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.github.bgabriel998.softwaredevproject">
+    package="ch.epfl.sdp.peakar">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
@@ -23,7 +23,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:remove="android:appComponentFactory">
-
         <activity android:name=".user.friends.AddFriendActivity"/>
         <activity android:name=".user.friends.FriendItemActivity"/>
         <activity android:name=".user.friends.FriendsActivity"/>

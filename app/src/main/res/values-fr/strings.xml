@@ -28,7 +28,7 @@
     <string name="points__mountain_category">Points:</string>
     <string name="height_mountain_category">Altitude:</string>
     <string name="position_mountain_category">Position:</string>
-    <string name="pictureTakenToast">Image sauvegardée sous: file:///storage/emulated/0/Android/media/com.github.bgabriel998.softwaredevproject/</string>
+    <string name="pictureTakenToast">Image sauvegardée sous: file:///storage/emulated/0/Android/media/ch.epfl.sdp.peakar/</string>
     <string name="pictureSavedFailed">Echec de la savegarde de l\'image:</string>
     <string name="pictureSavedSuccessfully">Image sauvegardée sous:</string>
     <string name="marker_altitude">Altitude: %s m</string>

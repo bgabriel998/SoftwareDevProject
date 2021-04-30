@@ -1,5 +1,5 @@
 include ':app'
-rootProject.name = "SoftwareDevProject"
+rootProject.name = "PeakAR"
 ext.isCiServer = System.getenv().containsKey("CIRRUS_CI")
 ext.isDefaultBranch = System.getenv()["CIRRUS_BRANCH"] == "master"
 ext.buildCacheHost = System.getenv().getOrDefault("CIRRUS_HTTP_CACHE_HOST", "localhost:12321")
