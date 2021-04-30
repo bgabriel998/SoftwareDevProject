@@ -68,7 +68,7 @@ public class ComputePOIPointsUnitTest {
         //Check that the size increased
         assertEquals(3, filteredPois.size());
         newlyAdded = (POIPoint) filteredPois.keySet().toArray()[2];
-        //Newly added name should be name of poiOutside6
+        //Newly added name should be name of poiHigh
         assertEquals("poiHigh", newlyAdded.getName());
     }
 }

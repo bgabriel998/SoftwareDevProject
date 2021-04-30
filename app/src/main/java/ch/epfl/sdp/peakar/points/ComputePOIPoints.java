@@ -99,45 +99,50 @@ public class ComputePOIPoints {
         //New map that contains only the filtered POIPoints
         Map<POIPoint, Boolean> filteredPOIs = new HashMap<>();
 
-        //Decides if the mountain gets added or not
-        boolean addPoiPoint;
         //Iterate over all POIPoints in labeledPOIPoints
-        for (Map.Entry<POIPoint, Boolean> poiPoints : sortedPoisByAlt.entrySet()) {
-            //Initialize to true
-            addPoiPoint = true;
-            //Iterate over all mountains in the filtered Map
-            for (Map.Entry<POIPoint, Boolean> resPoiPoints : filteredPOIs.entrySet()) {
-                //If the difference between one of the filtered POIPoints and the actual POIPoint
-                //is less than HALF_MARKER_SIZE then do no add the marker
-                if(Math.abs(poiPoints.getKey().getHorizontalBearing()
-                        - resPoiPoints.getKey().getHorizontalBearing()) <= HALF_MARKER_SIZE_WIDTH){
-
-                    //Break if the markers are not close vertically
-                    if(Math.abs(poiPoints.getKey().getVerticalBearing()
-                            - resPoiPoints.getKey().getVerticalBearing()) >= HALF_MARKER_SIZE_HEIGHT){
-                        break;
-                    }
-
-                    //If the POIPoint in the filtered Map is in the line of sight or the actual
-                    //POIPoint is not in the line of sight
-                    if(resPoiPoints.getValue() || !poiPoints.getValue()){
-                        //Set addPoiPoint to false
-                        addPoiPoint = false;
-                        break;
-                    }
-                    //If the actual mountain is in the line of sight but the filtered is not
-                    else{
-                        //Then remove the filtered
-                        filteredPOIs.remove(resPoiPoints.getKey());
-                        break;
-                    }
-                }
-            }
-            //Iff addPoiPoint is still true, add the POIPoint to the filtered list
-            if(addPoiPoint){
-                filteredPOIs.put(poiPoints.getKey(), poiPoints.getValue());
+        for (Map.Entry<POIPoint, Boolean> poiPoint : sortedPoisByAlt.entrySet()) {
+            if(comparePoiToFiltered(poiPoint, filteredPOIs)){
+                filteredPOIs.put(poiPoint.getKey(), poiPoint.getValue());
             }
         }
         return filteredPOIs;
+    }
+
+    /**
+     * Compares a entry of a Map<POIPoint, Boolean> to the Map of filteredPOIs to decide if
+     * the POIPoint will be added or not to the filteredPOIs Map.
+     * @param poiPoint Entry of a Map<POIPoint, Boolean> of the POIPoints that needs to be filtered
+     * @param filteredPOIs Map<POIPoint, Boolean> that contains the filtered POIPOints
+     * @return True if the POIPoint should be added, false otherwise
+     */
+    private static boolean comparePoiToFiltered(Map.Entry<POIPoint, Boolean> poiPoint, Map<POIPoint, Boolean> filteredPOIs) {
+        //Iterate over all mountains in the filtered Map
+        for (Map.Entry<POIPoint, Boolean> resPoiPoints : filteredPOIs.entrySet()) {
+            //If the difference between one of the filtered POIPoints and the actual POIPoint
+            //is less than HALF_MARKER_SIZE then do no add the marker
+            if(Math.abs(poiPoint.getKey().getHorizontalBearing()
+                    - resPoiPoints.getKey().getHorizontalBearing()) <= HALF_MARKER_SIZE_WIDTH){
+
+                //Break if the markers are not close vertically
+                if(Math.abs(poiPoint.getKey().getVerticalBearing()
+                        - resPoiPoints.getKey().getVerticalBearing()) >= HALF_MARKER_SIZE_HEIGHT){
+                    return true;
+                }
+
+                //If the POIPoint in the filtered Map is in the line of sight or the actual
+                //POIPoint is not in the line of sight
+                if(resPoiPoints.getValue() || !poiPoint.getValue()){
+                    //Set addPoiPoint to false
+                    return false;
+                }
+                //If the actual mountain is in the line of sight but the filtered is not
+                else{
+                    //Then remove the filtered
+                    filteredPOIs.remove(resPoiPoints.getKey());
+                    return true;
+                }
+            }
+        }
+        return true;
     }
 }
