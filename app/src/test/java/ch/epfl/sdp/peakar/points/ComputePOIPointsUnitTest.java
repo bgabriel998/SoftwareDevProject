@@ -19,8 +19,9 @@ public class ComputePOIPointsUnitTest {
         Point startPoint = new Point(0,0,0);
 
         for(int i = 0; i < 10; i++){
-            POIPoint poi = new POIPoint(""+i, i+1, i+1, i);
+            POIPoint poi = new POIPoint(""+i, (i+1)/10f, (i+1)/10f, i);
             poi.setHorizontalBearing(startPoint);
+            poi.setVerticalBearing(startPoint);
             pois.put(poi, false);
         }
 
@@ -34,6 +35,8 @@ public class ComputePOIPointsUnitTest {
         POIPoint poiInLineOfSight2 = new POIPoint("inLineOfSight", 6, 6, 3);
         poiInLineOfSight1.setHorizontalBearing(startPoint);
         poiInLineOfSight2.setHorizontalBearing(startPoint);
+        poiInLineOfSight1.setVerticalBearing(startPoint);
+        poiInLineOfSight2.setVerticalBearing(startPoint);
         pois.put(poiInLineOfSight1, true);
         pois.put(poiInLineOfSight2, true);
         filteredPois = ComputePOIPoints.filterHighestPOIs(pois);
@@ -46,6 +49,7 @@ public class ComputePOIPointsUnitTest {
         //Add POIPoint that is outside the 6° range
         POIPoint poiOutside6 = new POIPoint("poiOutside6", 45, 38, 0);
         poiOutside6.setHorizontalBearing(startPoint);
+        poiOutside6.setVerticalBearing(startPoint);
         pois.put(poiOutside6, false);
         filteredPois = ComputePOIPoints.filterHighestPOIs(pois);
         //Check that the size increased
@@ -53,5 +57,18 @@ public class ComputePOIPointsUnitTest {
         POIPoint newlyAdded = (POIPoint) filteredPois.keySet().toArray()[1];
         //Newly added name should be name of poiOutside6
         assertEquals("poiOutside6", newlyAdded.getName());
+
+
+        //Add POIPoint that is higher
+        POIPoint poiHigh = new POIPoint("poiHigh", 0.5, 0.5, 2000);
+        poiHigh.setHorizontalBearing(startPoint);
+        poiHigh.setVerticalBearing(startPoint);
+        pois.put(poiHigh, false);
+        filteredPois = ComputePOIPoints.filterHighestPOIs(pois);
+        //Check that the size increased
+        assertEquals(3, filteredPois.size());
+        newlyAdded = (POIPoint) filteredPois.keySet().toArray()[2];
+        //Newly added name should be name of poiOutside6
+        assertEquals("poiHigh", newlyAdded.getName());
     }
 }
