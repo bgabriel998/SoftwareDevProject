@@ -182,7 +182,6 @@ public class SettingsActivityTest{
 
     /*Test language selection menu */
     @Test
-<<<<<<< HEAD:app/src/androidTest/java/com/github/bgabriel998/softwaredevproject/SettingsActivityTest.java
     public void TestLanguageButton() throws InterruptedException {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
