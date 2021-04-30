@@ -20,7 +20,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.github.bgabriel998.softwaredevproject.R;
 import com.github.bgabriel998.softwaredevproject.general.SettingsActivity;
 
->>>>>>> master:app/src/androidTest/java/com/github/bgabriel998/softwaredevproject/general/SettingsActivityTest.java
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
