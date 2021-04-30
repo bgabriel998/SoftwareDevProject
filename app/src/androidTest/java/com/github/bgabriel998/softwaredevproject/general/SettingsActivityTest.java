@@ -238,7 +238,6 @@ public class SettingsActivityTest{
         String TOOLBAR_TITLE = "Settings";
         ViewInteraction greetingText = Espresso.onView(ViewMatchers.withId(R.id.toolbarTitle));
         greetingText.check(matches(withText(TOOLBAR_TITLE)));
->>>>>>> master:app/src/androidTest/java/com/github/bgabriel998/softwaredevproject/general/SettingsActivityTest.java
     }
 
     /*Test preference allow caching button click*/
