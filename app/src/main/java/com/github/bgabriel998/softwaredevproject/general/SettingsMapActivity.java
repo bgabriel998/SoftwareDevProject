@@ -43,7 +43,7 @@ public class SettingsMapActivity extends AppCompatActivity {
     private OSMMap osmMap = null;
 
     private Button backButton;
-    Button okButton;
+    private Button okButton;
 
     Activity thisActivity;
 
