@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-<<<<<<< HEAD:app/src/androidTest/java/com/github/bgabriel998/softwaredevproject/SettingsActivityTest.java
 import androidx.preference.PreferenceManager;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -12,7 +11,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
-=======
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.matcher.ViewMatchers;
@@ -22,7 +20,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.github.bgabriel998.softwaredevproject.R;
 import com.github.bgabriel998.softwaredevproject.general.SettingsActivity;
 
->>>>>>> master:app/src/androidTest/java/com/github/bgabriel998/softwaredevproject/general/SettingsActivityTest.java
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -185,7 +182,6 @@ public class SettingsActivityTest{
 
     /*Test language selection menu */
     @Test
-<<<<<<< HEAD:app/src/androidTest/java/com/github/bgabriel998/softwaredevproject/SettingsActivityTest.java
     public void TestLanguageButton() throws InterruptedException {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -238,12 +234,10 @@ public class SettingsActivityTest{
         onView(withText(activity.getResources().getStringArray(R.array.language_entries)[0])).perform(click());
         //Let activity retrieves stability point
 
-=======
     public void TestToolbarTitle(){
         String TOOLBAR_TITLE = "Settings";
         ViewInteraction greetingText = Espresso.onView(ViewMatchers.withId(R.id.toolbarTitle));
         greetingText.check(matches(withText(TOOLBAR_TITLE)));
->>>>>>> master:app/src/androidTest/java/com/github/bgabriel998/softwaredevproject/general/SettingsActivityTest.java
     }
 
     /*Test preference allow caching button click*/
