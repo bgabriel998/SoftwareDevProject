@@ -111,7 +111,7 @@ public class POICacheTest {
         BoundingBox boundingBox = userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM);
         poiCache.savePOIDataToCache(inputArrayList,boundingBox,context);
         ArrayList<POIPoint> result = poiCache.getCachedPOIPoints(context);
-        assertEquals(result.size(), inputArrayList.size());
+        assertEquals(inputArrayList.size(), result.size());
         assertTrue(inputArrayList.contains(result.get(0)));
         assertTrue(inputArrayList.contains(result.get(1)));
         assertTrue(inputArrayList.contains(result.get(2)));
