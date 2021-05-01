@@ -6,9 +6,9 @@ import java.util.ArrayList;
 
 public class POICacheContent {
     /*List of POIs contained in the cache*/
-    private ArrayList<POIPoint> cachedPOIPoints;
+    private final ArrayList<POIPoint> cachedPOIPoints;
     /*Bounding box saved to cache*/
-    private BoundingBox cachedBoundingBox;
+    private final BoundingBox cachedBoundingBox;
 
     /**
      * Constructor
