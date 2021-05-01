@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * CompassView draws the compass on the display
+ * CameraUiView draws a canvas with the compass and mountain information on the camera-preview
  */
 public class CameraUiView extends View {
     //Paints used to draw the lines and heading of the compass on the camera-preview
@@ -195,7 +195,6 @@ public class CameraUiView extends View {
      * Sets the range in degrees of the compass-view, corresponds to the field of view of the camera
      * @param cameraFieldOfView Pair containing the horizontal and vertical field of view
      */
-    @SuppressWarnings("ConstantConditions")
     public void setRange(Pair<Float, Float> cameraFieldOfView) {
         int orientation = getResources().getConfiguration().orientation;
 
@@ -397,8 +396,6 @@ public class CameraUiView extends View {
         //Restore the saved state
         canvas.restore();
     }
-
-
 
     /**
      * Get a bitmap of the compass-view

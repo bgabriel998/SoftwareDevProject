@@ -10,6 +10,9 @@ import android.util.SizeF;
 import androidx.camera.core.AspectRatio;
 import androidx.core.util.Pair;
 
+/**
+ * Utility class for the Camera Activity, contains utility methods for the camera-preview and compass
+ */
 public final class CameraUtilities {
 
     /**

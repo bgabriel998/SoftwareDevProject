@@ -1,7 +1,6 @@
 package ch.epfl.sdp.peakar.camera;
 
 import android.content.Context;
-import android.graphics.Camera;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -10,6 +9,9 @@ import android.hardware.SensorManager;
 import ch.epfl.sdp.peakar.utils.AngleLowpassFilter;
 import ch.epfl.sdp.peakar.utils.CameraUtilities;
 
+/**
+ * Compass calculates the horizontal and vertical degree of the device
+ */
 public class Compass implements SensorEventListener {
     //Compass listener to update the compass heading
     private CompassListener compassListener;

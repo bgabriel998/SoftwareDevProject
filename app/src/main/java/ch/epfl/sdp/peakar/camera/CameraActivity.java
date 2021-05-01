@@ -25,6 +25,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+/**
+ * CameraActivity handles the AR part of the application.
+ */
 public class CameraActivity extends AppCompatActivity{
 
 
