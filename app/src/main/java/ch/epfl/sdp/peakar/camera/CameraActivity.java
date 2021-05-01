@@ -101,7 +101,7 @@ public class CameraActivity extends AppCompatActivity{
         compass = new Compass(this);
 
         //Create compass listener
-        CompassListener compassListener = getCompassListener();
+        CompassListenerInterface compassListener = getCompassListener();
 
         //Bind the compassListener with the compass
         compass.setListener(compassListener);
@@ -117,7 +117,7 @@ public class CameraActivity extends AppCompatActivity{
      *
      * @return CompassListener for the compass
      */
-    private CompassListener getCompassListener() {
+    private CompassListenerInterface getCompassListener() {
         return (heading, headingV) -> {
             //Update the compass when the heading changes
             cameraUiView.setDegrees(heading, headingV);
