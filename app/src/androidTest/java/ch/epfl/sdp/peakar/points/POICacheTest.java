@@ -7,7 +7,6 @@ import androidx.test.core.app.ApplicationProvider;
 
 import com.google.gson.Gson;
 
-import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -40,6 +39,7 @@ import static ch.epfl.sdp.peakar.TestingConstants.POINTE_DE_LAPAZ_ALT;
 import static ch.epfl.sdp.peakar.TestingConstants.POINTE_DE_LAPAZ_LAT;
 import static ch.epfl.sdp.peakar.TestingConstants.POINTE_DE_LAPAZ_LONG;
 import static ch.epfl.sdp.peakar.TestingConstants.POINTE_DE_LAPAZ_NAME;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -130,7 +130,11 @@ public class POICacheTest {
         BoundingBox boundingBox = userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM);
         poiCache.savePOIDataToCache(inputArrayList,boundingBox,context);
         ArrayList<POIPoint> result = poiCache.getCachedPOIPoints(context);
-        Assert.assertThat(result, IsIterableContainingInOrder.contains(inputArrayList.toArray()));
+        assertEquals(result.size(), inputArrayList.size());
+        assertTrue(inputArrayList.contains(result.get(0)));
+        assertTrue(inputArrayList.contains(result.get(1)));
+        assertTrue(inputArrayList.contains(result.get(2)));
+        assertTrue(inputArrayList.contains(result.get(3)));
     }
 
     /*check if the user is in the bounding box*/
@@ -146,4 +150,6 @@ public class POICacheTest {
         POICache poiCache = POICache.getInstance();
         assertTrue(poiCache.isCacheFilePresent(context));
     }
+
+
 }
