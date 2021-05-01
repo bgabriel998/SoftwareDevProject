@@ -44,6 +44,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.utils.CameraUtilities;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -176,26 +177,6 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
     @Override
     public Lifecycle getLifecycle() {
         return registry;
-    }
-
-    /**
-     * Check if the correct orientation string is returned
-     */
-    @Test
-    public void getCorrectOrientationString(){
-        Context context = ApplicationProvider.getApplicationContext();
-        Assert.assertNotNull(context);
-        CameraUiView cameraUiView = new CameraUiView(context, null);
-        assertEquals(cameraUiView.selectHeadingString(0), "N");
-        assertEquals(cameraUiView.selectHeadingString(45), "NE");
-        assertEquals(cameraUiView.selectHeadingString(90), "E");
-        assertEquals(cameraUiView.selectHeadingString(135), "SE");
-        assertEquals(cameraUiView.selectHeadingString(180), "S");
-        assertEquals(cameraUiView.selectHeadingString(225), "SW");
-        assertEquals(cameraUiView.selectHeadingString(270), "W");
-        assertEquals(cameraUiView.selectHeadingString(315), "NW");
-        assertEquals(cameraUiView.selectHeadingString(360), "N");
-        assertEquals(cameraUiView.selectHeadingString(1), "");
     }
 
     /**
