@@ -141,6 +141,11 @@ public class POICacheTest {
     @Test
     public void testPOICacheIsUserInBoundingBox(){
         POICache poiCache = POICache.getInstance();
+        userPoint.setLocation(
+                MOCK_LOCATION_LAT_CHAMONIX,
+                MOCK_LOCATION_LON_CHAMONIX,
+                MOCK_LOCATION_ALT_CHAMONIX,
+                0);
         assertTrue(poiCache.isUserInBoundingBox(userPoint,context));
     }
 
