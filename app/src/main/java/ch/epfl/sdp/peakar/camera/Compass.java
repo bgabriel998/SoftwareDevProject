@@ -1,12 +1,14 @@
 package ch.epfl.sdp.peakar.camera;
 
 import android.content.Context;
+import android.graphics.Camera;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 import ch.epfl.sdp.peakar.utils.AngleLowpassFilter;
+import ch.epfl.sdp.peakar.utils.CameraUtilities;
 
 public class Compass implements SensorEventListener {
     //Compass listener to update the compass heading
@@ -80,7 +82,7 @@ public class Compass implements SensorEventListener {
             applyLowPassFilter(orientationMat);
 
             //Convert values to degrees
-            convertArrToDegrees(orientationMat);
+            CameraUtilities.convertArrToDegrees(orientationMat);
 
             //Add 360° to only get positive values
             float headingHorizontal = (orientationMat[0] + 360) % 360;
@@ -93,16 +95,6 @@ public class Compass implements SensorEventListener {
             if (compassListener != null) {
                 compassListener.onNewHeading(headingHorizontal, headingVertical);
             }
-        }
-    }
-
-    /**
-     * Convert all values of array to degrees
-     * @param orientationMat Array of values that gets converted from radians to degrees
-     */
-    private void convertArrToDegrees(float[] orientationMat) {
-        for(int i=0; i<orientationMat.length; i++){
-            orientationMat[i] = (float)(Math.toDegrees(orientationMat[i]));
         }
     }
 
