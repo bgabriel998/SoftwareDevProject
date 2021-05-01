@@ -9,7 +9,7 @@ public class TestingConstants {
     public static final String MONT_BLANC_NAME = "Mont Blanc - Monte Bianco";
     public static final String DENT_DU_GEANT_NAME = "Dent du Geant";
     public static final String POINTE_DE_LAPAZ_NAME = "Pointe de Lapaz";
-    public static final String AIGUILLE_DU_PLAN = "Aiguille du Plan";
+    public static final String AIGUILLE_DU_PLAN_NAME = "Aiguille du Plan";
     //Constants POI coordinates
     public static final double MONT_BLANC_LAT = 45.8325;
     public static final double MONT_BLANC_LONG = 6.8641666666667;
@@ -38,4 +38,11 @@ public class TestingConstants {
     public static final double MOCK_LOCATION_LAT_LAUSANNE = 46.519251915333676;
     public static final double MOCK_LOCATION_LON_LAUSANNE = 6.558563221333525;
     public static final double MOCK_LOCATION_ALT_LAUSANNE = 220;
+
+    public static final double MOCK_LOCATION_LAT_CHAMONIX = 45.92839376413104;
+    public static final double MOCK_LOCATION_LON_CHAMONIX = 6.873333749580832;
+    public static final double MOCK_LOCATION_ALT_CHAMONIX = 1035;
+
+    //Cache constants
+    public static final String CACHE_FILE_NAME_TEST = "POIPointsCache.txt";
 }

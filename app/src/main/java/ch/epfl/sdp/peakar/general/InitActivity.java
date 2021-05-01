@@ -11,13 +11,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.points.ComputePOIPoints;
-import ch.epfl.sdp.peakar.user.account.FirebaseAccount;
 import com.google.firebase.FirebaseApp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 
 public class InitActivity extends AppCompatActivity {
 
@@ -43,6 +43,12 @@ public class InitActivity extends AppCompatActivity {
                 //Add here permissions
         });
 
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         //Opening the main menu
         Intent intent = new Intent(this, MainMenuActivity.class);
         startActivity(intent);
@@ -54,8 +60,8 @@ public class InitActivity extends AppCompatActivity {
      * Init application global stuff before opening the main menu
      */
     private synchronized void initApp(){
-        FirebaseAccount firebaseAccount = FirebaseAccount.getAccount();
-        firebaseAccount.synchronizeUserProfile();
+        //FirebaseAccount firebaseAccount = FirebaseAccount.getAccount();
+        //firebaseAccount.synchronizeUserProfile();
 
         //Request and compute the POIPoints
         new ComputePOIPoints(this);
