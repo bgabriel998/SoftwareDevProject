@@ -19,8 +19,26 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static ch.epfl.sdp.peakar.TestingConstants.*;
-import static org.junit.Assert.assertEquals;
+import static ch.epfl.sdp.peakar.TestingConstants.AIGUILLE_DU_PLAN_ALT;
+import static ch.epfl.sdp.peakar.TestingConstants.AIGUILLE_DU_PLAN_LAT;
+import static ch.epfl.sdp.peakar.TestingConstants.AIGUILLE_DU_PLAN_LONG;
+import static ch.epfl.sdp.peakar.TestingConstants.AIGUILLE_DU_PLAN_NAME;
+import static ch.epfl.sdp.peakar.TestingConstants.CACHE_FILE_NAME_TEST;
+import static ch.epfl.sdp.peakar.TestingConstants.DENT_DU_GEANT_ALT;
+import static ch.epfl.sdp.peakar.TestingConstants.DENT_DU_GEANT_LAT;
+import static ch.epfl.sdp.peakar.TestingConstants.DENT_DU_GEANT_LONG;
+import static ch.epfl.sdp.peakar.TestingConstants.DENT_DU_GEANT_NAME;
+import static ch.epfl.sdp.peakar.TestingConstants.MOCK_LOCATION_ALT_CHAMONIX;
+import static ch.epfl.sdp.peakar.TestingConstants.MOCK_LOCATION_LAT_CHAMONIX;
+import static ch.epfl.sdp.peakar.TestingConstants.MOCK_LOCATION_LON_CHAMONIX;
+import static ch.epfl.sdp.peakar.TestingConstants.MONT_BLANC_ALT;
+import static ch.epfl.sdp.peakar.TestingConstants.MONT_BLANC_LAT;
+import static ch.epfl.sdp.peakar.TestingConstants.MONT_BLANC_LONG;
+import static ch.epfl.sdp.peakar.TestingConstants.MONT_BLANC_NAME;
+import static ch.epfl.sdp.peakar.TestingConstants.POINTE_DE_LAPAZ_ALT;
+import static ch.epfl.sdp.peakar.TestingConstants.POINTE_DE_LAPAZ_LAT;
+import static ch.epfl.sdp.peakar.TestingConstants.POINTE_DE_LAPAZ_LONG;
+import static ch.epfl.sdp.peakar.TestingConstants.POINTE_DE_LAPAZ_NAME;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -114,7 +132,15 @@ public class POICacheTest {
         outputFile.delete();
         poiCache.savePOIDataToCache(inputArrayList,boundingBox,context);
         ArrayList<POIPoint> result = poiCache.getCachedPOIPoints(context);
-        assertEquals(inputArrayList.size(), result.size());
+
+        //assertEquals(inputArrayList.size(), result.size(),);
+        StringBuilder sb = new StringBuilder();
+        for(POIPoint poi : result){
+            sb.append(poi.getName() +" ");
+        }
+        assertTrue(sb.toString(),inputArrayList.size() == result.size());
+
+
         assertTrue(inputArrayList.contains(result.get(0)));
         assertTrue(inputArrayList.contains(result.get(1)));
         assertTrue(inputArrayList.contains(result.get(2)));
