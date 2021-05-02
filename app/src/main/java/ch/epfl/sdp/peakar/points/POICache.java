@@ -123,8 +123,8 @@ public class POICache {
         if(cachedBoundingBox == null)
             retrievePOIDataFromCache(context);
         //Decrease the size of the bounding box by half
-        BoundingBox innerBox = cachedBoundingBox.increaseByScale(INNER_BOUNDING_BOX_SCALING_FACTOR);
-        return innerBox.contains(userPoint.getLatitude(), userPoint.getLongitude());
+        //BoundingBox innerBox = cachedBoundingBox.increaseByScale(INNER_BOUNDING_BOX_SCALING_FACTOR);
+        return cachedBoundingBox.contains(userPoint.getLatitude(), userPoint.getLongitude());
     }
 
     public boolean isCacheFilePresent(Context context){
