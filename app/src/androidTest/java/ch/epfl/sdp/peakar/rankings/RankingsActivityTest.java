@@ -163,7 +163,9 @@ public class RankingsActivityTest {
         Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
         FirebaseAuthService.getInstance().forceRetrieveData();
         Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
-
+        testRule.getScenario().recreate();
+        Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
+        
         DataInteraction interaction =  onData(instanceOf(RankingItem.class));
 
         // Check correct colors on current fake user
