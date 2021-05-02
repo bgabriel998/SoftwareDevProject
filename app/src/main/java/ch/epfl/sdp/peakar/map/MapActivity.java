@@ -5,8 +5,8 @@ import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import ch.epfl.sdp.peakar.user.account.FirebaseAccount;
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.user.auth.Authentication;
 
 public class MapActivity extends AppCompatActivity {
 
@@ -26,10 +26,8 @@ public class MapActivity extends AppCompatActivity {
         osmMap = new OSMMap(this, findViewById(R.id.map));
 
 
-        //Get user account
-        FirebaseAccount account = FirebaseAccount.getAccount();
         //Display markers on the map
-        osmMap.setMarkersForDiscoveredPeaks(account,account.isSignedIn());
+        osmMap.setMarkersForDiscoveredPeaks(Authentication.getInstance().getAuthAccount() != null);
 
         osmMap.displayUserLocation();
 

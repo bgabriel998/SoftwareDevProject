@@ -7,10 +7,13 @@ import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -25,7 +28,9 @@ import java.util.stream.IntStream;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.UITestHelper;
 import ch.epfl.sdp.peakar.database.Database;
-import ch.epfl.sdp.peakar.user.account.Account;
+import ch.epfl.sdp.peakar.user.AccountTest;
+import ch.epfl.sdp.peakar.user.auth.Authentication;
+import ch.epfl.sdp.peakar.user.auth.FirebaseAuthentication;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -33,6 +38,10 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sdp.peakar.user.AccountTest.BASIC_USERNAME;
+import static ch.epfl.sdp.peakar.user.AccountTest.SHORT_SLEEP_TIME;
+import static ch.epfl.sdp.peakar.user.AccountTest.registerAuthUser;
+import static ch.epfl.sdp.peakar.user.AccountTest.removeAuthUser;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
@@ -51,29 +60,48 @@ public class RankingsActivityTest {
         Collections.reverse(mockPoints);
         /* Make sure that mock users are not on the database before the tests*/
         for(int i=0; i < mockPoints.size(); i++) {
-            Database.refRoot.child("users").child("test" + mockPositions.get(i)).removeValue();
+            Database.refRoot.child(Database.CHILD_USERS).child(BASIC_USERNAME + mockPositions.get(i)).removeValue();
         }
-        Database.refRoot.child("users").child("null").removeValue();
-        Thread.sleep(1500);
+        
+        
 
         /* Make sure no user is signed in before a test */
-        FirebaseAuth.getInstance().signOut();
-        Account.getAccount().synchronizeUserProfile();
-        Thread.sleep(1500);
+        Authentication.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+
+        /* Create a new one */
+        registerAuthUser();
     }
 
-    @Rule
-    public ActivityScenarioRule<RankingsActivity> testRule = new ActivityScenarioRule<>(RankingsActivity.class);
+    /* Clean environment */
+    @AfterClass
+    public static void end() {
+        removeAuthUser();
+    }
+
+    /* Make sure that an account is signed in and as new before each test */
+    @Before
+    public void createTestUser() {
+        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Authentication.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+            registerAuthUser();
+        }
+        else {
+            FirebaseAuthentication.getInstance().forceRetrieveData();
+        }
+    }
 
     /* Make sure that mock users are not on the database after a test */
     @After
     public void removeTestUsers() throws InterruptedException {
         for(int i=0; i < mockPoints.size(); i++) {
-            Database.refRoot.child("users").child("test" + mockPositions.get(i)).removeValue();
+            Database.refRoot.child(Database.CHILD_USERS).child(BASIC_USERNAME + mockPositions.get(i)).removeValue();
         }
-        Database.refRoot.child("users").child("null").removeValue();
-        Thread.sleep(1500);
+        Database.refRoot.child(Database.CHILD_USERS).child(Authentication.getInstance().getID()).removeValue();
+        Thread.sleep(SHORT_SLEEP_TIME);
     }
+
+    @Rule
+    public ActivityScenarioRule<RankingsActivity> testRule = new ActivityScenarioRule<>(RankingsActivity.class);
 
     /* Test that the toolbar title is set as expected */
     @Test
@@ -88,7 +116,7 @@ public class RankingsActivityTest {
     public void TestToolbarBackButton(){
         onView(withId(R.id.toolbarBackButton)).perform(click());
         try {
-            Thread.sleep(1000);
+            Thread.sleep(SHORT_SLEEP_TIME);
             assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -101,10 +129,13 @@ public class RankingsActivityTest {
     public void TestContentOfListView() throws InterruptedException {
         // Add the mock user on the database
         for(int i=0; i < mockPoints.size(); i++) {
-            Database.setChild("users/test" + mockPositions.get(i), Arrays.asList("username", "score"), Arrays.asList(TESTING_USERNAME + mockPositions.get(i), mockPoints.get(i)));
+            Database.setChild(Database.CHILD_USERS + BASIC_USERNAME + mockPositions.get(i), Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_SCORE), Arrays.asList(TESTING_USERNAME + mockPositions.get(i), mockPoints.get(i)));
         }
-        Database.setChild("users/null", Arrays.asList("username", "score"), Arrays.asList(TESTING_USERNAME, MAXIMUM_POINTS));
-        Thread.sleep(1500);
+        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_SCORE), Arrays.asList(TESTING_USERNAME, MAXIMUM_POINTS));
+
+        Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
+        FirebaseAuthentication.getInstance().forceRetrieveData();
+        Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
 
         // Check correct data
         DataInteraction interaction =  onData(instanceOf(RankingItem.class));
@@ -125,10 +156,13 @@ public class RankingsActivityTest {
     public void TestColorOfListView() throws InterruptedException {
         // Add the mock user on the database
         for(int i=0; i < mockPoints.size(); i++) {
-            Database.setChild("users/test" + mockPositions.get(i), Arrays.asList("username", "score"), Arrays.asList(TESTING_USERNAME + mockPositions.get(i), mockPoints.get(i)));
+            Database.setChild(Database.CHILD_USERS + BASIC_USERNAME + mockPositions.get(i), Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_SCORE), Arrays.asList(TESTING_USERNAME + mockPositions.get(i), mockPoints.get(i)));
         }
-        Database.setChild("users/null", Arrays.asList("username", "score"), Arrays.asList(TESTING_USERNAME, MAXIMUM_POINTS));
-        Thread.sleep(1500);
+        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_SCORE), Arrays.asList(TESTING_USERNAME, MAXIMUM_POINTS));
+
+        Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
+        FirebaseAuthentication.getInstance().forceRetrieveData();
+        Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
 
         DataInteraction interaction =  onData(instanceOf(RankingItem.class));
 

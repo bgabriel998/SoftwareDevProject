@@ -18,6 +18,7 @@ import ch.epfl.sdp.peakar.collection.CollectionActivity;
 import ch.epfl.sdp.peakar.gallery.GalleryActivity;
 import ch.epfl.sdp.peakar.map.MapActivity;
 import ch.epfl.sdp.peakar.rankings.RankingsActivity;
+import ch.epfl.sdp.peakar.user.auth.Authentication;
 import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
 
 public class MainMenuActivity extends AppCompatActivity {

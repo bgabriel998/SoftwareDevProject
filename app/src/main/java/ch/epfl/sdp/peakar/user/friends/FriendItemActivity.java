@@ -8,9 +8,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import ch.epfl.sdp.peakar.user.account.Account;
-import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.user.auth.Authentication;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
 import java.util.Locale;
@@ -54,11 +53,10 @@ public class FriendItemActivity extends AppCompatActivity {
         Log.d("FRIEND REMOVED", "removeFriendButton: " + INTENT_EXTRA_VALUE);
 
         // Remove the friend
-        Account account = Account.getAccount();
-        Database.refRoot.child(Database.CHILD_USERS + account.getId() + Database.CHILD_FRIENDS).child(UId).removeValue();
-        Intent intent = new Intent(this, FriendsActivity.class);
+        Authentication.getInstance().getAuthAccount().removeFriend(UId);
 
         // Put extra to the intent so a message can be shown in friends activity
+        Intent intent = new Intent(this, FriendsActivity.class);
         intent.putExtra(INTENT_EXTRA_NAME, INTENT_EXTRA_VALUE);
 
         // Get back to the friends activity

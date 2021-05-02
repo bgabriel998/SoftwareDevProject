@@ -1,6 +1,11 @@
 package ch.epfl.sdp.peakar.user.friends;
 
+import androidx.annotation.NonNull;
+
 import ch.epfl.sdp.peakar.database.Database;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
@@ -18,14 +23,28 @@ public class FriendItem {
     /**
      * Constructor
      * @param uid of user
-     * @param username of user.
-     * @param points user has.
      */
-    public FriendItem(String uid, String username, int points) {
+    public FriendItem(String uid) {
         this.uid = uid;
-        this.username = username;
-        this.points = points;
-        this.dbRef = Database.refRoot.child(Database.CHILD_USERS + uid);
+        dbRef = Database.refRoot.child(Database.CHILD_USERS).child(uid);
+
+        // Define the listener
+        itemListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Integer newPoints = snapshot.child(Database.CHILD_SCORE).getValue(Integer.class);
+                String newUsername = snapshot.child(Database.CHILD_USERNAME).getValue(String.class);
+                if(newPoints != null) setPoints(newPoints);
+                if(newUsername != null) setUsername(newUsername);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        };
+
+        // Add the listener
+        dbRef.addValueEventListener(itemListener);
     }
 
     /**
@@ -74,10 +93,17 @@ public class FriendItem {
     }
 
     /**
-     * Check if a friend item has a specific username
-     * @return true if the user has the target username, false otherwise
+     * Remove the listener of a friend item
      */
-    public boolean hasUsername(String username) {
-        return this.username.equals(username);
+    public void removeListener() {
+        dbRef.removeEventListener(itemListener);
+    }
+
+    /**
+     * Check if a friend item has a specific ID
+     * @return true if the user has the target ID, false otherwise
+     */
+    public boolean hasID(String ID) {
+        return this.uid.equals(ID);
     }
 }

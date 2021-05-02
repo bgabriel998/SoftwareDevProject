@@ -12,11 +12,13 @@ import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.POIPoint;
-import ch.epfl.sdp.peakar.user.account.FirebaseAccount;
+import ch.epfl.sdp.peakar.user.auth.Authentication;
+import ch.epfl.sdp.peakar.user.auth.FirebaseAuthentication;
 import ch.epfl.sdp.peakar.user.score.UserScore;
 
 import org.junit.After;
@@ -37,6 +39,11 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sdp.peakar.user.AccountTest.BASIC_USERNAME;
+import static ch.epfl.sdp.peakar.user.AccountTest.LONG_SLEEP_TIME;
+import static ch.epfl.sdp.peakar.user.AccountTest.SHORT_SLEEP_TIME;
+import static ch.epfl.sdp.peakar.user.AccountTest.registerAuthUser;
+import static ch.epfl.sdp.peakar.user.AccountTest.removeAuthUser;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertSame;
@@ -55,8 +62,12 @@ public class CollectionActivityTest {
 
     @BeforeClass
     public static void setupUserAccount() throws InterruptedException {
-        Database.refRoot.child(Database.CHILD_USERS).child("null").removeValue();
-        Thread.sleep(3000);
+        /* Make sure no user is signed in before a test */
+        Authentication.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+
+        /* Create a new one */
+        registerAuthUser();
+
         //Write peaks to the database
         GeoPoint geoPoint_1 = new GeoPoint(45.8325,6.8641666666667,4810);
         POIPoint point_1 = new POIPoint(geoPoint_1);
@@ -81,19 +92,19 @@ public class CollectionActivityTest {
         inputArrayList.add(point_4);
 
         //Put every POI in database + in the cache
-        FirebaseAccount account = FirebaseAccount.getAccount();
-        UserScore userScore = new UserScore(ApplicationProvider.getApplicationContext(),account);
+        UserScore userScore = new UserScore(ApplicationProvider.getApplicationContext());
         userScore.updateUserScoreAndDiscoveredPeaks(inputArrayList);
-        Thread.sleep(3000);
+        Thread.sleep(LONG_SLEEP_TIME);
+
+        FirebaseAuthentication.getInstance().forceRetrieveData();
     }
 
+    /* Clean environment */
     @AfterClass
-    public static void deleteUserAccount(){
-        Database.refRoot.child(Database.CHILD_USERS).child("null").removeValue();
+    public static void end() {
+        Database.refRoot.child(Database.CHILD_USERS).child(Authentication.getInstance().getID()).removeValue();
+        removeAuthUser();
     }
-
-
-
 
     /* Create Intent */
     @Before
@@ -135,7 +146,7 @@ public class CollectionActivityTest {
 
         DataInteraction interaction =  onData(instanceOf(CollectedItem.class));
 
-        Thread.sleep(3000);
+        Thread.sleep(LONG_SLEEP_TIME * 2);
         for (int i = 0; i < 4; i++){
             DataInteraction listItem = interaction.atPosition(i);
             DataInteraction dataInteraction = listItem.onChildView(withId(R.id.collected_name));
@@ -171,7 +182,7 @@ public class CollectionActivityTest {
         DataInteraction listItem = onData(instanceOf(CollectedItem.class)).atPosition(2);
         listItem.perform(ViewActions.click());
 
-        Thread.sleep(3000);
+        Thread.sleep(SHORT_SLEEP_TIME);
 
         // Catch intent, and check information
         intended(allOf(IntentMatchers.hasComponent(MountainActivity.class.getName()),

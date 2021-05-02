@@ -9,13 +9,17 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
-import ch.epfl.sdp.peakar.user.account.Account;
+import ch.epfl.sdp.peakar.user.auth.Account;
+import ch.epfl.sdp.peakar.user.auth.Authentication;
+import ch.epfl.sdp.peakar.user.auth.FirebaseAuthentication;
 import ch.epfl.sdp.peakar.user.friends.AddFriendActivity;
 import ch.epfl.sdp.peakar.user.friends.FriendsActivity;
 import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.junit.After;
@@ -28,7 +32,6 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Random;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -39,48 +42,54 @@ import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibilit
 import static androidx.test.espresso.matcher.ViewMatchers.withHint;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sdp.peakar.user.AccountTest.BASIC_USERNAME;
+import static ch.epfl.sdp.peakar.user.AccountTest.SHORT_SLEEP_TIME;
+import static ch.epfl.sdp.peakar.user.AccountTest.registerAuthUser;
+import static ch.epfl.sdp.peakar.user.AccountTest.removeAuthUser;
 import static org.junit.Assert.*;
 
 public class ProfileActivityTest {
-    private static final Integer USER_OFFSET = new Random().nextInt();
-    private static final Account account = Account.getAccount();
-    private static final String user1 = AccountTest.BASIC_USERNAME + USER_OFFSET;
-    private static final String user2 = AccountTest.BASIC_USERNAME + USER_OFFSET + 1;
-    private static String username;
-
+    private static String user1;
+    private static String user2;
 
     /* Set up the environment */
     @BeforeClass
-    public static void init() throws InterruptedException {
-        /* Make sure no user is signed in before a test */
-        FirebaseAuth.getInstance().signOut();
-        Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
+    public static void init() {
+        /* Make sure no user is signed in before tests */
+        Authentication.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
-        AccountTest.registerTestUser();
-        username = (account.getId()).substring(0, Account.MAX_LENGHT);
-    }
 
-    /* Make sure that an account is signed in before each test */
-    @Before
-    public void createTestUser() {
-        if(!Account.getAccount().isSignedIn()) {
-            AccountTest.registerTestUser();
-            username = (account.getId()).substring(0, Account.MAX_LENGHT);
-        }
+        /* Create a new one */
+        registerAuthUser();
+
+        user1 = (BASIC_USERNAME + Authentication.getInstance().getID()).substring(0, Account.NAME_MAX_LENGTH - 1);
+        user2 = (BASIC_USERNAME + Authentication.getInstance().getID()).substring(0, Account.NAME_MAX_LENGTH - 2);
     }
 
     /* Clean environment */
     @AfterClass
     public static void end() {
-        AccountTest.removeTestUser();
+        removeAuthUser();
+    }
+
+    /* Make sure that an account is signed in and as new before each test */
+    @Before
+    public void createTestUser() {
+        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Authentication.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+            registerAuthUser();
+        }
+        else {
+            FirebaseAuthentication.getInstance().forceRetrieveData();
+        }
     }
 
     /* Make sure that mock users are not on the database after a test */
     @After
     public void removeTestUsers() throws InterruptedException {
-        Database.refRoot.child(Database.CHILD_USERS).child(account.getId()).removeValue();
+        Database.refRoot.child(Database.CHILD_USERS).child(Authentication.getInstance().getID()).removeValue();
         Database.refRoot.child(Database.CHILD_USERS).child(user2).removeValue();
-        Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
+        Thread.sleep(SHORT_SLEEP_TIME);
     }
 
     @Rule
@@ -112,7 +121,7 @@ public class ProfileActivityTest {
     /* Test that if no account is signed the sign in button is visible */
     @Test
     public void withNoAccountSignedTest() throws InterruptedException {
-        AccountTest.removeTestUser();
+        AccountTest.removeAuthUser();
         testRule.getScenario().recreate();
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
 
@@ -144,10 +153,10 @@ public class ProfileActivityTest {
     /* Test that if the username is already present the correct message is displayed */
     @Test
     public void usernameAlreadyPresentTest() throws InterruptedException {
-        Database.setChild(Database.CHILD_USERS + user2, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(username));
+        Database.setChild(Database.CHILD_USERS + user2, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user2));
 
         testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
-        onView(withId(R.id.editTextUsername)).perform(typeText(username));
+        onView(withId(R.id.editTextUsername)).perform(typeText(user2));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitUsernameButton)).perform(click());
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
@@ -161,7 +170,14 @@ public class ProfileActivityTest {
     @Test
     public void registerUserTest() throws InterruptedException {
         testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
-        onView(withId(R.id.editTextUsername)).perform(typeText(username));
+        onView(withId(R.id.editTextUsername)).perform(typeText(user1));
+        Espresso.closeSoftKeyboard();
+        onView(withId(R.id.submitUsernameButton)).perform(click());
+        Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
+        onView(withText(R.string.registered_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
+        testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
+        onView(withId(R.id.editTextUsername)).perform(typeText(user2));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitUsernameButton)).perform(click());
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
@@ -178,9 +194,13 @@ public class ProfileActivityTest {
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitUsernameButton)).perform(click());
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
+        testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
+        onView(withId(R.id.editTextUsername)).perform(typeText("null"));
+        Espresso.closeSoftKeyboard();
+        onView(withId(R.id.submitUsernameButton)).perform(click());
+        Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
         onView(withText(R.string.current_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
-        Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
     }
 
     /* Test that if the user chooses an invalid username the correct message is displayed */
@@ -194,14 +214,12 @@ public class ProfileActivityTest {
         onView(withId(R.id.submitUsernameButton)).perform(click());
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
         onView(withText(R.string.invalid_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
-        Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
     }
 
     /* Test that UI is displayed correctly when change username button is pressed. */
     @Test
     public void changeUsernameButtonTest() throws InterruptedException {
-        Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
+        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
         testRule.getScenario().recreate();
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
@@ -214,7 +232,7 @@ public class ProfileActivityTest {
     /* Test that the message inviting the user to write the username in the correct box is correct */
     @Test
     public void addFriendTextTest() throws InterruptedException {
-        Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
+        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
         testRule.getScenario().recreate();
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
@@ -227,14 +245,14 @@ public class ProfileActivityTest {
     /* Test that if the friend is already present the correct message is displayed */
     @Test
     public void friendAlreadyPresentTest() throws InterruptedException {
-        Database.setChild(Database.CHILD_USERS + account.getId(), Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_FRIENDS + user2), Arrays.asList(user1, ""));
-        Database.setChild(Database.CHILD_USERS + user2, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(username));
+        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_FRIENDS + user2), Arrays.asList(user1, ""));
+        Database.setChild(Database.CHILD_USERS + user2, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user2));
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
         testRule.getScenario().recreate();
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
 
         onView(withId(R.id.addFriendButton)).perform(click());
-        onView(withId(R.id.editTextFriend)).perform(typeText(username));
+        onView(withId(R.id.editTextFriend)).perform(typeText(user2));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
@@ -244,17 +262,14 @@ public class ProfileActivityTest {
     /* Test that if the friend has been added the correct message is displayed */
     @Test
     public void addFriendTest() throws InterruptedException {
-        final String added_message = username + " " + ApplicationProvider.getApplicationContext().getResources().getString(R.string.friend_added);
-
-        Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
-        Database.setChild(Database.CHILD_USERS + user2, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(username));
+        final String added_message = user2 + " " + ApplicationProvider.getApplicationContext().getResources().getString(R.string.friend_added);
+        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
+        Database.setChild(Database.CHILD_USERS + user2, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user2));
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
         testRule.getScenario().recreate();
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
-
-
         onView(withId(R.id.addFriendButton)).perform(click());
-        onView(withId(R.id.editTextFriend)).perform(typeText(username));
+        onView(withId(R.id.editTextFriend)).perform(typeText(user2));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
@@ -264,13 +279,13 @@ public class ProfileActivityTest {
     /* Test that if the friend username is the current username the correct message is displayed */
     @Test
     public void addFriendCurrentUsernameTest() throws InterruptedException {
-        Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(username));
+        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
+        FirebaseAuthentication.getInstance().forceRetrieveData();
         testRule.getScenario().recreate();
-        Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
 
         onView(withId(R.id.addFriendButton)).perform(click());
-        onView(withId(R.id.editTextFriend)).perform(typeText(username));
+        onView(withId(R.id.editTextFriend)).perform(typeText(user1));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
@@ -280,13 +295,13 @@ public class ProfileActivityTest {
     /* Test that if the friend username is not present the correct message is displayed */
     @Test
     public void addNoExistingUser() throws InterruptedException {
-        Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
+        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
         testRule.getScenario().recreate();
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
 
         onView(withId(R.id.addFriendButton)).perform(click());
-        onView(withId(R.id.editTextFriend)).perform(typeText(username));
+        onView(withId(R.id.editTextFriend)).perform(typeText(user2));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
@@ -298,7 +313,7 @@ public class ProfileActivityTest {
     public void friendIsNotValidTest() throws InterruptedException {
         final String username = "";
 
-        Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
+        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
         testRule.getScenario().recreate();
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
@@ -314,12 +329,12 @@ public class ProfileActivityTest {
     /* Test that UI is displayed correctly when sign out button is pressed. */
     @Test
     public void signOutButtonTest() throws InterruptedException {
-        Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
+        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
         testRule.getScenario().recreate();
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
 
-        AccountTest.removeTestUser();
+        AccountTest.removeAuthUser();
         onView(withId(R.id.signOutButton)).perform(click());
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
         Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
@@ -334,7 +349,7 @@ public class ProfileActivityTest {
     /* Test that FriendsActivity is started on button click */
     @Test
     public void friendsButtonTest() throws InterruptedException {
-        Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
+        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
         testRule.getScenario().recreate();
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
@@ -348,7 +363,7 @@ public class ProfileActivityTest {
     /* Test that AddFriendActivity is started on button click */
     @Test
     public void addFriendButtonTest() throws InterruptedException {
-        Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
+        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
         testRule.getScenario().recreate();
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);

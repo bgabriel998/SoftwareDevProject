@@ -7,8 +7,10 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.user.auth.Account;
+import ch.epfl.sdp.peakar.user.auth.Authentication;
+import ch.epfl.sdp.peakar.user.auth.FirebaseAccount;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
-import ch.epfl.sdp.peakar.user.account.FirebaseAccount;
 import ch.epfl.sdp.peakar.user.score.ScoringConstants;
 
 import java.util.ArrayList;
@@ -49,7 +51,7 @@ public class CollectionActivity extends AppCompatActivity {
      * @return array list of all collected items.
      */
     private ArrayList<CollectedItem> getCollection(){
-        FirebaseAccount account = FirebaseAccount.getAccount();
+        Account account = Authentication.getInstance().getAuthAccount();
         ArrayList<CollectedItem> collectedItems = ((ArrayList<CollectedItem>)
                 (account.getDiscoveredPeaks().stream().map(poi-> new CollectedItem(poi.getName(),
                 (int)(poi.getAltitude()* ScoringConstants.PEAK_FACTOR),

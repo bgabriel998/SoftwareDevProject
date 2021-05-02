@@ -3,15 +3,19 @@ package ch.epfl.sdp.peakar.user;
 import android.content.Context;
 
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.POIPoint;
-import ch.epfl.sdp.peakar.user.account.FirebaseAccount;
+import ch.epfl.sdp.peakar.user.auth.Authentication;
 import ch.epfl.sdp.peakar.user.score.ScoringConstants;
 import ch.epfl.sdp.peakar.user.score.UserScore;
 
+import static ch.epfl.sdp.peakar.user.AccountTest.registerAuthUser;
+import static ch.epfl.sdp.peakar.user.AccountTest.removeAuthUser;
 import static org.junit.Assert.assertEquals;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,20 +23,28 @@ import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertEquals;
-
 public class UserScoreTest {
 
     private static final int USER_ID = 99;
 
     private static UserScore userScore;
 
+    /* Set up the environment */
     @BeforeClass
-    public static void setup(){
-        Context context = ApplicationProvider.getApplicationContext();
-        Assert.assertNotNull(context);
-        FirebaseAccount account = FirebaseAccount.getAccount();
-        userScore = new UserScore(context,account);
+    public static void init() {
+        /* Make sure no user is signed in before a test */
+        Authentication.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+
+        /* Create a new one */
+        registerAuthUser();
+
+        userScore = new UserScore(InstrumentationRegistry.getInstrumentation().getTargetContext());
+    }
+
+    /* Clean environment */
+    @AfterClass
+    public static void end() {
+        removeAuthUser();
     }
 
     /**
@@ -74,9 +86,7 @@ public class UserScoreTest {
                                 ScoringConstants.BONUS_1st_4000_M_PEAK+
                                 ScoringConstants.BONUS_COUNTRY_TALLEST_PEAK;
 
-        assertEquals(expectedUserScore,FirebaseAccount.getAccount().getUserScore());
-        //remove child from database
-        Database.refRoot.child(Database.CHILD_USERS).child("null").removeValue();
+        assertEquals(expectedUserScore,Authentication.getInstance().getAuthAccount().getScore());
     }
 
 

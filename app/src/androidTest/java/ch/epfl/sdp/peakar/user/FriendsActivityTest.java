@@ -11,10 +11,13 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
-import ch.epfl.sdp.peakar.user.account.Account;
+import ch.epfl.sdp.peakar.user.auth.Account;
+import ch.epfl.sdp.peakar.user.auth.Authentication;
+import ch.epfl.sdp.peakar.user.auth.FirebaseAuthentication;
 import ch.epfl.sdp.peakar.user.friends.FriendItem;
 import ch.epfl.sdp.peakar.user.friends.FriendItemActivity;
 import ch.epfl.sdp.peakar.user.friends.FriendsActivity;
@@ -39,49 +42,59 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sdp.peakar.user.AccountTest.BASIC_USERNAME;
+import static ch.epfl.sdp.peakar.user.AccountTest.SHORT_SLEEP_TIME;
+import static ch.epfl.sdp.peakar.user.AccountTest.registerAuthUser;
+import static ch.epfl.sdp.peakar.user.AccountTest.removeAuthUser;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
 public class FriendsActivityTest {
-    private static final Integer USER_OFFSET = new Random().nextInt();
-    private static final Account account = Account.getAccount();
-    private static final String username = ("test" + USER_OFFSET).substring(0, Math.min(("test" + USER_OFFSET).length(), Account.MAX_LENGHT - 2));
+    private static String username;
     private final static int FRIENDS_SIZE = 20;
 
     /* Set up the environment */
     @BeforeClass
-    public static void init() throws InterruptedException {
-        /* Make sure no user is signed in before a test */
-        FirebaseAuth.getInstance().signOut();
-        Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
+    public static void init() {
+        /* Make sure no user is signed in before tests */
+        Authentication.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
-        AccountTest.registerTestUser();
-    }
 
-    /* Make sure that an account is signed in before each test */
-    @Before
-    public void createTestUser() {
-        if(!Account.getAccount().isSignedIn()) {
-            AccountTest.registerTestUser();
-        }
+        /* Create a new one */
+        registerAuthUser();
+
+        username = (BASIC_USERNAME + Authentication.getInstance().getID()).substring(0, Account.NAME_MAX_LENGTH - 4);
     }
 
     /* Clean environment */
     @AfterClass
     public static void end() {
-        AccountTest.removeTestUser();
+        removeAuthUser();
+    }
+
+    /* Make sure that an account is signed in and as new before each test */
+    @Before
+    public void createTestUser() {
+        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Authentication.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+            registerAuthUser();
+        }
+        else {
+            FirebaseAuthentication.getInstance().forceRetrieveData();
+        }
     }
 
     /* Make sure that mock users are not on the database after a test */
     @After
     public void removeTestUsers() throws InterruptedException {
-        Database.refRoot.child(Database.CHILD_USERS).child(account.getId()).removeValue();
+        Database.refRoot.child(Database.CHILD_USERS).child(Authentication.getInstance().getID()).removeValue();
         for(int i=0; i < FRIENDS_SIZE; i++) {
             Database.refRoot.child(Database.CHILD_USERS).child(username + ((i < 10) ? "0" + i : i)).removeValue();
         }
-        Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
+        Thread.sleep(SHORT_SLEEP_TIME);
     }
 
     @Rule
@@ -116,17 +129,24 @@ public class FriendsActivityTest {
         for(int i=0; i < FRIENDS_SIZE; i++) {
             Database.setChild(Database.CHILD_USERS + username + ((i < 10) ? "0" + i : i), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(username + i));
         }
-        Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(username));
+        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(username));
         Thread.sleep(AccountTest.LONG_SLEEP_TIME);
 
         // Add mock users to the friends
         for(int i=0; i < FRIENDS_SIZE; i++) {
-            Database.setChild(Database.CHILD_USERS + account.getId() + Database.CHILD_FRIENDS, Collections.singletonList(username + ((i < 10) ? "0" + i : i)), Collections.singletonList(""));
+            Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID() + Database.CHILD_FRIENDS, Collections.singletonList(username + ((i < 10) ? "0" + i : i)), Collections.singletonList(""));
         }
         Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
 
+        FirebaseAuthentication.getInstance().forceRetrieveData();
+        Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
+
+        assertNotNull(Authentication.getInstance().getAuthAccount().getFriends());
+        assertSame(20, Authentication.getInstance().getAuthAccount().getFriends().size());
+
         testRule.getScenario().recreate();
         Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
+
         DataInteraction interaction =  onData(instanceOf(FriendItem.class));
 
         for (int i = 0; i < FRIENDS_SIZE; i++){
@@ -158,10 +178,13 @@ public class FriendsActivityTest {
         String FRIEND_USER = username + "00";
 
         Database.setChild(Database.CHILD_USERS + FRIEND_USER, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(FRIEND_USER));
-        Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(username));
+        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(username));
 
         // Add mock user to the friends
-        Database.setChild(Database.CHILD_USERS + account.getId() + Database.CHILD_FRIENDS, Collections.singletonList(FRIEND_USER), Collections.singletonList(""));
+        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID() + Database.CHILD_FRIENDS, Collections.singletonList(FRIEND_USER), Collections.singletonList(""));
+        Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
+
+        FirebaseAuthentication.getInstance().forceRetrieveData();
         Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
 
         testRule.getScenario().recreate();
@@ -169,9 +192,7 @@ public class FriendsActivityTest {
 
         // Item at pos 0 looks like this
         FriendItem correctItem = new FriendItem(
-                FRIEND_USER,
-                FRIEND_USER,
-                0);
+                FRIEND_USER);
 
         Intents.init();
 

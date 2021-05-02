@@ -1,25 +1,18 @@
 package ch.epfl.sdp.peakar.user.friends;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
-import ch.epfl.sdp.peakar.user.account.Account;
-import ch.epfl.sdp.peakar.database.Database;
-import ch.epfl.sdp.peakar.user.account.FirebaseAccount;
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.user.auth.AddFriendOutcome;
+import ch.epfl.sdp.peakar.user.auth.Authentication;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
-import java.util.Collections;
+import com.google.android.material.snackbar.Snackbar;
 
 public class AddFriendActivity extends AppCompatActivity {
 
@@ -31,7 +24,7 @@ public class AddFriendActivity extends AppCompatActivity {
     // VIEW REFERENCES
     private View editTextFriend;
 
-    private Account account;
+    Authentication authService = Authentication.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +41,6 @@ public class AddFriendActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-        // Get the account reference
-        account = FirebaseAccount.getAccount();
     }
 
     /**
@@ -58,40 +48,25 @@ public class AddFriendActivity extends AppCompatActivity {
      * @param view
      */
     public void submitFriendButton(View view) {
-        String username = ((EditText)editTextFriend).getText().toString();
-        String currentUsername = account.getUsername();
-        Log.d("FRIENDS SIZE", "onSubmit: " + account.getFriends().size());
+        String friend = ((EditText)editTextFriend).getText().toString();
 
-        boolean found = false;
-        for(FriendItem friend: account.getFriends()) {
-            if(friend.hasUsername(username)) found = true;
-        }
-
-        // First, check if the username is valid, it's not the current user or it's already in the current user's friends
-        if(!Account.isValid(username) || username.equals(currentUsername) || found) {
-            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), !Account.isValid(username) ? R.string.invalid_username : ( !found ? R.string.add_current_username : R.string.friend_already_added), Snackbar.LENGTH_LONG);
-            snackbar.show();
-
-            // Clean the edit text field
-            ((EditText)editTextFriend).getText().clear();
-
-            return;
-        }
-
-        // Then, check if the user is registered and if so add the friend
-        checkUserExistsAndAdd(username);
-    }
-
-    /* Check that the user exists on the DB and, if so, add it to the friends of the current user  */
-    private void checkUserExistsAndAdd(String username) {
-        Database.refRoot.child(Database.CHILD_USERS).orderByChild(Database.CHILD_USERNAME).equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
+        // Start a new thread that will handle the process
+        Thread addThread = new Thread(){
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for (DataSnapshot user: snapshot.getChildren()) {
-                        String friendUid = user.getKey();
-                        String INTENT_EXTRA_VALUE = username + " " + getResources().getString(R.string.friend_added);
-                        Database.setChild(Database.CHILD_USERS + account.getId() + Database.CHILD_FRIENDS, Collections.singletonList(friendUid), Collections.singletonList(""));
+            public void run() {
+                // Add the friend and wait for the task to end
+                AddFriendOutcome result = authService.getAuthAccount().addFriend(friend);
+
+                // Update the view on the UI thread
+                runOnUiThread(() -> {
+
+                    // Clear the text
+                    ((EditText)editTextFriend).getText().clear();
+
+                    // If the friend has been added, get back to profile activity
+                    if(result == AddFriendOutcome.ADDED) {
+                        // Prepare the intent extra value
+                        String INTENT_EXTRA_VALUE = friend + " " + getResources().getString(result.getMessage());
 
                         // Get the intent that started the activity
                         Intent intent = getIntent();
@@ -99,21 +74,19 @@ public class AddFriendActivity extends AppCompatActivity {
                         // Put extra to the intent so a message can be shown in profile activity
                         intent.putExtra(INTENT_EXTRA_NAME, INTENT_EXTRA_VALUE);
                         setResult(RESULT_OK, intent);
+                        ((EditText)editTextFriend).getText().clear();
 
                         // Destroy this activity
                         finish();
                     }
-                }
-                else {
-                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.friend_not_present_db, Snackbar.LENGTH_LONG);
-                    snackbar.show();
-                    ((EditText)editTextFriend).getText().clear();
-                }
+                    else {
+                        // Display the message
+                        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), result.getMessage(), Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                    }
+                });
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
+        };
+        addThread.start();
     }
 }
