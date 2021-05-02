@@ -58,11 +58,11 @@ public class RankingsActivityTest {
     @BeforeClass
     public static void init() throws InterruptedException {
         Collections.reverse(mockPoints);
-        /* Make sure that mock users are not on the database before the tests*/
+        // Add the mock user on the database
         for(int i=0; i < mockPoints.size(); i++) {
-            Database.refRoot.child(Database.CHILD_USERS).child(BASIC_USERNAME + mockPositions.get(i)).removeValue();
+            Database.setChild(Database.CHILD_USERS + BASIC_USERNAME + mockPositions.get(i), Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_SCORE), Arrays.asList(TESTING_USERNAME + mockPositions.get(i), mockPoints.get(i)));
         }
-        
+
         
 
         /* Make sure no user is signed in before a test */
@@ -70,34 +70,21 @@ public class RankingsActivityTest {
 
         /* Create a new one */
         registerAuthUser();
+
+        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_SCORE), Arrays.asList(TESTING_USERNAME, MAXIMUM_POINTS));
+        Thread.sleep(SHORT_SLEEP_TIME);
+        FirebaseAuthService.getInstance().forceRetrieveData();
     }
 
     /* Clean environment */
     @AfterClass
-    public static void end() {
-        removeAuthUser();
-    }
-
-    /* Make sure that an account is signed in and as new before each test */
-    @Before
-    public void createTestUser() {
-        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-            AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
-            registerAuthUser();
-        }
-        else {
-            FirebaseAuthService.getInstance().forceRetrieveData();
-        }
-    }
-
-    /* Make sure that mock users are not on the database after a test */
-    @After
-    public void removeTestUsers() throws InterruptedException {
+    public static void end() throws InterruptedException {
         for(int i=0; i < mockPoints.size(); i++) {
             Database.refRoot.child(Database.CHILD_USERS).child(BASIC_USERNAME + mockPositions.get(i)).removeValue();
         }
         Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
         Thread.sleep(SHORT_SLEEP_TIME);
+        removeAuthUser();
     }
 
     @Rule
@@ -127,16 +114,6 @@ public class RankingsActivityTest {
     /* Test that mock user sin list view are at correct places and contain correct data */
     @Test
     public void TestContentOfListView() throws InterruptedException {
-        // Add the mock user on the database
-        for(int i=0; i < mockPoints.size(); i++) {
-            Database.setChild(Database.CHILD_USERS + BASIC_USERNAME + mockPositions.get(i), Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_SCORE), Arrays.asList(TESTING_USERNAME + mockPositions.get(i), mockPoints.get(i)));
-        }
-        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_SCORE), Arrays.asList(TESTING_USERNAME, MAXIMUM_POINTS));
-
-        Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
-        FirebaseAuthService.getInstance().forceRetrieveData();
-        Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
-
         // Check correct data
         DataInteraction interaction =  onData(instanceOf(RankingItem.class));
         for(int i=0; i <= mockPoints.size(); i++) {
@@ -154,16 +131,6 @@ public class RankingsActivityTest {
     /* Test that all elements colors in list view are correct */
     @Test
     public void TestColorOfListView() throws InterruptedException {
-        // Add the mock user on the database
-        for(int i=0; i < mockPoints.size(); i++) {
-            Database.setChild(Database.CHILD_USERS + BASIC_USERNAME + mockPositions.get(i), Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_SCORE), Arrays.asList(TESTING_USERNAME + mockPositions.get(i), mockPoints.get(i)));
-        }
-        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_SCORE), Arrays.asList(TESTING_USERNAME, MAXIMUM_POINTS));
-
-        Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
-        FirebaseAuthService.getInstance().forceRetrieveData();
-        Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
-
         DataInteraction interaction =  onData(instanceOf(RankingItem.class));
 
         // Check correct colors on current fake user
@@ -178,7 +145,7 @@ public class RankingsActivityTest {
                 .check(matches(UITestHelper.withTextColor(R.color.LightGrey)));
 
         // Check correct colors on other fake users
-        for(int i=0; i < mockPoints.size(); i++) {
+        for(int i=0; i < mockPoints.size() - 1; i++) {
             listItem = interaction.atPosition(i+1);
 
             listItem.onChildView(withId(R.id.ranking_item_container))
