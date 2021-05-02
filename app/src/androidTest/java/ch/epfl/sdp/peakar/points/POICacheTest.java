@@ -109,6 +109,9 @@ public class POICacheTest {
     public void testPOICacheSaveRetrievePOIDataToCache(){
         POICache poiCache = POICache.getInstance();
         BoundingBox boundingBox = userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM);
+        File cacheDir = context.getCacheDir();
+        File outputFile = new File(cacheDir,CACHE_FILE_NAME_TEST);
+        outputFile.delete();
         poiCache.savePOIDataToCache(inputArrayList,boundingBox,context);
         ArrayList<POIPoint> result = poiCache.getCachedPOIPoints(context);
         assertEquals(inputArrayList.size(), result.size());
