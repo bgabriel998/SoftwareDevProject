@@ -24,6 +24,7 @@ public class FirebaseFriendItem extends FriendItem implements RemoteResource {
     public FirebaseFriendItem(String uid) {
         super(uid);
         retrieveData();
+        loadData();
     }
 
     /**
