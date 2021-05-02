@@ -92,10 +92,20 @@ public class ProfileActivityTest {
         Thread.sleep(SHORT_SLEEP_TIME);
     }
 
+    /* Create Intent */
+    @Before
+    public void createIntent(){
+        Intents.init();
+    }
+
+    /* Release Intent */
+    @After
+    public void releaseIntent(){
+        Intents.release();
+    }
+
     @Rule
     public ActivityScenarioRule<ProfileActivity> testRule = new ActivityScenarioRule<>(ProfileActivity.class);
-
-
 
     /* Test that the toolbar title is set as expected */
     @Test
