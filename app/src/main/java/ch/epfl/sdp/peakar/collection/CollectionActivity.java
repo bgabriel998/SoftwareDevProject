@@ -10,6 +10,7 @@ import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.user.auth.Account;
 import ch.epfl.sdp.peakar.user.auth.Authentication;
 import ch.epfl.sdp.peakar.user.auth.FirebaseAccount;
+import ch.epfl.sdp.peakar.user.auth.FirebaseAuthentication;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 import ch.epfl.sdp.peakar.user.score.ScoringConstants;
 
@@ -27,7 +28,8 @@ public class CollectionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_collection);
         ToolbarHandler.SetupToolbar(this, TOOLBAR_TITLE);
 
-        fillCollectionList();
+        // Load the list only if there is a logged user
+        if(FirebaseAuthentication.getInstance().getAuthAccount() != null) fillCollectionList();
     }
 
     /**
