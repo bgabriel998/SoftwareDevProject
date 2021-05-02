@@ -12,10 +12,10 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.user.auth.AuthOutcome;
-import ch.epfl.sdp.peakar.user.auth.AuthProvider;
-import ch.epfl.sdp.peakar.user.auth.Authentication;
-import ch.epfl.sdp.peakar.user.auth.UsernameChoiceOutcome;
+import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
+import ch.epfl.sdp.peakar.user.services.AuthProvider;
+import ch.epfl.sdp.peakar.user.services.Authentication;
+import ch.epfl.sdp.peakar.user.outcome.UsernameChoiceOutcome;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 import ch.epfl.sdp.peakar.user.friends.AddFriendActivity;
 import ch.epfl.sdp.peakar.user.friends.FriendsActivity;
@@ -25,7 +25,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.material.snackbar.Snackbar;
 
-import static ch.epfl.sdp.peakar.user.auth.AuthProvider.*;
+import static ch.epfl.sdp.peakar.user.services.AuthProvider.*;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -155,7 +155,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void run() {
                 // Start the authentication using the auth service
-                AuthOutcome authResult = authService.authWithProvider(provider, token);
+                RemoteOutcome authResult = authService.authWithProvider(provider, token);
 
                 // Update the view on the UI thread
                 runOnUiThread(() -> {
@@ -163,7 +163,7 @@ public class ProfileActivity extends AppCompatActivity {
                     loadingView.setVisibility(View.GONE);
 
                     // Handle the auth result
-                    if(authResult == AuthOutcome.NOT_REGISTERED) setUsernameChoiceUI();
+                    if(authResult == RemoteOutcome.NOT_FOUND) setUsernameChoiceUI();
                     else {
                         setMenuUI();
                         Log.d("ProfileActivity", "handleAuth: registered");

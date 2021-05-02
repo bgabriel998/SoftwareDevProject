@@ -1,4 +1,4 @@
-package ch.epfl.sdp.peakar.user.auth;
+package ch.epfl.sdp.peakar.user.services;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,11 +7,14 @@ import java.util.List;
 
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.points.POIPoint;
+import ch.epfl.sdp.peakar.user.outcome.AddFriendOutcome;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAccount;
+import ch.epfl.sdp.peakar.user.outcome.UsernameChoiceOutcome;
 import ch.epfl.sdp.peakar.user.friends.FriendItem;
 
 /**
  * This class describes the local behaviour of the user regardless of the Database provider.
- * For each database provider, extend this class adding when necessary the interaction with the Database.
+ * For each database provider, extend this class implementing RemoteResource interface to handle the interaction with the specific Database.
  */
 public abstract class Account {
 
@@ -22,19 +25,13 @@ public abstract class Account {
 
     /**
      * Get an account instance.
-     * This method must be called only from Auth classes.
+     * WARNING: you SHOULD NOT call this method. To get the account reference you should call .
      * @param authID
      */
     protected static Account getInstance(String authID) {
         // As the account firebase is the only one we use, return an instance of that.
         return FirebaseAccount.getInstance(authID);
     }
-
-    /**
-     * Update the local attributes with the data retrieved from the database.
-     */
-    protected abstract AuthOutcome retrieveData();
-
 
     /* GETTERS */
 

@@ -6,9 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import org.apache.http.auth.AUTH;
-
-import ch.epfl.sdp.peakar.user.auth.Authentication;
+import ch.epfl.sdp.peakar.user.services.Authentication;
 import ch.epfl.sdp.peakar.utils.ListAdapterInflater;
 import ch.epfl.sdp.peakar.R;
 

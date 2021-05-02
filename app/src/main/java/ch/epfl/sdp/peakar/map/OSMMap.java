@@ -15,9 +15,8 @@ import androidx.core.content.res.ResourcesCompat;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.points.Point;
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.user.auth.Account;
-import ch.epfl.sdp.peakar.user.auth.Authentication;
-import ch.epfl.sdp.peakar.user.auth.FirebaseAccount;
+import ch.epfl.sdp.peakar.user.services.Account;
+import ch.epfl.sdp.peakar.user.services.Authentication;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;

@@ -1,8 +1,4 @@
-package ch.epfl.sdp.peakar.user.auth;
-
-import android.content.Context;
-
-import androidx.annotation.NonNull;
+package ch.epfl.sdp.peakar.user.outcome;
 
 import ch.epfl.sdp.peakar.R;
 

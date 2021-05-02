@@ -8,8 +8,8 @@ import android.view.View;
 import android.widget.EditText;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.user.auth.AddFriendOutcome;
-import ch.epfl.sdp.peakar.user.auth.Authentication;
+import ch.epfl.sdp.peakar.user.outcome.AddFriendOutcome;
+import ch.epfl.sdp.peakar.user.services.Authentication;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
 import com.google.android.material.snackbar.Snackbar;

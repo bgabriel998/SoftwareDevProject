@@ -17,8 +17,8 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.POIPoint;
-import ch.epfl.sdp.peakar.user.auth.Authentication;
-import ch.epfl.sdp.peakar.user.auth.FirebaseAuthentication;
+import ch.epfl.sdp.peakar.user.services.Authentication;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthentication;
 import ch.epfl.sdp.peakar.user.score.UserScore;
 
 import org.junit.After;
@@ -39,7 +39,6 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.peakar.user.AccountTest.BASIC_USERNAME;
 import static ch.epfl.sdp.peakar.user.AccountTest.LONG_SLEEP_TIME;
 import static ch.epfl.sdp.peakar.user.AccountTest.SHORT_SLEEP_TIME;
 import static ch.epfl.sdp.peakar.user.AccountTest.registerAuthUser;

@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.user.auth.Authentication;
+import ch.epfl.sdp.peakar.user.services.Authentication;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
 import java.util.Locale;

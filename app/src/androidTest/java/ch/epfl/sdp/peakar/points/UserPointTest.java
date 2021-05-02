@@ -18,8 +18,8 @@ import java.util.Random;
 import java.util.concurrent.TimeoutException;
 
 import ch.epfl.sdp.peakar.database.Database;
-import ch.epfl.sdp.peakar.user.auth.Authentication;
-import ch.epfl.sdp.peakar.user.auth.FirebaseAuthentication;
+import ch.epfl.sdp.peakar.user.services.Authentication;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthentication;
 
 import static ch.epfl.sdp.peakar.user.AccountTest.SHORT_SLEEP_TIME;
 import static ch.epfl.sdp.peakar.user.AccountTest.registerAuthUser;

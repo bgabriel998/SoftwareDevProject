@@ -8,7 +8,7 @@ import android.util.Log;
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.database.DataBaseHelper;
 import ch.epfl.sdp.peakar.points.POIPoint;
-import ch.epfl.sdp.peakar.user.auth.FirebaseAuthentication;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthentication;
 
 import java.util.ArrayList;
 import java.util.HashMap;

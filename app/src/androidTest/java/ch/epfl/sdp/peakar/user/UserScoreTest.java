@@ -1,13 +1,9 @@
 package ch.epfl.sdp.peakar.user;
 
-import android.content.Context;
-
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.POIPoint;
-import ch.epfl.sdp.peakar.user.auth.Authentication;
+import ch.epfl.sdp.peakar.user.services.Authentication;
 import ch.epfl.sdp.peakar.user.score.ScoringConstants;
 import ch.epfl.sdp.peakar.user.score.UserScore;
 
@@ -16,7 +12,6 @@ import static ch.epfl.sdp.peakar.user.AccountTest.removeAuthUser;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.osmdroid.util.GeoPoint;

@@ -5,10 +5,10 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
-import ch.epfl.sdp.peakar.user.auth.Account;
-import ch.epfl.sdp.peakar.user.auth.AddFriendOutcome;
-import ch.epfl.sdp.peakar.user.auth.Authentication;
-import ch.epfl.sdp.peakar.user.auth.FirebaseAuthentication;
+import ch.epfl.sdp.peakar.user.services.Account;
+import ch.epfl.sdp.peakar.user.outcome.AddFriendOutcome;
+import ch.epfl.sdp.peakar.user.services.Authentication;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthentication;
 import ch.epfl.sdp.peakar.user.score.ScoringConstants;
 
 import com.google.android.gms.tasks.Task;

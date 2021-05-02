@@ -6,7 +6,7 @@ import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.user.auth.Authentication;
+import ch.epfl.sdp.peakar.user.services.Authentication;
 
 public class MapActivity extends AppCompatActivity {
 

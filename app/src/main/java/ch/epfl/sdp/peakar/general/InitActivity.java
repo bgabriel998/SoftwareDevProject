@@ -13,8 +13,7 @@ import androidx.core.content.ContextCompat;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
-import ch.epfl.sdp.peakar.user.auth.AuthOutcome;
-import ch.epfl.sdp.peakar.user.auth.Authentication;
+import ch.epfl.sdp.peakar.user.services.Authentication;
 
 import com.google.firebase.FirebaseApp;
 

@@ -1,4 +1,4 @@
-package ch.epfl.sdp.peakar.user.auth;
+package ch.epfl.sdp.peakar.user.services.providers.firebase;
 
 import android.util.Log;
 
@@ -17,13 +17,21 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import ch.epfl.sdp.peakar.database.Database;
+import ch.epfl.sdp.peakar.general.remote.RemoteResource;
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.points.POIPoint;
+import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
+import ch.epfl.sdp.peakar.user.services.Account;
 import ch.epfl.sdp.peakar.user.friends.FriendItem;
+import ch.epfl.sdp.peakar.user.outcome.AddFriendOutcome;
+import ch.epfl.sdp.peakar.user.outcome.UsernameChoiceOutcome;
 
-public class FirebaseAccount extends Account {
+/**
+ * This class extends Account to handle operations on a Firebase Realtime Database
+ */
+public class FirebaseAccount extends Account implements RemoteResource {
     private static String currentID = null;
-    private static Account instance = null;
+    private static FirebaseAccount instance = null;
     private final DatabaseReference dbRefUser;
 
     /* Attributes saved also on DB */
@@ -34,6 +42,7 @@ public class FirebaseAccount extends Account {
     private HashMap<String, CountryHighPoint> discoveredCountryHighPoint = new HashMap<>();
     private HashSet<Integer> discoveredPeakHeights = new HashSet<>();
     private List<FriendItem> friends = new ArrayList<>();
+    private DataSnapshot data;
 
     /**
      * Create a new account instance.
@@ -44,7 +53,7 @@ public class FirebaseAccount extends Account {
         currentID = newID;
     }
 
-    protected static Account getInstance(String authID) {
+    protected static FirebaseAccount getInstance(String authID) {
         // If the auth ID has not changed, return the same instance
         if(authID.equals(currentID)) return instance;
 
@@ -55,7 +64,7 @@ public class FirebaseAccount extends Account {
     }
 
     @Override
-    protected AuthOutcome retrieveData() {
+    public RemoteOutcome retrieveData() {
 
         /* Initialize attributes */
         username = Account.USERNAME_BEFORE_REGISTRATION;
@@ -76,23 +85,21 @@ public class FirebaseAccount extends Account {
             assert data != null;
 
             // If there is no data on DB, return such outcome
-            if(!data.exists()) return AuthOutcome.NOT_REGISTERED;
+            if(!data.exists()) return RemoteOutcome.NOT_FOUND;
 
             // Otherwise, update the attributes with retrieve data
-            loadData(data);
-            return AuthOutcome.REGISTERED;
+            this.data = data;
+            loadData();
+            return RemoteOutcome.FOUND;
 
         } catch (Exception e) {
             Log.d("AUTH", "retrieveData: failed " + e.getMessage());
-            return AuthOutcome.FAIL;
+            return RemoteOutcome.FAIL;
         }
     }
 
-    /**
-     * Load the downloaded data to the local attributes.
-     * @param data data snapshot from the database.
-     */
-    private void loadData(DataSnapshot data) {
+    @Override
+    public void loadData() {
         // Load username
         username = Optional.ofNullable(data.child(Database.CHILD_USERNAME).getValue(String.class)).orElse(USERNAME_BEFORE_REGISTRATION);
 

@@ -1,6 +1,9 @@
-package ch.epfl.sdp.peakar.user.auth;
+package ch.epfl.sdp.peakar.user.services;
 
 import android.content.Context;
+
+import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthentication;
 
 /**
  * This class represents an auth service.
@@ -20,12 +23,12 @@ public interface Authentication {
      * @param authProvider provider for the authentication.
      * @param token token from the provider.
      */
-    AuthOutcome authWithProvider(AuthProvider authProvider, String token);
+    RemoteOutcome authWithProvider(AuthProvider authProvider, String token);
 
     /**
      * Perform the authentication for an anonymous user. This method blocks the caller until the outcome is obtained.
      */
-    AuthOutcome authAnonymously();
+    RemoteOutcome authAnonymously();
 
     /**
      * Get the authenticated account or a null reference if no auth has been performed.

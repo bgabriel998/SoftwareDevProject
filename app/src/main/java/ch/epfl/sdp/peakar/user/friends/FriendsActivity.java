@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.widget.ListView;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.user.auth.Authentication;
+import ch.epfl.sdp.peakar.user.services.Authentication;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 import com.google.android.material.snackbar.Snackbar;
 

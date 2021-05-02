@@ -1,4 +1,4 @@
-package ch.epfl.sdp.peakar.user.auth;
+package ch.epfl.sdp.peakar.user.services.providers.firebase;
 
 import android.content.Context;
 import android.util.Log;
@@ -14,19 +14,20 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.util.Objects;
 
+import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
+import ch.epfl.sdp.peakar.user.services.Account;
+import ch.epfl.sdp.peakar.user.services.AuthProvider;
+import ch.epfl.sdp.peakar.user.services.Authentication;
+
 /**
- * This class describes the Auth service provided by Firebase
+ * This class describes the Auth service provided by Firebase.
+ * It makes use of a FirebaseAccount as this authentication service is always used only if Firebase Realtime Database is available.
  */
 public class FirebaseAuthentication implements Authentication {
     private static FirebaseAuthentication instance;
 
     // The account reference will be null if no account is authenticated, or != null if an account is authenticated
-    private static Account authAccount;
-
-
-    static {
-
-    }
+    private static FirebaseAccount authAccount;
 
     private FirebaseAuthentication() {}
 
@@ -34,16 +35,16 @@ public class FirebaseAuthentication implements Authentication {
         if(instance == null) {
             instance = new FirebaseAuthentication();
             // On class initialization, retrieve any previously logged account and, if necessary, the account data
-            authAccount = FirebaseAuth.getInstance().getCurrentUser() != null ? Account.getInstance(FirebaseAuth.getInstance().getCurrentUser().getUid()) : null;
+            authAccount = FirebaseAuth.getInstance().getCurrentUser() != null ? FirebaseAccount.getInstance(FirebaseAuth.getInstance().getCurrentUser().getUid()) : null;
             if(authAccount != null) new Thread (() -> authAccount.retrieveData()).start();
         }
         return instance;
     }
 
     @Override
-    public AuthOutcome authWithProvider(AuthProvider authProvider, String token) {
+    public RemoteOutcome authWithProvider(AuthProvider authProvider, String token) {
 
-        AuthOutcome outcome = AuthOutcome.FAIL;
+        RemoteOutcome outcome = RemoteOutcome.FAIL;
 
         // Get the credential from the provider
         AuthCredential credential = getCredentialFromProvider(authProvider, token);
@@ -57,18 +58,18 @@ public class FirebaseAuthentication implements Authentication {
             Tasks.await(authTask);
 
             // Update the account reference
-            authAccount = Account.getInstance(getID());
+            authAccount = FirebaseAccount.getInstance(getID());
 
             // Retrieve account data
             outcome = authAccount.retrieveData();
 
-            if(outcome == AuthOutcome.FAIL) outcome = AuthOutcome.NOT_REGISTERED;
+            if(outcome == RemoteOutcome.FAIL) outcome = RemoteOutcome.NOT_FOUND;
 
         } catch (Exception e) {
             Log.d("AUTH", "authWithProvider: " + e.getMessage() + "\n" + e.getLocalizedMessage() + "\n" + e.getCause());
 
             // Notify failure
-            return AuthOutcome.FAIL;
+            return RemoteOutcome.FAIL;
         }
 
         return outcome;
@@ -77,7 +78,7 @@ public class FirebaseAuthentication implements Authentication {
     /**
      * Perform an anonymous auth.
      */
-    public AuthOutcome authAnonymously() {
+    public RemoteOutcome authAnonymously() {
         Task<AuthResult> authTask = FirebaseAuth.getInstance().signInAnonymously();
 
         try {
@@ -85,15 +86,15 @@ public class FirebaseAuthentication implements Authentication {
             Tasks.await(authTask);
 
             // Update the account reference
-            authAccount = Account.getInstance(getID());
+            authAccount = FirebaseAccount.getInstance(getID());
 
             // Retrieve account data
-            AuthOutcome outcome = authAccount.retrieveData();
-            return outcome == AuthOutcome.FAIL ? AuthOutcome.NOT_REGISTERED : outcome;
+            RemoteOutcome outcome = authAccount.retrieveData();
+            return outcome == RemoteOutcome.FAIL ? RemoteOutcome.NOT_FOUND : outcome;
 
         } catch (Exception e) {
             // Notify failure
-            return AuthOutcome.FAIL;
+            return RemoteOutcome.FAIL;
         }
     }
 

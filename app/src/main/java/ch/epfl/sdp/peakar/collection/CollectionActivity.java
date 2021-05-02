@@ -7,10 +7,9 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.user.auth.Account;
-import ch.epfl.sdp.peakar.user.auth.Authentication;
-import ch.epfl.sdp.peakar.user.auth.FirebaseAccount;
-import ch.epfl.sdp.peakar.user.auth.FirebaseAuthentication;
+import ch.epfl.sdp.peakar.user.services.Account;
+import ch.epfl.sdp.peakar.user.services.Authentication;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthentication;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 import ch.epfl.sdp.peakar.user.score.ScoringConstants;
 

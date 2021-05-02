@@ -1,4 +1,4 @@
-package ch.epfl.sdp.peakar.user.auth;
+package ch.epfl.sdp.peakar.user.outcome;
 
 import ch.epfl.sdp.peakar.R;
 

@@ -15,9 +15,9 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
-import ch.epfl.sdp.peakar.user.auth.Account;
-import ch.epfl.sdp.peakar.user.auth.Authentication;
-import ch.epfl.sdp.peakar.user.auth.FirebaseAuthentication;
+import ch.epfl.sdp.peakar.user.services.Account;
+import ch.epfl.sdp.peakar.user.services.Authentication;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthentication;
 import ch.epfl.sdp.peakar.user.friends.FriendItem;
 import ch.epfl.sdp.peakar.user.friends.FriendItemActivity;
 import ch.epfl.sdp.peakar.user.friends.FriendsActivity;
@@ -32,7 +32,6 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Random;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;

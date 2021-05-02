@@ -29,8 +29,8 @@ import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.UITestHelper;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.user.AccountTest;
-import ch.epfl.sdp.peakar.user.auth.Authentication;
-import ch.epfl.sdp.peakar.user.auth.FirebaseAuthentication;
+import ch.epfl.sdp.peakar.user.services.Authentication;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthentication;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
