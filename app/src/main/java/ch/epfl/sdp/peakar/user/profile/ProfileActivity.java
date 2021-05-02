@@ -274,9 +274,9 @@ public class ProfileActivity extends AppCompatActivity {
      */
     public void hideEverything() {
         editTextUsername.setVisibility(View.GONE);
-        loggedLayout.setVisibility(View.GONE);
         signOutButton.setVisibility(View.GONE);
         submitUsernameButton.setVisibility(View.GONE);
         signInButton.setVisibility(View.GONE);
+        loggedLayout.setVisibility(View.GONE);
     }
 }

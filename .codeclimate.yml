@@ -15,6 +15,9 @@ checks:
     identical-code:
         config:
             threshold: 50
+    return-statements:
+        config:
+            threshold: 8
 exclude_patterns:
 - "**/test/"
 - "**/androidTest/"
