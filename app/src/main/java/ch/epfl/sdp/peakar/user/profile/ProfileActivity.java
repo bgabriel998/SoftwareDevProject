@@ -113,17 +113,10 @@ public class ProfileActivity extends AppCompatActivity {
         else {
             // If there is a user already logged, check if the user is already registered
             if(authService.getAuthAccount().getUsername() != null) {
-                // Put the loading circle
-                loadingView.setVisibility(View.VISIBLE);
-
                 // Start the check
                 new Thread(() -> {
                     boolean registered = authService.getAuthAccount().isRegistered();
-
                     runOnUiThread(() -> {
-                        // Remove the loading circle
-                        loadingView.setVisibility(View.GONE);
-
                         // Handle the check result
                         if(registered) setMenuUI();
                         else setUsernameChoiceUI();

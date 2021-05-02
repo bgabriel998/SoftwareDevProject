@@ -21,7 +21,13 @@ public class FirebaseAuthentication implements Authentication {
     private static FirebaseAuthentication instance;
 
     // The account reference will be null if no account is authenticated, or != null if an account is authenticated
-    private static Account authAccount = FirebaseAuth.getInstance().getCurrentUser() != null ? Account.getInstance(FirebaseAuth.getInstance().getCurrentUser().getUid()) : null;;
+    private static Account authAccount;
+
+    // On class initialization, retrieve any previously logged account and, if necessary, the account data
+    static {
+        authAccount = FirebaseAuth.getInstance().getCurrentUser() != null ? Account.getInstance(FirebaseAuth.getInstance().getCurrentUser().getUid()) : null;
+        if(authAccount != null) authAccount.retrieveData();
+    }
 
     private FirebaseAuthentication() {}
 
