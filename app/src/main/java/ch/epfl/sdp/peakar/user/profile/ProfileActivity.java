@@ -98,7 +98,6 @@ public class ProfileActivity extends AppCompatActivity {
         ToolbarHandler.SetupToolbar(this, TOOLBAR_TITLE);
 
         authService = AuthService.getInstance();
-        hideEverything();
     }
 
     /**
@@ -267,16 +266,5 @@ public class ProfileActivity extends AppCompatActivity {
         signInButton.setVisibility(View.GONE);
         submitUsernameButton.setVisibility(View.VISIBLE);
         editTextUsername.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * Hide all the UI components
-     */
-    public void hideEverything() {
-        editTextUsername.setVisibility(View.GONE);
-        signOutButton.setVisibility(View.GONE);
-        submitUsernameButton.setVisibility(View.GONE);
-        signInButton.setVisibility(View.GONE);
-        loggedLayout.setVisibility(View.GONE);
     }
 }
