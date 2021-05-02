@@ -11,18 +11,24 @@ public enum AddFriendOutcome {
     FAIL;
 
     public int getMessage() {
+        int message = 0;
         switch(this) {
             case INVALID:
-                return R.string.invalid_username;
+                message = R.string.invalid_username;
+                break;
             case ALREADY_ADDED:
-                return R.string.friend_already_added;
+                message = R.string.friend_already_added;
+                break;
             case ADDED:
-                return R.string.friend_added;
+                message = R.string.friend_added;
+                break;
             case CURRENT:
-                return R.string.add_current_username;
+                message = R.string.add_current_username;
+                break;
             case NOT_PRESENT:
-                return R.string.friend_not_present_db;
-            default: return 0;
+                message = R.string.friend_not_present_db;
+                break;
         }
+        return message;
     }
 }

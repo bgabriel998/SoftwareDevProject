@@ -210,8 +210,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
         };
         changeThread.start();
-
-
     }
 
     /**
@@ -271,11 +269,14 @@ public class ProfileActivity extends AppCompatActivity {
         editTextUsername.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Hide all the UI components
+     */
     public void hideEverything() {
+        editTextUsername.setVisibility(View.GONE);
         loggedLayout.setVisibility(View.GONE);
         signOutButton.setVisibility(View.GONE);
-        signInButton.setVisibility(View.GONE);
         submitUsernameButton.setVisibility(View.GONE);
-        editTextUsername.setVisibility(View.GONE);
+        signInButton.setVisibility(View.GONE);
     }
 }

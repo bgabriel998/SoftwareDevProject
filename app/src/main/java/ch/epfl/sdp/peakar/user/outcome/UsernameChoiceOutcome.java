@@ -11,18 +11,24 @@ public enum UsernameChoiceOutcome {
     FAIL;
 
     public int getMessage() {
+        int message = 0;
         switch(this) {
             case INVALID:
-                return R.string.invalid_username;
+                message =  R.string.invalid_username;
+                break;
             case USED:
-                return R.string.already_existing_username;
+                message = R.string.already_existing_username;
+                break;
             case CHANGED:
-                return R.string.available_username;
+                message = R.string.available_username;
+                break;
             case CURRENT:
-                return R.string.current_username;
+                message = R.string.current_username;
+                break;
             case REGISTERED:
-                return R.string.registered_username;
-            default: return 0;
+                message = R.string.registered_username;
+                break;
         }
+        return message;
     }
 }
