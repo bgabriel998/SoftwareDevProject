@@ -6,7 +6,7 @@ import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.user.services.Authentication;
+import ch.epfl.sdp.peakar.user.services.AuthService;
 
 public class MapActivity extends AppCompatActivity {
 
@@ -27,7 +27,7 @@ public class MapActivity extends AppCompatActivity {
 
 
         //Display markers on the map
-        osmMap.setMarkersForDiscoveredPeaks(Authentication.getInstance().getAuthAccount() != null);
+        osmMap.setMarkersForDiscoveredPeaks(AuthService.getInstance().getAuthAccount() != null);
 
         osmMap.displayUserLocation();
 

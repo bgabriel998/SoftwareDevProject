@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.user.services.Account;
-import ch.epfl.sdp.peakar.user.services.Authentication;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthentication;
+import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 import ch.epfl.sdp.peakar.user.score.ScoringConstants;
 
@@ -28,7 +28,7 @@ public class CollectionActivity extends AppCompatActivity {
         ToolbarHandler.SetupToolbar(this, TOOLBAR_TITLE);
 
         // Load the list only if there is a logged user
-        if(FirebaseAuthentication.getInstance().getAuthAccount() != null) fillCollectionList();
+        if(FirebaseAuthService.getInstance().getAuthAccount() != null) fillCollectionList();
     }
 
     /**
@@ -52,7 +52,7 @@ public class CollectionActivity extends AppCompatActivity {
      * @return array list of all collected items.
      */
     private ArrayList<CollectedItem> getCollection(){
-        Account account = Authentication.getInstance().getAuthAccount();
+        Account account = AuthService.getInstance().getAuthAccount();
         ArrayList<CollectedItem> collectedItems = ((ArrayList<CollectedItem>)
                 (account.getDiscoveredPeaks().stream().map(poi-> new CollectedItem(poi.getName(),
                 (int)(poi.getAltitude()* ScoringConstants.PEAK_FACTOR),

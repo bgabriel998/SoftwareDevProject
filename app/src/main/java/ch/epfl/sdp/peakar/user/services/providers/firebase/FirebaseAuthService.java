@@ -17,23 +17,23 @@ import java.util.Objects;
 import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
 import ch.epfl.sdp.peakar.user.services.Account;
 import ch.epfl.sdp.peakar.user.services.AuthProvider;
-import ch.epfl.sdp.peakar.user.services.Authentication;
+import ch.epfl.sdp.peakar.user.services.AuthService;
 
 /**
  * This class describes the Auth service provided by Firebase.
  * It makes use of a FirebaseAccount as this authentication service is always used only if Firebase Realtime Database is available.
  */
-public class FirebaseAuthentication implements Authentication {
-    private static FirebaseAuthentication instance;
+public class FirebaseAuthService implements AuthService {
+    private static FirebaseAuthService instance;
 
     // The account reference will be null if no account is authenticated, or != null if an account is authenticated
     private static FirebaseAccount authAccount;
 
-    private FirebaseAuthentication() {}
+    private FirebaseAuthService() {}
 
-    public static FirebaseAuthentication getInstance() {
+    public static FirebaseAuthService getInstance() {
         if(instance == null) {
-            instance = new FirebaseAuthentication();
+            instance = new FirebaseAuthService();
             // On class initialization, retrieve any previously logged account and, if necessary, the account data
             authAccount = FirebaseAuth.getInstance().getCurrentUser() != null ? FirebaseAccount.getInstance(FirebaseAuth.getInstance().getCurrentUser().getUid()) : null;
             if(authAccount != null) new Thread (() -> authAccount.retrieveData()).start();

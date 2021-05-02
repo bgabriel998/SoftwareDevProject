@@ -14,8 +14,8 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.user.services.Account;
-import ch.epfl.sdp.peakar.user.services.Authentication;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthentication;
+import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 import ch.epfl.sdp.peakar.user.friends.AddFriendActivity;
 import ch.epfl.sdp.peakar.user.friends.FriendsActivity;
 import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
@@ -56,14 +56,14 @@ public class ProfileActivityTest {
     @BeforeClass
     public static void init() {
         /* Make sure no user is signed in before tests */
-        Authentication.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+        AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
 
         /* Create a new one */
         registerAuthUser();
 
-        user1 = (BASIC_USERNAME + Authentication.getInstance().getID()).substring(0, Account.NAME_MAX_LENGTH - 1);
-        user2 = (BASIC_USERNAME + Authentication.getInstance().getID()).substring(0, Account.NAME_MAX_LENGTH - 2);
+        user1 = (BASIC_USERNAME + AuthService.getInstance().getID()).substring(0, Account.NAME_MAX_LENGTH - 1);
+        user2 = (BASIC_USERNAME + AuthService.getInstance().getID()).substring(0, Account.NAME_MAX_LENGTH - 2);
     }
 
     /* Clean environment */
@@ -76,18 +76,18 @@ public class ProfileActivityTest {
     @Before
     public void createTestUser() {
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-            Authentication.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+            AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
             registerAuthUser();
         }
         else {
-            FirebaseAuthentication.getInstance().forceRetrieveData();
+            FirebaseAuthService.getInstance().forceRetrieveData();
         }
     }
 
     /* Make sure that mock users are not on the database after a test */
     @After
     public void removeTestUsers() throws InterruptedException {
-        Database.refRoot.child(Database.CHILD_USERS).child(Authentication.getInstance().getID()).removeValue();
+        Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
         Database.refRoot.child(Database.CHILD_USERS).child(user2).removeValue();
         Thread.sleep(SHORT_SLEEP_TIME);
     }
@@ -219,7 +219,7 @@ public class ProfileActivityTest {
     /* Test that UI is displayed correctly when change username button is pressed. */
     @Test
     public void changeUsernameButtonTest() throws InterruptedException {
-        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
+        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
         testRule.getScenario().recreate();
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
@@ -232,7 +232,7 @@ public class ProfileActivityTest {
     /* Test that the message inviting the user to write the username in the correct box is correct */
     @Test
     public void addFriendTextTest() throws InterruptedException {
-        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
+        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
         testRule.getScenario().recreate();
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
@@ -245,7 +245,7 @@ public class ProfileActivityTest {
     /* Test that if the friend is already present the correct message is displayed */
     @Test
     public void friendAlreadyPresentTest() throws InterruptedException {
-        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_FRIENDS + user2), Arrays.asList(user1, ""));
+        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_FRIENDS + user2), Arrays.asList(user1, ""));
         Database.setChild(Database.CHILD_USERS + user2, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user2));
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
         testRule.getScenario().recreate();
@@ -263,7 +263,7 @@ public class ProfileActivityTest {
     @Test
     public void addFriendTest() throws InterruptedException {
         final String added_message = user2 + " " + ApplicationProvider.getApplicationContext().getResources().getString(R.string.friend_added);
-        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
+        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Database.setChild(Database.CHILD_USERS + user2, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user2));
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
         testRule.getScenario().recreate();
@@ -279,9 +279,9 @@ public class ProfileActivityTest {
     /* Test that if the friend username is the current username the correct message is displayed */
     @Test
     public void addFriendCurrentUsernameTest() throws InterruptedException {
-        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
+        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
-        FirebaseAuthentication.getInstance().forceRetrieveData();
+        FirebaseAuthService.getInstance().forceRetrieveData();
         testRule.getScenario().recreate();
 
         onView(withId(R.id.addFriendButton)).perform(click());
@@ -295,7 +295,7 @@ public class ProfileActivityTest {
     /* Test that if the friend username is not present the correct message is displayed */
     @Test
     public void addNoExistingUser() throws InterruptedException {
-        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
+        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
         testRule.getScenario().recreate();
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
@@ -313,7 +313,7 @@ public class ProfileActivityTest {
     public void friendIsNotValidTest() throws InterruptedException {
         final String username = "";
 
-        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
+        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
         testRule.getScenario().recreate();
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
@@ -329,7 +329,7 @@ public class ProfileActivityTest {
     /* Test that UI is displayed correctly when sign out button is pressed. */
     @Test
     public void signOutButtonTest() throws InterruptedException {
-        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
+        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
         testRule.getScenario().recreate();
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
@@ -349,7 +349,7 @@ public class ProfileActivityTest {
     /* Test that FriendsActivity is started on button click */
     @Test
     public void friendsButtonTest() throws InterruptedException {
-        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
+        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
         testRule.getScenario().recreate();
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
@@ -363,7 +363,7 @@ public class ProfileActivityTest {
     /* Test that AddFriendActivity is started on button click */
     @Test
     public void addFriendButtonTest() throws InterruptedException {
-        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
+        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
         testRule.getScenario().recreate();
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);

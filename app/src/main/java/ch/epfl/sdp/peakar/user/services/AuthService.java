@@ -3,19 +3,19 @@ package ch.epfl.sdp.peakar.user.services;
 import android.content.Context;
 
 import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthentication;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 
 /**
  * This class represents an auth service.
  */
-public interface Authentication {
+public interface AuthService {
 
     /**
      * Get the reference to the Authentication object.
      */
-    static Authentication getInstance() {
+    static AuthService getInstance() {
         // As FirebaseAuthentication is the only authentication we have implemented
-        return FirebaseAuthentication.getInstance();
+        return FirebaseAuthService.getInstance();
     }
 
     /**

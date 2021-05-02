@@ -29,8 +29,8 @@ import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.UITestHelper;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.user.AccountTest;
-import ch.epfl.sdp.peakar.user.services.Authentication;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthentication;
+import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -66,7 +66,7 @@ public class RankingsActivityTest {
         
 
         /* Make sure no user is signed in before a test */
-        Authentication.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+        AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
         /* Create a new one */
         registerAuthUser();
@@ -82,11 +82,11 @@ public class RankingsActivityTest {
     @Before
     public void createTestUser() {
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-            Authentication.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+            AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
             registerAuthUser();
         }
         else {
-            FirebaseAuthentication.getInstance().forceRetrieveData();
+            FirebaseAuthService.getInstance().forceRetrieveData();
         }
     }
 
@@ -96,7 +96,7 @@ public class RankingsActivityTest {
         for(int i=0; i < mockPoints.size(); i++) {
             Database.refRoot.child(Database.CHILD_USERS).child(BASIC_USERNAME + mockPositions.get(i)).removeValue();
         }
-        Database.refRoot.child(Database.CHILD_USERS).child(Authentication.getInstance().getID()).removeValue();
+        Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
         Thread.sleep(SHORT_SLEEP_TIME);
     }
 
@@ -131,10 +131,10 @@ public class RankingsActivityTest {
         for(int i=0; i < mockPoints.size(); i++) {
             Database.setChild(Database.CHILD_USERS + BASIC_USERNAME + mockPositions.get(i), Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_SCORE), Arrays.asList(TESTING_USERNAME + mockPositions.get(i), mockPoints.get(i)));
         }
-        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_SCORE), Arrays.asList(TESTING_USERNAME, MAXIMUM_POINTS));
+        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_SCORE), Arrays.asList(TESTING_USERNAME, MAXIMUM_POINTS));
 
         Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
-        FirebaseAuthentication.getInstance().forceRetrieveData();
+        FirebaseAuthService.getInstance().forceRetrieveData();
         Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
 
         // Check correct data
@@ -158,10 +158,10 @@ public class RankingsActivityTest {
         for(int i=0; i < mockPoints.size(); i++) {
             Database.setChild(Database.CHILD_USERS + BASIC_USERNAME + mockPositions.get(i), Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_SCORE), Arrays.asList(TESTING_USERNAME + mockPositions.get(i), mockPoints.get(i)));
         }
-        Database.setChild(Database.CHILD_USERS + Authentication.getInstance().getID(), Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_SCORE), Arrays.asList(TESTING_USERNAME, MAXIMUM_POINTS));
+        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_SCORE), Arrays.asList(TESTING_USERNAME, MAXIMUM_POINTS));
 
         Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
-        FirebaseAuthentication.getInstance().forceRetrieveData();
+        FirebaseAuthService.getInstance().forceRetrieveData();
         Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
 
         DataInteraction interaction =  onData(instanceOf(RankingItem.class));

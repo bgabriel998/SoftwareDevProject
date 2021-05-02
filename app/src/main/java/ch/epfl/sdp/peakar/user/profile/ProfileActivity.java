@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
 import ch.epfl.sdp.peakar.user.services.AuthProvider;
-import ch.epfl.sdp.peakar.user.services.Authentication;
+import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.outcome.UsernameChoiceOutcome;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 import ch.epfl.sdp.peakar.user.friends.AddFriendActivity;
@@ -33,7 +33,7 @@ public class ProfileActivity extends AppCompatActivity {
     private static final String  TOOLBAR_TITLE = "Profile";
 
     // AUTHENTICATION
-    private Authentication authService;
+    private AuthService authService;
 
     // VIEW REFERENCES
     private View submitUsernameButton;
@@ -97,7 +97,7 @@ public class ProfileActivity extends AppCompatActivity {
         // Setup the toolbar
         ToolbarHandler.SetupToolbar(this, TOOLBAR_TITLE);
 
-        authService = Authentication.getInstance();
+        authService = AuthService.getInstance();
         hideEverything();
     }
 

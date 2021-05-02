@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.user.services.Authentication;
+import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
 import java.util.Locale;
@@ -53,7 +53,7 @@ public class FriendItemActivity extends AppCompatActivity {
         Log.d("FRIEND REMOVED", "removeFriendButton: " + INTENT_EXTRA_VALUE);
 
         // Remove the friend
-        Authentication.getInstance().getAuthAccount().removeFriend(UId);
+        AuthService.getInstance().getAuthAccount().removeFriend(UId);
 
         // Put extra to the intent so a message can be shown in friends activity
         Intent intent = new Intent(this, FriendsActivity.class);

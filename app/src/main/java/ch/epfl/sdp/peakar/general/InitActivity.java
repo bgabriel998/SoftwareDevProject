@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
-import ch.epfl.sdp.peakar.user.services.Authentication;
+import ch.epfl.sdp.peakar.user.services.AuthService;
 
 import com.google.firebase.FirebaseApp;
 
@@ -55,7 +55,7 @@ public class InitActivity extends AppCompatActivity {
      * Init application global stuff before opening the main menu
      */
     private synchronized void initApp(){
-        if(Authentication.getInstance().getAuthAccount() != null) Authentication.getInstance().getAuthAccount().isRegistered();
+        if(AuthService.getInstance().getAuthAccount() != null) AuthService.getInstance().getAuthAccount().isRegistered();
         //Request and compute the POIPoints
         new ComputePOIPoints(this);
     }

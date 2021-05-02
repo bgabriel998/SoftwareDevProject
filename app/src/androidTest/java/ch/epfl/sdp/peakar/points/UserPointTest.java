@@ -18,8 +18,8 @@ import java.util.Random;
 import java.util.concurrent.TimeoutException;
 
 import ch.epfl.sdp.peakar.database.Database;
-import ch.epfl.sdp.peakar.user.services.Authentication;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthentication;
+import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 
 import static ch.epfl.sdp.peakar.user.AccountTest.SHORT_SLEEP_TIME;
 import static ch.epfl.sdp.peakar.user.AccountTest.registerAuthUser;
@@ -35,7 +35,7 @@ public class UserPointTest {
     @BeforeClass
     public static void init() {
         /* Make sure no user is signed in before tests */
-        Authentication.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+        AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
         /* Create a new one */
         registerAuthUser();
@@ -51,18 +51,18 @@ public class UserPointTest {
     @Before
     public void createTestUser() {
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-            Authentication.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+            AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
             registerAuthUser();
         }
         else {
-            FirebaseAuthentication.getInstance().forceRetrieveData();
+            FirebaseAuthService.getInstance().forceRetrieveData();
         }
     }
 
     /* Make sure that mock users are not on the database after a test */
     @After
     public void removeTestUsers() throws InterruptedException {
-        Database.refRoot.child(Database.CHILD_USERS).child(Authentication.getInstance().getID()).removeValue();
+        Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
         Thread.sleep(SHORT_SLEEP_TIME);
     }
 

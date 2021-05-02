@@ -3,7 +3,7 @@ package ch.epfl.sdp.peakar.user;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import ch.epfl.sdp.peakar.points.POIPoint;
-import ch.epfl.sdp.peakar.user.services.Authentication;
+import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.score.ScoringConstants;
 import ch.epfl.sdp.peakar.user.score.UserScore;
 
@@ -28,7 +28,7 @@ public class UserScoreTest {
     @BeforeClass
     public static void init() {
         /* Make sure no user is signed in before a test */
-        Authentication.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+        AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
         /* Create a new one */
         registerAuthUser();
@@ -81,7 +81,7 @@ public class UserScoreTest {
                                 ScoringConstants.BONUS_1st_4000_M_PEAK+
                                 ScoringConstants.BONUS_COUNTRY_TALLEST_PEAK;
 
-        assertEquals(expectedUserScore,Authentication.getInstance().getAuthAccount().getScore());
+        assertEquals(expectedUserScore, AuthService.getInstance().getAuthAccount().getScore());
     }
 
 

@@ -1,24 +1,13 @@
 package ch.epfl.sdp.peakar.user.friends;
 
-import androidx.annotation.NonNull;
-
-import ch.epfl.sdp.peakar.database.Database;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-
 /**
  * Item holding user attributes
  * used to fill friends list.
  */
 public class FriendItem {
     private final String uid;
-    private String username;
-    private int points;
-    private final DatabaseReference dbRef;
-    private ValueEventListener itemListener;
+    private String username = "";
+    private int points = 0;
 
     /**
      * Constructor
@@ -26,25 +15,6 @@ public class FriendItem {
      */
     public FriendItem(String uid) {
         this.uid = uid;
-        dbRef = Database.refRoot.child(Database.CHILD_USERS).child(uid);
-
-        // Define the listener
-        itemListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Integer newPoints = snapshot.child(Database.CHILD_SCORE).getValue(Integer.class);
-                String newUsername = snapshot.child(Database.CHILD_USERNAME).getValue(String.class);
-                if(newPoints != null) setPoints(newPoints);
-                if(newUsername != null) setUsername(newUsername);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        };
-
-        // Add the listener
-        dbRef.addValueEventListener(itemListener);
     }
 
     /**
@@ -82,21 +52,6 @@ public class FriendItem {
      */
     public String getUid() {
         return uid;
-    }
-
-    /**
-     * Set the listener of a friend item that will update the fields on DB changes
-     */
-    public void setListener(ValueEventListener listener) {
-        itemListener = listener;
-        dbRef.addValueEventListener(itemListener);
-    }
-
-    /**
-     * Remove the listener of a friend item
-     */
-    public void removeListener() {
-        dbRef.removeEventListener(itemListener);
     }
 
     /**

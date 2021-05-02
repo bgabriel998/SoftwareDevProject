@@ -8,7 +8,7 @@ import android.util.Log;
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.database.DataBaseHelper;
 import ch.epfl.sdp.peakar.points.POIPoint;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthentication;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,7 +78,7 @@ public class UserScore {
                 retValue += ScoringConstants.BONUS_COUNTRY_TALLEST_PEAK;
                 countryInfo.setCountryName(country);
                 countryInfo.setCountryHighPoint(poiPoint.getName());
-                FirebaseAuthentication.getInstance().getAuthAccount().setDiscoveredCountryHighPoint(countryInfo);
+                FirebaseAuthService.getInstance().getAuthAccount().setDiscoveredCountryHighPoint(countryInfo);
             }
         }
         dataBaseHelper.close();
@@ -93,8 +93,8 @@ public class UserScore {
      */
     public long computePeakHeightBonus(POIPoint poiPoint){
         int roundedHeight = (int)(poiPoint.getAltitude() - (poiPoint.getAltitude() % 1000));
-        if(!FirebaseAuthentication.getInstance().getAuthAccount().getDiscoveredPeakHeights().contains(roundedHeight)){
-            FirebaseAuthentication.getInstance().getAuthAccount().setDiscoveredPeakHeights(roundedHeight);
+        if(!FirebaseAuthService.getInstance().getAuthAccount().getDiscoveredPeakHeights().contains(roundedHeight)){
+            FirebaseAuthService.getInstance().getAuthAccount().setDiscoveredPeakHeights(roundedHeight);
             switch (roundedHeight){
                 case ScoringConstants.BADGE_1st_1000_M_PEAK:
                     return ScoringConstants.BONUS_1st_1000_M_PEAK;
@@ -137,7 +137,7 @@ public class UserScore {
      * @return true if the
      */
     private boolean countryHighPointAlreadyDiscovered(POIPoint poiPoint, String country){
-        HashMap<String, CountryHighPoint> countryHighPointDiscovered = FirebaseAuthentication.getInstance().getAuthAccount().getDiscoveredCountryHighPoint();
+        HashMap<String, CountryHighPoint> countryHighPointDiscovered = FirebaseAuthService.getInstance().getAuthAccount().getDiscoveredCountryHighPoint();
         if(countryHighPointDiscovered == null) return false;
         if(countryHighPointDiscovered.containsKey(country))
             return countryHighPointDiscovered.get(country).getCountryHighPoint().contains(poiPoint.getName());
@@ -166,7 +166,7 @@ public class UserScore {
     private long computeUserScore(ArrayList<POIPoint> scannedPeaks){
 
         //Get previous score from user database
-        long userScore = FirebaseAuthentication.getInstance().getAuthAccount().getScore();
+        long userScore = FirebaseAuthService.getInstance().getAuthAccount().getScore();
         //Foreach loop over all scanned peaks
         for(POIPoint poiPoint : scannedPeaks){
             /*Add classical amount of points*/
@@ -183,12 +183,12 @@ public class UserScore {
      */
     public void updateUserScoreAndDiscoveredPeaks(ArrayList<POIPoint> scannedPeaks){
         //Filter out all already discovered peaks
-        ArrayList<POIPoint> filteredScannedPeaks = FirebaseAuthentication.getInstance().getAuthAccount().filterNewDiscoveredPeaks(scannedPeaks);
+        ArrayList<POIPoint> filteredScannedPeaks = FirebaseAuthService.getInstance().getAuthAccount().filterNewDiscoveredPeaks(scannedPeaks);
         long userScore = computeUserScore(filteredScannedPeaks);
         //Overwrite score value in the database
-        FirebaseAuthentication.getInstance().getAuthAccount().setScore(userScore);
+        FirebaseAuthService.getInstance().getAuthAccount().setScore(userScore);
         //Add all new discovered peaks to the database
-        FirebaseAuthentication.getInstance().getAuthAccount().setDiscoveredPeaks(filteredScannedPeaks);
+        FirebaseAuthService.getInstance().getAuthAccount().setDiscoveredPeaks(filteredScannedPeaks);
     }
 
 

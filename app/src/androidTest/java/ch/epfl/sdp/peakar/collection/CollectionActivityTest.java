@@ -17,8 +17,8 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.POIPoint;
-import ch.epfl.sdp.peakar.user.services.Authentication;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthentication;
+import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 import ch.epfl.sdp.peakar.user.score.UserScore;
 
 import org.junit.After;
@@ -62,7 +62,7 @@ public class CollectionActivityTest {
     @BeforeClass
     public static void setupUserAccount() throws InterruptedException {
         /* Make sure no user is signed in before a test */
-        Authentication.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+        AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
         /* Create a new one */
         registerAuthUser();
@@ -95,13 +95,13 @@ public class CollectionActivityTest {
         userScore.updateUserScoreAndDiscoveredPeaks(inputArrayList);
         Thread.sleep(LONG_SLEEP_TIME);
 
-        FirebaseAuthentication.getInstance().forceRetrieveData();
+        FirebaseAuthService.getInstance().forceRetrieveData();
     }
 
     /* Clean environment */
     @AfterClass
     public static void end() {
-        Database.refRoot.child(Database.CHILD_USERS).child(Authentication.getInstance().getID()).removeValue();
+        Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
         removeAuthUser();
     }
 

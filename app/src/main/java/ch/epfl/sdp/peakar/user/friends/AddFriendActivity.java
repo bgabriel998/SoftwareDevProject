@@ -9,7 +9,7 @@ import android.widget.EditText;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.user.outcome.AddFriendOutcome;
-import ch.epfl.sdp.peakar.user.services.Authentication;
+import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -24,7 +24,7 @@ public class AddFriendActivity extends AppCompatActivity {
     // VIEW REFERENCES
     private View editTextFriend;
 
-    Authentication authService = Authentication.getInstance();
+    AuthService authService = AuthService.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

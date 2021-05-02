@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.widget.ListView;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.user.services.Authentication;
+import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -42,7 +42,7 @@ public class FriendsActivity extends AppCompatActivity {
     private void fillFriendsList(){
         ListView friendsListView = findViewById(R.id.friends_list_view);
 
-        List<FriendItem> friendsList = Authentication.getInstance().getAuthAccount().getFriends();
+        List<FriendItem> friendsList = AuthService.getInstance().getAuthAccount().getFriends();
 
         // Create the list adapter
         FriendsListAdapter listAdapter = new FriendsListAdapter(this,

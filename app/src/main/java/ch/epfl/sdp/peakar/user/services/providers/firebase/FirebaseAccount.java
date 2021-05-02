@@ -172,7 +172,7 @@ public class FirebaseAccount extends Account implements RemoteResource {
             String uidFriend = friendEntry.getKey();
 
             // Create a friend item
-            FriendItem newFriendItem = new FriendItem(uidFriend);
+            FirebaseFriendItem newFriendItem = new FirebaseFriendItem(uidFriend);
 
             // Add the friend
             friends.add(newFriendItem);
@@ -354,7 +354,7 @@ public class FirebaseAccount extends Account implements RemoteResource {
             Tasks.await(addTask);
 
             // Create a friend item
-            FriendItem newFriendItem = new FriendItem(friendID);
+            FirebaseFriendItem newFriendItem = new FirebaseFriendItem(friendID);
 
             // Add the friend locally
             friends.add(newFriendItem);
@@ -369,7 +369,7 @@ public class FirebaseAccount extends Account implements RemoteResource {
     @Override
     public void removeFriend(String friendID) {
         // Remove listener
-        friends.stream().filter(x -> x.hasID(friendID)).forEach(FriendItem::removeListener);
+        friends.stream().filter(x -> x.hasID(friendID)).map(x -> (FirebaseFriendItem)x).forEach(FirebaseFriendItem::removeListener);
 
         // Remove remotely, in an asynchronous way as there is no need to retrieve the information for now
         new Thread(() -> {
