@@ -50,7 +50,7 @@ import static org.junit.Assert.fail;
 public class RankingsActivityTest {
 
     private static final Integer MAXIMUM_POINTS = Integer.MAX_VALUE;
-    private static final String TESTING_USERNAME = "invalid@username";
+    private static final String TESTING_USERNAME = "test@user";
     private static final List<Integer> mockPoints = IntStream.rangeClosed(MAXIMUM_POINTS-19, MAXIMUM_POINTS-1).boxed().collect(Collectors.toList());
     private static final List<Integer> mockPositions = IntStream.rangeClosed(2, 20).boxed().collect(Collectors.toList());
 
@@ -163,9 +163,7 @@ public class RankingsActivityTest {
         Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
         FirebaseAuthService.getInstance().forceRetrieveData();
         Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
-        testRule.getScenario().recreate();
-        Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
-        
+
         DataInteraction interaction =  onData(instanceOf(RankingItem.class));
 
         // Check correct colors on current fake user
