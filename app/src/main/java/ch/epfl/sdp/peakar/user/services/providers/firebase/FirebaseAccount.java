@@ -11,20 +11,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.general.remote.RemoteResource;
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
+import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.services.Account;
-import ch.epfl.sdp.peakar.user.friends.FriendItem;
-import ch.epfl.sdp.peakar.user.outcome.AddFriendOutcome;
-import ch.epfl.sdp.peakar.user.outcome.UsernameChoiceOutcome;
 
 /**
  * This class extends Account to handle operations on a Firebase Realtime Database
@@ -200,12 +195,12 @@ public class FirebaseAccount extends Account implements RemoteResource {
     /* SETTERS */
 
     @Override
-    public UsernameChoiceOutcome changeUsername(String newUsername) {
+    public ProfileOutcome changeUsername(String newUsername) {
         // If the username is not valid
-        if(!Account.checkUsernameValidity(newUsername)) return UsernameChoiceOutcome.INVALID;
+        if(!Account.checkUsernameValidity(newUsername)) return ProfileOutcome.INVALID;
 
         // If the username is the current one
-        if(newUsername.equals(username)) return UsernameChoiceOutcome.CURRENT;
+        if(newUsername.equals(username)) return ProfileOutcome.USERNAME_CURRENT;
 
         // Finally, check if it is available
         Task<DataSnapshot> checkTask = Database.refRoot.child(Database.CHILD_USERS).orderByChild(Database.CHILD_USERNAME).equalTo(newUsername).get();
@@ -219,7 +214,7 @@ public class FirebaseAccount extends Account implements RemoteResource {
             assert data != null;
 
             // Check if it was already used
-            if(data.exists()) return UsernameChoiceOutcome.USED;
+            if(data.exists()) return ProfileOutcome.USERNAME_USED;
 
             // If not, register the new username
             Task<Void> changeTask = dbRefUser.child(Database.CHILD_USERNAME).setValue(newUsername);
@@ -231,17 +226,17 @@ public class FirebaseAccount extends Account implements RemoteResource {
                 String oldUsername = username;
                 username = newUsername;
 
-                if(oldUsername.equals(USERNAME_BEFORE_REGISTRATION)) return UsernameChoiceOutcome.REGISTERED;
-                return UsernameChoiceOutcome.CHANGED;
+                if(oldUsername.equals(USERNAME_BEFORE_REGISTRATION)) return ProfileOutcome.USERNAME_REGISTERED;
+                return ProfileOutcome.USERNAME_CHANGED;
 
             } catch (Exception e) {
                 Log.d("Account", "changeUsername - changeTask: failed");
-                return UsernameChoiceOutcome.FAIL;
+                return ProfileOutcome.FAIL;
             }
 
         } catch (Exception e) {
             Log.d("Account", "changeUsername - checkTask: failed");
-            return UsernameChoiceOutcome.FAIL;
+            return ProfileOutcome.FAIL;
         }
 
     }
@@ -258,15 +253,15 @@ public class FirebaseAccount extends Account implements RemoteResource {
     }
 
     @Override
-    public AddFriendOutcome addFriend(String friendUsername) {
+    public ProfileOutcome addFriend(String friendUsername) {
         Log.d("ACCOUNT", "addFriend: current username: " + username);
         Log.d("ACCOUNT", "addFriend: friend username: " + friendUsername);
 
         // If the friend username is not valid
-        if(!Account.checkUsernameValidity(friendUsername)) return AddFriendOutcome.INVALID;
+        if(!Account.checkUsernameValidity(friendUsername)) return ProfileOutcome.INVALID;
 
         // If the friend username is the current one
-        if(friendUsername.equals(username)) return AddFriendOutcome.CURRENT;
+        if(friendUsername.equals(username)) return ProfileOutcome.FRIEND_CURRENT;
 
         // Finally, check if the user exists
         Task<DataSnapshot> checkExistenceTask = Database.refRoot.child(Database.CHILD_USERS).orderByChild(Database.CHILD_USERNAME).equalTo(friendUsername).get();
@@ -282,7 +277,7 @@ public class FirebaseAccount extends Account implements RemoteResource {
             assert data != null;
 
             // Check if the friend exists
-            if(!data.exists()) return AddFriendOutcome.NOT_PRESENT;
+            if(!data.exists()) return ProfileOutcome.FRIEND_NOT_PRESENT;
 
             Log.d("ACCOUNT", "addFriend: friend is on DB");
 
@@ -297,7 +292,7 @@ public class FirebaseAccount extends Account implements RemoteResource {
             final String friendID = tempID;
 
             // Check if the friend is already a user's friend
-            if(friends.stream().anyMatch(x -> x.hasID(friendID))) return AddFriendOutcome.ALREADY_ADDED;
+            if(friends.stream().anyMatch(x -> x.hasID(friendID))) return ProfileOutcome.FRIEND_ALREADY_ADDED;
 
             Log.d("ACCOUNT", "addFriend: adding friend");
             Log.d("ACCOUNT", "addFriend: adding friend - current username: " + username);
@@ -314,10 +309,10 @@ public class FirebaseAccount extends Account implements RemoteResource {
             // Add the friend locally
             friends.add(newFriendItem);
 
-            return AddFriendOutcome.ADDED;
+            return ProfileOutcome.FRIEND_ADDED;
         } catch (Exception e) {
             Log.d("ACCOUNT", "addFriend - checkExistenceTask: failed");
-            return AddFriendOutcome.FAIL;
+            return ProfileOutcome.FAIL;
         }
     }
 

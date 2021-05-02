@@ -21,6 +21,8 @@ import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 import ch.epfl.sdp.peakar.user.friends.FriendItem;
 import ch.epfl.sdp.peakar.user.friends.FriendItemActivity;
 import ch.epfl.sdp.peakar.user.friends.FriendsActivity;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseFriendItem;
+
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.junit.After;
@@ -190,7 +192,7 @@ public class FriendsActivityTest {
         Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
 
         // Item at pos 0 looks like this
-        FriendItem correctItem = new FriendItem(
+        FriendItem correctItem = new FirebaseFriendItem(
                 FRIEND_USER);
 
         Intents.init();

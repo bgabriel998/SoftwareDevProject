@@ -15,7 +15,7 @@ import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
 import ch.epfl.sdp.peakar.user.services.AuthProvider;
 import ch.epfl.sdp.peakar.user.services.AuthService;
-import ch.epfl.sdp.peakar.user.outcome.UsernameChoiceOutcome;
+import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 import ch.epfl.sdp.peakar.user.friends.AddFriendActivity;
 import ch.epfl.sdp.peakar.user.friends.FriendsActivity;
@@ -193,14 +193,14 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void run() {
                 // Change the username and wait for the task to end
-                UsernameChoiceOutcome result = authService.getAuthAccount().changeUsername(newUsername);
+                ProfileOutcome result = authService.getAuthAccount().changeUsername(newUsername);
 
                 // Update the view on the UI thread
                 runOnUiThread(() -> {
                     ((EditText)editTextUsername).getText().clear();
 
                     // If username has changed, get back to the initial UI
-                    if(result == UsernameChoiceOutcome.CHANGED || result == UsernameChoiceOutcome.REGISTERED) setMenuUI();
+                    if(result == ProfileOutcome.USERNAME_CHANGED || result == ProfileOutcome.USERNAME_REGISTERED) setMenuUI();
 
                     // Display the message
                     Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), result.getMessage(), Snackbar.LENGTH_LONG);

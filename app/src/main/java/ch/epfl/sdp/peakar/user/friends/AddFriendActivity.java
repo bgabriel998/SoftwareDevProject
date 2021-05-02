@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.user.outcome.AddFriendOutcome;
+import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
@@ -55,7 +55,7 @@ public class AddFriendActivity extends AppCompatActivity {
             @Override
             public void run() {
                 // Add the friend and wait for the task to end
-                AddFriendOutcome result = authService.getAuthAccount().addFriend(friend);
+                ProfileOutcome result = authService.getAuthAccount().addFriend(friend);
 
                 // Update the view on the UI thread
                 runOnUiThread(() -> {
@@ -64,7 +64,7 @@ public class AddFriendActivity extends AppCompatActivity {
                     ((EditText)editTextFriend).getText().clear();
 
                     // If the friend has been added, get back to profile activity
-                    if(result == AddFriendOutcome.ADDED) {
+                    if(result == ProfileOutcome.FRIEND_ADDED) {
                         // Prepare the intent extra value
                         String INTENT_EXTRA_VALUE = friend + " " + getResources().getString(result.getMessage());
 

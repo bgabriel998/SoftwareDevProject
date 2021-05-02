@@ -349,11 +349,9 @@ public class ProfileActivityTest {
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
         Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
 
-        Intents.init();
         onView(withId(R.id.signInButton)).perform(click());
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
         intended(IntentMatchers.hasComponent(com.google.android.gms.auth.api.signin.internal.SignInHubActivity.class.getName()));
-        Intents.release();
     }
 
     /* Test that FriendsActivity is started on button click */
@@ -364,10 +362,8 @@ public class ProfileActivityTest {
         testRule.getScenario().recreate();
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
 
-        Intents.init();
         onView(withId(R.id.friendsButton)).perform(click());
         intended(IntentMatchers.hasComponent(FriendsActivity.class.getName()));
-        Intents.release();
     }
 
     /* Test that AddFriendActivity is started on button click */
@@ -378,9 +374,7 @@ public class ProfileActivityTest {
         testRule.getScenario().recreate();
         Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
 
-        Intents.init();
         onView(withId(R.id.addFriendButton)).perform(click());
         intended(IntentMatchers.hasComponent(AddFriendActivity.class.getName()));
-        Intents.release();
     }
 }

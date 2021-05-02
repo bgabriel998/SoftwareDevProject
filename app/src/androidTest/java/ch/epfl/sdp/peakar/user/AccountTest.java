@@ -6,7 +6,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.user.services.Account;
-import ch.epfl.sdp.peakar.user.outcome.AddFriendOutcome;
+import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 import ch.epfl.sdp.peakar.user.score.ScoringConstants;
@@ -161,8 +161,8 @@ public class AccountTest {
         assertTrue(account.getFriends().isEmpty());
 
         // Test if a friend is present
-        AddFriendOutcome outcome = account.addFriend(user2);
-        assertEquals(AddFriendOutcome.ADDED, outcome);
+        ProfileOutcome outcome = account.addFriend(user2);
+        assertEquals(ProfileOutcome.FRIEND_ADDED, outcome);
         assertEquals(user2, account.getFriends().get(0).getUid());
 
         // Test if the friend is removed

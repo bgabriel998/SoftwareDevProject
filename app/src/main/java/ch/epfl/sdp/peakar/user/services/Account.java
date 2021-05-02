@@ -9,9 +9,8 @@ import java.util.stream.Collectors;
 
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.points.POIPoint;
-import ch.epfl.sdp.peakar.user.outcome.AddFriendOutcome;
+import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAccount;
-import ch.epfl.sdp.peakar.user.outcome.UsernameChoiceOutcome;
 import ch.epfl.sdp.peakar.user.friends.FriendItem;
 
 /**
@@ -120,7 +119,7 @@ public abstract class Account {
      * @param newUsername new username to use.
      * @return outcome of the process.
      */
-    public abstract UsernameChoiceOutcome changeUsername(String newUsername);
+    public abstract ProfileOutcome changeUsername(String newUsername);
 
     /**
      * Set the score of the authenticated user.
@@ -132,7 +131,7 @@ public abstract class Account {
      * @param friendUsername friend's username.
      * @return outcome of the process.
      */
-    public abstract AddFriendOutcome addFriend(String friendUsername);
+    public abstract ProfileOutcome addFriend(String friendUsername);
 
     /**
      * Remove a friend of the authenticated user.
