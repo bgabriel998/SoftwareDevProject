@@ -1,4 +1,5 @@
 package ch.epfl.sdp.peakar.user.outcome;
+
 import ch.epfl.sdp.peakar.R;
 
 public enum AddFriendOutcome {
