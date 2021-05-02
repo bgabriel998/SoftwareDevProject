@@ -161,7 +161,7 @@ public class POICacheTest {
                 MOCK_LOCATION_LON_CHAMONIX,
                 MOCK_LOCATION_ALT_CHAMONIX,
                 0);
-        assertTrue(poiCache.isUserInBoundingBox(userPoint,context));
+        assertTrue("lat: "+ userPoint.getLatitude()+" long: " +userPoint.getLongitude() ,poiCache.isUserInBoundingBox(userPoint,context));
     }
 
     /*Check if the cache file is present*/
