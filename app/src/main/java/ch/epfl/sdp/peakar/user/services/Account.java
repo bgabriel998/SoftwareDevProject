@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.points.POIPoint;
@@ -13,10 +15,20 @@ import ch.epfl.sdp.peakar.user.outcome.UsernameChoiceOutcome;
 import ch.epfl.sdp.peakar.user.friends.FriendItem;
 
 /**
- * This class describes the local behaviour of the user regardless of the Database provider.
- * For each database provider, extend this class implementing RemoteResource interface to handle the interaction with the specific Database.
+ * This class describes the local behaviour of the account model regardless of the Database provider.
+ * For each database provider:
+ * 1. extend this class implementing RemoteResource interface to handle the interaction with the specific Database.
+ * 2. implement the modifiers methods that need interaction with the specific Database.
  */
 public abstract class Account {
+
+    /* LOCAL ATTRIBUTES */
+    protected String username = Account.USERNAME_BEFORE_REGISTRATION;
+    protected long score = 0;
+    protected HashSet<POIPoint> discoveredPeaks = new HashSet<>();
+    protected HashMap<String, CountryHighPoint> discoveredCountryHighPoint = new HashMap<>();
+    protected HashSet<Integer> discoveredPeakHeights = new HashSet<>();
+    protected List<FriendItem> friends = new ArrayList<>();
 
     /* CONSTANTS */
     public static int NAME_MAX_LENGTH = 15;
@@ -38,39 +50,61 @@ public abstract class Account {
     /**
      * Get the username of the authenticated user.
      */
-    public abstract String getUsername();
+    public String getUsername() {
+        return username;
+    }
 
     /**
      * Get the score of the authenticated user.
      */
-    public abstract long getScore();
+    public long getScore() {
+        return score;
+    }
 
     /**
      * Get the country high points discovered by the authenticated user.
      */
-    public abstract HashMap<String, CountryHighPoint> getDiscoveredCountryHighPoint();
+    public HashMap<String, CountryHighPoint> getDiscoveredCountryHighPoint() {
+        return discoveredCountryHighPoint;
+    }
 
     /**
      * Return only the names of the discovered country high points
      * as a list of strings
      * @return list of peak names
      */
-    public abstract List<String> getDiscoveredCountryHighPointNames();
+    public List<String> getDiscoveredCountryHighPointNames() {
+        List<String> retList = new ArrayList<>();
+        for (Map.Entry<String, CountryHighPoint> highPoint : discoveredCountryHighPoint.entrySet()) {
+            retList.add(highPoint.getValue().getCountryHighPoint());
+        }
+        return retList;
+    }
 
     /**
-     * Get the list containing all height badges
+     * Get the list containing all height badges discovered by the authenticated user.
      */
-    public abstract HashSet<Integer> getDiscoveredPeakHeights();
+    public HashSet<Integer> getDiscoveredPeakHeights() {
+        return discoveredPeakHeights;
+    }
 
     /**
      * Get the peaks discovered by the authenticated user.
      */
-    public abstract HashSet<POIPoint> getDiscoveredPeaks();
+    public HashSet<POIPoint> getDiscoveredPeaks() {
+        return discoveredPeaks;
+    }
 
     /**
      * Get the friends of the the authenticated user.
      */
-    public abstract List<FriendItem> getFriends();
+    public List<FriendItem> getFriends() {
+        return friends;
+    }
+
+
+    /* GETTER TO IMPLEMENT WITH DATABASE INTERACTION */
+
 
     /**
      * Check if the current authenticated user is registered. If so, retrieve the user data.
@@ -78,7 +112,7 @@ public abstract class Account {
     public abstract boolean isRegistered();
 
 
-    /* SETTERS */
+    /* MODIFIERS TO IMPLEMENT WITH DATABASE INTERACTION */
 
 
     /**
@@ -125,6 +159,10 @@ public abstract class Account {
      */
     public abstract void setDiscoveredPeaks(ArrayList<POIPoint> newDiscoveredPeaks);
 
+
+    /* UTILITY METHODS */
+
+
     /**
      * Filter the list of discovered peaks. If the peak in the list is already contained in the Hashset
      * the peak gets dropped from the list.
@@ -132,10 +170,12 @@ public abstract class Account {
      * @param unfilteredDiscoveredPeaks unfiltered list of peaks (coming directly from AR activity)
      * @return list of POI after filtering
      */
-    public abstract ArrayList<POIPoint> filterNewDiscoveredPeaks(ArrayList<POIPoint> unfilteredDiscoveredPeaks);
-
-
-    /* STATIC UTILITY METHODS */
+    public ArrayList<POIPoint> filterNewDiscoveredPeaks(ArrayList<POIPoint> unfilteredDiscoveredPeaks){
+        ArrayList<POIPoint> resultList = unfilteredDiscoveredPeaks.stream().filter(newPeak -> !discoveredPeaks.contains(newPeak)).collect(Collectors.toCollection(ArrayList::new));
+        // Update the list of discovered peaks (local HashSet)
+        discoveredPeaks.addAll(resultList);
+        return resultList;
+    }
 
     /**
      * Check if the username chosen by the user is valid.

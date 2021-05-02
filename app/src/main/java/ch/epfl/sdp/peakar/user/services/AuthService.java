@@ -7,6 +7,7 @@ import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 
 /**
  * This class represents an auth service.
+ * Extend this class with the specific implementation from a provider.
  */
 public interface AuthService {
 

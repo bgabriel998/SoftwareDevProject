@@ -36,12 +36,6 @@ public class FirebaseAccount extends Account implements RemoteResource {
 
     /* Attributes saved also on DB */
 
-    private String username = Account.USERNAME_BEFORE_REGISTRATION;
-    private long score = 0;
-    private HashSet<POIPoint> discoveredPeaks = new HashSet<>();
-    private HashMap<String, CountryHighPoint> discoveredCountryHighPoint = new HashMap<>();
-    private HashSet<Integer> discoveredPeakHeights = new HashSet<>();
-    private List<FriendItem> friends = new ArrayList<>();
     private DataSnapshot data;
 
     /**
@@ -180,45 +174,6 @@ public class FirebaseAccount extends Account implements RemoteResource {
     }
 
     /* GETTERS */
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    @Override
-    public long getScore() {
-        return score;
-    }
-
-    @Override
-    public HashMap<String, CountryHighPoint> getDiscoveredCountryHighPoint() {
-        return discoveredCountryHighPoint;
-    }
-
-    @Override
-    public List<String> getDiscoveredCountryHighPointNames() {
-        List<String> retList = new ArrayList<>();
-        for (Map.Entry<String, CountryHighPoint> highPoint : discoveredCountryHighPoint.entrySet()) {
-            retList.add(highPoint.getValue().getCountryHighPoint());
-        }
-        return retList;
-    }
-
-    @Override
-    public HashSet<Integer> getDiscoveredPeakHeights() {
-        return discoveredPeakHeights;
-    }
-
-    @Override
-    public HashSet<POIPoint> getDiscoveredPeaks() {
-        return discoveredPeaks;
-    }
-
-    @Override
-    public List<FriendItem> getFriends() {
-        return friends;
-    }
 
     @Override
     public boolean isRegistered() {
@@ -413,15 +368,4 @@ public class FirebaseAccount extends Account implements RemoteResource {
                         Database.CHILD_DISCOVERED_PEAKS,
                 new ArrayList<Object>(newDiscoveredPeaks));
     }
-
-
-    @Override
-    public ArrayList<POIPoint> filterNewDiscoveredPeaks(ArrayList<POIPoint> unfilteredDiscoveredPeaks){
-        ArrayList<POIPoint> resultList = unfilteredDiscoveredPeaks.stream().filter(newPeak -> !discoveredPeaks.contains(newPeak)).collect(Collectors.toCollection(ArrayList::new));
-        //Update the list of discovered peaks (local HashSet)
-        discoveredPeaks.addAll(resultList);
-        return resultList;
-    }
-
-
 }
