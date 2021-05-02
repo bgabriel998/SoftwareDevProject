@@ -28,14 +28,6 @@ public class FirebaseFriendItem extends FriendItem implements RemoteResource {
     }
 
     /**
-     * Set the listener of a friend item that will update the fields on DB changes
-     */
-    public void setListener(ValueEventListener listener) {
-        itemListener = listener;
-        dbRef.addValueEventListener(itemListener);
-    }
-
-    /**
      * Remove the listener of a friend item
      */
     public void removeListener() {

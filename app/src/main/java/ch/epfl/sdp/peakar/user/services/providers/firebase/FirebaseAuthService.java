@@ -15,6 +15,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import java.util.Objects;
 
 import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
+import ch.epfl.sdp.peakar.general.remote.RemoteResource;
 import ch.epfl.sdp.peakar.user.services.Account;
 import ch.epfl.sdp.peakar.user.services.AuthProvider;
 import ch.epfl.sdp.peakar.user.services.AuthService;
@@ -89,7 +90,8 @@ public class FirebaseAuthService implements AuthService {
             authAccount = FirebaseAccount.getInstance(getID());
 
             // Retrieve account data
-            RemoteOutcome outcome = authAccount.retrieveData();
+            RemoteResource remoteAccount = authAccount;
+            RemoteOutcome outcome = remoteAccount.retrieveData();
             return outcome == RemoteOutcome.FAIL ? RemoteOutcome.NOT_FOUND : outcome;
 
         } catch (Exception e) {
@@ -107,9 +109,10 @@ public class FirebaseAuthService implements AuthService {
         switch(authProvider) {
             case GOOGLE:
                 return GoogleAuthProvider.getCredential(token, null);
-
+            /* Code commented because we still do not have the facebook UI for login
             case FACEBOOK:
                 return FacebookAuthProvider.getCredential(token);
+            */
 
             default:
                 return null;
@@ -146,11 +149,12 @@ public class FirebaseAuthService implements AuthService {
     }
 
     /**
-     * Force a data retrieve.
+     * Force a data retrieval.
      * WARNING: this method SHOULD NOT be used for normal purposes as all the other methods already make sure that data is retrieved correctly.
      */
     public void forceRetrieveData() {
         // Retrieve account data
-        if(authAccount != null) authAccount.retrieveData();
+        RemoteResource remoteAccount = authAccount;
+        if(authAccount != null) remoteAccount.retrieveData();
     }
 }
