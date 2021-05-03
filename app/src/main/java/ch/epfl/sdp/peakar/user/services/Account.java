@@ -36,8 +36,8 @@ public abstract class Account {
 
     /**
      * Get an account instance.
-     * WARNING: you SHOULD NOT call this method. To get the account reference you should call .
-     * @param authID
+     * WARNING: you SHOULD NOT call this method. To get the account reference you should call AuthInstance.getInstance().getAuthAccount().
+     * @param authID id of the authenticated user.
      */
     protected static Account getInstance(String authID) {
         // As the account firebase is the only one we use, return an instance of that.

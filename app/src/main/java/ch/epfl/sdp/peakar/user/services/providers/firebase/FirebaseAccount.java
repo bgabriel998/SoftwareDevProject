@@ -42,6 +42,11 @@ public class FirebaseAccount extends Account implements RemoteResource {
         currentID = newID;
     }
 
+    /**
+     * Get a Firebase account instance.
+     * WARNING: you SHOULD NOT call this method. To get the account reference you should call AuthInstance.getInstance().getAuthAccount().
+     * @param authID id of the authenticated user.
+     */
     protected static FirebaseAccount getInstance(String authID) {
         // If the auth ID has not changed, return the same instance
         if(authID.equals(currentID)) return instance;
@@ -155,6 +160,9 @@ public class FirebaseAccount extends Account implements RemoteResource {
         }
     }
 
+    /**
+     * Load added friends
+     */
     private void loadFriends(DataSnapshot data) {
         for (DataSnapshot friendEntry : data.getChildren()) {
             // Get the friend ID
@@ -317,10 +325,7 @@ public class FirebaseAccount extends Account implements RemoteResource {
         friends.stream().filter(x -> x.hasID(friendID)).map(x -> (FirebaseFriendItem)x).forEach(FirebaseFriendItem::removeListener);
 
         // Remove remotely, in an asynchronous way as there is no need to retrieve the information for now
-        new Thread(() -> {
-            Task<Void> removeTask = dbRefUser.child(Database.CHILD_FRIENDS).child(friendID).removeValue();
-        }).start();
-
+        new Thread(() -> dbRefUser.child(Database.CHILD_FRIENDS).child(friendID).removeValue()).start();
 
         // Remove locally
         friends.removeIf(x -> x.hasID(friendID));

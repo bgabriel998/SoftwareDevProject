@@ -45,7 +45,7 @@ public class FirebaseAuthService implements AuthService {
     @Override
     public RemoteOutcome authWithProvider(AuthProvider authProvider, String token) {
 
-        RemoteOutcome outcome = RemoteOutcome.FAIL;
+        RemoteOutcome outcome;
 
         // Get the credential from the provider
         AuthCredential credential = getCredentialFromProvider(authProvider, token);
