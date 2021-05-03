@@ -19,24 +19,50 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static ch.epfl.sdp.peakar.TestingConstants.*;
+import static ch.epfl.sdp.peakar.TestingConstants.AIGUILLE_DU_PLAN_ALT;
+import static ch.epfl.sdp.peakar.TestingConstants.AIGUILLE_DU_PLAN_LAT;
+import static ch.epfl.sdp.peakar.TestingConstants.AIGUILLE_DU_PLAN_LONG;
+import static ch.epfl.sdp.peakar.TestingConstants.AIGUILLE_DU_PLAN_NAME;
+import static ch.epfl.sdp.peakar.TestingConstants.CACHE_FILE_NAME_TEST;
+import static ch.epfl.sdp.peakar.TestingConstants.DENT_DU_GEANT_ALT;
+import static ch.epfl.sdp.peakar.TestingConstants.DENT_DU_GEANT_LAT;
+import static ch.epfl.sdp.peakar.TestingConstants.DENT_DU_GEANT_LONG;
+import static ch.epfl.sdp.peakar.TestingConstants.DENT_DU_GEANT_NAME;
+import static ch.epfl.sdp.peakar.TestingConstants.MOCK_LOCATION_ALT_CHAMONIX;
+import static ch.epfl.sdp.peakar.TestingConstants.MOCK_LOCATION_LAT_CHAMONIX;
+import static ch.epfl.sdp.peakar.TestingConstants.MOCK_LOCATION_LON_CHAMONIX;
+import static ch.epfl.sdp.peakar.TestingConstants.MONT_BLANC_ALT;
+import static ch.epfl.sdp.peakar.TestingConstants.MONT_BLANC_LAT;
+import static ch.epfl.sdp.peakar.TestingConstants.MONT_BLANC_LONG;
+import static ch.epfl.sdp.peakar.TestingConstants.MONT_BLANC_NAME;
+import static ch.epfl.sdp.peakar.TestingConstants.POINTE_DE_LAPAZ_ALT;
+import static ch.epfl.sdp.peakar.TestingConstants.POINTE_DE_LAPAZ_LAT;
+import static ch.epfl.sdp.peakar.TestingConstants.POINTE_DE_LAPAZ_LONG;
+import static ch.epfl.sdp.peakar.TestingConstants.POINTE_DE_LAPAZ_NAME;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 
 public class POICacheTest {
 
-    private static UserPoint userPoint;
+    //private static UserPoint userPoint;
     private static Context context;
     private static ArrayList<POIPoint> inputArrayList;
 
 
     @BeforeClass
     public static void setup(){
+
+        //Remove automatically created file
+        File oldFile = new File(context.getCacheDir(),CACHE_FILE_NAME_TEST);
+        //noinspection ResultOfMethodCallIgnored
+        oldFile.delete();
+
         //Create file containing POIs manually
         context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
-        userPoint = UserPoint.getInstance(context);
+        UserPoint userPoint = UserPoint.getInstance(context);
 
         File file = new File(context.getCacheDir(),CACHE_FILE_NAME_TEST);
 
@@ -66,9 +92,7 @@ public class POICacheTest {
                 MOCK_LOCATION_LON_CHAMONIX,
                 MOCK_LOCATION_ALT_CHAMONIX,
                 0);
-        //BoundingBox boundingBox = userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM);
-        //BoundingBox boundingBox = computeBoundingBox(MOCK_LOCATION_LAT_CHAMONIX,MOCK_LOCATION_LON_CHAMONIX,GeonamesHandler.DEFAULT_RANGE_IN_KM);
-        BoundingBox boundingBox = new BoundingBox(46.108056004131036,7.131633620191105,45.74873152413104,6.615033878970559);
+        BoundingBox boundingBox = userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM);
         //Create mock cache content
         POICacheContent poiCacheContent = new POICacheContent(inputArrayList,boundingBox);
         Gson gson = new Gson();
@@ -89,15 +113,6 @@ public class POICacheTest {
 
     }
 
-    private static final double ADJUST_COORDINATES = 0.008983112; // 1km in degrees at equator.
-    public static BoundingBox computeBoundingBox(double latitude, double longitude, double rangeInKm){
-        double north = latitude + ( rangeInKm * ADJUST_COORDINATES);
-        double south = latitude - ( rangeInKm * ADJUST_COORDINATES);
-        double lngRatio = 1/Math.cos(Math.toRadians(latitude));
-        double east = longitude + (rangeInKm * ADJUST_COORDINATES) * lngRatio;
-        double west = longitude - (rangeInKm * ADJUST_COORDINATES) * lngRatio;
-        return new BoundingBox(north,east,south,west);
-    }
 
     @AfterClass
     public static void cleanup(){
@@ -117,25 +132,19 @@ public class POICacheTest {
     }
 
     /*Test the saving and the retrieving to/from cache*/
-    //@Test
+    @Test
     public void testPOICacheSaveRetrievePOIDataToCache(){
         POICache poiCache = POICache.getInstance();
 
-        BoundingBox boundingBox = computeBoundingBox(MOCK_LOCATION_LAT_CHAMONIX,MOCK_LOCATION_LON_CHAMONIX,GeonamesHandler.DEFAULT_RANGE_IN_KM);
+        BoundingBox boundingBox = UserPoint.getInstance(context).computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM);
         File cacheDir = context.getCacheDir();
         File outputFile = new File(cacheDir,CACHE_FILE_NAME_TEST);
+
         outputFile.delete();
         poiCache.savePOIDataToCache(inputArrayList,boundingBox,context);
         ArrayList<POIPoint> result = poiCache.getCachedPOIPoints(context);
 
-        //assertEquals(inputArrayList.size(), result.size(),);
-        StringBuilder sb = new StringBuilder();
-        for(POIPoint poi : result){
-            sb.append(poi.getName() +" ");
-        }
-        assertTrue(sb.toString(),inputArrayList.size() == result.size());
-
-
+        assertEquals(inputArrayList.size(), result.size());
         assertTrue(inputArrayList.contains(result.get(0)));
         assertTrue(inputArrayList.contains(result.get(1)));
         assertTrue(inputArrayList.contains(result.get(2)));
@@ -146,11 +155,7 @@ public class POICacheTest {
     @Test
     public void testPOICacheIsUserInBoundingBox(){
         POICache poiCache = POICache.getInstance();
-        boolean userInBB = poiCache.isUserInBoundingBox(userPoint,context);
-        assertTrue("lat: "+ userPoint.getLatitude()+" long: " +userPoint.getLongitude() + " bb string " +
-                userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM).toString()+ " cached bb"  +
-                POICache.getCachedBoundingBox().toString()
-                ,userInBB);
+        assertTrue(poiCache.isUserInBoundingBox(UserPoint.getInstance(context),context));
     }
 
     /*Check if the cache file is present*/
@@ -159,6 +164,4 @@ public class POICacheTest {
         POICache poiCache = POICache.getInstance();
         assertTrue(poiCache.isCacheFilePresent(context));
     }
-
-
 }
