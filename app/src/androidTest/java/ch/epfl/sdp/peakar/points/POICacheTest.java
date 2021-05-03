@@ -67,7 +67,8 @@ public class POICacheTest {
                 MOCK_LOCATION_ALT_CHAMONIX,
                 0);
         //BoundingBox boundingBox = userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM);
-        BoundingBox boundingBox = computeBoundingBox(MOCK_LOCATION_LAT_CHAMONIX,MOCK_LOCATION_LON_CHAMONIX,GeonamesHandler.DEFAULT_RANGE_IN_KM);
+        //BoundingBox boundingBox = computeBoundingBox(MOCK_LOCATION_LAT_CHAMONIX,MOCK_LOCATION_LON_CHAMONIX,GeonamesHandler.DEFAULT_RANGE_IN_KM);
+        BoundingBox boundingBox = new BoundingBox(46.108056004131036,7.131633620191105,45.74873152413104,6.615033878970559);
         //Create mock cache content
         POICacheContent poiCacheContent = new POICacheContent(inputArrayList,boundingBox);
         Gson gson = new Gson();
