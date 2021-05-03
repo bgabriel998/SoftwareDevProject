@@ -131,7 +131,6 @@ public class ProfileActivityTest {
     @Test
     public void withNoAccountSignedTest() throws InterruptedException {
         removeAuthUser();
-        AuthService.getInstance().getAuthAccount().init();
         testRule.getScenario().recreate();
         Thread.sleep(SHORT_SLEEP_TIME);
 
@@ -231,12 +230,10 @@ public class ProfileActivityTest {
     public void changeUsernameButtonTest() throws InterruptedException {
         Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(SHORT_SLEEP_TIME);
-        AuthService.getInstance().getAuthAccount().init();
+        FirebaseAuthService.getInstance().forceRetrieveData();
         testRule.getScenario().recreate();
-        Thread.sleep(SHORT_SLEEP_TIME);
 
         onView(withId(R.id.changeUsernameButton)).perform(click());
-        Thread.sleep(SHORT_SLEEP_TIME);
         Espresso.onView(withId(R.id.submitUsernameButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
@@ -245,9 +242,8 @@ public class ProfileActivityTest {
     public void addFriendTextTest() throws InterruptedException {
         Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(SHORT_SLEEP_TIME);
-        AuthService.getInstance().getAuthAccount().init();
+        FirebaseAuthService.getInstance().forceRetrieveData();
         testRule.getScenario().recreate();
-        Thread.sleep(SHORT_SLEEP_TIME);
 
         onView(withId(R.id.addFriendButton)).perform(click());
         ViewInteraction addFriendText = Espresso.onView(withId(R.id.editTextFriend));
@@ -260,15 +256,13 @@ public class ProfileActivityTest {
         Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_FRIENDS + user2), Arrays.asList(user1, ""));
         Database.setChild(Database.CHILD_USERS + user2, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user2));
         Thread.sleep(SHORT_SLEEP_TIME);
-        AuthService.getInstance().getAuthAccount().init();
+        FirebaseAuthService.getInstance().forceRetrieveData();
         testRule.getScenario().recreate();
-        Thread.sleep(SHORT_SLEEP_TIME);
 
         onView(withId(R.id.addFriendButton)).perform(click());
         onView(withId(R.id.editTextFriend)).perform(typeText(user2));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());
-        Thread.sleep(SHORT_SLEEP_TIME);
         onView(withText(R.string.friend_already_added)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
@@ -279,14 +273,12 @@ public class ProfileActivityTest {
         Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Database.setChild(Database.CHILD_USERS + user2, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user2));
         Thread.sleep(SHORT_SLEEP_TIME);
-        AuthService.getInstance().getAuthAccount().init();
+        FirebaseAuthService.getInstance().forceRetrieveData();
         testRule.getScenario().recreate();
-        Thread.sleep(SHORT_SLEEP_TIME);
         onView(withId(R.id.addFriendButton)).perform(click());
         onView(withId(R.id.editTextFriend)).perform(typeText(user2));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());
-        Thread.sleep(SHORT_SLEEP_TIME);
         onView(withText(added_message)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
@@ -296,14 +288,12 @@ public class ProfileActivityTest {
         Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(SHORT_SLEEP_TIME);
         FirebaseAuthService.getInstance().forceRetrieveData();
-        AuthService.getInstance().getAuthAccount().init();
         testRule.getScenario().recreate();
 
         onView(withId(R.id.addFriendButton)).perform(click());
         onView(withId(R.id.editTextFriend)).perform(typeText(user1));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());
-        Thread.sleep(SHORT_SLEEP_TIME);
         onView(withText(R.string.add_current_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
@@ -312,15 +302,13 @@ public class ProfileActivityTest {
     public void addNoExistingUser() throws InterruptedException {
         Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(SHORT_SLEEP_TIME);
-        AuthService.getInstance().getAuthAccount().init();
+        FirebaseAuthService.getInstance().forceRetrieveData();
         testRule.getScenario().recreate();
-        Thread.sleep(SHORT_SLEEP_TIME);
 
         onView(withId(R.id.addFriendButton)).perform(click());
         onView(withId(R.id.editTextFriend)).perform(typeText(user2));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());
-        Thread.sleep(SHORT_SLEEP_TIME);
         onView(withText(R.string.friend_not_present_db)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
@@ -331,15 +319,13 @@ public class ProfileActivityTest {
 
         Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(SHORT_SLEEP_TIME);
-        AuthService.getInstance().getAuthAccount().init();
+        FirebaseAuthService.getInstance().forceRetrieveData();
         testRule.getScenario().recreate();
-        Thread.sleep(SHORT_SLEEP_TIME);
 
         onView(withId(R.id.addFriendButton)).perform(click());
         onView(withId(R.id.editTextFriend)).perform(typeText(username));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());
-        Thread.sleep(SHORT_SLEEP_TIME);
         onView(withText(R.string.invalid_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
@@ -348,17 +334,14 @@ public class ProfileActivityTest {
     public void signOutButtonTest() throws InterruptedException {
         Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(SHORT_SLEEP_TIME);
-        AuthService.getInstance().getAuthAccount().init();
+        FirebaseAuthService.getInstance().forceRetrieveData();
         testRule.getScenario().recreate();
-        Thread.sleep(SHORT_SLEEP_TIME);
 
         removeAuthUser();
         onView(withId(R.id.signOutButton)).perform(click());
-        Thread.sleep(SHORT_SLEEP_TIME);
         Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
 
         onView(withId(R.id.signInButton)).perform(click());
-        Thread.sleep(SHORT_SLEEP_TIME);
         intended(IntentMatchers.hasComponent(com.google.android.gms.auth.api.signin.internal.SignInHubActivity.class.getName()));
     }
 
@@ -367,9 +350,8 @@ public class ProfileActivityTest {
     public void friendsButtonTest() throws InterruptedException {
         Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(SHORT_SLEEP_TIME);
-        AuthService.getInstance().getAuthAccount().init();
+        FirebaseAuthService.getInstance().forceRetrieveData();
         testRule.getScenario().recreate();
-        Thread.sleep(SHORT_SLEEP_TIME);
 
         onView(withId(R.id.friendsButton)).perform(click());
         intended(IntentMatchers.hasComponent(FriendsActivity.class.getName()));
@@ -380,9 +362,8 @@ public class ProfileActivityTest {
     public void addFriendButtonTest() throws InterruptedException {
         Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(SHORT_SLEEP_TIME);
-        AuthService.getInstance().getAuthAccount().init();
+        FirebaseAuthService.getInstance().forceRetrieveData();
         testRule.getScenario().recreate();
-        Thread.sleep(SHORT_SLEEP_TIME);
 
         onView(withId(R.id.addFriendButton)).perform(click());
         intended(IntentMatchers.hasComponent(AddFriendActivity.class.getName()));

@@ -171,24 +171,19 @@ public class FirebaseAccount extends Account implements RemoteResource {
     /* GETTERS */
 
     @Override
-    public boolean init() {
-        if(!username.equals(USERNAME_BEFORE_REGISTRATION)) return true;
-        Task<DataSnapshot> checkTask = dbRefUser.get();
-        try {
-            Tasks.await(checkTask);
+    public void init() {
+        if(username.equals(USERNAME_BEFORE_REGISTRATION)) {
+            Task<DataSnapshot> checkTask = dbRefUser.get();
+            try {
+                Tasks.await(checkTask);
 
-            DataSnapshot data = checkTask.getResult();
-            assert data != null;
+                DataSnapshot data = checkTask.getResult();
+                assert data != null;
 
-            if(!data.exists()) return false;
-
-            // If the account exists but is not loaded, load it
-            retrieveData();
-
-            return true;
-
-        } catch (Exception e) {
-            return false;
+                // If the account is registered but is not loaded, load it
+                if (data.exists()) retrieveData();;
+            } catch (Exception ignored) {
+            }
         }
     }
 
