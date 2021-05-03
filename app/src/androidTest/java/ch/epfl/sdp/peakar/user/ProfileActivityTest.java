@@ -66,6 +66,7 @@ public class ProfileActivityTest {
     /* Clean environment */
     @AfterClass
     public static void end() {
+        removeTestUsers();
         removeAuthUser();
     }
 
@@ -83,8 +84,7 @@ public class ProfileActivityTest {
     }
 
     /* Make sure that mock users are not on the database after a test */
-    @After
-    public void removeTestUsers() {
+    public static void removeTestUsers() {
         Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
         Task<Void> task2 = Database.refRoot.child(Database.CHILD_USERS).child(user2).removeValue();
         try {
