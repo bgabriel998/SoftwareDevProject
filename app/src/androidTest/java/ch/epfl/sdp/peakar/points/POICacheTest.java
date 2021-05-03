@@ -137,14 +137,11 @@ public class POICacheTest {
     @Test
     public void testPOICacheIsUserInBoundingBox(){
         POICache poiCache = POICache.getInstance();
-        userPoint.setLocation(
-                MOCK_LOCATION_LAT_CHAMONIX,
-                MOCK_LOCATION_LON_CHAMONIX,
-                MOCK_LOCATION_ALT_CHAMONIX,
-                0);
-        assertTrue("lat: "+ userPoint.getLatitude()+" long: " +userPoint.getLongitude() + " bb center " +
-                userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM).getCenterLatitude()
-                ,poiCache.isUserInBoundingBox(userPoint,context));
+        boolean userInBB = poiCache.isUserInBoundingBox(userPoint,context);
+        assertTrue("lat: "+ userPoint.getLatitude()+" long: " +userPoint.getLongitude() + " bb string " +
+                userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM).toString()+ " cached bb"  +
+                POICache.getCachedBoundingBox().toString()
+                ,userInBB);
     }
 
     /*Check if the cache file is present*/

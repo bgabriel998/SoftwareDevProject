@@ -142,4 +142,8 @@ public class POICache {
             retrievePOIDataFromCache(context);
         return cachedPOIPoints;
     }
+
+    public static BoundingBox getCachedBoundingBox() {
+        return cachedBoundingBox;
+    }
 }
