@@ -112,7 +112,7 @@ public class RankingsActivityTest {
 
     /* Test that mock user sin list view are at correct places and contain correct data */
     @Test
-    public void TestContentOfListView() throws InterruptedException {
+    public void TestContentOfListView() {
         // Check correct data
         DataInteraction interaction =  onData(instanceOf(RankingItem.class));
         for(int i=0; i <= mockPoints.size(); i++) {
