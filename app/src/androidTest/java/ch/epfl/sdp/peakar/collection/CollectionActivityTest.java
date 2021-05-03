@@ -67,7 +67,7 @@ public class CollectionActivityTest {
         registerAuthUser();
 
         //Write peaks to the database
-        GeoPoint geoPoint_1 = new GeoPoint(45.8325,6.8641666666667,4810);
+        GeoPoint geoPoint_1 = new GeoPoint(MONT_BLANC_LAT,MONT_BLANC_LONG,MONT_BLANC_ALT);
         POIPoint point_1 = new POIPoint(geoPoint_1);
         point_1.setName(MONT_BLANC_NAME);
 
