@@ -6,7 +6,7 @@ import android.location.Geocoder;
 import android.util.Log;
 
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
-import ch.epfl.sdp.peakar.database.DataBaseHelper;
+import ch.epfl.sdp.peakar.database.DatabaseHelper;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 
@@ -20,7 +20,7 @@ public class UserScore {
 
     /*Local database cache*/
     private HashMap<String, CountryHighPoint> databaseCache = null;
-    private DataBaseHelper dataBaseHelper = null;
+    private DatabaseHelper dataBaseHelper = null;
 
     private final Context mContext;
 
@@ -36,7 +36,7 @@ public class UserScore {
 
         databaseCache = new HashMap<String, CountryHighPoint>();
         if(dataBaseHelper == null){
-            dataBaseHelper = new DataBaseHelper(context);
+            dataBaseHelper = new DatabaseHelper(context);
         }
     }
 
