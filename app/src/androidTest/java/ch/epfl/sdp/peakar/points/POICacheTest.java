@@ -95,7 +95,7 @@ public class POICacheTest {
     @AfterClass
     public static void cleanup(){
         //Remove manually created file
-        File cacheDir = context.getCacheDir();
+        File cacheDir = ApplicationProvider.getApplicationContext().getCacheDir();
         File outputFile = new File(cacheDir,CACHE_FILE_NAME_TEST);
         //noinspection ResultOfMethodCallIgnored
         outputFile.delete();
