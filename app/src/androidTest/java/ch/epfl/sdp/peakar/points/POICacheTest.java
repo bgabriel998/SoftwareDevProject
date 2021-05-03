@@ -37,11 +37,7 @@ public class POICacheTest {
         context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
         userPoint = UserPoint.getInstance(context);
-        userPoint.setLocation(
-                MOCK_LOCATION_LAT_CHAMONIX,
-                MOCK_LOCATION_LON_CHAMONIX,
-                MOCK_LOCATION_ALT_CHAMONIX,
-                0);
+
         File file = new File(context.getCacheDir(),CACHE_FILE_NAME_TEST);
 
         GeoPoint geoPoint_1 = new GeoPoint(MONT_BLANC_LAT,MONT_BLANC_LONG,MONT_BLANC_ALT);
@@ -65,7 +61,13 @@ public class POICacheTest {
         inputArrayList.add(point_1);
         inputArrayList.add(point_3);
         inputArrayList.add(point_4);
-        BoundingBox boundingBox = userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM);
+        userPoint.setLocation(
+                MOCK_LOCATION_LAT_CHAMONIX,
+                MOCK_LOCATION_LON_CHAMONIX,
+                MOCK_LOCATION_ALT_CHAMONIX,
+                0);
+        //BoundingBox boundingBox = userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM);
+        BoundingBox boundingBox = computeBoundingBox(MOCK_LOCATION_LAT_CHAMONIX,MOCK_LOCATION_LON_CHAMONIX,GeonamesHandler.DEFAULT_RANGE_IN_KM);
         //Create mock cache content
         POICacheContent poiCacheContent = new POICacheContent(inputArrayList,boundingBox);
         Gson gson = new Gson();
@@ -84,6 +86,16 @@ public class POICacheTest {
             Log.e("Exception", "File write failed cache POIPoints: " + e.toString());
         }
 
+    }
+
+    private static final double ADJUST_COORDINATES = 0.008983112; // 1km in degrees at equator.
+    public static BoundingBox computeBoundingBox(double latitude, double longitude, double rangeInKm){
+        double north = latitude + ( rangeInKm * ADJUST_COORDINATES);
+        double south = latitude - ( rangeInKm * ADJUST_COORDINATES);
+        double lngRatio = 1/Math.cos(Math.toRadians(latitude));
+        double east = longitude + (rangeInKm * ADJUST_COORDINATES) * lngRatio;
+        double west = longitude - (rangeInKm * ADJUST_COORDINATES) * lngRatio;
+        return new BoundingBox(north,east,south,west);
     }
 
     @AfterClass
