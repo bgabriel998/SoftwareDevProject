@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
+import ch.epfl.sdp.peakar.user.services.Account;
 import ch.epfl.sdp.peakar.user.services.AuthProvider;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
@@ -111,17 +112,8 @@ public class ProfileActivity extends AppCompatActivity {
         if(authService.getAuthAccount() == null) setMenuUI();
         else {
             // If there is a user already logged, check if the user is already registered
-            if(authService.getAuthAccount().getUsername() != null) {
-                // Start the check
-                new Thread(() -> {
-                    boolean registered = authService.getAuthAccount().isRegistered();
-                    runOnUiThread(() -> {
-                        // Handle the check result
-                        if(registered) setMenuUI();
-                        else setUsernameChoiceUI();
-                    });
-                }).start();
-            }
+            if(authService.getAuthAccount().getUsername().equals(Account.USERNAME_BEFORE_REGISTRATION)) setUsernameChoiceUI();
+            else setMenuUI();
         }
     }
 

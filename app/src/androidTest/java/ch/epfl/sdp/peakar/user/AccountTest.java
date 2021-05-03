@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static ch.epfl.sdp.peakar.TestingConstants.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -36,11 +37,6 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class AccountTest {
-    public final static String BASIC_USERNAME = "test";
-    public final static int SHORT_SLEEP_TIME = 500;
-    public final static int LONG_SLEEP_TIME = 1500;
-    public final static int USER_SCORE = 200000;
-
     private static String user1;
     private static String user2;
 

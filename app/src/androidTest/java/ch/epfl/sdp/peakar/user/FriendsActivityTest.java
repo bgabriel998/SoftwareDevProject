@@ -43,8 +43,7 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.peakar.user.AccountTest.BASIC_USERNAME;
-import static ch.epfl.sdp.peakar.user.AccountTest.SHORT_SLEEP_TIME;
+import static ch.epfl.sdp.peakar.TestingConstants.*;
 import static ch.epfl.sdp.peakar.user.AccountTest.registerAuthUser;
 import static ch.epfl.sdp.peakar.user.AccountTest.removeAuthUser;
 import static org.hamcrest.Matchers.allOf;
@@ -131,22 +130,22 @@ public class FriendsActivityTest {
             Database.setChild(Database.CHILD_USERS + username + ((i < 10) ? "0" + i : i), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(username + i));
         }
         Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(username));
-        Thread.sleep(AccountTest.LONG_SLEEP_TIME);
+        Thread.sleep(LONG_SLEEP_TIME);
 
         // Add mock users to the friends
         for(int i=0; i < FRIENDS_SIZE; i++) {
             Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID() + Database.CHILD_FRIENDS, Collections.singletonList(username + ((i < 10) ? "0" + i : i)), Collections.singletonList(""));
         }
-        Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
+        Thread.sleep(LONG_SLEEP_TIME * 2);
 
         FirebaseAuthService.getInstance().forceRetrieveData();
-        Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
+        Thread.sleep(LONG_SLEEP_TIME * 2);
 
         assertNotNull(AuthService.getInstance().getAuthAccount().getFriends());
         assertSame(20, AuthService.getInstance().getAuthAccount().getFriends().size());
 
         testRule.getScenario().recreate();
-        Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
+        Thread.sleep(LONG_SLEEP_TIME * 2);
 
         DataInteraction interaction =  onData(instanceOf(FriendItem.class));
 
@@ -163,7 +162,7 @@ public class FriendsActivityTest {
         String newUsername = username + "new";
         int newScore = 20;
         Database.setChild(Database.CHILD_USERS + username + "00", Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_SCORE), Arrays.asList(newUsername, newScore));
-        Thread.sleep(AccountTest.SHORT_SLEEP_TIME * 2);
+        Thread.sleep(SHORT_SLEEP_TIME * 2);
 
         // Check username has been updated
         interaction.atPosition(0).onChildView(withId(R.id.friend_username))
@@ -183,13 +182,13 @@ public class FriendsActivityTest {
 
         // Add mock user to the friends
         Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID() + Database.CHILD_FRIENDS, Collections.singletonList(FRIEND_USER), Collections.singletonList(""));
-        Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
+        Thread.sleep(LONG_SLEEP_TIME * 2);
 
         FirebaseAuthService.getInstance().forceRetrieveData();
-        Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
+        Thread.sleep(LONG_SLEEP_TIME * 2);
 
         testRule.getScenario().recreate();
-        Thread.sleep(AccountTest.LONG_SLEEP_TIME * 2);
+        Thread.sleep(LONG_SLEEP_TIME * 2);
 
         // Item at pos 0 looks like this
         FriendItem correctItem = new FirebaseFriendItem(
@@ -200,7 +199,7 @@ public class FriendsActivityTest {
         // Get Item at pos 0 and click.
         DataInteraction listItem = onData(instanceOf(FriendItem.class)).atPosition(0);
         listItem.perform(ViewActions.click());
-        Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
+        Thread.sleep(SHORT_SLEEP_TIME);
 
         // Catch intent, and check information
         intended(allOf(IntentMatchers.hasComponent(FriendItemActivity.class.getName()),

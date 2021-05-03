@@ -1,6 +1,7 @@
 package ch.epfl.sdp.peakar.database;
 
 import android.content.Context;
+import static ch.epfl.sdp.peakar.TestingConstants.*;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -23,35 +24,35 @@ public class DatabaseTest {
     private static Context context;
 
     private static final int USER_OFFSET = new Random().nextInt();
-    private static final String user1 = AccountTest.BASIC_USERNAME + USER_OFFSET;
+    private static final String user1 = BASIC_USERNAME + USER_OFFSET;
 
     /* Make sure that mock users are not on the database after a test */
     @After
     public void removeTestUsers() throws InterruptedException {
         Database.refRoot.child(Database.CHILD_USERS).child(user1).removeValue();
-        Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
+        Thread.sleep(SHORT_SLEEP_TIME);
     }
 
     /* Test that isPresent method works */
     @Test
     public void isPresentTest() throws InterruptedException {
         Database.setChild(Database.CHILD_USERS + user1, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
-        Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
+        Thread.sleep(SHORT_SLEEP_TIME);
 
         Database.isPresent(Database.CHILD_USERS, Database.CHILD_USERNAME, "", Assert::fail, () -> assertTrue("Correct behavior", true));
         Database.isPresent(Database.CHILD_USERS, Database.CHILD_USERNAME, user1, () -> assertTrue("Correct behavior", true),  Assert::fail);
-        Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
+        Thread.sleep(SHORT_SLEEP_TIME);
     }
 
     /* Test that setChild method works */
     @Test
     public void setChildTest() throws InterruptedException {
         Database.isPresent(Database.CHILD_USERS, Database.CHILD_USERNAME, user1, Assert::fail, () -> assertTrue("Correct behavior", true));
-        Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
+        Thread.sleep(SHORT_SLEEP_TIME);
         Database.setChild(Database.CHILD_USERS + user1, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
-        Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
+        Thread.sleep(SHORT_SLEEP_TIME);
         Database.isPresent(Database.CHILD_USERS, Database.CHILD_USERNAME, user1, () -> assertTrue("Correct behavior", true), Assert::fail);
-        Thread.sleep(AccountTest.SHORT_SLEEP_TIME);
+        Thread.sleep(SHORT_SLEEP_TIME);
     }
 
     /* Test that exception is thrown if different list sizes are provided */

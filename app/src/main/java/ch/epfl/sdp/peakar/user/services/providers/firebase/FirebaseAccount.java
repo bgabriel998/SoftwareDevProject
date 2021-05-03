@@ -171,7 +171,7 @@ public class FirebaseAccount extends Account implements RemoteResource {
     /* GETTERS */
 
     @Override
-    public boolean isRegistered() {
+    public boolean init() {
         if(!username.equals(USERNAME_BEFORE_REGISTRATION)) return true;
         Task<DataSnapshot> checkTask = dbRefUser.get();
         try {

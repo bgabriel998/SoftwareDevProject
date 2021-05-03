@@ -106,9 +106,10 @@ public abstract class Account {
 
 
     /**
-     * Check if the current authenticated user is registered. If so, retrieve the user data.
+     * This method must be called on app opening if an account has been authenticated.
+     * If so, check if the user is registered and in this case retrieve the user data.
      */
-    public abstract boolean isRegistered();
+    public abstract boolean init();
 
 
     /* MODIFIERS TO IMPLEMENT WITH DATABASE INTERACTION */

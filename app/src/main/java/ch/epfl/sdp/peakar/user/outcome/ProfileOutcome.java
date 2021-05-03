@@ -2,6 +2,10 @@ package ch.epfl.sdp.peakar.user.outcome;
 
 import ch.epfl.sdp.peakar.R;
 
+/**
+ * Enum representing possible outcomes of operations on profiles.
+ * It's used to display the proper message after an operation on the model requested by the profile activity.
+ */
 public enum ProfileOutcome {
     INVALID(R.string.invalid_username),
     FRIEND_CURRENT(R.string.add_current_username),
@@ -20,6 +24,9 @@ public enum ProfileOutcome {
         this.message = message;
     }
 
+    /**
+     * Get an integer representing a resource string to display.
+     */
     public int getMessage() {
         return message;
     }
