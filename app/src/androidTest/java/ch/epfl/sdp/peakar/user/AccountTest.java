@@ -125,10 +125,9 @@ public class AccountTest {
 
     /**
      * Testing that changeUsername works fine
-     * @throws InterruptedException
      */
     @Test
-    public void changeUsernameTest() throws InterruptedException {
+    public void changeUsernameTest() {
         /* Get account */
         Account account = AuthService.getInstance().getAuthAccount();
 
