@@ -129,7 +129,7 @@ public class RankingsActivityTest {
 
     /* Test that all elements colors in list view are correct */
     @Test
-    public void TestColorOfListView() throws InterruptedException {
+    public void TestColorOfListView() {
         DataInteraction interaction =  onData(instanceOf(RankingItem.class));
 
         // Check correct colors on current fake user
