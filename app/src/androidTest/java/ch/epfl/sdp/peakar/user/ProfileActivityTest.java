@@ -131,6 +131,7 @@ public class ProfileActivityTest {
     @Test
     public void withNoAccountSignedTest() throws InterruptedException {
         removeAuthUser();
+        AuthService.getInstance().getAuthAccount().init();
         testRule.getScenario().recreate();
         Thread.sleep(SHORT_SLEEP_TIME);
 
@@ -230,6 +231,7 @@ public class ProfileActivityTest {
     public void changeUsernameButtonTest() throws InterruptedException {
         Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(SHORT_SLEEP_TIME);
+        AuthService.getInstance().getAuthAccount().init();
         testRule.getScenario().recreate();
         Thread.sleep(SHORT_SLEEP_TIME);
 
@@ -243,6 +245,7 @@ public class ProfileActivityTest {
     public void addFriendTextTest() throws InterruptedException {
         Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(SHORT_SLEEP_TIME);
+        AuthService.getInstance().getAuthAccount().init();
         testRule.getScenario().recreate();
         Thread.sleep(SHORT_SLEEP_TIME);
 
@@ -257,6 +260,7 @@ public class ProfileActivityTest {
         Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_FRIENDS + user2), Arrays.asList(user1, ""));
         Database.setChild(Database.CHILD_USERS + user2, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user2));
         Thread.sleep(SHORT_SLEEP_TIME);
+        AuthService.getInstance().getAuthAccount().init();
         testRule.getScenario().recreate();
         Thread.sleep(SHORT_SLEEP_TIME);
 
@@ -275,6 +279,7 @@ public class ProfileActivityTest {
         Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Database.setChild(Database.CHILD_USERS + user2, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user2));
         Thread.sleep(SHORT_SLEEP_TIME);
+        AuthService.getInstance().getAuthAccount().init();
         testRule.getScenario().recreate();
         Thread.sleep(SHORT_SLEEP_TIME);
         onView(withId(R.id.addFriendButton)).perform(click());
@@ -291,6 +296,7 @@ public class ProfileActivityTest {
         Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(SHORT_SLEEP_TIME);
         FirebaseAuthService.getInstance().forceRetrieveData();
+        AuthService.getInstance().getAuthAccount().init();
         testRule.getScenario().recreate();
 
         onView(withId(R.id.addFriendButton)).perform(click());
@@ -306,6 +312,7 @@ public class ProfileActivityTest {
     public void addNoExistingUser() throws InterruptedException {
         Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(SHORT_SLEEP_TIME);
+        AuthService.getInstance().getAuthAccount().init();
         testRule.getScenario().recreate();
         Thread.sleep(SHORT_SLEEP_TIME);
 
@@ -324,6 +331,7 @@ public class ProfileActivityTest {
 
         Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(SHORT_SLEEP_TIME);
+        AuthService.getInstance().getAuthAccount().init();
         testRule.getScenario().recreate();
         Thread.sleep(SHORT_SLEEP_TIME);
 
@@ -340,6 +348,7 @@ public class ProfileActivityTest {
     public void signOutButtonTest() throws InterruptedException {
         Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(SHORT_SLEEP_TIME);
+        AuthService.getInstance().getAuthAccount().init();
         testRule.getScenario().recreate();
         Thread.sleep(SHORT_SLEEP_TIME);
 
@@ -358,6 +367,7 @@ public class ProfileActivityTest {
     public void friendsButtonTest() throws InterruptedException {
         Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(SHORT_SLEEP_TIME);
+        AuthService.getInstance().getAuthAccount().init();
         testRule.getScenario().recreate();
         Thread.sleep(SHORT_SLEEP_TIME);
 
@@ -370,6 +380,7 @@ public class ProfileActivityTest {
     public void addFriendButtonTest() throws InterruptedException {
         Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(SHORT_SLEEP_TIME);
+        AuthService.getInstance().getAuthAccount().init();
         testRule.getScenario().recreate();
         Thread.sleep(SHORT_SLEEP_TIME);
 
