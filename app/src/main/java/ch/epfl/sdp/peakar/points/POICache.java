@@ -14,11 +14,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Class used to cache list of POIs in the surrounding
+ * The list of POI is converted to JSON, the corresponding bounding box
+ * is added to the JSON and everything is saved in the cache folder
+ * of the android device
+ */
 public class POICache {
     //Constants
-    private static final float INNER_BOUNDING_BOX_SCALING_FACTOR = 0.5f;
     private static final String CACHE_FILE_NAME = "POIPointsCache.txt";
-
 
     private static POICache instance;
     /*List of POIs contained in the cache*/
@@ -127,6 +131,12 @@ public class POICache {
         return cachedBoundingBox.contains(userPoint.getLatitude(), userPoint.getLongitude());
     }
 
+
+    /**
+     * Checks if cache file is present in device Cache folder
+     * @param context application context
+     * @return true if file is present. False if no file found
+     */
     public boolean isCacheFilePresent(Context context){
         File cacheDir = context.getCacheDir();
         File file = new File(cacheDir,CACHE_FILE_NAME);
@@ -141,9 +151,5 @@ public class POICache {
         if(cachedPOIPoints == null)
             retrievePOIDataFromCache(context);
         return cachedPOIPoints;
-    }
-
-    public static BoundingBox getCachedBoundingBox() {
-        return cachedBoundingBox;
     }
 }
