@@ -119,12 +119,8 @@ public class POICacheTest {
     @Test
     public void testPOICacheSaveRetrievePOIDataToCache(){
         POICache poiCache = POICache.getInstance();
-        userPoint.setLocation(
-                MOCK_LOCATION_LAT_CHAMONIX,
-                MOCK_LOCATION_LON_CHAMONIX,
-                MOCK_LOCATION_ALT_CHAMONIX,
-                0);
-        BoundingBox boundingBox = userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM);
+
+        BoundingBox boundingBox = computeBoundingBox(MOCK_LOCATION_LAT_CHAMONIX,MOCK_LOCATION_LON_CHAMONIX,GeonamesHandler.DEFAULT_RANGE_IN_KM);
         File cacheDir = context.getCacheDir();
         File outputFile = new File(cacheDir,CACHE_FILE_NAME_TEST);
         outputFile.delete();
