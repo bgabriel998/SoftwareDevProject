@@ -225,7 +225,7 @@ public class AccountTest {
      * Test that the set and get discovered country high points works
      */
     @Test
-    public void setAndGetDiscoveredCountryHighPoints()throws InterruptedException{
+    public void setAndGetDiscoveredCountryHighPoints() {
         /* Get account */
         Account account = AuthService.getInstance().getAuthAccount();
 
