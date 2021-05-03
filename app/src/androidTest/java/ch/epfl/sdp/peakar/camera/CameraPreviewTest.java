@@ -179,26 +179,6 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
     }
 
     /**
-     * Check if the correct orientation string is returned
-     */
-    @Test
-    public void getCorrectOrientationString(){
-        Context context = ApplicationProvider.getApplicationContext();
-        Assert.assertNotNull(context);
-        CameraUiView cameraUiView = new CameraUiView(context, null);
-        assertEquals(cameraUiView.selectHeadingString(0), "N");
-        assertEquals(cameraUiView.selectHeadingString(45), "NE");
-        assertEquals(cameraUiView.selectHeadingString(90), "E");
-        assertEquals(cameraUiView.selectHeadingString(135), "SE");
-        assertEquals(cameraUiView.selectHeadingString(180), "S");
-        assertEquals(cameraUiView.selectHeadingString(225), "SW");
-        assertEquals(cameraUiView.selectHeadingString(270), "W");
-        assertEquals(cameraUiView.selectHeadingString(315), "NW");
-        assertEquals(cameraUiView.selectHeadingString(360), "N");
-        assertEquals(cameraUiView.selectHeadingString(1), "");
-    }
-
-    /**
      * Test that toast is displayed with correct text after taking a picture in portrait and landscape mode
      */
     @Test

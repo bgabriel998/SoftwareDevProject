@@ -26,7 +26,9 @@ import java.util.stream.IntStream;
  * (~90 meter) is obtained.
  *
  */
-public class DownloadTopographyTask extends AsyncTask<Point, Void, Pair<int[][], Double>> implements DownloadTopographyTaskIF {
+public class DownloadTopographyTask extends AsyncTask<Point, Void, Pair<int[][], Double>>
+        implements DownloadTopographyTaskInterface {
+
     static final int BOUNDING_BOX_RANGE = 20; //range of the bounding box in km
 
     private final String BASE_URL = "https://portal.opentopography.org/API/globaldem";
@@ -169,8 +171,4 @@ public class DownloadTopographyTask extends AsyncTask<Point, Void, Pair<int[][],
     }
 
 
-}
-
-interface DownloadTopographyTaskIF {
-    void onResponseReceived(Pair<int[][], Double> topography);
 }
