@@ -58,8 +58,7 @@ public class ComputePOIPoints {
     private static void getPOIs(UserPoint userPoint){
         //Retrieve cache instance
         POICache poiCache = POICache.getInstance();
-        //Check if the user is in the cached BB. If yes
-        //load data from cache / if not download data
+        //Check if file is present and if user is in BB
         if(poiCache.isCacheFilePresent(ctx) && poiCache.isUserInBoundingBox(userPoint, ctx))
             getPOIsFromCache(userPoint);
         else
@@ -77,7 +76,9 @@ public class ComputePOIPoints {
             poiPoint.setHorizontalBearing(userPoint);
             poiPoint.setVerticalBearing(userPoint);
         }).collect(Collectors.toList()));
+        //TODO use this method to merge caching of the POIs and 3D map
         //getLabeledPOIs(userPoint);
+        //TODO =========================================<<
     }
 
     /**
