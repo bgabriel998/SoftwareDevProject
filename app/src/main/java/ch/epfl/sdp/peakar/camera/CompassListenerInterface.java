@@ -3,7 +3,7 @@ package ch.epfl.sdp.peakar.camera;
 /**
  * Interface for the CompassListener
  */
-public interface CompassListener {
+public interface CompassListenerInterface {
     /**
      * Gets the headings in degree
      * @param heading horizontal heading

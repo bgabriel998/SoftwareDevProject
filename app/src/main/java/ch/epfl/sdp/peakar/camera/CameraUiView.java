@@ -15,12 +15,13 @@ import androidx.core.util.Pair;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.utils.CameraUtilities;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * CompassView draws the compass on the display
+ * CameraUiView draws a canvas with the compass and mountain information on the camera-preview
  */
 public class CameraUiView extends View {
     //Paints used to draw the lines and heading of the compass on the camera-preview
@@ -194,7 +195,6 @@ public class CameraUiView extends View {
      * Sets the range in degrees of the compass-view, corresponds to the field of view of the camera
      * @param cameraFieldOfView Pair containing the horizontal and vertical field of view
      */
-    @SuppressWarnings("ConstantConditions")
     public void setRange(Pair<Float, Float> cameraFieldOfView) {
         int orientation = getResources().getConfiguration().orientation;
 
@@ -286,13 +286,13 @@ public class CameraUiView extends View {
 
             //Select the correct heading depending on the degree with selecHeadingString()
             //Draw the heading with the mainTextPaint above the line
-            canvas.drawText(selectHeadingString(i), pixDeg * (i - minDegrees), textHeight, mainTextPaint);
+            canvas.drawText(CameraUtilities.selectHeadingString(i), pixDeg * (i - minDegrees), textHeight, mainTextPaint);
         }
 
         //Draw a secondary line for every 45° excluding every 90° (45°, 135°, 225° ...)
         else if (i % 45 == 0){
             drawLine(i, secondaryLineHeight, secondaryLinePaint);
-            canvas.drawText(selectHeadingString(i), pixDeg * (i - minDegrees), textHeight, secondaryTextPaint);
+            canvas.drawText(CameraUtilities.selectHeadingString(i), pixDeg * (i - minDegrees), textHeight, secondaryTextPaint);
         }
 
         //Draw tertiary line for every 15° excluding every 45° and 90° (15, 30, 60, 75, ...)
@@ -395,34 +395,6 @@ public class CameraUiView extends View {
                 mountainInfo);
         //Restore the saved state
         canvas.restore();
-    }
-
-    /**
-     * Used to get the string of the actual heading
-     * @param degree degree to get the string
-     * @return String for the degree
-     */
-    String selectHeadingString(int degree){
-        switch (degree){
-            case 0: case 360:
-                return "N";
-            case 90: case 450:
-                return "E";
-            case -180: case 180:
-                return "S";
-            case -90: case 270:
-                return "W";
-            case 45: case 405:
-                return "NE";
-            case -45: case 315:
-                return "NW";
-            case 135: case 495:
-                return "SE";
-            case -135: case 225:
-                return "SW";
-            default:
-                return "";
-        }
     }
 
     /**
