@@ -13,7 +13,6 @@ import androidx.core.content.ContextCompat;
 
 import com.google.firebase.FirebaseApp;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -32,11 +31,6 @@ public class InitActivity extends AppCompatActivity {
 
         FirebaseApp.initializeApp(this);
 
-        File cacheDir = getApplicationContext().getCacheDir();
-        if(!cacheDir.exists()){
-            cacheDir.mkdirs();
-        }
-
         ProgressBar progressBar = findViewById(R.id.progressBarInitActivity);
         progressBar.setVisibility(View.VISIBLE);
         initApp();
@@ -50,11 +44,8 @@ public class InitActivity extends AppCompatActivity {
                 //Add here permissions
         });
 
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        //TODO : find solution to let the activity display permissions window
+        //TODO : before moving to Main menu
 
         //Opening the main menu
         Intent intent = new Intent(this, MainMenuActivity.class);

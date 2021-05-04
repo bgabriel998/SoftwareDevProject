@@ -120,17 +120,17 @@ public class POICacheTest {
         BoundingBox boundingBox = userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM);
 
         //Check if file is present
-        assertFalse("Old Cache file found",POICache.getInstance().isCacheFilePresent(context.getFilesDir()));
+        assertFalse("Old Cache file found",POICache.getInstance().isCacheFilePresent(context.getCacheDir()));
 
         //Create new cache file
-        POICache.getInstance().savePOIDataToCache(inputArrayList,boundingBox,context.getFilesDir());
+        POICache.getInstance().savePOIDataToCache(inputArrayList,boundingBox,context.getCacheDir());
 
         //Check if file is present
-        assertTrue("Cache file not found",POICache.getInstance().isCacheFilePresent(context.getFilesDir()));
+        assertTrue("Cache file not found",POICache.getInstance().isCacheFilePresent(context.getCacheDir()));
         //Check if the user is in the BB
-        assertTrue("isUserInBoundingBox returned false",POICache.getInstance().isUserInBoundingBox(UserPoint.getInstance(context),context.getFilesDir()));
+        assertTrue("isUserInBoundingBox returned false",POICache.getInstance().isUserInBoundingBox(UserPoint.getInstance(context),context.getCacheDir()));
         //Read created file
-        ArrayList<POIPoint> result = POICache.getInstance().getCachedPOIPoints(context.getFilesDir());
+        ArrayList<POIPoint> result = POICache.getInstance().getCachedPOIPoints(context.getCacheDir());
         //Check cache file content
         assertEquals("Cache: data written doesn't correspond to data retrieved...",inputArrayList.size(), result.size());
         assertTrue(inputArrayList.contains(result.get(0)));

@@ -125,8 +125,7 @@ public class POICache {
      */
     public boolean isUserInBoundingBox(UserPoint userPoint,File path){
         //Get the bounding box from file if not already present
-        if(cachedBoundingBox == null)
-            retrievePOIDataFromCache(path);
+        retrievePOIDataFromCache(path);
         //Decrease the size of the bounding box by half
         BoundingBox innerBox = cachedBoundingBox.increaseByScale(INNER_BOUNDING_BOX_SCALING_FACTOR);
         return innerBox.contains(userPoint.getLatitude(), userPoint.getLongitude());
@@ -148,8 +147,8 @@ public class POICache {
      * @return list of POI Points
      */
     public ArrayList<POIPoint> getCachedPOIPoints(File file){
-        if(cachedPOIPoints == null)
-            retrievePOIDataFromCache(file);
+
+        retrievePOIDataFromCache(file);
         return cachedPOIPoints;
     }
 }
