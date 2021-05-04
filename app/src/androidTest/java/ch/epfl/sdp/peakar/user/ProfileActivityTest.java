@@ -175,6 +175,11 @@ public class ProfileActivityTest {
         onView(withId(R.id.editTextUsername)).perform(typeText(user2));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitUsernameButton)).perform(click());
+        try {
+            Thread.sleep(SHORT_SLEEP_TIME);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         onView(withText(R.string.already_existing_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         Espresso.onView(withId(R.id.signInButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
     }
@@ -187,11 +192,21 @@ public class ProfileActivityTest {
         onView(withId(R.id.editTextUsername)).perform(typeText(user1));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitUsernameButton)).perform(click());
+        try {
+            Thread.sleep(SHORT_SLEEP_TIME);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         onView(withText(R.string.registered_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
         onView(withId(R.id.editTextUsername)).perform(typeText(user2));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitUsernameButton)).perform(click());
+        try {
+            Thread.sleep(SHORT_SLEEP_TIME);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         onView(withText(R.string.available_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         Espresso.onView(withId(R.id.submitUsernameButton)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
     }
@@ -207,6 +222,11 @@ public class ProfileActivityTest {
         onView(withId(R.id.editTextUsername)).perform(typeText("null"));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitUsernameButton)).perform(click());
+        try {
+            Thread.sleep(SHORT_SLEEP_TIME);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         onView(withText(R.string.current_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
@@ -219,6 +239,11 @@ public class ProfileActivityTest {
         onView(withId(R.id.editTextUsername)).perform(typeText(usernameTest));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitUsernameButton)).perform(click());
+        try {
+            Thread.sleep(SHORT_SLEEP_TIME);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         onView(withText(R.string.invalid_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
@@ -276,6 +301,11 @@ public class ProfileActivityTest {
         onView(withId(R.id.editTextFriend)).perform(typeText(user2));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());
+        try {
+            Thread.sleep(SHORT_SLEEP_TIME);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         onView(withText(R.string.friend_already_added)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
@@ -321,6 +351,11 @@ public class ProfileActivityTest {
         onView(withId(R.id.editTextFriend)).perform(typeText(user1));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());
+        try {
+            Thread.sleep(SHORT_SLEEP_TIME);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         onView(withText(R.string.add_current_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
@@ -340,6 +375,11 @@ public class ProfileActivityTest {
         onView(withId(R.id.editTextFriend)).perform(typeText(user2));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());
+        try {
+            Thread.sleep(SHORT_SLEEP_TIME);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         onView(withText(R.string.friend_not_present_db)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
@@ -361,6 +401,11 @@ public class ProfileActivityTest {
         onView(withId(R.id.editTextFriend)).perform(typeText(username));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());
+        try {
+            Thread.sleep(SHORT_SLEEP_TIME);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         onView(withText(R.string.invalid_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
