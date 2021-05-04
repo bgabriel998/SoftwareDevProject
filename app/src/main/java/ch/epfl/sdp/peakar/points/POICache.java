@@ -1,6 +1,5 @@
 package ch.epfl.sdp.peakar.points;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -55,22 +54,21 @@ public class POICache {
     /**
      * Save downloaded POIs and bounding box to cache file
      */
-    public void savePOIDataToCache(ArrayList<POIPoint> cachedPOIPoints, BoundingBox cachedBoundingBox, Context context){
+    public void savePOIDataToCache(ArrayList<POIPoint> cachedPOIPoints, BoundingBox cachedBoundingBox, File path){
         //Create a new object with all needed information to save in JSON
         POICacheContent poiCacheContent = new POICacheContent(cachedPOIPoints,cachedBoundingBox);
         //Convert to JSON
         String serializesCache = gson.toJson(poiCacheContent);
-        saveJson(serializesCache,context);
+        saveJson(serializesCache,path);
     }
 
     /**
      * Save the serialized JSON to text file
      * @param serializedObject string in json format
-     * @param context context
+     * @param path path to cache file
      */
-    private static void saveJson(String serializedObject,Context context){
-        File cacheDir = context.getCacheDir();
-        File outputFile = new File(cacheDir,CACHE_FILE_NAME);
+    private static void saveJson(String serializedObject,File path){
+        File outputFile = new File(path,CACHE_FILE_NAME);
             try{
             FileWriter writer = new FileWriter(outputFile);
             writer.append(serializedObject);
@@ -87,8 +85,8 @@ public class POICache {
      * Retrieve POI data from cache and overwrite cachedPOIPoints and cachedBoundingBox
      * with cache file values
      */
-    private static void retrievePOIDataFromCache(Context context){
-        String fileContent = readJSON(context);
+    private static void retrievePOIDataFromCache(File path){
+        String fileContent = readJSON(path);
         POICacheContent poiCacheContent = gson.fromJson(fileContent, POICacheContent.class);
         cachedPOIPoints = poiCacheContent.getCachedPOIPoints();
         cachedBoundingBox = poiCacheContent.getCachedBoundingBox();
@@ -99,8 +97,8 @@ public class POICache {
      * Read text file and retrieve serialized
      * @return serialized string
      */
-    private static String readJSON(Context context){
-        File file = new File(context.getCacheDir(),CACHE_FILE_NAME);
+    private static String readJSON(File path){
+        File file = new File(path, CACHE_FILE_NAME);
         StringBuilder fileContent = new StringBuilder();
             try{
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
@@ -125,10 +123,10 @@ public class POICache {
      * @return true if the user is in the middle of the cached bounding box
      *          false if not
      */
-    public boolean isUserInBoundingBox(UserPoint userPoint,Context context){
+    public boolean isUserInBoundingBox(UserPoint userPoint,File path){
         //Get the bounding box from file if not already present
         if(cachedBoundingBox == null)
-            retrievePOIDataFromCache(context);
+            retrievePOIDataFromCache(path);
         //Decrease the size of the bounding box by half
         BoundingBox innerBox = cachedBoundingBox.increaseByScale(INNER_BOUNDING_BOX_SCALING_FACTOR);
         return innerBox.contains(userPoint.getLatitude(), userPoint.getLongitude());
@@ -137,12 +135,11 @@ public class POICache {
 
     /**
      * Checks if cache file is present in device Cache folder
-     * @param context application context
+     * @param path path to cache file
      * @return true if file is present. False if no file found
      */
-    public boolean isCacheFilePresent(Context context){
-        File cacheDir = context.getCacheDir();
-        File file = new File(cacheDir,CACHE_FILE_NAME);
+    public boolean isCacheFilePresent(File path){
+        File file = new File(path,CACHE_FILE_NAME);
         return file.exists();
     }
 
@@ -150,9 +147,9 @@ public class POICache {
      * Returns the list of POI points from the cache
      * @return list of POI Points
      */
-    public ArrayList<POIPoint> getCachedPOIPoints(Context context){
+    public ArrayList<POIPoint> getCachedPOIPoints(File file){
         if(cachedPOIPoints == null)
-            retrievePOIDataFromCache(context);
+            retrievePOIDataFromCache(file);
         return cachedPOIPoints;
     }
 }

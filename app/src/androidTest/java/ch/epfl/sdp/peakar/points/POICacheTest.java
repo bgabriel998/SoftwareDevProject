@@ -1,12 +1,15 @@
 package ch.epfl.sdp.peakar.points;
 
+import android.Manifest;
 import android.content.Context;
 
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
@@ -41,6 +44,11 @@ import static org.junit.Assert.assertTrue;
 
 
 public class POICacheTest {
+
+    @Rule
+    public GrantPermissionRule grantCameraPermissionRule1 = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    @Rule
+    public GrantPermissionRule grantCameraPermissionRule2 = GrantPermissionRule.grant(Manifest.permission.READ_EXTERNAL_STORAGE);
 
     @BeforeClass
     public static void setup(){
@@ -112,17 +120,17 @@ public class POICacheTest {
         BoundingBox boundingBox = userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM);
 
         //Check if file is present
-        assertFalse("Old Cache file found",POICache.getInstance().isCacheFilePresent(context));
+        assertFalse("Old Cache file found",POICache.getInstance().isCacheFilePresent(context.getFilesDir()));
 
         //Create new cache file
-        POICache.getInstance().savePOIDataToCache(inputArrayList,boundingBox,context);
+        POICache.getInstance().savePOIDataToCache(inputArrayList,boundingBox,context.getFilesDir());
 
         //Check if file is present
-        assertTrue("Cache file not found",POICache.getInstance().isCacheFilePresent(context));
+        assertTrue("Cache file not found",POICache.getInstance().isCacheFilePresent(context.getFilesDir()));
         //Check if the user is in the BB
-        assertTrue("isUserInBoundingBox returned false",POICache.getInstance().isUserInBoundingBox(UserPoint.getInstance(context),context));
+        assertTrue("isUserInBoundingBox returned false",POICache.getInstance().isUserInBoundingBox(UserPoint.getInstance(context),context.getFilesDir()));
         //Read created file
-        ArrayList<POIPoint> result = POICache.getInstance().getCachedPOIPoints(context);
+        ArrayList<POIPoint> result = POICache.getInstance().getCachedPOIPoints(context.getFilesDir());
         //Check cache file content
         assertEquals("Cache: data written doesn't correspond to data retrieved...",inputArrayList.size(), result.size());
         assertTrue(inputArrayList.contains(result.get(0)));

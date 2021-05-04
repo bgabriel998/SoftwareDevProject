@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat;
 
 import com.google.firebase.FirebaseApp;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -30,6 +31,11 @@ public class InitActivity extends AppCompatActivity {
         setContentView(R.layout.activity_init);
 
         FirebaseApp.initializeApp(this);
+
+        File cacheDir = getApplicationContext().getCacheDir();
+        if(!cacheDir.exists()){
+            cacheDir.mkdirs();
+        }
 
         ProgressBar progressBar = findViewById(R.id.progressBarInitActivity);
         progressBar.setVisibility(View.VISIBLE);

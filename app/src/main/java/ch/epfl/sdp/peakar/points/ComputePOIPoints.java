@@ -59,7 +59,7 @@ public class ComputePOIPoints {
         //Retrieve cache instance
         POICache poiCache = POICache.getInstance();
         //Check if file is present and if user is in BB
-        if(poiCache.isCacheFilePresent(ctx) && poiCache.isUserInBoundingBox(userPoint, ctx))
+        if(poiCache.isCacheFilePresent(ctx.getApplicationContext().getCacheDir()) && poiCache.isUserInBoundingBox(userPoint, ctx.getCacheDir()))
             getPOIsFromCache(userPoint);
         else
             getPOIsFromProvider(userPoint);
@@ -70,7 +70,7 @@ public class ComputePOIPoints {
      * @param userPoint location of the user
      */
     private static void getPOIsFromCache(UserPoint userPoint){
-        ArrayList<POIPoint> cachedPOIs = POICache.getInstance().getCachedPOIPoints(ctx);
+        ArrayList<POIPoint> cachedPOIs = POICache.getInstance().getCachedPOIPoints(ctx.getCacheDir());
         POIPoints.addAll(cachedPOIs.stream().peek(poiPoint ->
         {
             poiPoint.setHorizontalBearing(userPoint);
@@ -96,7 +96,7 @@ public class ComputePOIPoints {
                         poiPoint.setVerticalBearing(userPoint);
                         POIPoints.add(poiPoint);
                     }
-                    POICache.getInstance().savePOIDataToCache(new ArrayList<>(POIPoints),userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM), ctx);
+                    POICache.getInstance().savePOIDataToCache(new ArrayList<>(POIPoints),userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM), ctx.getCacheDir());
                     getLabeledPOIs(userPoint);
                 }
             }
