@@ -2,7 +2,6 @@ package ch.epfl.sdp.peakar.camera;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.ImageFormat;
@@ -37,7 +36,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.experimental.theories.Theories;
 import org.junit.runner.RunWith;
 
 import java.lang.reflect.InvocationTargetException;
