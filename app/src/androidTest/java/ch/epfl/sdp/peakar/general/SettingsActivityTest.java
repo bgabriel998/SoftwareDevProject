@@ -289,7 +289,7 @@ public class SettingsActivityTest{
         //Get selected value
         Boolean startVal = sharedPreferences.getBoolean("developer_options", false);
         onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.offline_mode_title))),
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.display_dev_options))),
                         click()));
         Boolean endVal = sharedPreferences.getBoolean("developer_options", false);
         assertThat(startVal, not(is(endVal)));
