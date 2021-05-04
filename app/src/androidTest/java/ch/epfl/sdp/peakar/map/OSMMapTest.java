@@ -143,7 +143,7 @@ public class OSMMapTest {
 
         GeoPoint geoPoint_3 = new GeoPoint(AIGUILLE_DU_PLAN_LAT, AIGUILLE_DU_PLAN_LONG,AIGUILLE_DU_PLAN_ALT);
         POIPoint point_3 = new POIPoint(geoPoint_3);
-        point_3.setName(AIGUILLE_DU_PLAN);
+        point_3.setName(AIGUILLE_DU_PLAN_NAME);
 
         GeoPoint geoPoint_4 = new GeoPoint(POINTE_DE_LAPAZ_LAT, POINTE_DE_LAPAZ_LONG,POINTE_DE_LAPAZ_ALT);
         POIPoint point_4 = new POIPoint(geoPoint_4);
@@ -190,7 +190,7 @@ public class OSMMapTest {
                     case MONT_BLANC_NAME:
                         MontBlancMarkerPresent = true;
                         break;
-                    case AIGUILLE_DU_PLAN:
+                    case AIGUILLE_DU_PLAN_NAME:
                         AiguilleDuPlanMarkerPresent = true;
                         break;
                     case DENT_DU_GEANT_NAME:

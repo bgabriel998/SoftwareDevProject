@@ -2,7 +2,7 @@ package ch.epfl.sdp.peakar.points;
 
 import android.content.Context;
 
-import org.osmdroid.util.BoundingBox;
+
 
 
 /**
@@ -26,7 +26,7 @@ public final class UserPoint extends Point {
 
     private static UserPoint single_instance = null; // singleton instance
   
-    private GPSTracker gpsTracker;
+    private final GPSTracker gpsTracker;
 
     private double accuracy;
 

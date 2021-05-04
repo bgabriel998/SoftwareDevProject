@@ -1,5 +1,6 @@
 package ch.epfl.sdp.peakar.points;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
 import androidx.core.util.Pair;
@@ -28,6 +29,8 @@ public class ComputePOIPoints {
     public static Map<POIPoint, Boolean> labeledPOIPoints;
     public static Map<POIPoint, Boolean> highestPOIPoints;
     public static UserPoint userPoint;
+    @SuppressLint("StaticFieldLeak")
+    public static Context ctx;
 
     private static final int HALF_MARKER_SIZE_WIDTH = 3;
     private static final int HALF_MARKER_SIZE_HEIGHT = 5;
@@ -37,17 +40,52 @@ public class ComputePOIPoints {
      * @param context Context of activity
      */
     public ComputePOIPoints(Context context){
+        ctx = context;
         POIPoints = new ArrayList<>();
         userPoint = UserPoint.getInstance(context);
         userPoint.update();
         getPOIs(userPoint);
     }
 
+
     /**
-     * Gets the POIs for the userPoint
-     * @param userPoint location of the user
+     * Retrieves list of surrounding POIs either from cache
+     * or from provider. If the cached data corresponds to
+     * the user location, no download is made and the POIs
+     * are retrieved from cached file
+     * @param userPoint user location
      */
     private static void getPOIs(UserPoint userPoint){
+        //Retrieve cache instance
+        POICache poiCache = POICache.getInstance();
+        //Check if file is present and if user is in BB
+        if(poiCache.isCacheFilePresent(ctx.getApplicationContext().getCacheDir()) && poiCache.isUserInBoundingBox(userPoint, ctx.getCacheDir()))
+            getPOIsFromCache(userPoint);
+        else
+            getPOIsFromProvider(userPoint);
+    }
+
+    /**
+     * Get surrounding POIs from cache
+     * @param userPoint location of the user
+     */
+    private static void getPOIsFromCache(UserPoint userPoint){
+        ArrayList<POIPoint> cachedPOIs = POICache.getInstance().getCachedPOIPoints(ctx.getCacheDir());
+        POIPoints.addAll(cachedPOIs.stream().peek(poiPoint ->
+        {
+            poiPoint.setHorizontalBearing(userPoint);
+            poiPoint.setVerticalBearing(userPoint);
+        }).collect(Collectors.toList()));
+        //TODO use this method to merge caching of the POIs and 3D map
+        //getLabeledPOIs(userPoint);
+        //TODO =========================================<<
+    }
+
+    /**
+     * Gets the POIs for the userPoint from Provider
+     * @param userPoint location of the user
+     */
+    private static void getPOIsFromProvider(UserPoint userPoint){
         new GeonamesHandler(userPoint){
             @Override
             public void onResponseReceived(ArrayList<POI> result) {
@@ -58,6 +96,7 @@ public class ComputePOIPoints {
                         poiPoint.setVerticalBearing(userPoint);
                         POIPoints.add(poiPoint);
                     }
+                    POICache.getInstance().savePOIDataToCache(new ArrayList<>(POIPoints),userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM), ctx.getCacheDir());
                     getLabeledPOIs(userPoint);
                 }
             }

@@ -11,14 +11,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.points.ComputePOIPoints;
-import ch.epfl.sdp.peakar.user.services.AuthService;
-
 import com.google.firebase.FirebaseApp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.points.ComputePOIPoints;
+import ch.epfl.sdp.peakar.user.services.AuthService;
+
 
 public class InitActivity extends AppCompatActivity {
 
@@ -43,6 +44,9 @@ public class InitActivity extends AppCompatActivity {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
                 //Add here permissions
         });
+
+        //TODO : find solution to let the activity display permissions window
+        //TODO : before moving to Main menu
 
         //Opening the main menu
         Intent intent = new Intent(this, MainMenuActivity.class);
