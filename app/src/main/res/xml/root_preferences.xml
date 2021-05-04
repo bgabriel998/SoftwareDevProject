@@ -44,7 +44,7 @@
             android:key="@string/displayPOIs_key"
             android:title="@string/display_pois_title"
             app:useSimpleSummaryProvider="true"
-            android:dialogIcon="@drawable/ic_baseline_language_24"
+            android:dialogIcon="@drawable/ic_line_of_sight_camera"
             android:icon="@drawable/ic_line_of_sight_camera"/>
 
         <SwitchPreference
@@ -52,6 +52,12 @@
             android:key="@string/filterPOIs_key"
             android:title="@string/filter_pois_title"
             android:icon="@drawable/ic_filter_pois_camera"/>
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/dev_options_camera_key"
+            android:title="@string/filter_pois_title"
+            android:icon="@drawable/ic_developer_options_camera"/>
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/language_header">
