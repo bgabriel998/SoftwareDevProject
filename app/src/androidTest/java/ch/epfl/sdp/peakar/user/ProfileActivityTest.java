@@ -297,6 +297,11 @@ public class ProfileActivityTest {
         onView(withId(R.id.editTextFriend)).perform(typeText(user2));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());
+        try {
+            Thread.sleep(SHORT_SLEEP_TIME);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         onView(withText(added_message)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
