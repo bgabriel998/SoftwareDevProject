@@ -283,15 +283,13 @@ public class SettingsActivityTest{
     @Test
     public void TestEnableDeveloperOptions(){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear().commit();
 
         //Get selected value
-        Boolean startVal = sharedPreferences.getBoolean("developer_options", false);
+        boolean startVal = sharedPreferences.getBoolean("developer_options", false);
         onView(withId(androidx.preference.R.id.recycler_view))
                 .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.display_dev_options))),
                         click()));
-        Boolean endVal = sharedPreferences.getBoolean("developer_options", false);
+        boolean endVal = sharedPreferences.getBoolean("developer_options", false);
         assertThat(startVal, not(is(endVal)));
     }
 
@@ -299,8 +297,6 @@ public class SettingsActivityTest{
     @Test
     public void TestToggleFilterPOIs(){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear().commit();
 
         //Get selected value
         Boolean startVal = sharedPreferences.getBoolean("filter_pois", false);
@@ -315,9 +311,6 @@ public class SettingsActivityTest{
     @Test
     public void TestSelectDisplayedMountains() throws InterruptedException {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.clear().commit();
 
         //Get selected value
         String startString = prefs.getString(activity.getResources().getString(R.string.displayPOIs_key), "");

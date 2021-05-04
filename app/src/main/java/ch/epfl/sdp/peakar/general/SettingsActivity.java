@@ -45,6 +45,8 @@ public class SettingsActivity extends AppCompatActivity {
                         break;
                     case "offline_mode_key":
                         offlineModeChanged();
+                        break;
+                    default:
                 }
             };
 
