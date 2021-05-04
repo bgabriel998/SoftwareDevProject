@@ -123,7 +123,7 @@ public class ProfileActivityTest {
     public void TestToolbarBackButton(){
         onView(withId(R.id.toolbarBackButton)).perform(click());
         try {
-            Thread.sleep(SHORT_SLEEP_TIME);
+            Thread.sleep(LONG_SLEEP_TIME);
             assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -176,7 +176,7 @@ public class ProfileActivityTest {
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitUsernameButton)).perform(click());
         try {
-            Thread.sleep(SHORT_SLEEP_TIME);
+            Thread.sleep(LONG_SLEEP_TIME);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -193,7 +193,7 @@ public class ProfileActivityTest {
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitUsernameButton)).perform(click());
         try {
-            Thread.sleep(SHORT_SLEEP_TIME);
+            Thread.sleep(LONG_SLEEP_TIME);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -203,7 +203,7 @@ public class ProfileActivityTest {
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitUsernameButton)).perform(click());
         try {
-            Thread.sleep(SHORT_SLEEP_TIME);
+            Thread.sleep(LONG_SLEEP_TIME);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -223,7 +223,7 @@ public class ProfileActivityTest {
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitUsernameButton)).perform(click());
         try {
-            Thread.sleep(SHORT_SLEEP_TIME);
+            Thread.sleep(LONG_SLEEP_TIME);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -240,7 +240,7 @@ public class ProfileActivityTest {
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitUsernameButton)).perform(click());
         try {
-            Thread.sleep(SHORT_SLEEP_TIME);
+            Thread.sleep(LONG_SLEEP_TIME);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -302,7 +302,7 @@ public class ProfileActivityTest {
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());
         try {
-            Thread.sleep(SHORT_SLEEP_TIME);
+            Thread.sleep(LONG_SLEEP_TIME);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -328,7 +328,7 @@ public class ProfileActivityTest {
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());
         try {
-            Thread.sleep(SHORT_SLEEP_TIME);
+            Thread.sleep(LONG_SLEEP_TIME);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -352,7 +352,7 @@ public class ProfileActivityTest {
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());
         try {
-            Thread.sleep(SHORT_SLEEP_TIME);
+            Thread.sleep(LONG_SLEEP_TIME);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -376,7 +376,7 @@ public class ProfileActivityTest {
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());
         try {
-            Thread.sleep(SHORT_SLEEP_TIME);
+            Thread.sleep(LONG_SLEEP_TIME);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -402,7 +402,7 @@ public class ProfileActivityTest {
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.submitFriendButton)).perform(click());
         try {
-            Thread.sleep(SHORT_SLEEP_TIME);
+            Thread.sleep(LONG_SLEEP_TIME);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
