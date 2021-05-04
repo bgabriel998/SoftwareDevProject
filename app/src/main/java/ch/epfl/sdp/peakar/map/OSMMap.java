@@ -14,8 +14,9 @@ import androidx.core.content.res.ResourcesCompat;
 
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.points.Point;
-import ch.epfl.sdp.peakar.user.account.FirebaseAccount;
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.user.services.Account;
+import ch.epfl.sdp.peakar.user.services.AuthService;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
@@ -146,10 +147,10 @@ public class OSMMap {
      * Scan the list of discovered POIs and add a marker on the map for each of them
      * if the user account is invalid, no peaks are displayed
      */
-    public void setMarkersForDiscoveredPeaks(FirebaseAccount userAccount, boolean isSignedIn){
+    public void setMarkersForDiscoveredPeaks(boolean isSignedIn){
         if(isSignedIn) {
-            HashSet<POIPoint> discoveredPeaks = userAccount.getDiscoveredPeaks();
-            List<String> countryHighPointsName = userAccount.getDiscoveredCountryHighPointNames();
+            HashSet<POIPoint> discoveredPeaks = AuthService.getInstance().getAuthAccount().getDiscoveredPeaks();
+            List<String> countryHighPointsName = AuthService.getInstance().getAuthAccount().getDiscoveredCountryHighPointNames();
             //iterate over all POI
             for (POIPoint poi : discoveredPeaks) {
                 GeoPoint startPoint = new GeoPoint(poi.getLatitude(), poi.getLongitude());
@@ -169,7 +170,7 @@ public class OSMMap {
                 mapView.getOverlays().add(startMarker);
             }
             mapView.invalidate();
-            setZoomBoundingBox(userAccount);
+            setZoomBoundingBox(AuthService.getInstance().getAuthAccount());
         }
         else{
             Toast toast = Toast.makeText(context,context.getString(R.string.toast_no_account),Toast.LENGTH_LONG);
@@ -199,7 +200,7 @@ public class OSMMap {
      * box
      * @param userAccount firebase account
      */
-    private void setZoomBoundingBox(FirebaseAccount userAccount){
+    private void setZoomBoundingBox(Account userAccount){
         //Create a bounding box and zoom in
         if(userAccount.getDiscoveredPeaks().size() != 0) {
             BoundingBox boundingBox = computeArea(new ArrayList<>(userAccount.getDiscoveredPeaks()));

@@ -1,14 +1,20 @@
 package ch.epfl.sdp.peakar.user;
 
-import android.net.Uri;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
-import ch.epfl.sdp.peakar.user.account.Account;
+import ch.epfl.sdp.peakar.user.services.Account;
+import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
+import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 import ch.epfl.sdp.peakar.user.score.ScoringConstants;
+
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
 import org.junit.After;
@@ -21,164 +27,141 @@ import org.junit.runner.RunWith;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
+import static ch.epfl.sdp.peakar.TestingConstants.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class AccountTest {
-    public final static String BASIC_USERNAME = "username@test";
-    public final static int SHORT_SLEEP_TIME = 500;
-    public final static int LONG_SLEEP_TIME = 1500;
-    public final static int USER_SCORE = 200000;
-
-    private static final int USER_OFFSET = new Random().nextInt();
-
-    private static final String user1 = BASIC_USERNAME + USER_OFFSET;;
-    private static final String user2 = BASIC_USERNAME + USER_OFFSET + 1;
+    private static String user1;
+    private static String user2;
 
     // Helper method, register a new test user using a certain random offset given as input
-    public static void registerTestUser() {
-        Account account = Account.getAccount();
-
+    public static void registerAuthUser() {
         // Generate user
-        FirebaseAuth.getInstance().signInAnonymously();
-        try {
-            Thread.sleep(LONG_SLEEP_TIME);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        // Synchronize
-        account.synchronizeUserProfile();
-        try {
-            Thread.sleep(LONG_SLEEP_TIME);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        AuthService.getInstance().authAnonymously();
     }
 
     // Helper method, delete the current user
-    public static void removeTestUser() {
-        // If no account is signed, stop
-        if(!Account.getAccount().isSignedIn()) return;
+    public static void removeAuthUser() {
+        Task<Void> dbTask = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
+        Task<Void> fbTask = null;
 
-        // Otherwise
-        Database.refRoot.child(Database.CHILD_USERS).child(Account.getAccount().getId()).removeValue();
-        FirebaseAuth.getInstance().getCurrentUser().delete();
-
-        try {
-            Thread.sleep(LONG_SLEEP_TIME);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        Account.getAccount().synchronizeUserProfile();
+        FirebaseUser oldUser = FirebaseAuth.getInstance().getCurrentUser();
+        AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+        if(oldUser != null) fbTask = oldUser.delete();
 
         try {
-            Thread.sleep(LONG_SLEEP_TIME);
-        } catch (InterruptedException e) {
+            Tasks.await(dbTask);
+            if(oldUser!=null) {
+                Tasks.await(fbTask);
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /* Set up the environment */
     @BeforeClass
-    public static void init() throws InterruptedException {
-        /* Make sure no user is signed in before a test */
-        FirebaseAuth.getInstance().signOut();
-        Thread.sleep(SHORT_SLEEP_TIME);
+    public static void init() {
+        /* Make sure no user is signed in before tests */
+        AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
-        Account.getAccount().synchronizeUserProfile();
-        Thread.sleep(SHORT_SLEEP_TIME);
+
+        /* Create a new one */
+        registerAuthUser();
+
+        user1 = ("test" + AuthService.getInstance().getID()).substring(0, Account.NAME_MAX_LENGTH - 1);
+        user2 = ("test" + AuthService.getInstance().getID()).substring(0, Account.NAME_MAX_LENGTH - 2);
     }
 
     /* Clean environment */
     @AfterClass
     public static void end() {
-        removeTestUser();
+        removeAuthUser();
     }
 
-    /* Make sure that an account is signed in before each test */
+    /* Make sure that an account is signed in and as new before each test */
     @Before
     public void createTestUser() {
-        if(!Account.getAccount().isSignedIn()) registerTestUser();
+        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+            AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+            registerAuthUser();
+        }
+        else FirebaseAuthService.getInstance().forceRetrieveData();
     }
 
     /* Make sure that mock users are not on the database after a test */
     @After
     public void removeTestUsers() throws InterruptedException {
-        Database.refRoot.child(Database.CHILD_USERS).child(Account.getAccount().getId()).removeValue();
+        Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
         Database.refRoot.child(Database.CHILD_USERS).child(user2).removeValue();
         Thread.sleep(SHORT_SLEEP_TIME);
     }
 
     /**
-     * Testing the output are not null but actual strings with no account
+     * Testing that account is null
      */
     @Test
     public void noAccountTest() {
-        removeTestUser();
-        Account account = Account.getAccount();
+        removeAuthUser();
+        AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
-        assertFalse(account.isSignedIn());
-        assertTrue(account.getFriends().isEmpty());
-        assertEquals("null", account.getDisplayName());
-        assertEquals("null", account.getEmail());
-        assertEquals("null", account.getId());
-        assertEquals("null", account.getProviderId());
-        assertEquals(Uri.EMPTY, account.getPhotoUrl());
+        assertNull(AuthService.getInstance().getAuthAccount());
     }
 
     /**
-     * Testing that synchronizeUsername works fine
-     * @throws InterruptedException
+     * Testing that account is null
      */
     @Test
-    public void synchronizeUsernameTest() throws InterruptedException {
-        /* Get account */
-        Account account = Account.getAccount();
+    public void noRegisteredTest() {
+        assertNotNull(AuthService.getInstance().getAuthAccount());
+        assertEquals(Account.USERNAME_BEFORE_REGISTRATION, AuthService.getInstance().getAuthAccount().getUsername());
+    }
 
+    /**
+     * Testing that changeUsername works fine
+     */
+    @Test
+    public void changeUsernameTest() {
+        /* Get account */
+        Account account = AuthService.getInstance().getAuthAccount();
+
+        // Assert basic username
+        assertEquals(Account.USERNAME_BEFORE_REGISTRATION, AuthService.getInstance().getAuthAccount().getUsername());
+        
         // Add username
-        Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
-        Thread.sleep(SHORT_SLEEP_TIME);
-
-
-        // Check username
-        Thread.sleep(SHORT_SLEEP_TIME);
+        account.changeUsername(user1);
         assertEquals(user1, account.getUsername());
-
-        // Now it will test that if username is removed, it produces a "null" username
-        Database.refRoot.child(Database.CHILD_USERS).child(account.getId()).removeValue();
-        Thread.sleep(SHORT_SLEEP_TIME);
-        assertEquals("null", account.getUsername());
     }
 
     /**
-     * Testing that synchronizeFriends works fine
+     * Testing that addFriend works fine
      * @throws InterruptedException
      */
     @Test
-    public void synchronizeFriendsTest() throws InterruptedException {
+    public void addFriendTest() throws InterruptedException {
         /* Get account */
-        Account account = Account.getAccount();
+        Account account = AuthService.getInstance().getAuthAccount();
 
-        Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
+        /* Add friend remotely */
         Database.setChild(Database.CHILD_USERS + user2, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user2));
-        Thread.sleep(SHORT_SLEEP_TIME);
+        Thread.sleep(LONG_SLEEP_TIME);
 
         // Test if no friend is present
         assertTrue(account.getFriends().isEmpty());
 
         // Test if a friend is present
-        Database.setChild(Database.CHILD_USERS + account.getId() + Database.CHILD_FRIENDS, Collections.singletonList(user2), Collections.singletonList(""));
-        Thread.sleep(SHORT_SLEEP_TIME);
-        assertEquals(user2, account.getFriends().get(0).getUsername());
+        ProfileOutcome outcome = account.addFriend(user2);
+        assertEquals(ProfileOutcome.FRIEND_ADDED, outcome);
+        assertEquals(user2, account.getFriends().get(0).getUid());
 
         // Test if the friend is removed
-        Database.refRoot.child(Database.CHILD_USERS + account.getId() + Database.CHILD_FRIENDS).removeValue();
-        Thread.sleep(SHORT_SLEEP_TIME);
+        account.removeFriend(user2);
         assertTrue(account.getFriends().isEmpty());
     }
 
@@ -187,59 +170,66 @@ public class AccountTest {
      * written to the database
      */
     @Test
-    public void setAndGetUserScoreTest() throws InterruptedException{
+    public void setAndGetScoreTest() {
         /* Get account */
-        Account account = Account.getAccount();
+        Account account = AuthService.getInstance().getAuthAccount();
 
-        Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
-        Thread.sleep(SHORT_SLEEP_TIME);
-
-        account.setUserScore(USER_SCORE);
-        Thread.sleep(SHORT_SLEEP_TIME);
-        assertEquals(USER_SCORE, account.getUserScore());
+        account.setScore(USER_SCORE);
+        assertEquals(USER_SCORE, account.getScore());
     }
 
     /**
-     * test user score synchronization between database and account class
+     * Testing that retrieve data works fine
+     * @throws InterruptedException
+     */
+    @Test
+    public void synchronizeFriendsTest() throws InterruptedException {
+        /* Get account */
+        Account account = AuthService.getInstance().getAuthAccount();
+
+        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
+        Database.setChild(Database.CHILD_USERS + user2, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user2));
+        Thread.sleep(SHORT_SLEEP_TIME);
+
+        // Test if no friend is present
+        assertTrue(account.getFriends().isEmpty());
+
+        // Test if a friend is present
+        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID() + Database.CHILD_FRIENDS, Collections.singletonList(user2), Collections.singletonList(""));
+        FirebaseAuthService.getInstance().forceRetrieveData();
+        assertEquals(user2, account.getFriends().get(0).getUid());
+    }
+
+    /**
+     * Testing that retrieve data works fine
      */
     @Test
     public void synchronizeUserScoreTest()throws InterruptedException{
         /* Get account */
-        Account account = Account.getAccount();
-        Thread.sleep(SHORT_SLEEP_TIME);
+        Account account = AuthService.getInstance().getAuthAccount();
 
-        Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
+        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
 
-        //Set user score to zero
+        //Set user score to USER_SCORE
         DatabaseReference refAdd = Database.refRoot.child(Database.CHILD_USERS);
-        refAdd.child(account.getId()).child(Database.CHILD_SCORE).setValue(0);
+        refAdd.child(AuthService.getInstance().getID()).child(Database.CHILD_SCORE).setValue(USER_SCORE);
         Thread.sleep(SHORT_SLEEP_TIME);
 
-
-        refAdd.child(account.getId()).child(Database.CHILD_SCORE).setValue(USER_SCORE);
-        Thread.sleep(SHORT_SLEEP_TIME);
-        assertEquals(USER_SCORE, account.getUserScore());
-
+        FirebaseAuthService.getInstance().forceRetrieveData();
+        assertEquals(USER_SCORE, account.getScore());
     }
 
 
     /**
-     * Test that the set and get discovered country high points effectively writes and retrieves
-     * data to/from the database
+     * Test that the set and get discovered country high points works
      */
     @Test
-    public void setAndGetDiscoveredCountryHighPoints()throws InterruptedException{
+    public void setAndGetDiscoveredCountryHighPoints() {
         /* Get account */
-        Account account = Account.getAccount();
-        Thread.sleep(SHORT_SLEEP_TIME);
-
-        Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
-        Thread.sleep(SHORT_SLEEP_TIME);
+        Account account = AuthService.getInstance().getAuthAccount();
 
         CountryHighPoint newEntry = new CountryHighPoint("France","Mont Blanc",4810);
         account.setDiscoveredCountryHighPoint(newEntry);
-        Thread.sleep(SHORT_SLEEP_TIME);
-
         assertEquals(newEntry.toString(), account.getDiscoveredCountryHighPoint().get("France").toString());
     }
 
@@ -251,54 +241,57 @@ public class AccountTest {
     @Test
     public void synchronizeDiscoveredCountryHighPointsTest() throws InterruptedException{
         /* Get account */
-        Account account = Account.getAccount();
-        Thread.sleep(SHORT_SLEEP_TIME);
+        Account account = AuthService.getInstance().getAuthAccount();
 
-        Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
+        Database.setChild(Database.CHILD_USERS +  AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         CountryHighPoint newEntry = new CountryHighPoint("France","Mont Blanc",4810);
-        Thread.sleep(SHORT_SLEEP_TIME);
 
         //Set value to the database manually
         DatabaseReference refAdd = Database.refRoot.child(Database.CHILD_USERS);
-        refAdd.child(account.getId()).child(Database.CHILD_COUNTRY_HIGH_POINT).push().setValue(newEntry);
-
+        refAdd.child(AuthService.getInstance().getID()).child(Database.CHILD_COUNTRY_HIGH_POINT).push().setValue(newEntry);
         Thread.sleep(SHORT_SLEEP_TIME);
+
+        FirebaseAuthService.getInstance().forceRetrieveData();
         String s1 = account.getDiscoveredCountryHighPoint().get("France").toString();
         String s2 = newEntry.toString();
         assertEquals(s2, s1);
     }
 
+    /**
+     * Test the synchronization of discovered heights
+     * @throws InterruptedException
+     */
     @Test
     public void synchronizeDiscoveredHeights() throws InterruptedException {
         /* Get account */
-        Account account = Account.getAccount();
-        Thread.sleep(SHORT_SLEEP_TIME);
+        Account account = AuthService.getInstance().getAuthAccount();
 
-        Database.setChild(Database.CHILD_USERS + account.getId(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
+        Database.setChild(Database.CHILD_USERS +  AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(SHORT_SLEEP_TIME);
 
         //Set value to the database manually
         Integer entry1 = ScoringConstants.BADGE_1st_4000_M_PEAK;
         Integer entry2 = ScoringConstants.BADGE_1st_3000_M_PEAK;
 
-        Database.setChildObject(Database.CHILD_USERS +  account.getId() + "/" +
+        Database.setChildObject(Database.CHILD_USERS +   AuthService.getInstance().getID() + "/" +
                 Database.CHILD_DISCOVERED_PEAKS_HEIGHTS,Collections.singletonList(entry1));
-        Database.setChildObject(Database.CHILD_USERS +  account.getId() + "/" +
+        Database.setChildObject(Database.CHILD_USERS +   AuthService.getInstance().getID() + "/" +
                 Database.CHILD_DISCOVERED_PEAKS_HEIGHTS,Collections.singletonList(entry2));
-
         Thread.sleep(SHORT_SLEEP_TIME);
+
+        FirebaseAuthService.getInstance().forceRetrieveData();
         assertTrue(account.getDiscoveredPeakHeights().contains(entry1) && account.getDiscoveredPeakHeights().contains(entry2));
     }
     
     /**
-     * Testing that isValid recognizes valid strings and rejects invalid strings
+     * Testing that checkUsernameValidity recognizes valid strings and rejects invalid strings
      */
     @Test
     public void isValidTest() {
         List<String> invalidStrings = Arrays.asList("", null, " ", "ab", "@@@@", "1.Z" ,"....", "aaaaaaaaaaaaaaaa");
         List<String> validStrings = Arrays.asList("abc", "null", "123", "ab_", "____", "aaaaaaaaaaaaaaa");
-        for(String s: validStrings) assertTrue(s + " is not valid.", Account.isValid(s));
-        for(String s: invalidStrings) assertFalse(s + " is valid.", Account.isValid(s));
+        for(String s: validStrings) assertTrue(s + " is not valid.", Account.checkUsernameValidity(s));
+        for(String s: invalidStrings) assertFalse(s + " is valid.", Account.checkUsernameValidity(s));
     }
 
 }

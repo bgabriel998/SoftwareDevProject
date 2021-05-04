@@ -1,6 +1,11 @@
 package ch.epfl.sdp.peakar;
 
 public class TestingConstants {
+    //User constants
+    public final static String BASIC_USERNAME = "test";
+    public final static int SHORT_SLEEP_TIME = 500;
+    public final static int LONG_SLEEP_TIME = 1500;
+    public final static int USER_SCORE = 200000;
 
     //Map constant
     public static final float TILE_SCALING_FACTOR = 1.5f;

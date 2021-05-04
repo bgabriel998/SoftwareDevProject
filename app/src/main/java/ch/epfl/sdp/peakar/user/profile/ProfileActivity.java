@@ -9,36 +9,32 @@ import android.widget.EditText;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.firebase.ui.auth.AuthUI;
-import ch.epfl.sdp.peakar.user.account.Account;
-import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
+import ch.epfl.sdp.peakar.user.services.Account;
+import ch.epfl.sdp.peakar.user.services.AuthProvider;
+import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 import ch.epfl.sdp.peakar.user.friends.AddFriendActivity;
 import ch.epfl.sdp.peakar.user.friends.FriendsActivity;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
-import java.util.Arrays;
+import static ch.epfl.sdp.peakar.user.services.AuthProvider.*;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    // CONSTANTS
     private static final String  TOOLBAR_TITLE = "Profile";
+
+    // AUTHENTICATION
+    private AuthService authService;
 
     // VIEW REFERENCES
     private View submitUsernameButton;
@@ -48,32 +44,37 @@ public class ProfileActivity extends AppCompatActivity {
     private View loggedLayout;
     private View loadingView;
 
-    private GoogleSignInClient mGoogleSignInClient;
-    private Account account = Account.getAccount();
-
-    private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
+    // Google Sign In Result Launcher
+    private final ActivityResultLauncher<Intent> googleSignInLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                Log.d("Google Sign API", "signInButton: started callback");
-                // The Task returned from this call is always completed, no need to attach a listener.
-                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
                 try {
-                    firebaseAuthWithGoogle(task.getResult(ApiException.class).getIdToken());
+
+                    // Handle the auth UI
+                    handleAuth(GOOGLE, GoogleSignIn.getSignedInAccountFromIntent(result.getData()).getResult(ApiException.class).getIdToken());
+
                 } catch (ApiException e) {
+
                     // The ApiException status code indicates the detailed failure reason.
                     Log.w("Google Sign API", "signInResult:failed code=" + e.getStatusCode());
+
                 }
             });
 
+    // Add friend result launcher
     private final ActivityResultLauncher<Intent> addFriendLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     // Retrieve the snack bar message
                     Intent data = result.getData();
+                    assert data != null;
                     String message = data.getStringExtra(AddFriendActivity.INTENT_EXTRA_NAME);
 
                     Log.d("Friend added", "onActivityResult: message: " + message);
+
+                    // Show the initial menu
+                    setMenuUI();
 
                     // Show the snack bar
                     Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG);
@@ -97,24 +98,22 @@ public class ProfileActivity extends AppCompatActivity {
         // Setup the toolbar
         ToolbarHandler.SetupToolbar(this, TOOLBAR_TITLE);
 
-        // Sign in options (argument for getClient method)
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
-
-        // Build a GoogleSignInClient with the options specified by gso.
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        authService = AuthService.getInstance();
     }
 
     /**
      * Gets user and calls for setUI
      */
     @Override
-    public void onStart() {
+    protected void onStart() {
         super.onStart();
         loadingView.setVisibility(View.GONE);
         // If the user is not logged
-        if(!account.isSignedIn()) setMenuUI();
+        if(authService.getAuthAccount() == null) setMenuUI();
         else {
-            checkUserOnDB();
+            // If there is a user already logged, check if the user is already registered
+            if(authService.getAuthAccount().getUsername().equals(Account.USERNAME_BEFORE_REGISTRATION)) setUsernameChoiceUI();
+            else setMenuUI();
         }
     }
 
@@ -123,15 +122,47 @@ public class ProfileActivity extends AppCompatActivity {
      * @param view
      */
     public void signInButton(View view) {
-        Log.d("Google Sign API", "signInButton: pressed");
+        // Set the options for Google Sign In intent
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
 
-        // Create a new intent
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        // Create a new Google Sign In intent
+        Intent googleSignInIntent = GoogleSignIn.getClient(this, gso).getSignInIntent();
 
         // Start the intent with the callback
-        signInLauncher.launch(signInIntent);
+        googleSignInLauncher.launch(googleSignInIntent);
+    }
 
-        Log.d("Google Sign API", "signInButton: finished");
+    /**
+     * Handle the UI before and after an auth task runs
+     */
+    private void handleAuth(AuthProvider provider, String token) {
+
+        // Update the view with the loading interface
+        signInButton.setVisibility(View.GONE);
+        loadingView.setVisibility(View.VISIBLE);
+
+        // Start a new thread that will handle the auth process
+        Thread authThread = new Thread(){
+            @Override
+            public void run() {
+                // Start the authentication using the auth service
+                RemoteOutcome authResult = authService.authWithProvider(provider, token);
+
+                // Update the view on the UI thread
+                runOnUiThread(() -> {
+                    // Remove the loading circle
+                    loadingView.setVisibility(View.GONE);
+
+                    // Handle the auth result
+                    if(authResult == RemoteOutcome.NOT_FOUND) setUsernameChoiceUI();
+                    else {
+                        setMenuUI();
+                        Log.d("ProfileActivity", "handleAuth: registered");
+                    }
+                });
+            }
+        };
+        authThread.start();
     }
 
     /**
@@ -147,27 +178,29 @@ public class ProfileActivity extends AppCompatActivity {
      * @param view
      */
     public void submitUsernameButton(View view) {
-        String username = ((EditText)editTextUsername).getText().toString();
-        String currentUsername = account.getUsername();
-        Log.d("CURRENT_USERNAME", "onSubmit: " + currentUsername);
-        // First, check if the username is valid or if it is already used by the user
-        if(!Account.isValid(username) || username.equals(currentUsername)) {
-            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), !Account.isValid(username) ? R.string.invalid_username : R.string.current_username, Snackbar.LENGTH_LONG);
-            snackbar.show();
-        }
-        // Finally, check if it is available
-        else Database.isPresent(Database.CHILD_USERS, Database.CHILD_USERNAME, username, () -> {
-            // Notify the user that the chosen username is already used
-            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.already_existing_username , Snackbar.LENGTH_LONG);
-            snackbar.show();
-        }, () -> {
-            // Notify the user that the username has changed
-            Database.setChild(Database.CHILD_USERS + account.getId(), Arrays.asList(Database.CHILD_EMAIL, Database.CHILD_USERNAME), Arrays.asList(account.getEmail(), username));
-            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.available_username , Snackbar.LENGTH_LONG);
-            snackbar.show();
-            setMenuUI();
-            ((EditText)editTextUsername).getText().clear();
-        });
+        String newUsername = ((EditText)editTextUsername).getText().toString();
+
+        // Start a new thread that will handle the process
+        Thread changeThread = new Thread(){
+            @Override
+            public void run() {
+                // Change the username and wait for the task to end
+                ProfileOutcome result = authService.getAuthAccount().changeUsername(newUsername);
+
+                // Update the view on the UI thread
+                runOnUiThread(() -> {
+                    ((EditText)editTextUsername).getText().clear();
+
+                    // If username has changed, get back to the initial UI
+                    if(result == ProfileOutcome.USERNAME_CHANGED || result == ProfileOutcome.USERNAME_REGISTERED) setMenuUI();
+
+                    // Display the message
+                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), result.getMessage(), Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                });
+            }
+        };
+        changeThread.start();
     }
 
     /**
@@ -175,13 +208,8 @@ public class ProfileActivity extends AppCompatActivity {
      * @param view
      */
     public void signOutButton(View view) {
-        AuthUI.getInstance().signOut(this)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    public void onComplete(Task<Void> task) {
-                        account.synchronizeUserProfile();
-                        setMenuUI();
-                    }
-                });
+        authService.signOut(this);
+        setMenuUI();
     }
 
     /**
@@ -189,6 +217,7 @@ public class ProfileActivity extends AppCompatActivity {
      * @param view
      */
     public void addFriendButton(View view) {
+        Log.d("ProfileActivity", "addFriendButton: current username - " + authService.getAuthAccount().getUsername());
         // Create a new intent
         Intent friendButtonIntent = new Intent(this, AddFriendActivity.class);
 
@@ -205,61 +234,17 @@ public class ProfileActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    /**
-     * This method is called during the sign-in to perform the connection with Firebase
-     * @param idToken
-     */
-    public void firebaseAuthWithGoogle(String idToken) {
-        signInButton.setVisibility(View.GONE);
-        loadingView.setVisibility(View.VISIBLE);
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        FirebaseAuth.getInstance().signInWithCredential(credential)
-                .addOnCompleteListener(this, task -> {
-                    loadingView.setVisibility(View.GONE);
-                    if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d("Firebase AUTH", "signInWithCredential:success");
-                        account.synchronizeUserProfile();
-                        // Check if the user is already registered on the database
-                        checkUserOnDB();
-                    } else {
-                        Log.w("Firebase AUTH", "signInWithCredential:failure", task.getException());
-                    }
-
-                });
-    }
-
-    /**
-     * Check if the user is on the DB. If so, set the default UI. Otherwise, force a username change.
-     */
-    public void checkUserOnDB() {
-        Database.refRoot.child(Database.CHILD_USERS + account.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    setMenuUI();
-                }
-                else {
-                    setUsernameChoiceUI();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-    }
-
     /* UI METHODS */
 
     /**
      * Sets what is visible on UI based on if the user is signed in or not.
      */
     public void setMenuUI() {
-        loggedLayout.setVisibility(account.isSignedIn() ? View.VISIBLE : View.GONE);
-        signOutButton.setVisibility(account.isSignedIn() ? View.VISIBLE : View.GONE);
-        signInButton.setVisibility(account.isSignedIn() ? View.GONE : View.VISIBLE);
+        boolean signedIn = authService.getAuthAccount() != null;
+
+        loggedLayout.setVisibility(signedIn ? View.VISIBLE : View.GONE);
+        signOutButton.setVisibility(signedIn ? View.VISIBLE : View.GONE);
+        signInButton.setVisibility(signedIn ? View.GONE : View.VISIBLE);
         submitUsernameButton.setVisibility(View.GONE);
         editTextUsername.setVisibility(View.GONE);
     }

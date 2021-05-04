@@ -10,7 +10,9 @@ import android.widget.ProgressBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
+import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.points.ComputePOIPoints;
+import ch.epfl.sdp.peakar.user.services.AuthService;
 import com.google.firebase.FirebaseApp;
 
 import java.util.ArrayList;
@@ -58,9 +60,7 @@ public class InitActivity extends AppCompatActivity {
      * Init application global stuff before opening the main menu
      */
     private synchronized void initApp(){
-        FirebaseAccount firebaseAccount = FirebaseAccount.getAccount();
-        firebaseAccount.synchronizeUserProfile();
-
+        if(AuthService.getInstance().getAuthAccount() != null) AuthService.getInstance().getAuthAccount().init();
         //Request and compute the POIPoints
         new ComputePOIPoints(this);
     }
