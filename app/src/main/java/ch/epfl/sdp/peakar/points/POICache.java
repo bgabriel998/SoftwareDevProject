@@ -23,6 +23,7 @@ import java.util.ArrayList;
 public class POICache {
     //Constants
     private static final String CACHE_FILE_NAME = "POIPointsCache.txt";
+    private static final float INNER_BOUNDING_BOX_SCALING_FACTOR = 0.5f;
 
     private static POICache instance;
     /*List of POIs contained in the cache*/
@@ -56,61 +57,33 @@ public class POICache {
         POICacheContent poiCacheContent = new POICacheContent(cachedPOIPoints,cachedBoundingBox);
         Gson gson = new Gson();
         //Convert to JSON
-        String serializesCache = gson.toJson(poiCacheContent);
-        saveJson(serializesCache,context);
-    }
-
-    /**
-     * Save the serialized JSON to text file
-     * @param serializedObject string in json format
-     * @param context context
-     */
-    private static void saveJson(String serializedObject,Context context){
-        File cacheDir = context.getCacheDir();
-        File outputFile = new File(cacheDir,CACHE_FILE_NAME);
+        File outputFile = new File(context.getCacheDir(),CACHE_FILE_NAME);
         try{
-            FileWriter writer = new FileWriter(outputFile);
-            writer.append(serializedObject);
-            writer.flush();
-            writer.close();
+            gson.toJson(poiCacheContent, new FileWriter(outputFile));
         }
-        catch(IOException e){
+        catch (IOException e){
             Log.e("Exception", "File write failed cache POIPoints: " + e.toString());
         }
+
     }
 
-
-    /**
-     * Read text file and retrieve serialized
-     * @return serialized string
-     */
-    private static String readJSON(Context context){
-        File file = new File(context.getCacheDir(),CACHE_FILE_NAME);
-        StringBuilder fileContent = new StringBuilder();
-        try{
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-            String line;
-            while ((line = bufferedReader.readLine()) != null){
-                fileContent.append(line);
-                fileContent.append('\n');
-            }
-            bufferedReader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return fileContent.toString();
-    }
 
     /**
      * Retrieve POI data from cache and overwrite cachedPOIPoints and cachedBoundingBox
      * with cache file values
      */
     private static void retrievePOIDataFromCache(Context context){
-        String fileContent = readJSON(context);
-        Gson gson = new Gson();
-        POICacheContent poiCacheContent = gson.fromJson(fileContent, POICacheContent.class);
-        cachedPOIPoints = poiCacheContent.getCachedPOIPoints();
-        cachedBoundingBox = poiCacheContent.getCachedBoundingBox();
+        File file = new File(context.getCacheDir(),CACHE_FILE_NAME);
+        try{
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            Gson gson = new Gson();
+            POICacheContent poiCacheContent = gson.fromJson(bufferedReader, POICacheContent.class);
+            cachedPOIPoints = poiCacheContent.getCachedPOIPoints();
+            cachedBoundingBox = poiCacheContent.getCachedBoundingBox();
+        }catch (IOException e){
+            Log.e("Exception", "File read failed cache POIPoints: " + e.toString());
+        }
+
     }
 
     /**
@@ -127,7 +100,7 @@ public class POICache {
         if(cachedBoundingBox == null)
             retrievePOIDataFromCache(context);
         //Decrease the size of the bounding box by half
-        //BoundingBox innerBox = cachedBoundingBox.increaseByScale(INNER_BOUNDING_BOX_SCALING_FACTOR);
+        BoundingBox innerBox = cachedBoundingBox.increaseByScale(INNER_BOUNDING_BOX_SCALING_FACTOR);
         return cachedBoundingBox.contains(userPoint.getLatitude(), userPoint.getLongitude());
     }
 

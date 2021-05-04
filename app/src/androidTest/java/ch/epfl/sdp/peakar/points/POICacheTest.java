@@ -112,17 +112,45 @@ public class POICacheTest {
     /*Test the saving and the retrieving to/from cache*/
     @Test
     public void testPOICacheSaveRetrievePOIDataToCache(){
-        POICache poiCache = POICache.getInstance();
+        //Create file containing POIs manually
+        context = ApplicationProvider.getApplicationContext();
+        Assert.assertNotNull(context);
+        UserPoint userPoint = UserPoint.getInstance(context);
+        GeoPoint geoPoint_1 = new GeoPoint(MONT_BLANC_LAT,MONT_BLANC_LONG,MONT_BLANC_ALT);
+        POIPoint point_1 = new POIPoint(geoPoint_1);
+        point_1.setName(MONT_BLANC_NAME);
 
-        BoundingBox boundingBox = UserPoint.getInstance(context).computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM);
-        File cacheDir = context.getCacheDir();
-        File outputFile = new File(cacheDir,CACHE_FILE_NAME_TEST);
-        //delete old file
-        //noinspection ResultOfMethodCallIgnored
-        outputFile.delete();
+        GeoPoint geoPoint_2 = new GeoPoint(DENT_DU_GEANT_LAT, DENT_DU_GEANT_LONG,DENT_DU_GEANT_ALT);
+        POIPoint point_2 = new POIPoint(geoPoint_2);
+        point_2.setName(DENT_DU_GEANT_NAME);
+
+        GeoPoint geoPoint_3 = new GeoPoint(AIGUILLE_DU_PLAN_LAT, AIGUILLE_DU_PLAN_LONG,AIGUILLE_DU_PLAN_ALT);
+        POIPoint point_3 = new POIPoint(geoPoint_3);
+        point_3.setName(AIGUILLE_DU_PLAN_NAME);
+
+        GeoPoint geoPoint_4 = new GeoPoint(POINTE_DE_LAPAZ_LAT, POINTE_DE_LAPAZ_LONG,POINTE_DE_LAPAZ_ALT);
+        POIPoint point_4 = new POIPoint(geoPoint_4);
+        point_4.setName(POINTE_DE_LAPAZ_NAME);
+
+        inputArrayList = new ArrayList<>();
+        inputArrayList.add(point_2);
+        inputArrayList.add(point_1);
+        inputArrayList.add(point_3);
+        inputArrayList.add(point_4);
+        userPoint.setLocation(
+                MOCK_LOCATION_LAT_CHAMONIX,
+                MOCK_LOCATION_LON_CHAMONIX,
+                MOCK_LOCATION_ALT_CHAMONIX,
+                0);
+        BoundingBox boundingBox = userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM);
+
         //Create new cache file
-        poiCache.savePOIDataToCache(inputArrayList,boundingBox,context);
-        ArrayList<POIPoint> result = poiCache.getCachedPOIPoints(context);
+        POICache.getInstance().savePOIDataToCache(inputArrayList,boundingBox,context);
+
+        //Check if file is present
+        assertTrue(POICache.getInstance().isCacheFilePresent(context));
+        //Read created file
+        ArrayList<POIPoint> result = POICache.getInstance().getCachedPOIPoints(context);
 
         assertEquals(inputArrayList.size(), result.size());
         assertTrue(inputArrayList.contains(result.get(0)));

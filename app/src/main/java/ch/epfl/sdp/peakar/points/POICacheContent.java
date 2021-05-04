@@ -5,7 +5,8 @@ import org.osmdroid.util.BoundingBox;
 import java.util.ArrayList;
 
 /**
- * Class used for serialization and deserialization
+ * Class used to create object that will be serialized and deserialized
+ * in POICache.java file.
  * in JSON format
  */
 public class POICacheContent {
