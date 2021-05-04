@@ -103,10 +103,6 @@ public class CameraActivity extends AppCompatActivity{
 
         //Bind the compassListener with the compass
         compass.setListener(compassListener);
-
-        //Set the POIs for the compass
-        //TODO check settings to select the POIPoints
-        //cameraUiView.setPOIs(ComputePOIPoints.POIPoints, ComputePOIPoints.highestPOIPoints);
     }
 
     /**

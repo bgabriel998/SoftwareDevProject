@@ -91,7 +91,7 @@ public class ComputePOIPointsTest {
      * Test if ComputePOIPoints has computed the POIs
      */
     @Test
-    public void getLabeledPOIPointsTest() {
+    public void getPOIPointsTest() {
         assertNotNull(ComputePOIPoints.getPOIs());
         assertNotNull(ComputePOIPoints.getPOIsInSight());
         assertNotNull(ComputePOIPoints.getPOIsOutOfSight());
