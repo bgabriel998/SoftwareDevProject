@@ -21,7 +21,6 @@ import ch.epfl.sdp.peakar.user.AccountTest;
 
 @RunWith(AndroidJUnit4.class)
 public class DatabaseTest {
-    private static Context context;
 
     private static final int USER_OFFSET = new Random().nextInt();
     private static final String user1 = BASIC_USERNAME + USER_OFFSET;

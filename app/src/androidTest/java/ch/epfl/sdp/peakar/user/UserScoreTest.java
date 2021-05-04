@@ -20,8 +20,6 @@ import java.util.ArrayList;
 
 public class UserScoreTest {
 
-    private static final int USER_ID = 99;
-
     private static UserScore userScore;
 
     /* Set up the environment */
