@@ -133,7 +133,7 @@ public class ProfileActivityTest {
 
     /* Test that if no account is signed the sign in button is visible */
     @Test
-    public void withNoAccountSignedTest() throws InterruptedException {
+    public void withNoAccountSignedTest() {
         removeAuthUser();
         testRule.getScenario().recreate();
 
@@ -182,7 +182,7 @@ public class ProfileActivityTest {
     /* Test that if the username has changed the correct message is displayed */
     /* The account created is then removed */
     @Test
-    public void registerUserTest() throws InterruptedException {
+    public void registerUserTest() {
         testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
         onView(withId(R.id.editTextUsername)).perform(typeText(user1));
         Espresso.closeSoftKeyboard();
@@ -198,7 +198,7 @@ public class ProfileActivityTest {
 
     /* Test that if the username chooses his current username the correct message is displayed */
     @Test
-    public void chosenCurrentUsernameTest() throws InterruptedException {
+    public void chosenCurrentUsernameTest() {
         testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
         onView(withId(R.id.editTextUsername)).perform(typeText("null"));
         Espresso.closeSoftKeyboard();
@@ -212,7 +212,7 @@ public class ProfileActivityTest {
 
     /* Test that if the user chooses an invalid username the correct message is displayed */
     @Test
-    public void isNotValidTest() throws InterruptedException {
+    public void isNotValidTest() {
         final String usernameTest = "";
 
         testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
@@ -224,7 +224,7 @@ public class ProfileActivityTest {
 
     /* Test that UI is displayed correctly when change username button is pressed. */
     @Test
-    public void changeUsernameButtonTest() throws InterruptedException {
+    public void changeUsernameButtonTest() {
         Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
         try {
             Tasks.await(task1);
@@ -240,7 +240,7 @@ public class ProfileActivityTest {
 
     /* Test that the message inviting the user to write the username in the correct box is correct */
     @Test
-    public void addFriendTextTest() throws InterruptedException {
+    public void addFriendTextTest() {
 
         Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
         try {
@@ -258,7 +258,7 @@ public class ProfileActivityTest {
 
     /* Test that if the friend is already present the correct message is displayed */
     @Test
-    public void friendAlreadyPresentTest() throws InterruptedException {
+    public void friendAlreadyPresentTest() {
         Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
         Task<Void> task2 = Database.refRoot.child(Database.CHILD_USERS).child(user2).child(Database.CHILD_USERNAME).setValue(user2);
         Task<Void> task3 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_FRIENDS).child(user2).setValue("");
@@ -281,7 +281,7 @@ public class ProfileActivityTest {
 
     /* Test that if the friend has been added the correct message is displayed */
     @Test
-    public void addFriendTest() throws InterruptedException {
+    public void addFriendTest() {
         final String added_message = user2 + " " + ApplicationProvider.getApplicationContext().getResources().getString(R.string.friend_added);
         Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
         Task<Void> task2 = Database.refRoot.child(Database.CHILD_USERS).child(user2).child(Database.CHILD_USERNAME).setValue(user2);
@@ -302,7 +302,7 @@ public class ProfileActivityTest {
 
     /* Test that if the friend username is the current username the correct message is displayed */
     @Test
-    public void addFriendCurrentUsernameTest() throws InterruptedException {
+    public void addFriendCurrentUsernameTest() {
         Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
         try {
             Tasks.await(task1);
@@ -321,7 +321,7 @@ public class ProfileActivityTest {
 
     /* Test that if the friend username is not present the correct message is displayed */
     @Test
-    public void addNoExistingUser() throws InterruptedException {
+    public void addNoExistingUser() {
         Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
         try {
             Tasks.await(task1);
@@ -340,7 +340,7 @@ public class ProfileActivityTest {
 
     /* Test that if the user chooses an invalid friend's username the correct message is displayed */
     @Test
-    public void friendIsNotValidTest() throws InterruptedException {
+    public void friendIsNotValidTest() {
         final String username = "";
 
         Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
@@ -361,7 +361,7 @@ public class ProfileActivityTest {
 
     /* Test that UI is displayed correctly when sign out button is pressed. */
     @Test
-    public void signOutButtonTest() throws InterruptedException {
+    public void signOutButtonTest() {
         Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
         try {
             Tasks.await(task1);
@@ -381,7 +381,7 @@ public class ProfileActivityTest {
 
     /* Test that FriendsActivity is started on button click */
     @Test
-    public void friendsButtonTest() throws InterruptedException {
+    public void friendsButtonTest() {
         Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
         try {
             Tasks.await(task1);
@@ -397,7 +397,7 @@ public class ProfileActivityTest {
 
     /* Test that AddFriendActivity is started on button click */
     @Test
-    public void addFriendButtonTest() throws InterruptedException {
+    public void addFriendButtonTest() {
         Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
         try {
             Tasks.await(task1);
