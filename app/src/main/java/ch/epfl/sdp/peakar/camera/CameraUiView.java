@@ -90,8 +90,7 @@ public class CameraUiView extends View {
 
     private final SharedPreferences sharedPref;
 
-    private Boolean displayedToastMode1;
-    private Boolean displayedToastMode2;
+    private Boolean displayedToastMode;
 
     private final SharedPreferences.OnSharedPreferenceChangeListener listenerPreferences =
             (prefs, key) -> {
@@ -101,17 +100,11 @@ public class CameraUiView extends View {
                 switch (displayMode){
                     case "1":
                         setPOIs(filterPOIs ? ComputePOIPoints.getFilteredPOIsInSight() : ComputePOIPoints.getPOIsInSight());
-                        if(!ComputePOIPoints.isLineOfSightAvailable() && !displayedToastMode1){
-                            Toast.makeText(getContext(), "Line of sight downlaod is not yet finished, please wait.", Toast.LENGTH_SHORT).show();
-                            displayedToastMode1 = true;
-                        }
+                        checkIfLineOfSightAvailable();
                         break;
                     case "2":
                         setPOIs(filterPOIs ? ComputePOIPoints.getFilteredPOIsOutOfSight() : ComputePOIPoints.getPOIsOutOfSight());
-                        if(!ComputePOIPoints.isLineOfSightAvailable() && !displayedToastMode2){
-                            Toast.makeText(getContext(), "Line of sight downlaod is not yet finished, please wait.", Toast.LENGTH_SHORT).show();
-                            displayedToastMode2 = true;
-                        }
+                        checkIfLineOfSightAvailable();
                         break;
                     default:
                         //case 0 and default
@@ -132,8 +125,7 @@ public class CameraUiView extends View {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         sharedPref.registerOnSharedPreferenceChangeListener(listenerPreferences);
 
-        displayedToastMode1 = false;
-        displayedToastMode2 = false;
+        displayedToastMode = false;
     }
 
     /**
@@ -380,6 +372,16 @@ public class CameraUiView extends View {
                 mountainInfo);
         //Restore the saved state
         canvas.restore();
+    }
+
+    /**
+     * Checks if the line of sight has been computed. If not display only one toast informing the user
+     */
+    private void checkIfLineOfSightAvailable() {
+        if(!ComputePOIPoints.isLineOfSightAvailable() && !displayedToastMode){
+            Toast.makeText(getContext(), "Line of sight downlaod is not yet finished, please wait.", Toast.LENGTH_SHORT).show();
+            displayedToastMode = true;
+        }
     }
 
     /**
