@@ -17,6 +17,7 @@ import androidx.core.util.Pair;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.map.MapActivity;
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.utils.CameraUtilities;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,6 +25,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+/**
+ * CameraActivity handles the AR part of the application.
+ */
 public class CameraActivity extends AppCompatActivity{
 
 
@@ -80,7 +84,7 @@ public class CameraActivity extends AppCompatActivity{
         //Get the fov of the camera
         Pair<Float, Float> cameraFieldOfView = new Pair<>(0f, 0f);
         try {
-            cameraFieldOfView = cameraPreview.getFieldOfView(this);
+            cameraFieldOfView = CameraUtilities.getFieldOfView(this);
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
@@ -97,7 +101,7 @@ public class CameraActivity extends AppCompatActivity{
         compass = new Compass(this);
 
         //Create compass listener
-        CompassListener compassListener = getCompassListener();
+        CompassListenerInterface compassListener = getCompassListener();
 
         //Bind the compassListener with the compass
         compass.setListener(compassListener);
@@ -113,16 +117,13 @@ public class CameraActivity extends AppCompatActivity{
      *
      * @return CompassListener for the compass
      */
-    private CompassListener getCompassListener() {
-        return new CompassListener() {
-            @Override
-            public void onNewHeading(float heading, float headingV) {
-                //Update the compass when the heading changes
-                cameraUiView.setDegrees(heading, headingV);
-                //Update the textviews with the new headings
-                headingHorizontal.setText(String.format(Locale.ENGLISH, "%.1f °", heading));
-                headingVertical.setText(String.format(Locale.ENGLISH, "%.1f °", headingV));
-            }
+    private CompassListenerInterface getCompassListener() {
+        return (heading, headingV) -> {
+            //Update the compass when the heading changes
+            cameraUiView.setDegrees(heading, headingV);
+            //Update the textviews with the new headings
+            headingHorizontal.setText(String.format(Locale.ENGLISH, "%.1f °", heading));
+            headingVertical.setText(String.format(Locale.ENGLISH, "%.1f °", headingV));
         };
     }
 
