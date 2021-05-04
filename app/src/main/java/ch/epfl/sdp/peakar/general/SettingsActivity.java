@@ -45,9 +45,14 @@ public class SettingsActivity extends AppCompatActivity {
                         break;
                     case "offline_mode_key":
                         offlineModeChanged();
+                    case "display_pois_preference":
+                        selectDisplayPOIs();
+                    case "filterPOIs_key":
+                        setFilterPOIs();
+                    case "dev_options_camera_key":
+                        setDevOptionsCamera((Boolean) prefs.getAll().get("dev_options_camera_key"));
                 }
             };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,17 +163,23 @@ public class SettingsActivity extends AppCompatActivity {
         Toast.makeText(this,"Setting not implemented yet !", Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onBackPressed() {
-        Intent setIntent = new Intent(this,MainMenuActivity.class);
-        startActivity(setIntent);
-    }
-
-
     /** Changes view to SettingsMapActivity */
     public void offlineModeButton(View view) {
         Intent intent = new Intent(this, SettingsMapActivity.class);
         startActivity(intent);
+    }
+
+    /**
+     * Displays or not the developer options on the camera-preview
+     */
+    private void setDevOptionsCamera(Boolean setDevOptions) {
+
+    }
+
+    private void setFilterPOIs() {
+    }
+
+    private void selectDisplayPOIs() {
     }
 }
 

@@ -34,11 +34,17 @@
             android:title="@string/offline_mode_title"
             android:summary="@string/offline_mode_summary"
             android:icon="@drawable/ic_baseline_signal_cellular_off_24"/>
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/devOptions_key"
+            android:title="@string/display_dev_options"
+            android:icon="@drawable/ic_developer_options"/>
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/camera_header">
         <ListPreference
-            android:defaultValue="Display all mountains"
+            android:defaultValue="displayAll"
             android:entries="@array/displayPOIs_entries"
             android:entryValues="@array/displayPOIs_values"
             android:key="@string/displayPOIs_key"
@@ -53,11 +59,6 @@
             android:title="@string/filter_pois_title"
             android:icon="@drawable/ic_filter_pois_camera"/>
 
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/dev_options_camera_key"
-            android:title="@string/filter_pois_title"
-            android:icon="@drawable/ic_developer_options_camera"/>
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/language_header">

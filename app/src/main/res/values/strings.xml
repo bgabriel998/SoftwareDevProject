@@ -100,7 +100,7 @@
     <!-- Camera Preferences -->
     <string name="display_pois_title">Select displayed mountains</string>
     <string name="filter_pois_title">Filter mountains</string>
-    <string name="display_dev_options_cam">Display developer options</string>
+    <string name="display_dev_options">Display developer options</string>
 
     <!-- Language Preferences -->
     <string name="language_title">Language</string>
@@ -128,7 +128,7 @@
     <string name="language_key" translatable="false">language_preference</string>
     <string name="displayPOIs_key" translatable="false">display_pois_preference</string>
     <string name="filterPOIs_key" translatable="false">filter_pois</string>
-    <string name="dev_options_camera_key" translatable="false">dev_options_camera</string>
+    <string name="devOptions_key" translatable="false">developer_options</string>
     <string name="disable_caching_key" translatable="false">disable_caching</string>
     <string name="offline_mode_summary">Opens the editor to select an area to download. This allows the application to work without internet connexion</string>
 

@@ -48,5 +48,5 @@
     <string name="offline_mode_summary">Ouvre l\'éditeur pour selectionner une zone à télécharger. Ceci permet à l\'application de fonctionner sans connexion internet</string>
     <string name="display_pois_title">Selectionner les montagnes à afficher</string>
     <string name="filter_pois_title">Filtrer les montagnes</string>
-    <string name="display_dev_options_cam">Afficher options développeur</string>
+    <string name="display_dev_options">Afficher les options développeur</string>
 </resources>
