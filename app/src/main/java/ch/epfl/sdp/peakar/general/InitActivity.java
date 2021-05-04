@@ -10,9 +10,7 @@ import android.widget.ProgressBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.points.ComputePOIPoints;
-import ch.epfl.sdp.peakar.user.services.AuthService;
+
 import com.google.firebase.FirebaseApp;
 
 import java.util.ArrayList;
@@ -20,7 +18,8 @@ import java.util.Arrays;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
-import ch.epfl.sdp.peakar.user.account.FirebaseAccount;
+import ch.epfl.sdp.peakar.user.services.AuthService;
+
 
 public class InitActivity extends AppCompatActivity {
 
