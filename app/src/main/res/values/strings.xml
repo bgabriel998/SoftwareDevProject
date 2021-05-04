@@ -80,6 +80,8 @@
     <string name="pictureSavedFailed">Failed to take picture:</string>
     <string name="pictureSavedSuccessfully">Picture saved at:</string>
 
+    <!-- CAMERA BUTTONS STRINGS -->
+    <string name="buttonChangeDisplayModePOI" translatable="false">Change displaying of POIs in sight</string>
 
     <!-- MAP MARKERS STRINGS -->
     <string name="marker_altitude">Altitude: %s m</string>

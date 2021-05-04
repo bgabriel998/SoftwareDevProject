@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 import androidx.preference.PreferenceManager;
 
-import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.map.MapActivity;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.utils.CameraUtilities;
@@ -44,7 +43,6 @@ public class CameraActivity extends AppCompatActivity{
 
     //SharedPreferences
     private SharedPreferences sharedPref;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +106,7 @@ public class CameraActivity extends AppCompatActivity{
 
         //Set the POIs for the compass
         //TODO check settings to select the POIPoints
-        cameraUiView.setPOIs(ComputePOIPoints.POIPoints, ComputePOIPoints.highestPOIPoints);
+        //cameraUiView.setPOIs(ComputePOIPoints.POIPoints, ComputePOIPoints.highestPOIPoints);
     }
 
     /**
@@ -259,6 +257,24 @@ public class CameraActivity extends AppCompatActivity{
             fovHorizontal.setVisibility(View.INVISIBLE);
             fovVertical.setVisibility(View.INVISIBLE);
         }
+    }
+
+    /**
+     * Callback for the switchDisplayPOIs ImageButton, iterates over the different representation modes:
+     * 1. Display all POIs
+     * 2. Display only POIs in line of sight
+     * 3. Display only POIS out of line of sight
+     *
+     * @param view ImageButton
+     */
+    public void switchDisplayPOIMode(View view) {
+        String mode = sharedPref.getString("display_pois_preference", "0");
+        int actualMode = Integer.parseInt(mode);
+        int newMode = (actualMode + 1) % 3;
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("display_pois_preference", "" + newMode);
+        editor.apply();
     }
 
     /**

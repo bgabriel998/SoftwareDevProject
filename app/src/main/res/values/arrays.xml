@@ -50,8 +50,11 @@
     </string-array>
 
     <string-array name="displayPOIs_values">
-        <item>displayAll</item>
-        <item>displayInSight</item>
-        <item>diplayOutSight</item>
+        <!-- Display all mountains -->
+        <item>0</item>
+        <!-- Only display mountains in line of sight -->
+        <item>1</item>
+        <!-- Only display mountains out line of sight -->
+        <item>2</item>
     </string-array>
 </resources>

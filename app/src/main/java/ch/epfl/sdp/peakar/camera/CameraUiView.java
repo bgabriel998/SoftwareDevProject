@@ -1,6 +1,7 @@
 package ch.epfl.sdp.peakar.camera;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -8,16 +9,17 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
+import androidx.preference.PreferenceManager;
 
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.utils.CameraUtilities;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -83,10 +85,39 @@ public class CameraUiView extends View {
     private Bitmap mountainMarkerVisible;
     private Bitmap mountainMarkerNotVisible;
 
-    //List that contains the POIPoints
-    private List<POIPoint> POIPoints;
     //Map that contains the labeled POIPoints
     private Map<POIPoint, Boolean> labeledPOIPoints;
+
+    private final SharedPreferences sharedPref;
+
+    private Boolean displayedToastMode1;
+    private Boolean displayedToastMode2;
+
+    private final SharedPreferences.OnSharedPreferenceChangeListener listenerPreferences =
+            (prefs, key) -> {
+                String displayMode = prefs.getString("display_pois_preference", "0");
+                boolean filterPOIs = prefs.getBoolean("filter_pois", true);
+
+                switch (displayMode){
+                    case "1":
+                        setPOIs(filterPOIs ? ComputePOIPoints.getFilteredPOIsInSight() : ComputePOIPoints.getPOIsInSight());
+                        if(!ComputePOIPoints.isLineOfSightAvailable() && !displayedToastMode1){
+                            Toast.makeText(getContext(), "Line of sight downlaod is not yet finished, please wait.", Toast.LENGTH_SHORT).show();
+                            displayedToastMode1 = true;
+                        }
+                        break;
+                    case "2":
+                        setPOIs(filterPOIs ? ComputePOIPoints.getFilteredPOIsOutOfSight() : ComputePOIPoints.getPOIsOutOfSight());
+                        if(!ComputePOIPoints.isLineOfSightAvailable() && !displayedToastMode2){
+                            Toast.makeText(getContext(), "Line of sight downlaod is not yet finished, please wait.", Toast.LENGTH_SHORT).show();
+                            displayedToastMode2 = true;
+                        }
+                        break;
+                    default:
+                        //case 0 and default
+                        setPOIs(filterPOIs ? ComputePOIPoints.getFilteredPOIs() : ComputePOIPoints.getPOIs());
+                }
+            };
 
     /**
      * Constructor for the CompassView which initializes the widges like the font height and paints used
@@ -97,6 +128,12 @@ public class CameraUiView extends View {
         super(context, attrs);
 
         widgetInit();
+
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        sharedPref.registerOnSharedPreferenceChangeListener(listenerPreferences);
+
+        displayedToastMode1 = false;
+        displayedToastMode2 = false;
     }
 
     /**
@@ -207,15 +244,14 @@ public class CameraUiView extends View {
 
     /**
      * Set the POIs that will be drawn on the camera-preview
-     * @param POIPoints List of POIPoints
      * @param labeledPOIPoints Map of the POIPoints with the line of sight boolean
      */
-    public void setPOIs(List<POIPoint> POIPoints, Map<POIPoint, Boolean> labeledPOIPoints){
-        this.POIPoints = POIPoints;
+    public void setPOIs(Map<POIPoint, Boolean> labeledPOIPoints){
         this.labeledPOIPoints = labeledPOIPoints;
         invalidate();
         requestLayout();
     }
+
 
     /**
      * onDraw method is used to draw the compass on the screen.
@@ -265,88 +301,37 @@ public class CameraUiView extends View {
             drawCompass(i);
 
             //Draw the mountains on the canvas
-            drawMountains(i);
+            if(labeledPOIPoints != null && !labeledPOIPoints.isEmpty()) {
+                drawLabeledPOIs(i);
+            }
+            else{
+                listenerPreferences.onSharedPreferenceChanged(sharedPref, null);
+            }
         }
     }
 
     /**
-     * Draws the compass on the canvas
+     * Draws the compass on the canvas. Compass consists of a for-loop going from the heading -
+     * fov/2 until heading + fov/2.
      * @param i degree of the compass
      */
     private void drawCompass(int i) {
-        //Draw a main line for every 90°
+        float lineXpos = pixDeg * (i - minDegrees);
+        //Draw a main line and heading for every 90°
         if (i % 90 == 0){
-            //Draw the line,
-            //startX starts with 0 at the top left corner and increases when going from left to right
-            //startY also increases from top to bottom -> to start at the bottom,
-            // we will use the height of the compass-view.
-            //stopX is the same as startX since we want to draw a vertical line
-            //stopY is the height of the canvas minus some height to leave enough space to write the heading above
-            drawLine(i, mainLineHeight, mainLinePaint);
-
-            //Select the correct heading depending on the degree with selecHeadingString()
-            //Draw the heading with the mainTextPaint above the line
+            canvas.drawLine(lineXpos, height, lineXpos, mainLineHeight, mainLinePaint);
             canvas.drawText(CameraUtilities.selectHeadingString(i), pixDeg * (i - minDegrees), textHeight, mainTextPaint);
         }
 
         //Draw a secondary line for every 45° excluding every 90° (45°, 135°, 225° ...)
         else if (i % 45 == 0){
-            drawLine(i, secondaryLineHeight, secondaryLinePaint);
+            canvas.drawLine(lineXpos, height, lineXpos, secondaryLineHeight, secondaryLinePaint);
             canvas.drawText(CameraUtilities.selectHeadingString(i), pixDeg * (i - minDegrees), textHeight, secondaryTextPaint);
         }
 
         //Draw tertiary line for every 15° excluding every 45° and 90° (15, 30, 60, 75, ...)
         else if (i % 15 == 0){
-            drawLine(i, terciaryLineHeight, terciaryLinePaint);
-        }
-    }
-
-    /**
-     * Draws a line on the compass canvas
-     * @param degree Degree where the line needs to be drawn
-     * @param lineHeight Height of the line in pixel
-     * @param paint paint to be used
-     */
-    private void drawLine(float degree, int lineHeight, Paint paint){
-        canvas.drawLine(pixDeg * (degree - minDegrees), height, pixDeg * (degree - minDegrees), lineHeight, paint);
-    }
-
-    /**
-     * Selects which source needs to be used and then calls either {@link #drawLabeledPOIs(int)}
-     * if the map has been downloaded to check if the POIPoint is in the line of sight or not,
-     * {@link #drawPOIs(int)} if the map has not been downloaded but the POIPoints are already
-     * available or checks if the POIPoints are available.
-     * @param i The degree for which the mountains need to be drawn
-     */
-    private void drawMountains(int i){
-        if(labeledPOIPoints != null && !labeledPOIPoints.isEmpty()){
-            //Draw the labeled POIs depending on their visibility
-            drawLabeledPOIs(i);
-        }
-        else if(POIPoints != null && !POIPoints.isEmpty()){
-            //Draw all POIPoints as not visible since the map has not been downloaded
-            drawPOIs(i);
-            //Update the labeledPOIPoints
-            //TODO check in the settings which mountains to display
-            labeledPOIPoints = ComputePOIPoints.highestPOIPoints;
-        }
-        else{
-            //Update the POIPoints
-            POIPoints = ComputePOIPoints.POIPoints;
-        }
-    }
-
-    /**
-     * Draws the POIs on the display using the horizontal and vertical bearing of the mountain
-     * to the user
-     * @param actualDegree degree on which the POIPoint is drawn
-     */
-    private void drawPOIs(int actualDegree){
-        //Go through all POIPoints
-        for(POIPoint poiPoint : POIPoints){
-            if((int)poiPoint.getHorizontalBearing() == (actualDegree + 360) % 360){
-                drawMountainMarker(poiPoint, false, actualDegree);
-            }
+            canvas.drawLine(lineXpos, height, lineXpos, terciaryLineHeight, terciaryLinePaint);
         }
     }
 

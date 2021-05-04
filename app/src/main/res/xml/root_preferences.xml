@@ -44,7 +44,7 @@
 
     <PreferenceCategory app:title="@string/camera_header">
         <ListPreference
-            android:defaultValue="displayAll"
+            android:defaultValue="0"
             android:entries="@array/displayPOIs_entries"
             android:entryValues="@array/displayPOIs_values"
             android:key="@string/displayPOIs_key"
