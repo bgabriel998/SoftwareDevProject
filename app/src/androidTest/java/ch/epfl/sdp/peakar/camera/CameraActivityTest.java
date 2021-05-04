@@ -1,7 +1,9 @@
 package ch.epfl.sdp.peakar.camera;
 
 import android.app.Activity;
+import android.content.Context;
 
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
@@ -13,6 +15,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.map.MapActivity;
+import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.points.ComputePOIPointsTest;
 
 import org.junit.After;
@@ -39,7 +42,8 @@ public class CameraActivityTest {
     /* Setup environment */
     @BeforeClass
     public static void computePOIPoints(){
-        new ComputePOIPointsTest();
+        Context context = ApplicationProvider.getApplicationContext();
+        new ComputePOIPoints(context);
     }
 
     /* Create Intent */

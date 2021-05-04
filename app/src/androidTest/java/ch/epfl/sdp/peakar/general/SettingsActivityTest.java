@@ -279,6 +279,66 @@ public class SettingsActivityTest{
         assertThat(startVal, not(is(endVal)));
     }
 
+    /*Test preference toggle developer options*/
+    @Test
+    public void TestEnableDeveloperOptions(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear().commit();
+
+        //Get selected value
+        Boolean startVal = sharedPreferences.getBoolean("developer_options", false);
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.offline_mode_title))),
+                        click()));
+        Boolean endVal = sharedPreferences.getBoolean("developer_options", false);
+        assertThat(startVal, not(is(endVal)));
+    }
+
+    /*Test preference toggle filter POIs*/
+    @Test
+    public void TestToggleFilterPOIs(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear().commit();
+
+        //Get selected value
+        Boolean startVal = sharedPreferences.getBoolean("filter_pois", false);
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.filter_pois_title))),
+                        click()));
+        Boolean endVal = sharedPreferences.getBoolean("filter_pois", false);
+        assertThat(startVal, not(is(endVal)));
+    }
+
+    /*Test select displayed mountain menu*/
+    @Test
+    public void TestSelectDisplayedMountains() throws InterruptedException {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.clear().commit();
+
+        //Get selected value
+        String startString = prefs.getString(activity.getResources().getString(R.string.displayPOIs_key), "");
+
+        //Open selector window
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.display_pois_title))),
+                        click()));
+        Thread.sleep(1000);
+        //Select the opposite preference
+        if(startString.equals(activity.getResources().getStringArray(R.array.displayPOIs_values)[1]))
+            onView(withText(activity.getResources().getStringArray(R.array.displayPOIs_values)[0])).perform(click());
+        else
+            onView(withText(activity.getResources().getStringArray(R.array.displayPOIs_values)[1])).perform(click());
+
+        //Check that the selection happened
+        String endString = prefs.getString(activity.getResources().getString(R.string.displayPOIs_key), "");
+        assertThat(startString, not(is(endString)));
+    }
+
+
     /*Gets the activity for testing*/
     private <T extends Activity> T getActivity(ActivityScenarioRule<T> activityScenarioRule) {
         AtomicReference<T> activityRef = new AtomicReference<>();
