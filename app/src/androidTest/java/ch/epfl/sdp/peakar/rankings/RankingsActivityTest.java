@@ -9,6 +9,8 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.junit.After;
@@ -22,6 +24,7 @@ import org.junit.runner.RunWith;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -55,14 +58,19 @@ public class RankingsActivityTest {
 
     /* Set up the environment */
     @BeforeClass
-    public static void init() throws InterruptedException {
+    public static void init() {
         Collections.reverse(mockPoints);
         // Add the mock user on the database
         for(int i=0; i < mockPoints.size(); i++) {
-            Database.setChild(Database.CHILD_USERS + BASIC_USERNAME + mockPositions.get(i), Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_SCORE), Arrays.asList(TESTING_USERNAME + mockPositions.get(i), mockPoints.get(i)));
+            Task<Void> taskName = Database.refRoot.child(Database.CHILD_USERS).child(BASIC_USERNAME + mockPositions.get(i)).child(Database.CHILD_USERNAME).setValue(TESTING_USERNAME + mockPositions.get(i));
+            Task<Void> taskPoints =Database.refRoot.child(Database.CHILD_USERS).child(BASIC_USERNAME + mockPositions.get(i)).child(Database.CHILD_SCORE).setValue(mockPoints.get(i));
+            try {
+                Tasks.await(taskName);
+                Tasks.await(taskPoints);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
-        
 
         /* Make sure no user is signed in before a test */
         AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
@@ -70,19 +78,34 @@ public class RankingsActivityTest {
         /* Create a new one */
         registerAuthUser();
 
-        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_SCORE), Arrays.asList(TESTING_USERNAME, MAXIMUM_POINTS));
-        Thread.sleep(SHORT_SLEEP_TIME);
+        Task<Void> taskName = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(TESTING_USERNAME);
+        Task<Void> taskPoints =Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_SCORE).setValue(MAXIMUM_POINTS);
+        try {
+            Tasks.await(taskName);
+            Tasks.await(taskPoints);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         FirebaseAuthService.getInstance().forceRetrieveData();
     }
 
     /* Clean environment */
     @AfterClass
-    public static void end() throws InterruptedException {
+    public static void end() {
         for(int i=0; i < mockPoints.size(); i++) {
-            Database.refRoot.child(Database.CHILD_USERS).child(BASIC_USERNAME + mockPositions.get(i)).removeValue();
+            Task<Void> taskRemove = Database.refRoot.child(Database.CHILD_USERS).child(BASIC_USERNAME + mockPositions.get(i)).removeValue();
+            try {
+                Tasks.await(taskRemove);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
-        Thread.sleep(SHORT_SLEEP_TIME);
+        Task<Void> taskRemove = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
+        try {
+            Tasks.await(taskRemove);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         removeAuthUser();
     }
 
