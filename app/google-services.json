@@ -17,7 +17,7 @@
           "client_id": "336515442370-4f9m04noj354cvhbalt3u01hbbm7jbvg.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.github.bgabriel998.softwaredevproject",
+            "package_name": "ch.epfl.sdp.peakar",
             "certificate_hash": "9daa5696df26da43c260c78c1237bc2312157f81"
           }
         },

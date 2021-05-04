@@ -1,31 +1,20 @@
 package ch.epfl.sdp.peakar.user.friends;
 
-import ch.epfl.sdp.peakar.database.Database;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-
 /**
  * Item holding user attributes
  * used to fill friends list.
  */
 public class FriendItem {
     private final String uid;
-    private String username;
-    private int points;
-    private final DatabaseReference dbRef;
-    private ValueEventListener itemListener;
+    private String username = "";
+    private int points = 0;
 
     /**
      * Constructor
      * @param uid of user
-     * @param username of user.
-     * @param points user has.
      */
-    public FriendItem(String uid, String username, int points) {
+    public FriendItem(String uid) {
         this.uid = uid;
-        this.username = username;
-        this.points = points;
-        this.dbRef = Database.refRoot.child(Database.CHILD_USERS + uid);
     }
 
     /**
@@ -66,18 +55,10 @@ public class FriendItem {
     }
 
     /**
-     * Set the listener of a friend item that will update the fields on DB changes
+     * Check if a friend item has a specific ID
+     * @return true if the user has the target ID, false otherwise
      */
-    public void setListener(ValueEventListener listener) {
-        itemListener = listener;
-        dbRef.addValueEventListener(itemListener);
-    }
-
-    /**
-     * Check if a friend item has a specific username
-     * @return true if the user has the target username, false otherwise
-     */
-    public boolean hasUsername(String username) {
-        return this.username.equals(username);
+    public boolean hasID(String ID) {
+        return this.uid.equals(ID);
     }
 }

@@ -11,7 +11,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class DataBaseHelper extends SQLiteOpenHelper {
+public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String TABLE = "countryHighPoint";
     private static final String DB_PATH = "/data/data/ch.epfl.sdp.peakar/databases/";
@@ -25,7 +25,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      * Takes and keeps a reference of the passed context in order to access to the application assets and resources.
      * @param context app context
      */
-    public DataBaseHelper(Context context) {
+    public DatabaseHelper(Context context) {
         super(context, DB_NAME, null, 1);
         this.myContext = context;
         this.createDataBase();

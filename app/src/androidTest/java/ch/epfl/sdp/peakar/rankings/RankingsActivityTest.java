@@ -7,10 +7,15 @@ import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,13 +24,16 @@ import org.junit.runner.RunWith;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.UITestHelper;
 import ch.epfl.sdp.peakar.database.Database;
-import ch.epfl.sdp.peakar.user.account.Account;
+import ch.epfl.sdp.peakar.user.AccountTest;
+import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -33,6 +41,9 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sdp.peakar.TestingConstants.*;
+import static ch.epfl.sdp.peakar.user.AccountTest.registerAuthUser;
+import static ch.epfl.sdp.peakar.user.AccountTest.removeAuthUser;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
@@ -41,39 +52,65 @@ import static org.junit.Assert.fail;
 public class RankingsActivityTest {
 
     private static final Integer MAXIMUM_POINTS = Integer.MAX_VALUE;
-    private static final String TESTING_USERNAME = "invalid@username";
+    private static final String TESTING_USERNAME = "test@user";
     private static final List<Integer> mockPoints = IntStream.rangeClosed(MAXIMUM_POINTS-19, MAXIMUM_POINTS-1).boxed().collect(Collectors.toList());
     private static final List<Integer> mockPositions = IntStream.rangeClosed(2, 20).boxed().collect(Collectors.toList());
 
     /* Set up the environment */
     @BeforeClass
-    public static void init() throws InterruptedException {
+    public static void init() {
         Collections.reverse(mockPoints);
-        /* Make sure that mock users are not on the database before the tests*/
+        // Add the mock user on the database
         for(int i=0; i < mockPoints.size(); i++) {
-            Database.refRoot.child("users").child("test" + mockPositions.get(i)).removeValue();
+            Task<Void> taskName = Database.refRoot.child(Database.CHILD_USERS).child(BASIC_USERNAME + mockPositions.get(i)).child(Database.CHILD_USERNAME).setValue(TESTING_USERNAME + mockPositions.get(i));
+            Task<Void> taskPoints =Database.refRoot.child(Database.CHILD_USERS).child(BASIC_USERNAME + mockPositions.get(i)).child(Database.CHILD_SCORE).setValue(mockPoints.get(i));
+            try {
+                Tasks.await(taskName);
+                Tasks.await(taskPoints);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        Database.refRoot.child("users").child("null").removeValue();
-        Thread.sleep(1500);
 
         /* Make sure no user is signed in before a test */
-        FirebaseAuth.getInstance().signOut();
-        Account.getAccount().synchronizeUserProfile();
-        Thread.sleep(1500);
+        AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+
+        /* Create a new one */
+        registerAuthUser();
+
+        Task<Void> taskName = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(TESTING_USERNAME);
+        Task<Void> taskPoints =Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_SCORE).setValue(MAXIMUM_POINTS);
+        try {
+            Tasks.await(taskName);
+            Tasks.await(taskPoints);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        FirebaseAuthService.getInstance().forceRetrieveData();
+    }
+
+    /* Clean environment */
+    @AfterClass
+    public static void end() {
+        for(int i=0; i < mockPoints.size(); i++) {
+            Task<Void> taskRemove = Database.refRoot.child(Database.CHILD_USERS).child(BASIC_USERNAME + mockPositions.get(i)).removeValue();
+            try {
+                Tasks.await(taskRemove);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        Task<Void> taskRemove = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
+        try {
+            Tasks.await(taskRemove);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        removeAuthUser();
     }
 
     @Rule
     public ActivityScenarioRule<RankingsActivity> testRule = new ActivityScenarioRule<>(RankingsActivity.class);
-
-    /* Make sure that mock users are not on the database after a test */
-    @After
-    public void removeTestUsers() throws InterruptedException {
-        for(int i=0; i < mockPoints.size(); i++) {
-            Database.refRoot.child("users").child("test" + mockPositions.get(i)).removeValue();
-        }
-        Database.refRoot.child("users").child("null").removeValue();
-        Thread.sleep(1500);
-    }
 
     /* Test that the toolbar title is set as expected */
     @Test
@@ -88,7 +125,7 @@ public class RankingsActivityTest {
     public void TestToolbarBackButton(){
         onView(withId(R.id.toolbarBackButton)).perform(click());
         try {
-            Thread.sleep(1000);
+            Thread.sleep(SHORT_SLEEP_TIME);
             assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -98,14 +135,7 @@ public class RankingsActivityTest {
 
     /* Test that mock user sin list view are at correct places and contain correct data */
     @Test
-    public void TestContentOfListView() throws InterruptedException {
-        // Add the mock user on the database
-        for(int i=0; i < mockPoints.size(); i++) {
-            Database.setChild("users/test" + mockPositions.get(i), Arrays.asList("username", "score"), Arrays.asList(TESTING_USERNAME + mockPositions.get(i), mockPoints.get(i)));
-        }
-        Database.setChild("users/null", Arrays.asList("username", "score"), Arrays.asList(TESTING_USERNAME, MAXIMUM_POINTS));
-        Thread.sleep(1500);
-
+    public void TestContentOfListView() {
         // Check correct data
         DataInteraction interaction =  onData(instanceOf(RankingItem.class));
         for(int i=0; i <= mockPoints.size(); i++) {
@@ -122,14 +152,7 @@ public class RankingsActivityTest {
 
     /* Test that all elements colors in list view are correct */
     @Test
-    public void TestColorOfListView() throws InterruptedException {
-        // Add the mock user on the database
-        for(int i=0; i < mockPoints.size(); i++) {
-            Database.setChild("users/test" + mockPositions.get(i), Arrays.asList("username", "score"), Arrays.asList(TESTING_USERNAME + mockPositions.get(i), mockPoints.get(i)));
-        }
-        Database.setChild("users/null", Arrays.asList("username", "score"), Arrays.asList(TESTING_USERNAME, MAXIMUM_POINTS));
-        Thread.sleep(1500);
-
+    public void TestColorOfListView() {
         DataInteraction interaction =  onData(instanceOf(RankingItem.class));
 
         // Check correct colors on current fake user
@@ -144,7 +167,7 @@ public class RankingsActivityTest {
                 .check(matches(UITestHelper.withTextColor(R.color.LightGrey)));
 
         // Check correct colors on other fake users
-        for(int i=0; i < mockPoints.size(); i++) {
+        for(int i=0; i < mockPoints.size() - 1; i++) {
             listItem = interaction.atPosition(i+1);
 
             listItem.onChildView(withId(R.id.ranking_item_container))

@@ -29,6 +29,7 @@
     <string name='insert_username_button'>Insert your username here</string>
     <string name='change_username_button'>Change username</string>
     <string name='submit_username_button'>Change</string>
+    <string name='registered_username' translatable="false">Welcome to PeakAR community!</string>
 
     <!-- FRIENDS SYSTEM -->
     <string name='add_friend_button'>Add a friend</string>

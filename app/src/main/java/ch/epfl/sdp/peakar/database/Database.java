@@ -1,5 +1,7 @@
 package ch.epfl.sdp.peakar.database;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.google.firebase.database.DataSnapshot;
@@ -39,6 +41,7 @@ public class Database {
      * @param values    A list of strings containing the values to be added
      */
     public static void setChild(String path, List<String> childKeys, List<Object> values) {
+        Log.d("Database", "setChild: path " + path);
 
         // Moving to the correct child position
         DatabaseReference refAdd = refRoot.child(path);

@@ -8,16 +8,22 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.platform.app.InstrumentationRegistry;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.POIPoint;
-import ch.epfl.sdp.peakar.user.account.FirebaseAccount;
+import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 import ch.epfl.sdp.peakar.user.score.UserScore;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.osmdroid.tileprovider.MapTileProviderBase;
@@ -34,6 +40,8 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sdp.peakar.TestingConstants.*;
+import static ch.epfl.sdp.peakar.user.AccountTest.registerAuthUser;
+import static ch.epfl.sdp.peakar.user.AccountTest.removeAuthUser;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -46,6 +54,40 @@ public class OSMMapTest {
     @Rule
     public ActivityScenarioRule<MapActivity> activityActivityScenarioRule = new ActivityScenarioRule<>(MapActivity.class);
 
+    /* Set up the environment */
+    @BeforeClass
+    public static void init() {
+        /* Make sure no user is signed in before tests */
+        AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+
+        /* Create a new one */
+        registerAuthUser();
+    }
+
+    /* Clean environment */
+    @AfterClass
+    public static void end() {
+        removeAuthUser();
+    }
+
+    /* Make sure that an account is signed in and as new before each test */
+    @Before
+    public void createTestUser() {
+        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+            AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+            registerAuthUser();
+        }
+        else {
+            FirebaseAuthService.getInstance().forceRetrieveData();
+        }
+    }
+
+    /* Make sure that mock users are not on the database after a test */
+    @After
+    public void removeTestUsers() throws InterruptedException {
+        Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
+        Thread.sleep(SHORT_SLEEP_TIME);
+    }
 
     /* Create Intent */
     @Before
@@ -113,8 +155,7 @@ public class OSMMapTest {
         inputArrayList.add(point_3);
         inputArrayList.add(point_4);
         //Put every POI in database + in the cache
-        FirebaseAccount account = FirebaseAccount.getAccount();
-        UserScore userScore = new UserScore(ApplicationProvider.getApplicationContext(),account);
+        UserScore userScore = new UserScore(ApplicationProvider.getApplicationContext());
         userScore.updateUserScoreAndDiscoveredPeaks(inputArrayList);
 
         //Init map
@@ -128,7 +169,7 @@ public class OSMMapTest {
         //the setMarkersForDiscoveredPeaks method
         Looper.prepare();
         final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(() -> osmMap.setMarkersForDiscoveredPeaks(account, true), 100);
+        handler.postDelayed(() -> osmMap.setMarkersForDiscoveredPeaks(true), 100);
         //Wait for the handler to complete
         Thread.sleep(1000);
 
@@ -166,9 +207,6 @@ public class OSMMapTest {
         Assert.assertTrue(AiguilleDuPlanMarkerPresent);
         Assert.assertTrue(DentDuGeantMarkerPresent);
         Assert.assertTrue(PointeDeLapazMarkerPresent);
-
-        //Remove created child
-        Database.refRoot.child(Database.CHILD_USERS).child("null").removeValue();
     }
 
 
