@@ -31,12 +31,15 @@ public class POICache {
     /*Bounding box saved to cache*/
     private static BoundingBox cachedBoundingBox;
 
+    private static Gson gson;
+
     /**
      * Private constructor: the class is a singleton
      */
     private POICache(){
         cachedPOIPoints = null;
         cachedBoundingBox = null;
+        gson = new Gson();
     }
 
     /**
@@ -55,7 +58,6 @@ public class POICache {
     public void savePOIDataToCache(ArrayList<POIPoint> cachedPOIPoints, BoundingBox cachedBoundingBox, Context context){
         //Create a new object with all needed information to save in JSON
         POICacheContent poiCacheContent = new POICacheContent(cachedPOIPoints,cachedBoundingBox);
-        Gson gson = new Gson();
         //Convert to JSON
         String serializesCache = gson.toJson(poiCacheContent);
         saveJson(serializesCache,context);
@@ -85,24 +87,8 @@ public class POICache {
      * Retrieve POI data from cache and overwrite cachedPOIPoints and cachedBoundingBox
      * with cache file values
      */
-    /*private static void retrievePOIDataFromCache(Context context){
-        File file = new File(context.getCacheDir(),CACHE_FILE_NAME);
-        try{
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-            Gson gson = new Gson();
-            POICacheContent poiCacheContent = gson.fromJson(bufferedReader, POICacheContent.class);
-            cachedPOIPoints = poiCacheContent.getCachedPOIPoints();
-            cachedBoundingBox = poiCacheContent.getCachedBoundingBox();
-        }catch (IOException e){
-            Log.e("Exception", "File read failed cache POIPoints: " + e.toString());
-        }
-
-    }*/
-
-
     private static void retrievePOIDataFromCache(Context context){
         String fileContent = readJSON(context);
-        Gson gson = new Gson();
         POICacheContent poiCacheContent = gson.fromJson(fileContent, POICacheContent.class);
         cachedPOIPoints = poiCacheContent.getCachedPOIPoints();
         cachedBoundingBox = poiCacheContent.getCachedBoundingBox();
