@@ -50,5 +50,4 @@ public class TestingConstants {
 
     //Cache constants
     public static final String CACHE_FILE_NAME_TEST = "POIPointsCache.txt";
-    public static final String CACHE_FILE_PATH_TEST = "";
 }
