@@ -3,19 +3,68 @@ package ch.epfl.sdp.peakar.points;
 import android.content.Context;
 
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.google.firebase.auth.FirebaseAuth;
+
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Random;
 import java.util.concurrent.TimeoutException;
 
+import ch.epfl.sdp.peakar.database.Database;
+import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
+
+import static ch.epfl.sdp.peakar.TestingConstants.*;
+import static ch.epfl.sdp.peakar.user.AccountTest.registerAuthUser;
+import static ch.epfl.sdp.peakar.user.AccountTest.removeAuthUser;
+
 
 public class UserPointTest {
 
     private static Context mContext;
     private static UserPoint userPoint;
+
+    /* Set up the environment */
+    @BeforeClass
+    public static void init() {
+        /* Make sure no user is signed in before tests */
+        AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+
+        /* Create a new one */
+        registerAuthUser();
+    }
+
+    /* Clean environment */
+    @AfterClass
+    public static void end() {
+        removeAuthUser();
+    }
+
+    /* Make sure that an account is signed in and as new before each test */
+    @Before
+    public void createTestUser() {
+        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+            AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+            registerAuthUser();
+        }
+        else {
+            FirebaseAuthService.getInstance().forceRetrieveData();
+        }
+    }
+
+    /* Make sure that mock users are not on the database after a test */
+    @After
+    public void removeTestUsers() throws InterruptedException {
+        Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
+        Thread.sleep(SHORT_SLEEP_TIME);
+    }
 
     @BeforeClass
     public static void createInstance() {

@@ -6,9 +6,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.ListAdapterInflater;
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.user.account.Account;
 
 import java.util.List;
 import java.util.Locale;
@@ -79,7 +79,7 @@ public class RankingListAdapter extends ArrayAdapter<RankingItem> {
         int backgroundColor = R.color.LightGrey;
         int textStyle = R.style.StandardText_DarkGreen;
 
-        if (item.getUid().equals(Account.getAccount().getId())) {
+        if (item.getUid().equals(AuthService.getInstance().getID())) {
             backgroundColor = R.color.DarkGreen;
             textStyle = R.style.StandardText_LightGrey;
         }
