@@ -16,6 +16,7 @@ import org.junit.Test;
 import static java.lang.Double.NaN;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class ComputePOIPointsTest {
 
@@ -87,23 +88,23 @@ public class ComputePOIPointsTest {
     }
 
     /**
-     * Test if ComputePOIPoints can get POIPoints and LabeledPOIPoints
-     * @throws InterruptedException if any thread has interrupted the current thread
+     * Test if ComputePOIPoints has computed the POIs
      */
     @Test
-    public void getLabeledPOIPointsTest() throws InterruptedException {
-//        Context mContext = ApplicationProvider.getApplicationContext();
-//
-//        new ComputePOIPoints(mContext);
-//
-//        int count=0;
-//        //Wait for the map to be downloaded
-//        while(count<20 && ComputePOIPoints.getPOIs()==null){
-//            Thread.sleep(1000);
-//            count++;
-//        }
-
-        //Check that POIPoints and labeledPOIPoints are not null
+    public void getLabeledPOIPointsTest() {
         assertNotNull(ComputePOIPoints.getPOIs());
+        assertNotNull(ComputePOIPoints.getPOIsInSight());
+        assertNotNull(ComputePOIPoints.getPOIsOutOfSight());
+        assertNotNull(ComputePOIPoints.getFilteredPOIs());
+        assertNotNull(ComputePOIPoints.getFilteredPOIsInSight());
+        assertNotNull(ComputePOIPoints.getFilteredPOIsOutOfSight());
+
+        assertTrue(ComputePOIPoints.getPOIs().size() > 0);
+        assertEquals(ComputePOIPoints.getPOIs().size(), ComputePOIPoints.getPOIsInSight().size()
+                + ComputePOIPoints.getPOIsOutOfSight().size());
+
+        assertTrue(ComputePOIPoints.getFilteredPOIs().size() > 0);
+        assertEquals(ComputePOIPoints.getFilteredPOIs().size(), ComputePOIPoints.getFilteredPOIsInSight().size()
+                + ComputePOIPoints.getFilteredPOIsOutOfSight().size());
     }
 }
