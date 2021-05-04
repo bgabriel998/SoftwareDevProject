@@ -41,4 +41,17 @@
         <item>german</item>
         <item>swedish</item>
     </string-array>
+
+    <!-- camera display POIs Preference -->
+    <string-array name="displayPOIs_entries">
+        <item>Display all mountains</item>
+        <item>Only display mountains in line of sight</item>
+        <item>Only display mountains out line of sight</item>
+    </string-array>
+
+    <string-array name="displayPOIs_values">
+    <item>displayAll</item>
+    <item>displayInSight</item>
+    <item>diplayOutSight</item>
+    </string-array>
 </resources>
