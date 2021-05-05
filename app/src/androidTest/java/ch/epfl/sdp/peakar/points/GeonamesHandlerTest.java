@@ -15,8 +15,15 @@ import org.osmdroid.bonuspack.location.POI;
 
 import java.util.ArrayList;
 
-
-import static ch.epfl.sdp.peakar.TestingConstants.*;
+import static ch.epfl.sdp.peakar.TestingConstants.DEFAULT_QUERY_MAX_RESULT;
+import static ch.epfl.sdp.peakar.TestingConstants.DEFAULT_QUERY_TIMEOUT;
+import static ch.epfl.sdp.peakar.TestingConstants.GIVEN_QUERY_MAX_RESULT;
+import static ch.epfl.sdp.peakar.TestingConstants.GIVEN_QUERY_TIMEOUT;
+import static ch.epfl.sdp.peakar.TestingConstants.GIVEN_RANGE_IN_KM;
+import static ch.epfl.sdp.peakar.TestingConstants.MILLI_SEC_TO_SEC;
+import static ch.epfl.sdp.peakar.TestingConstants.MOCK_LOCATION_ALT_LAUSANNE;
+import static ch.epfl.sdp.peakar.TestingConstants.MOCK_LOCATION_LAT_LAUSANNE;
+import static ch.epfl.sdp.peakar.TestingConstants.MOCK_LOCATION_LON_LAUSANNE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.isEmptyOrNullString;

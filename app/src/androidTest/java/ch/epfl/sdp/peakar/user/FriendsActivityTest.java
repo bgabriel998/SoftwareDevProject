@@ -13,16 +13,6 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.database.Database;
-import ch.epfl.sdp.peakar.user.services.Account;
-import ch.epfl.sdp.peakar.user.services.AuthService;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
-import ch.epfl.sdp.peakar.user.friends.FriendItem;
-import ch.epfl.sdp.peakar.user.friends.FriendItemActivity;
-import ch.epfl.sdp.peakar.user.friends.FriendsActivity;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseFriendItem;
-
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.junit.After;
@@ -35,6 +25,16 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.Collections;
 
+import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.database.Database;
+import ch.epfl.sdp.peakar.user.friends.FriendItem;
+import ch.epfl.sdp.peakar.user.friends.FriendItemActivity;
+import ch.epfl.sdp.peakar.user.friends.FriendsActivity;
+import ch.epfl.sdp.peakar.user.services.Account;
+import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseFriendItem;
+
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -43,7 +43,9 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.peakar.TestingConstants.*;
+import static ch.epfl.sdp.peakar.TestingConstants.BASIC_USERNAME;
+import static ch.epfl.sdp.peakar.TestingConstants.LONG_SLEEP_TIME;
+import static ch.epfl.sdp.peakar.TestingConstants.SHORT_SLEEP_TIME;
 import static ch.epfl.sdp.peakar.user.AccountTest.registerAuthUser;
 import static ch.epfl.sdp.peakar.user.AccountTest.removeAuthUser;
 import static org.hamcrest.Matchers.allOf;

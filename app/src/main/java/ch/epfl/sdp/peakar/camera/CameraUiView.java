@@ -12,13 +12,13 @@ import android.view.View;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 
-import ch.epfl.sdp.peakar.points.ComputePOIPoints;
-import ch.epfl.sdp.peakar.points.POIPoint;
-import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.utils.CameraUtilities;
-
 import java.util.List;
 import java.util.Map;
+
+import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.points.ComputePOIPoints;
+import ch.epfl.sdp.peakar.points.POIPoint;
+import ch.epfl.sdp.peakar.utils.CameraUtilities;
 
 /**
  * CameraUiView draws a canvas with the compass and mountain information on the camera-preview

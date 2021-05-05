@@ -5,12 +5,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import ch.epfl.sdp.peakar.R;
-
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
+
+import ch.epfl.sdp.peakar.R;
 
 /**
  * Custom info window for markers. The design from the info

@@ -1,8 +1,5 @@
 package ch.epfl.sdp.peakar.database;
 
-import android.content.Context;
-import static ch.epfl.sdp.peakar.TestingConstants.*;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.After;
@@ -10,14 +7,13 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.*;
-
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
-import ch.epfl.sdp.peakar.user.AccountTest;
+import static ch.epfl.sdp.peakar.TestingConstants.BASIC_USERNAME;
+import static ch.epfl.sdp.peakar.TestingConstants.SHORT_SLEEP_TIME;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class DatabaseTest {

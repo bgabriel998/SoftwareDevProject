@@ -6,16 +6,16 @@ import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.stream.Collectors;
+
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.user.score.ScoringConstants;
 import ch.epfl.sdp.peakar.user.services.Account;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
-import ch.epfl.sdp.peakar.user.score.ScoringConstants;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.stream.Collectors;
 
 public class CollectionActivity extends AppCompatActivity {
 

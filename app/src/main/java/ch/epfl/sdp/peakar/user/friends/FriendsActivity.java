@@ -1,17 +1,18 @@
 package ch.epfl.sdp.peakar.user.friends;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ListView;
 
-import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.user.services.AuthService;
-import ch.epfl.sdp.peakar.utils.ToolbarHandler;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
+
+import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
 public class FriendsActivity extends AppCompatActivity {
 

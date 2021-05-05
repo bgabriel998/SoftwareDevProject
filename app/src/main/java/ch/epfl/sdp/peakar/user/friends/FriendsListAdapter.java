@@ -6,10 +6,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import ch.epfl.sdp.peakar.utils.ListAdapterInflater;
-import ch.epfl.sdp.peakar.R;
-
 import java.util.List;
+
+import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.utils.ListAdapterInflater;
 
 public class FriendsListAdapter extends ArrayAdapter<FriendItem> {
 

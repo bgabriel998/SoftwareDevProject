@@ -8,12 +8,8 @@ import android.util.Log;
 import androidx.core.util.Pair;
 import androidx.preference.PreferenceManager;
 
-import com.firebase.ui.auth.data.model.User;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.util.BoundingBox;
 

@@ -14,13 +14,6 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.database.Database;
-import ch.epfl.sdp.peakar.points.POIPoint;
-import ch.epfl.sdp.peakar.user.services.AuthService;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
-import ch.epfl.sdp.peakar.user.score.UserScore;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -32,6 +25,13 @@ import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
 
+import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.database.Database;
+import ch.epfl.sdp.peakar.points.POIPoint;
+import ch.epfl.sdp.peakar.user.score.UserScore;
+import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
+
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -39,7 +39,11 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.peakar.TestingConstants.*;
+import static ch.epfl.sdp.peakar.TestingConstants.LONG_SLEEP_TIME;
+import static ch.epfl.sdp.peakar.TestingConstants.MONT_BLANC_ALT;
+import static ch.epfl.sdp.peakar.TestingConstants.MONT_BLANC_LAT;
+import static ch.epfl.sdp.peakar.TestingConstants.MONT_BLANC_LONG;
+import static ch.epfl.sdp.peakar.TestingConstants.SHORT_SLEEP_TIME;
 import static ch.epfl.sdp.peakar.user.AccountTest.registerAuthUser;
 import static ch.epfl.sdp.peakar.user.AccountTest.removeAuthUser;
 import static org.hamcrest.Matchers.allOf;

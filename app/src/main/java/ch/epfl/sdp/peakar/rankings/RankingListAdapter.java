@@ -6,12 +6,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import ch.epfl.sdp.peakar.user.services.AuthService;
-import ch.epfl.sdp.peakar.utils.ListAdapterInflater;
-import ch.epfl.sdp.peakar.R;
-
 import java.util.List;
 import java.util.Locale;
+
+import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.utils.ListAdapterInflater;
 
 /**
  * List adapter for rankings items to set correct text for each ranking item.

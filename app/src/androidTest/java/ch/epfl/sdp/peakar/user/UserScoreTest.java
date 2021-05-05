@@ -1,25 +1,38 @@
 package ch.epfl.sdp.peakar.user;
 
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.core.app.ApplicationProvider;
-
-import org.junit.Assert;
-import ch.epfl.sdp.peakar.points.POIPoint;
-import ch.epfl.sdp.peakar.user.services.AuthService;
-import ch.epfl.sdp.peakar.user.score.ScoringConstants;
-import ch.epfl.sdp.peakar.user.score.UserScore;
-import static ch.epfl.sdp.peakar.TestingConstants.*;
-import static ch.epfl.sdp.peakar.user.AccountTest.registerAuthUser;
-import static ch.epfl.sdp.peakar.user.AccountTest.removeAuthUser;
-import static org.junit.Assert.assertEquals;
 
 import org.junit.AfterClass;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
+
+import ch.epfl.sdp.peakar.points.POIPoint;
+import ch.epfl.sdp.peakar.user.score.ScoringConstants;
+import ch.epfl.sdp.peakar.user.score.UserScore;
+import ch.epfl.sdp.peakar.user.services.AuthService;
+
+import static ch.epfl.sdp.peakar.TestingConstants.AIGUILLE_DU_PLAN_ALT;
+import static ch.epfl.sdp.peakar.TestingConstants.AIGUILLE_DU_PLAN_LAT;
+import static ch.epfl.sdp.peakar.TestingConstants.AIGUILLE_DU_PLAN_LONG;
+import static ch.epfl.sdp.peakar.TestingConstants.AIGUILLE_DU_PLAN_NAME;
+import static ch.epfl.sdp.peakar.TestingConstants.DENT_DU_GEANT_ALT;
+import static ch.epfl.sdp.peakar.TestingConstants.DENT_DU_GEANT_LAT;
+import static ch.epfl.sdp.peakar.TestingConstants.DENT_DU_GEANT_LONG;
+import static ch.epfl.sdp.peakar.TestingConstants.DENT_DU_GEANT_NAME;
+import static ch.epfl.sdp.peakar.TestingConstants.MONT_BLANC_ALT;
+import static ch.epfl.sdp.peakar.TestingConstants.MONT_BLANC_LAT;
+import static ch.epfl.sdp.peakar.TestingConstants.MONT_BLANC_LONG;
+import static ch.epfl.sdp.peakar.TestingConstants.MONT_BLANC_NAME;
+import static ch.epfl.sdp.peakar.TestingConstants.POINTE_DE_LAPAZ_ALT;
+import static ch.epfl.sdp.peakar.TestingConstants.POINTE_DE_LAPAZ_LAT;
+import static ch.epfl.sdp.peakar.TestingConstants.POINTE_DE_LAPAZ_LONG;
+import static ch.epfl.sdp.peakar.TestingConstants.POINTE_DE_LAPAZ_NAME;
+import static ch.epfl.sdp.peakar.user.AccountTest.registerAuthUser;
+import static ch.epfl.sdp.peakar.user.AccountTest.removeAuthUser;
+import static org.junit.Assert.assertEquals;
 
 
 public class UserScoreTest {

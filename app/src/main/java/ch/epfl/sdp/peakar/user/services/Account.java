@@ -9,9 +9,9 @@ import java.util.stream.Collectors;
 
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.points.POIPoint;
+import ch.epfl.sdp.peakar.user.friends.FriendItem;
 import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAccount;
-import ch.epfl.sdp.peakar.user.friends.FriendItem;
 
 /**
  * This class describes the local behaviour of the account model regardless of the Database provider.

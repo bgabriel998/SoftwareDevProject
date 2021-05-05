@@ -1,18 +1,18 @@
 package ch.epfl.sdp.peakar.user.friends;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.Locale;
+
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
-
-import java.util.Locale;
 
 public class FriendItemActivity extends AppCompatActivity {
     private String UId;
