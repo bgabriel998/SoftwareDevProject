@@ -193,7 +193,7 @@ public class SettingsActivityTest{
 
     /*Test offline mode button click*/
     @Test
-    public void TestOfflineModeButton(){
+    public void TestOfflineModeButton() throws InterruptedException {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         //Get selected value
         Boolean startVal = prefs.getBoolean(activity.getResources().getString(R.string.offline_mode_key), false);
@@ -204,6 +204,7 @@ public class SettingsActivityTest{
 
         Boolean endVal = prefs.getBoolean(activity.getResources().getString(R.string.offline_mode_key), false);
         assertThat(startVal, not(is(endVal)));
+        Thread.sleep(1000);
         if (endVal) {
             intended(IntentMatchers.hasComponent(SettingsMapActivity.class.getName()));
         }
