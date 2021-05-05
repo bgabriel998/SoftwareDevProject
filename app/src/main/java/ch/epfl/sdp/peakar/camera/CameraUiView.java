@@ -92,23 +92,28 @@ public class CameraUiView extends View {
 
     private Boolean displayedToastMode;
 
+    private static final String DISPLAY_ALL_POIS = "0";
+    private static final String DISPLAY_POIS_IN_SIGHT = "1";
+    private static final String DISPLAY_POIS_OUT_OF_SIGHT = "2";
+
+
     private final SharedPreferences.OnSharedPreferenceChangeListener listenerPreferences =
             (prefs, key) -> {
-                String displayMode = prefs.getString("display_pois_preference", "0");
-                boolean filterPOIs = prefs.getBoolean("filter_pois", true);
+                String displayMode = prefs.getString(getResources().getString(R.string.displayPOIs_key), DISPLAY_ALL_POIS);
+                boolean filterPOIs = prefs.getBoolean(getResources().getString(R.string.filterPOIs_key), true);
 
                 switch (displayMode){
-                    case "1":
+                    case DISPLAY_ALL_POIS:
+                        setPOIs(filterPOIs ? ComputePOIPoints.getFilteredPOIs() : ComputePOIPoints.getPOIs());
+                        break;
+                    case DISPLAY_POIS_IN_SIGHT:
                         setPOIs(filterPOIs ? ComputePOIPoints.getFilteredPOIsInSight() : ComputePOIPoints.getPOIsInSight());
                         checkIfLineOfSightAvailable();
                         break;
-                    case "2":
+                    case DISPLAY_POIS_OUT_OF_SIGHT:
                         setPOIs(filterPOIs ? ComputePOIPoints.getFilteredPOIsOutOfSight() : ComputePOIPoints.getPOIsOutOfSight());
                         checkIfLineOfSightAvailable();
                         break;
-                    default:
-                        //case 0 and default
-                        setPOIs(filterPOIs ? ComputePOIPoints.getFilteredPOIs() : ComputePOIPoints.getPOIs());
                 }
             };
 
@@ -379,7 +384,7 @@ public class CameraUiView extends View {
      */
     private void checkIfLineOfSightAvailable() {
         if(!ComputePOIPoints.isLineOfSightAvailable() && !displayedToastMode){
-            Toast.makeText(getContext(), "Line of sight downlaod is not yet finished, please wait.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getResources().getString(R.string.lineOfSightNotDownloaded), Toast.LENGTH_SHORT).show();
             displayedToastMode = true;
         }
     }

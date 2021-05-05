@@ -44,6 +44,8 @@ public class CameraActivity extends AppCompatActivity{
     //SharedPreferences
     private SharedPreferences sharedPref;
 
+    private static final String DISPLAY_ALL_POIS = "0";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +65,7 @@ public class CameraActivity extends AppCompatActivity{
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        displayDeveloperOptions(sharedPref.getBoolean("developer_options", false));
+        displayDeveloperOptions(sharedPref.getBoolean(getResources().getString(R.string.devOptions_key), false));
 
         //Create compass view
         cameraUiView = findViewById(R.id.compass);
@@ -264,12 +266,13 @@ public class CameraActivity extends AppCompatActivity{
      * @param view ImageButton
      */
     public void switchDisplayPOIMode(View view) {
-        String mode = sharedPref.getString("display_pois_preference", "0");
+        String displayPOIsKey = getResources().getString(R.string.displayPOIs_key);
+        String mode = sharedPref.getString(displayPOIsKey, DISPLAY_ALL_POIS);
         int actualMode = Integer.parseInt(mode);
         int newMode = (actualMode + 1) % 3;
 
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("display_pois_preference", "" + newMode);
+        editor.putString(displayPOIsKey, "" + newMode);
         editor.apply();
     }
 

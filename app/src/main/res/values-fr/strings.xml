@@ -49,4 +49,5 @@
     <string name="display_pois_title">Selectionner les montagnes à afficher</string>
     <string name="filter_pois_title">Filtrer les montagnes</string>
     <string name="display_dev_options">Afficher les options développeur</string>
+    <string name="lineOfSightNotDownloaded">Le téléchargement de la carte pour les montagnes dans la ligne de mire.</string>
 </resources>

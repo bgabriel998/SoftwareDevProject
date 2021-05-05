@@ -83,6 +83,7 @@
 
     <!-- CAMERA BUTTONS STRINGS -->
     <string name="buttonChangeDisplayModePOI" translatable="false">Change displaying of POIs in sight</string>
+    <string name="lineOfSightNotDownloaded">Line of sight downlaod is not yet finished, please wait.</string>
 
     <!-- MAP MARKERS STRINGS -->
     <string name="marker_altitude">Altitude: %s m</string>

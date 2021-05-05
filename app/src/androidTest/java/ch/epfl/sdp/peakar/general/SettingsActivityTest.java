@@ -19,6 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sdp.peakar.R;
+
 import java.util.concurrent.atomic.AtomicReference;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -27,6 +28,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sdp.peakar.TestingConstants.THREAD_SLEEP_1S;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
@@ -284,12 +286,13 @@ public class SettingsActivityTest{
     public void TestEnableDeveloperOptions(){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
+        String devOptionsKey = context.getResources().getString(R.string.devOptions_key);
         //Get selected value
-        boolean startVal = sharedPreferences.getBoolean("developer_options", false);
+        boolean startVal = sharedPreferences.getBoolean(devOptionsKey, false);
         onView(withId(androidx.preference.R.id.recycler_view))
                 .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.display_dev_options))),
                         click()));
-        boolean endVal = sharedPreferences.getBoolean("developer_options", false);
+        boolean endVal = sharedPreferences.getBoolean(devOptionsKey, false);
         assertThat(startVal, not(is(endVal)));
     }
 
@@ -298,12 +301,13 @@ public class SettingsActivityTest{
     public void TestToggleFilterPOIs(){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
+        String fillterPOIsKey = context.getResources().getString(R.string.filterPOIs_key);
         //Get selected value
-        Boolean startVal = sharedPreferences.getBoolean("filter_pois", false);
+        Boolean startVal = sharedPreferences.getBoolean(fillterPOIsKey, false);
         onView(withId(androidx.preference.R.id.recycler_view))
                 .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.filter_pois_title))),
                         click()));
-        Boolean endVal = sharedPreferences.getBoolean("filter_pois", false);
+        Boolean endVal = sharedPreferences.getBoolean(fillterPOIsKey, false);
         assertThat(startVal, not(is(endVal)));
     }
 
@@ -312,22 +316,24 @@ public class SettingsActivityTest{
     public void TestSelectDisplayedMountains() throws InterruptedException {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
+        String displayPOIsKey = context.getResources().getString(R.string.displayPOIs_key);
         //Get selected value
-        String startString = prefs.getString(activity.getResources().getString(R.string.displayPOIs_key), "");
+        String startString = prefs.getString(displayPOIsKey, "");
 
         //Open selector window
         onView(withId(androidx.preference.R.id.recycler_view))
                 .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.display_pois_title))),
                         click()));
-        Thread.sleep(1000);
+        Thread.sleep(THREAD_SLEEP_1S);
+        String[] arr = activity.getResources().getStringArray(R.array.displayPOIs_values);
         //Select the opposite preference
-        if(startString.equals(activity.getResources().getStringArray(R.array.displayPOIs_values)[1]))
-            onView(withText(activity.getResources().getStringArray(R.array.displayPOIs_entries)[0])).perform(click());
+        if(startString.equals(arr[1]))
+            onView(withText(arr[0])).perform(click());
         else
-            onView(withText(activity.getResources().getStringArray(R.array.displayPOIs_entries)[1])).perform(click());
+            onView(withText(arr[1])).perform(click());
 
         //Check that the selection happened
-        String endString = prefs.getString(activity.getResources().getString(R.string.displayPOIs_key), "");
+        String endString = prefs.getString(displayPOIsKey, "");
         assertThat(startString, not(is(endString)));
     }
 
