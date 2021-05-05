@@ -197,6 +197,8 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         boolean isEnabled = sharedPreferences.getBoolean("developer_options", false);
         Thread.sleep(1000);
         assertFalse(isEnabled);
+        testRule.getScenario().recreate();
+        Thread.sleep(1000);
         onView(ViewMatchers.withId(R.id.headingHorizontal)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)));
         onView(ViewMatchers.withId(R.id.headingVertical)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)));
         onView(ViewMatchers.withId(R.id.fovHorizontal)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)));
