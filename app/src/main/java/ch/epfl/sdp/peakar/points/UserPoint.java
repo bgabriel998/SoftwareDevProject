@@ -1,8 +1,12 @@
 package ch.epfl.sdp.peakar.points;
 
 import android.content.Context;
+import android.util.Log;
 
-
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 
 /**
@@ -21,6 +25,8 @@ import android.content.Context;
  * It provides a method to get updates on the user location.
  *
  * This class should be used as a observer that observes a GPSTracker.
+ *
+ * This class can be observed;
  */
 public final class UserPoint extends Point {
 
@@ -32,6 +38,8 @@ public final class UserPoint extends Point {
 
     private boolean customLocation;
 
+    private List<Observer> observers;
+
     /**
      * Constructor for the UserPoint. Private because it is a singleton.
      *
@@ -42,6 +50,16 @@ public final class UserPoint extends Point {
         gpsTracker = new GPSTracker(mContext, this);
         customLocation = false;
         single_instance = this;
+        observers = new LinkedList<>();
+    }
+
+    /**
+     * Allows to add observers to the UserPoint.
+     *
+     * @param o observer to add
+     */
+    public void addObserver(Observer o) {
+        this.observers.add(o);
     }
 
     /**
@@ -57,6 +75,8 @@ public final class UserPoint extends Point {
 
     /**
      * Method that is used to update the current user location.
+     *
+     * It updates the observers.
      */
     public void update() {
         if (!customLocation) {
@@ -64,6 +84,7 @@ public final class UserPoint extends Point {
             super.setLongitude(gpsTracker.getLongitude());
             super.setAltitude(gpsTracker.getAltitude());
             accuracy = gpsTracker.getAccuracy();
+            observers.forEach(o -> o.update(null, null));
         }
     }
 
