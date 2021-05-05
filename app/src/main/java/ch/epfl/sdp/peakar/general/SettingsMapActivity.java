@@ -3,13 +3,16 @@ package ch.epfl.sdp.peakar.general;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
+import androidx.preference.PreferenceManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,6 +33,7 @@ import ch.epfl.sdp.peakar.points.Point;
 /**
  * Activity that allows the user to select a point around which compute and
  * download POIPoints and an elevation map for offline usage.
+ * TODO modify GUI once final GUI is decided
  */
 public class SettingsMapActivity extends AppCompatActivity {
 
@@ -39,6 +43,7 @@ public class SettingsMapActivity extends AppCompatActivity {
     private Button okButton;
 
     Activity thisActivity;
+    Context thisContext;
 
     private Point selectedPoint;
 
@@ -55,11 +60,11 @@ public class SettingsMapActivity extends AppCompatActivity {
         this.okButton.setOnClickListener(v -> saveToJson());
 
         this.thisActivity = this;
+        this.thisContext = this;
 
         this.osmMap = new OSMMap(this, findViewById(R.id.settingsMapView));
 
         osmMap.displayUserLocation();
-        // TODO add other features of the app after merge
 
         osmMap.enablePinOnClick(() -> this.okButton.setVisibility(View.VISIBLE), (p) -> this.selectedPoint = p);
 
@@ -145,6 +150,7 @@ public class SettingsMapActivity extends AppCompatActivity {
                 try {
                     json.put("POIPoints", POIPoints);
                     saveJson(json);
+                    Toast.makeText(thisContext,thisContext.getResources().getString(R.string.offline_mode_on_toast), Toast.LENGTH_SHORT).show();
                     thisActivity.finish();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -172,5 +178,16 @@ public class SettingsMapActivity extends AppCompatActivity {
         Log.d("JSON" , json.toString());
     }
 
+    private void onBackPresses() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // Offline mode not activated, reset shared preference
+        prefs.edit()
+                .putBoolean(this.getResources().getString(R.string.offline_mode_key), false)
+                .apply();
+
+        this.finish();
+
+    }
 
 }

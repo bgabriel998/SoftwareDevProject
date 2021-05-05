@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Toast;
@@ -43,7 +44,7 @@ public class SettingsActivity extends AppCompatActivity {
                     case "disable_caching":
                         disableCachingChanged();
                         break;
-                    case "offline_mode_key":
+                    case "offline_mode_preference":
                         offlineModeChanged();
                 }
             };
@@ -151,24 +152,28 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     /**
-     * Change offline mode
+     * If the offline mode is off, it will prompt the user to the SettingsMapActivity, otherwise
+     * it will reconnect the app to the internet.
      */
     private void offlineModeChanged(){
-        //TODO Implement
-        Toast.makeText(this,"Setting not implemented yet !", Toast.LENGTH_SHORT).show();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        boolean offlineModeValue = prefs.getBoolean(this.getResources().getString(R.string.offline_mode_key), false);
+
+        if (offlineModeValue) {
+            Intent setIntent = new Intent(this, SettingsMapActivity.class);
+            startActivity(setIntent);
+        } else {
+            Toast.makeText(this,this.getResources().getString(R.string.offline_mode_off_toast), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public void onBackPressed() {
-        Intent setIntent = new Intent(this,MainMenuActivity.class);
+        Intent setIntent = new Intent(this, MainMenuActivity.class);
         startActivity(setIntent);
     }
 
-
-    /** Changes view to SettingsMapActivity */
-    public void offlineModeButton(View view) {
-        Intent intent = new Intent(this, SettingsMapActivity.class);
-        startActivity(intent);
-    }
 }
 

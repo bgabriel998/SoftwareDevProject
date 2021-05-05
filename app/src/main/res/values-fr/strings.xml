@@ -44,5 +44,7 @@
     <string name="caching_title">Autoriser le caching</string>
     <string name="caching_summary">Utiliser la mémoire pour sauvegarder les données cache de l\'application. Activer cette option augmente la vitesse de l\'application.</string>
     <string name="offline_mode_title">Mode hors-ligne</string>
+    <string name="offline_mode_on_toast">Vous êtes désormais en mode hors ligne!</string>
+    <string name="offline_mode_off_toast">En ligne!</string>
     <string name="offline_mode_summary">Ouvre l\'éditeur pour selectionner une zone à télécharger. Ceci permet à l\'application de fonctionner sans connexion internet</string>
 </resources>

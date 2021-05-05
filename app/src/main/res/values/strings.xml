@@ -110,8 +110,10 @@
     <!-- Night mode Preferences -->
     <string name="night_mode_title">Night mode</string>
 
-    <!-- Night mode Preferences -->
+    <!-- Offline mode Preferences -->
     <string name="offline_mode_title">Offline mode</string>
+    <string name="offline_mode_on_toast">You are now in offline mode!</string>
+    <string name="offline_mode_off_toast">Back online!</string>
 
     <!-- Caching Preferences -->
     <string name="caching_title">Allow caching</string>

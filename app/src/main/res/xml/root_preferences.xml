@@ -30,10 +30,10 @@
 
         <SwitchPreference
             android:defaultValue="false"
+            android:icon="@drawable/ic_baseline_signal_cellular_off_24"
             android:key="@string/offline_mode_key"
-            android:title="@string/offline_mode_title"
             android:summary="@string/offline_mode_summary"
-            android:icon="@drawable/ic_baseline_signal_cellular_off_24"/>
+            android:title="@string/offline_mode_title" />
     </PreferenceCategory>
 
 
