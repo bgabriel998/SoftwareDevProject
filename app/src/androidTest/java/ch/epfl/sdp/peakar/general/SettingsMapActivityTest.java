@@ -1,4 +1,4 @@
-package ch.epfl.sdp.peakar;
+package ch.epfl.sdp.peakar.general;
 
 import android.app.Activity;
 import android.util.Log;
@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import ch.epfl.sdp.peakar.general.SettingsMapActivity;
+import ch.epfl.sdp.peakar.R;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -125,7 +125,7 @@ public class SettingsMapActivityTest {
         String ret = "";
 
         try {
-            InputStream inputStream =  ApplicationProvider.getApplicationContext().openFileInput("save.txt");
+            InputStream inputStream =  ApplicationProvider.getApplicationContext().openFileInput(SettingsMapActivity.OFFLINE_CONTENT_FILE);
 
             if ( inputStream != null ) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);

@@ -14,8 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 import androidx.preference.PreferenceManager;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.osmdroid.bonuspack.location.POI;
 
 import java.io.IOException;
@@ -29,6 +30,7 @@ import ch.epfl.sdp.peakar.points.DownloadTopographyTask;
 import ch.epfl.sdp.peakar.points.GeonamesHandler;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.points.Point;
+import ch.epfl.sdp.peakar.utils.OfflineContentContainer;
 
 /**
  * Activity that allows the user to select a point around which compute and
@@ -36,6 +38,8 @@ import ch.epfl.sdp.peakar.points.Point;
  * TODO modify GUI once final GUI is decided
  */
 public class SettingsMapActivity extends AppCompatActivity {
+
+    public static final String OFFLINE_CONTENT_FILE =  "offline_content.txt";
 
     private OSMMap osmMap = null;
 
@@ -74,52 +78,40 @@ public class SettingsMapActivity extends AppCompatActivity {
      * Downloads and saves the POIs and elevation map around the selectedPoint.
      */
     // TODO handle disconnected from server (discuss with others)
-    @SuppressLint("StaticFieldLeak")
     public void saveToJson() {
 
-        JSONObject json = new JSONObject();
+        OfflineContentContainer saveObject = new OfflineContentContainer();
 
-        addBoundingBoxToJson(json, selectedPoint);
+        addBoundingBoxToContainer(saveObject, selectedPoint);
 
-        addMapAndPOIsToJson(json, selectedPoint);
+        addMapAndPOIsToContainer(saveObject, selectedPoint);
 
     }
 
     /**
      * Adds the bounding box to the json
-     *
-     * @param json          json that will contain the bounding box.
-     * @param selectedPoint center point of the bounding box.
+     *  @param saveObject        map that will contain the bounding box.
+     * @param selectedPoint     center point of the bounding box.
      */
-    private void addBoundingBoxToJson(JSONObject json, Point selectedPoint) {
-        try {
-            json.put("BoundingBox", selectedPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    private void addBoundingBoxToContainer(OfflineContentContainer saveObject, Point selectedPoint) {
+        saveObject.boundingBox = selectedPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM);
     }
 
     /**
      * Handles downloading of the elevation map and the POI list and then adds.
      * them to the input json. The part regarding the POIs is nested inside this method.
-     *
-     * @param json          json that will contain the bounding box.
+     *  @param saveObject    map that will contain the POIpoints and the elevationmap.
      * @param selectedPoint selected point around which the offline content will be downloaded.
      */
     @SuppressLint("StaticFieldLeak")
-    private void addMapAndPOIsToJson(JSONObject json, Point selectedPoint) {
+    private void addMapAndPOIsToContainer(OfflineContentContainer saveObject, Point selectedPoint) {
         new DownloadTopographyTask(){
             @SuppressLint("StaticFieldLeak")
             @Override
             public void onResponseReceived(Pair<int[][], Double> topography) {
-                Log.d("Debug", "entrance");
                 super.onResponseReceived(topography);
-                try {
-                    json.put("ELevationMap", topography);
-                    addPOIsToJson(json, selectedPoint);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                saveObject.topography = topography;
+                addPOIsToContainer(saveObject, selectedPoint);
             }
         }.execute(selectedPoint);
     }
@@ -128,12 +120,11 @@ public class SettingsMapActivity extends AppCompatActivity {
      * Handles downloading of the the POI list and then adds
      * them to the input json. After this process is finished the activity
      * is terminated.
-     *
-     * @param json          json that will contain the bounding box.
+     *  @param saveObject    json that will contain the bounding box.
      * @param selectedPoint selected point around which the offline content will be downloaded.
      */
     @SuppressLint("StaticFieldLeak")
-    private void addPOIsToJson(JSONObject json, Point selectedPoint) {
+    private void addPOIsToContainer(OfflineContentContainer saveObject, Point selectedPoint) {
         new GeonamesHandler(selectedPoint){
             @Override
             public void onResponseReceived(ArrayList<POI> result) {
@@ -147,14 +138,10 @@ public class SettingsMapActivity extends AppCompatActivity {
                     }
                 }
 
-                try {
-                    json.put("POIPoints", POIPoints);
-                    saveJson(json);
-                    Toast.makeText(thisContext,thisContext.getResources().getString(R.string.offline_mode_on_toast), Toast.LENGTH_SHORT).show();
-                    thisActivity.finish();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                saveObject.POIPoints = POIPoints;
+                saveJson(saveObject);
+                Toast.makeText(thisContext,thisContext.getResources().getString(R.string.offline_mode_on_toast), Toast.LENGTH_SHORT).show();
+                thisActivity.finish();
 
             }
         }.execute();
@@ -163,19 +150,19 @@ public class SettingsMapActivity extends AppCompatActivity {
     /**
      * Saves the json file as a .txt.
      *
-     * @param json  json to save.
+     * @param saveObject  json to save.
      */
-    private void saveJson(JSONObject json) {
-        String jsonString = json.toString();
+    private void saveJson(OfflineContentContainer saveObject) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String jsonString = gson.toJson(saveObject);
         try {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput("save.txt", Context.MODE_PRIVATE));
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput(OFFLINE_CONTENT_FILE, Context.MODE_PRIVATE));
             outputStreamWriter.write(jsonString);
             outputStreamWriter.close();
         }
         catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
         }
-        Log.d("JSON" , json.toString());
     }
 
     private void onBackPresses() {

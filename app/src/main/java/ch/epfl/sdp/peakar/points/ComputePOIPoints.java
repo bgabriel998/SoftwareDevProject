@@ -2,11 +2,25 @@ package ch.epfl.sdp.peakar.points;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
 
 import androidx.core.util.Pair;
+import androidx.preference.PreferenceManager;
 
+import com.firebase.ui.auth.data.model.User;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.osmdroid.bonuspack.location.POI;
+import org.osmdroid.util.BoundingBox;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,6 +29,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.general.SettingsMapActivity;
+import ch.epfl.sdp.peakar.utils.OfflineContentContainer;
 
 /**
  * Requests the POIPoints around the user location and then downloads the topography map once the
@@ -25,15 +43,18 @@ import java.util.stream.Collectors;
  * is visible or not. If no points are available or if they are not computed yet, they will be null
  */
 public class ComputePOIPoints {
+
+    private static final int MAX_LOADING_DISTANCE = 10000; // in m
+
+    private static final int HALF_MARKER_SIZE_WIDTH = 3;
+    private static final int HALF_MARKER_SIZE_HEIGHT = 5;
+
     public static List<POIPoint> POIPoints;
     public static Map<POIPoint, Boolean> labeledPOIPoints;
     public static Map<POIPoint, Boolean> highestPOIPoints;
     public static UserPoint userPoint;
     @SuppressLint("StaticFieldLeak")
     public static Context ctx;
-
-    private static final int HALF_MARKER_SIZE_WIDTH = 3;
-    private static final int HALF_MARKER_SIZE_HEIGHT = 5;
 
     /**
      * Constructor of ComputePOIPoints, updates userPoint and gets the POIs for the userPoint
@@ -56,6 +77,13 @@ public class ComputePOIPoints {
      * @param userPoint user location
      */
     private static void getPOIs(UserPoint userPoint){
+        // first check that if offline mode is active
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        boolean offlineModeValue = prefs.getBoolean(ctx.getResources().getString(R.string.offline_mode_key), false);
+        if (offlineModeValue) {
+           getPOISOffline(userPoint);
+           return;
+        }
         //Retrieve cache instance
         POICache poiCache = POICache.getInstance();
         //Check if file is present and if user is in BB
@@ -104,8 +132,57 @@ public class ComputePOIPoints {
     }
 
     /**
-     * Gets the labeled POIs and filters them
-     * @param userPoint userPoint for which the labeled POIs are computed
+     * Handles the creation and filtration of the list of the POIPoints when offline mode
+     * is enables.
+     *
+     * @param userPoint around which the list is computed.
+     */
+    private static void getPOISOffline(UserPoint userPoint) {
+
+        try {
+            OfflineContentContainer offlineContent = readFromFile();
+            getLabeledPOIsOffline(userPoint, offlineContent);
+        } catch (IOException e) {
+            Log.d("ComputePOIPoints", "There was an error reading the file");
+            labeledPOIPoints = new HashMap<>();
+            highestPOIPoints = new HashMap<>();
+        }
+
+    }
+
+    /**
+     * Helper method to load the downloaded json.
+     *
+     * @return an OfflineContainer containing the downloaded content.
+     */
+    private static OfflineContentContainer readFromFile() throws IOException {
+
+        Gson gson = new Gson();
+
+        String ret = "";
+
+        InputStream inputStream =  ctx.openFileInput(SettingsMapActivity.OFFLINE_CONTENT_FILE);
+        if ( inputStream != null ) {
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String receiveString;
+            StringBuilder stringBuilder = new StringBuilder();
+            while ( (receiveString = bufferedReader.readLine()) != null ) {
+                stringBuilder.append(receiveString);
+            }
+            inputStream.close();
+            ret = stringBuilder.toString();
+        }
+
+        Log.d("ComputePOIPoints", "Offline content downloaded");
+        return gson.fromJson(ret, OfflineContentContainer.class);
+
+    }
+
+    /**
+     * Gets the labeled POIs and filters them.
+     *
+     * @param userPoint userPoint for which the labeled POIs are computed.
      */
     private static void getLabeledPOIs(UserPoint userPoint){
         new DownloadTopographyTask(){
@@ -118,6 +195,31 @@ public class ComputePOIPoints {
                 highestPOIPoints = filterHighestPOIs(labeledPOIPoints);
             }
         }.execute(userPoint);
+    }
+
+    /**
+     * Gets the labeled POIs from a JSONObject and filters them. The points are not added if the
+     * userPoint is more thant MAX_LOADING_DISTANCE from the center of the downloaded bounding
+     * box.
+     *
+     * @param userPoint         userPoint for which the labeled POIs are computed.
+     * @param offlineContent    container containing offline content.
+     */
+    private static void getLabeledPOIsOffline(UserPoint userPoint, OfflineContentContainer offlineContent) {
+
+        BoundingBox boundingBox = offlineContent.boundingBox;
+
+        if (userPoint.computeFlatDistance(new POIPoint(boundingBox.getCenterWithDateLine())) > MAX_LOADING_DISTANCE) {
+            Pair<int[][], Double> topography = offlineContent.topography;
+            POIPoints = offlineContent.POIPoints;
+            LineOfSight lineOfSight = new LineOfSight(topography, userPoint);
+            labeledPOIPoints = lineOfSight.getVisiblePointsLabeled(POIPoints);
+            //Filter highest mountains
+            highestPOIPoints = filterHighestPOIs(labeledPOIPoints);
+        } else {
+            Log.d("ComputePOIPoints", "Distance is > 10000m");
+        }
+
     }
 
     /**
