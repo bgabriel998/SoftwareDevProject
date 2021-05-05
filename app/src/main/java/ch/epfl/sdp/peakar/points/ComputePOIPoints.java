@@ -67,6 +67,8 @@ public class ComputePOIPoints implements Observer {
     public ComputePOIPoints(Context context){
         ctx = context;
         POIPoints = new ArrayList<>();
+        labeledPOIPoints = new HashMap<>();
+        highestPOIPoints = new HashMap<>();
         userPoint = UserPoint.getInstance(context);
         userPoint.addObserver(this);
         getPOIs(userPoint);
@@ -81,6 +83,10 @@ public class ComputePOIPoints implements Observer {
      * @param userPoint user location
      */
     private static void getPOIs(UserPoint userPoint){
+        // clear the old points
+        POIPoints.clear();
+        labeledPOIPoints.clear();
+        highestPOIPoints.clear();
         // first check that if offline mode is active
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         boolean offlineModeValue = prefs.getBoolean(ctx.getResources().getString(R.string.offline_mode_key), false);
@@ -148,8 +154,6 @@ public class ComputePOIPoints implements Observer {
             getLabeledPOIsOffline(userPoint, offlineContent);
         } catch (IOException e) {
             Log.d("ComputePOIPoints", "There was an error reading the file");
-            labeledPOIPoints = new HashMap<>();
-            highestPOIPoints = new HashMap<>();
         }
 
     }
@@ -213,7 +217,11 @@ public class ComputePOIPoints implements Observer {
 
         BoundingBox boundingBox = offlineContent.boundingBox;
 
-        if (userPoint.computeFlatDistance(new POIPoint(boundingBox.getCenterWithDateLine())) < MAX_LOADING_DISTANCE) {
+        double distance = userPoint.computeFlatDistance(new POIPoint(boundingBox.getCenterWithDateLine()));
+
+        Log.d("ComputePOIPoints", "Distance = " + distance);
+
+        if (distance < MAX_LOADING_DISTANCE) {
             Pair<int[][], Double> topography = offlineContent.topography;
             POIPoints = offlineContent.POIPoints;
             LineOfSight lineOfSight = new LineOfSight(topography, userPoint);
