@@ -58,7 +58,7 @@ public class SettingsMapActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings_map);
 
         this.backButton = findViewById(R.id.settingsMapBackButton);
-        this.backButton.setOnClickListener(v -> this.finish());
+        this.backButton.setOnClickListener(v -> onBackPresses());
 
         this.okButton = findViewById(R.id.settingsMapOkButton);
         this.okButton.setOnClickListener(v -> saveToJson());
