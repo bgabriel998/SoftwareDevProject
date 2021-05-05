@@ -8,6 +8,7 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -92,6 +93,10 @@ public class ComputePOIPointsTest {
      */
     @Test
     public void getPOIPointsTest() {
+        userPoint.update();
+        assertEquals(0, userPoint.getLatitude(), 0.1);
+        assertEquals(0, userPoint.getLongitude(), 0.1);
+        assertEquals(0, userPoint.getAltitude(), 0.1);
         assertNotNull(ComputePOIPoints.getPOIs());
         assertNotNull(ComputePOIPoints.getPOIsInSight());
         assertNotNull(ComputePOIPoints.getPOIsOutOfSight());

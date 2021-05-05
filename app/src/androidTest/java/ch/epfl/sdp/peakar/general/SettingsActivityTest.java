@@ -325,12 +325,12 @@ public class SettingsActivityTest{
                 .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.display_pois_title))),
                         click()));
         Thread.sleep(THREAD_SLEEP_1S);
-        String[] arr = activity.getResources().getStringArray(R.array.displayPOIs_values);
+        String[] entries = activity.getResources().getStringArray(R.array.displayPOIs_entries);
         //Select the opposite preference
-        if(startString.equals(arr[1]))
-            onView(withText(arr[0])).perform(click());
+        if(startString.equals(activity.getResources().getStringArray(R.array.displayPOIs_values)[1]))
+            onView(withText(entries[0])).perform(click());
         else
-            onView(withText(arr[1])).perform(click());
+            onView(withText(entries[1])).perform(click());
 
         //Check that the selection happened
         String endString = prefs.getString(displayPOIsKey, "");
