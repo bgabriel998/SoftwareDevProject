@@ -14,6 +14,8 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.Map;
+
 import static java.lang.Double.NaN;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -108,7 +110,10 @@ public class ComputePOIPointsTest {
         assertEquals(ComputePOIPoints.getFilteredPOIs().size(), ComputePOIPoints.getFilteredPOIsInSight().size()
                 + ComputePOIPoints.getFilteredPOIsOutOfSight().size());
 
-        POIPoint poiPoint = (POIPoint) ComputePOIPoints.getPOIs().entrySet().toArray()[0];
+        POIPoint poiPoint = ComputePOIPoints.getPOIs().entrySet()
+                .stream()
+                .map(Map.Entry::getKey)
+                .findFirst().get();
         assertEquals("", poiPoint.getName());
     }
 }
