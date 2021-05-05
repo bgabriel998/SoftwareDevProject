@@ -25,14 +25,14 @@ import java.util.stream.Collectors;
  */
 public class ComputePOIPoints {
     //public static List<POIPoint> POIPoints;
-    private static Map<POIPoint, Boolean> labeledPOIs;
-    private static Map<POIPoint, Boolean> filteredLabeledPOIPoints;
     public static UserPoint userPoint;
     @SuppressLint("StaticFieldLeak")
     public static Context ctx;
 
-    private static Map<POIPoint, Boolean> filteredPOIPoints;
     private static Map<POIPoint, Boolean> POIs;
+    private static Map<POIPoint, Boolean> filteredPOIPoints;
+    private static Map<POIPoint, Boolean> labeledPOIs;
+    private static Map<POIPoint, Boolean> filteredLabeledPOIPoints;
     private static Map<POIPoint, Boolean> labeledPOIsInSight;
     private static Map<POIPoint, Boolean> filteredLabeledPOIsInSight;
     private static Map<POIPoint, Boolean> labeledPOIsOutOfSight;
