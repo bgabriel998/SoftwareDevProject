@@ -9,10 +9,12 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -71,11 +73,18 @@ public class SettingsActivityTest{
     }
 
 
+    /* Create intent */
     @Before
-    public void init(){
+    public void setup(){
+        Intents.init();
         activity = getActivity(testRule);
     }
 
+    /* Release Intent */
+    @After
+    public void cleanUp(){
+        Intents.release();
+    }
 
 
     /*Test discovery distance button*/
