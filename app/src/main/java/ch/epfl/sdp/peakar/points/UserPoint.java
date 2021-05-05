@@ -31,7 +31,7 @@ import java.util.Observer;
  */
 public final class UserPoint extends Point {
 
-    private static final int MIN_DISTANCE_FOR_UPDATES = 100; // in meters
+    public static final int MIN_DISTANCE_FOR_UPDATES = 100; // in meters
 
     private static UserPoint single_instance = null; // singleton instance
   
@@ -91,12 +91,12 @@ public final class UserPoint extends Point {
             super.setLongitude(gpsTracker.getLongitude());
             super.setAltitude(gpsTracker.getAltitude());
             accuracy = gpsTracker.getAccuracy();
-            if (this.computeDistance(lastLocation) > MIN_DISTANCE_FOR_UPDATES) {
-                lastLocation.setLatitude(this.latitude);
-                lastLocation.setLongitude(this.longitude);
-                lastLocation.setAltitude(this.altitude);
-                observers.forEach(o -> o.update(null, null));
-            }
+        }
+        if (this.computeDistance(lastLocation) > MIN_DISTANCE_FOR_UPDATES) {
+            lastLocation.setLatitude(this.latitude);
+            lastLocation.setLongitude(this.longitude);
+            lastLocation.setAltitude(this.altitude);
+            observers.forEach(o -> o.update(null, null));
         }
     }
 
