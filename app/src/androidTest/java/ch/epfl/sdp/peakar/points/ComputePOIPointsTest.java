@@ -107,5 +107,8 @@ public class ComputePOIPointsTest {
         assertTrue(ComputePOIPoints.getFilteredPOIs().size() > 0);
         assertEquals(ComputePOIPoints.getFilteredPOIs().size(), ComputePOIPoints.getFilteredPOIsInSight().size()
                 + ComputePOIPoints.getFilteredPOIsOutOfSight().size());
+
+        POIPoint poiPoint = (POIPoint) ComputePOIPoints.getPOIs().entrySet().toArray()[0];
+        assertEquals("", poiPoint.getName());
     }
 }

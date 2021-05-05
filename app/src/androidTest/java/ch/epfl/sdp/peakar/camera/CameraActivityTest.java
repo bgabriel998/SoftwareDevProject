@@ -86,11 +86,13 @@ public class CameraActivityTest {
 
     @Test
     public void GetLongitudeCirrus(){
+        userPoint.update();
         assertEquals(0, userPoint.getLongitude(), 0.1);
     }
 
     @Test
     public void GetLatitudeCirrus(){
+        userPoint.update();
         assertEquals(0, userPoint.getLatitude(), 0.1);
     }
 
