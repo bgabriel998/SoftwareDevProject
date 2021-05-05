@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.stream.Collectors;
 
 import ch.epfl.sdp.peakar.R;
@@ -41,10 +43,12 @@ import ch.epfl.sdp.peakar.utils.OfflineContentContainer;
  * To use, simply call ComputePOIPoints.POIPoints to get a List of POIPoints or
  * ComputePOIPoints to get a map with the POIPoints as keys and a boolean indicating if the POIPoint
  * is visible or not. If no points are available or if they are not computed yet, they will be null
+ *
+ * TODO handle the updates more efficiently
  */
-public class ComputePOIPoints {
+public class ComputePOIPoints implements Observer {
 
-    private static final int MAX_LOADING_DISTANCE = 10000; // in m
+    private static final int MAX_LOADING_DISTANCE = 20000; // in m
 
     private static final int HALF_MARKER_SIZE_WIDTH = 3;
     private static final int HALF_MARKER_SIZE_HEIGHT = 5;
@@ -64,7 +68,7 @@ public class ComputePOIPoints {
         ctx = context;
         POIPoints = new ArrayList<>();
         userPoint = UserPoint.getInstance(context);
-        userPoint.update();
+        userPoint.addObserver(this);
         getPOIs(userPoint);
     }
 
@@ -209,7 +213,7 @@ public class ComputePOIPoints {
 
         BoundingBox boundingBox = offlineContent.boundingBox;
 
-        if (userPoint.computeFlatDistance(new POIPoint(boundingBox.getCenterWithDateLine())) > MAX_LOADING_DISTANCE) {
+        if (userPoint.computeFlatDistance(new POIPoint(boundingBox.getCenterWithDateLine())) < MAX_LOADING_DISTANCE) {
             Pair<int[][], Double> topography = offlineContent.topography;
             POIPoints = offlineContent.POIPoints;
             LineOfSight lineOfSight = new LineOfSight(topography, userPoint);
@@ -217,7 +221,7 @@ public class ComputePOIPoints {
             //Filter highest mountains
             highestPOIPoints = filterHighestPOIs(labeledPOIPoints);
         } else {
-            Log.d("ComputePOIPoints", "Distance is > 10000m");
+            Log.d("ComputePOIPoints", "Distance is > " + MAX_LOADING_DISTANCE);
         }
 
     }
@@ -285,5 +289,10 @@ public class ComputePOIPoints {
             }
         }
         return true;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        getPOIs(userPoint);
     }
 }
