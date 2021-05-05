@@ -322,9 +322,9 @@ public class SettingsActivityTest{
         Thread.sleep(1000);
         //Select the opposite preference
         if(startString.equals(activity.getResources().getStringArray(R.array.displayPOIs_values)[1]))
-            onView(withText(activity.getResources().getStringArray(R.array.displayPOIs_values)[0])).perform(click());
+            onView(withText(activity.getResources().getStringArray(R.array.displayPOIs_entries)[0])).perform(click());
         else
-            onView(withText(activity.getResources().getStringArray(R.array.displayPOIs_values)[1])).perform(click());
+            onView(withText(activity.getResources().getStringArray(R.array.displayPOIs_entries)[1])).perform(click());
 
         //Check that the selection happened
         String endString = prefs.getString(activity.getResources().getString(R.string.displayPOIs_key), "");
