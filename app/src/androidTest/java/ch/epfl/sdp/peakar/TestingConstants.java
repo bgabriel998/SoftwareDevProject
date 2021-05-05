@@ -55,4 +55,7 @@ public class TestingConstants {
 
     //Coordinates cirrus
     public static final double LATITUDE = 45.802537;
+    public static final double DEFAULT_LAT = 27.988056;
+    public static final double DEFAULT_LON = 86.925278;
+    public static final double DEFAULT_ALT = 8848.86;
 }

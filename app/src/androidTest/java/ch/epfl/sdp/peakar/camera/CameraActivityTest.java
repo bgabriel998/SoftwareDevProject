@@ -23,11 +23,9 @@ import org.junit.runner.RunWith;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.map.MapActivity;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
-import ch.epfl.sdp.peakar.points.UserPoint;
 
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
@@ -38,13 +36,10 @@ public class CameraActivityTest {
     @Rule
     public ActivityScenarioRule<CameraActivity> testRule = new ActivityScenarioRule<>(CameraActivity.class);
 
-    private UserPoint userPoint;
-    private static Context context;
-
     /* Setup environment */
     @BeforeClass
     public static void computePOIPoints(){
-        context = ApplicationProvider.getApplicationContext();
+        Context context = ApplicationProvider.getApplicationContext();
         new ComputePOIPoints(context);
     }
 
@@ -82,27 +77,5 @@ public class CameraActivityTest {
             e.printStackTrace();
             fail("TestBackButton failed");
         }
-    }
-
-    @Test
-    public void GetLongitudeCirrus(){
-        userPoint = UserPoint.getInstance(context);
-        userPoint.update();
-        assertEquals(0, userPoint.getLongitude(), 0.1);
-    }
-
-    @Test
-    public void GetLatitudeCirrus(){
-        userPoint = UserPoint.getInstance(context);
-        userPoint.update();
-        assertEquals(0, userPoint.getLatitude(), 0.1);
-    }
-
-    @Test
-    public void GetAltitudeCiruss(){
-        userPoint = UserPoint.getInstance(context);
-        userPoint.update();
-        assertEquals(0, userPoint.getAltitude(), 0.1);
-
     }
 }
