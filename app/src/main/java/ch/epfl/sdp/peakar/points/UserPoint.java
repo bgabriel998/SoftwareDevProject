@@ -26,9 +26,12 @@ import java.util.Observer;
  *
  * This class should be used as a observer that observes a GPSTracker.
  *
- * This class can be observed;
+ * This class can be observed; The updates will be called only if the location changes
+ * more than MIN_DISTANCE_FOR_UPDATES meters.
  */
 public final class UserPoint extends Point {
+
+    private static final int MIN_DISTANCE_FOR_UPDATES = 100; // in meters
 
     private static UserPoint single_instance = null; // singleton instance
   
@@ -39,6 +42,8 @@ public final class UserPoint extends Point {
     private boolean customLocation;
 
     private List<Observer> observers;
+
+    private Point lastLocation;
 
     /**
      * Constructor for the UserPoint. Private because it is a singleton.
@@ -51,6 +56,7 @@ public final class UserPoint extends Point {
         customLocation = false;
         single_instance = this;
         observers = new LinkedList<>();
+        lastLocation = new Point(0,0,0);
     }
 
     /**
@@ -76,7 +82,8 @@ public final class UserPoint extends Point {
     /**
      * Method that is used to update the current user location.
      *
-     * It updates the observers.
+     * It updates the observers if the point has moved more than MIN_DISTANCE_FOR_UPDATES
+     * from the last saved location.
      */
     public void update() {
         if (!customLocation) {
@@ -84,11 +91,16 @@ public final class UserPoint extends Point {
             super.setLongitude(gpsTracker.getLongitude());
             super.setAltitude(gpsTracker.getAltitude());
             accuracy = gpsTracker.getAccuracy();
-            observers.forEach(o -> o.update(null, null));
+            if (this.computeDistance(lastLocation) > MIN_DISTANCE_FOR_UPDATES) {
+                lastLocation.setLatitude(this.latitude);
+                lastLocation.setLongitude(this.longitude);
+                lastLocation.setAltitude(this.altitude);
+                observers.forEach(o -> o.update(null, null));
+            }
         }
     }
 
-    /*
+    /**
      * Getter for the accuracy.
      *
      * @return accuracy of the current location (in meters)
