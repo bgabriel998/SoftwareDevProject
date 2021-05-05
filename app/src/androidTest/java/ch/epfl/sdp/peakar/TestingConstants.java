@@ -52,4 +52,7 @@ public class TestingConstants {
 
     //Cache constants
     public static final String CACHE_FILE_NAME_TEST = "POIPointsCache.txt";
+
+    //Coordinates cirrus
+    public static final double LATITUDE = 45.802537;
 }

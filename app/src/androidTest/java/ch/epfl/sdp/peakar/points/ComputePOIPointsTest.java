@@ -94,7 +94,6 @@ public class ComputePOIPointsTest {
     @Test
     public void getPOIPointsTest() {
         userPoint.update();
-        assertEquals(0, userPoint.getLatitude(), 0.1);
         assertEquals(0, userPoint.getLongitude(), 0.1);
         assertEquals(0, userPoint.getAltitude(), 0.1);
         assertNotNull(ComputePOIPoints.getPOIs());
