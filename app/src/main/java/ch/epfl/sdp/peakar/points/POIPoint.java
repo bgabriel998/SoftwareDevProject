@@ -65,7 +65,8 @@ public class POIPoint extends Point {
     /**
      * Override method for POIPoint HashSet comparison
      * Compare only the name of the POI
-     * @return
+     * @return     <code>true</code> if the POIPoints are equal
+     *             <code>false</code> otherwise.
      */
     @Override
     public boolean equals(Object obj) {
@@ -74,6 +75,6 @@ public class POIPoint extends Point {
             return false;
         if (obj == this)
             return true;
-        return getName().equals(((POIPoint)obj).getName());
+        return name.equals(((POIPoint)obj).getName());
     }
 }
