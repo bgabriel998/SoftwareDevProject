@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.general.SettingsMapActivity;
@@ -205,16 +206,16 @@ public class ComputePOIPointsTest {
 
         userPoint.update();
 
-        List<POIPoint> loadedPOIPoints =  ComputePOIPoints.POIPoints;
+        Map<POIPoint, Boolean> loadedPOIPoints =  ComputePOIPoints.getPOIs();
 
-        Assert.assertEquals(pointOne, loadedPOIPoints.get(0));
-        Assert.assertEquals(pointTwo, loadedPOIPoints.get(1));
+        Assert.assertTrue(loadedPOIPoints.containsKey(pointOne));
+        Assert.assertTrue(loadedPOIPoints.containsKey(pointTwo));
 
         userPoint.setLocation(0, 0, 0, 0);
 
         userPoint.update();
 
-        loadedPOIPoints = ComputePOIPoints.POIPoints;
+        loadedPOIPoints =  ComputePOIPoints.getPOIs();
 
         Assert.assertTrue(loadedPOIPoints.isEmpty());
 
