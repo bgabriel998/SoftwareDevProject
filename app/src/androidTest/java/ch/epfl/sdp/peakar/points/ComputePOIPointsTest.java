@@ -120,33 +120,33 @@ public class ComputePOIPointsTest {
         assertTrue(ComputePOIPoints.getPOIs().containsKey(LabeledInLineOfSight));
 
         //Check raw filtered
-        assertTrue(ComputePOIPoints.getPOIs().containsKey(filteredLabeledOutOfSight));
-        //assertFalse(ComputePOIPoints.getPOIs().containsKey(LabeledOutOfSight));
-        assertTrue(ComputePOIPoints.getPOIs().containsKey(filteredLabeledInSight));
-        //assertFalse(ComputePOIPoints.getPOIs().containsKey(LabeledInLineOfSight));
+        assertTrue(ComputePOIPoints.getFilteredPOIs().containsKey(filteredLabeledOutOfSight));
+        assertFalse(ComputePOIPoints.getFilteredPOIs().containsKey(LabeledOutOfSight));
+        assertTrue(ComputePOIPoints.getFilteredPOIs().containsKey(filteredLabeledInSight));
+        assertFalse(ComputePOIPoints.getFilteredPOIs().containsKey(LabeledInLineOfSight));
 
         //Check in line of sight not filtered
-        //assertFalse(ComputePOIPoints.getPOIs().containsKey(filteredLabeledOutOfSight));
-        //assertFalse(ComputePOIPoints.getPOIs().containsKey(LabeledOutOfSight));
-        assertTrue(ComputePOIPoints.getPOIs().containsKey(filteredLabeledInSight));
-        assertTrue(ComputePOIPoints.getPOIs().containsKey(LabeledInLineOfSight));
+        assertFalse(ComputePOIPoints.getPOIsInSight().containsKey(filteredLabeledOutOfSight));
+        assertFalse(ComputePOIPoints.getPOIsInSight().containsKey(LabeledOutOfSight));
+        assertTrue(ComputePOIPoints.getPOIsInSight().containsKey(filteredLabeledInSight));
+        assertTrue(ComputePOIPoints.getPOIsInSight().containsKey(LabeledInLineOfSight));
 
         //Check in line of sight filtered
-        //assertFalse(ComputePOIPoints.getPOIs().containsKey(filteredLabeledOutOfSight));
-        //assertFalse(ComputePOIPoints.getPOIs().containsKey(LabeledOutOfSight));
-        assertTrue(ComputePOIPoints.getPOIs().containsKey(filteredLabeledInSight));
-        //assertFalse(ComputePOIPoints.getPOIs().containsKey(LabeledInLineOfSight));
+        assertFalse(ComputePOIPoints.getFilteredPOIsInSight().containsKey(filteredLabeledOutOfSight));
+        assertFalse(ComputePOIPoints.getFilteredPOIsInSight().containsKey(LabeledOutOfSight));
+        assertTrue(ComputePOIPoints.getFilteredPOIsInSight().containsKey(filteredLabeledInSight));
+        assertFalse(ComputePOIPoints.getFilteredPOIsInSight().containsKey(LabeledInLineOfSight));
 
         //Check out of line of sight not filtered
-        assertTrue(ComputePOIPoints.getPOIs().containsKey(filteredLabeledOutOfSight));
-        assertTrue(ComputePOIPoints.getPOIs().containsKey(LabeledOutOfSight));
-        //assertFalse(ComputePOIPoints.getPOIs().containsKey(filteredLabeledInSight));
-        //assertFalse(ComputePOIPoints.getPOIs().containsKey(LabeledInLineOfSight));
+        assertTrue(ComputePOIPoints.getPOIsOutOfSight().containsKey(filteredLabeledOutOfSight));
+        assertTrue(ComputePOIPoints.getPOIsOutOfSight().containsKey(LabeledOutOfSight));
+        assertFalse(ComputePOIPoints.getPOIsOutOfSight().containsKey(filteredLabeledInSight));
+        assertFalse(ComputePOIPoints.getPOIsOutOfSight().containsKey(LabeledInLineOfSight));
 
         //Check out of line of sight filtered
-        assertTrue(ComputePOIPoints.getPOIs().containsKey(filteredLabeledOutOfSight));
-        //assertFalse(ComputePOIPoints.getPOIs().containsKey(LabeledOutOfSight));
-        //assertFalse(ComputePOIPoints.getPOIs().containsKey(filteredLabeledInSight));
-        //assertFalse(ComputePOIPoints.getPOIs().containsKey(LabeledInLineOfSight));
+        assertTrue(ComputePOIPoints.getFilteredPOIsOutOfSight().containsKey(filteredLabeledOutOfSight));
+        assertFalse(ComputePOIPoints.getFilteredPOIsOutOfSight().containsKey(LabeledOutOfSight));
+        assertFalse(ComputePOIPoints.getFilteredPOIsOutOfSight().containsKey(filteredLabeledInSight));
+        assertFalse(ComputePOIPoints.getFilteredPOIsOutOfSight().containsKey(LabeledInLineOfSight));
     }
 }
