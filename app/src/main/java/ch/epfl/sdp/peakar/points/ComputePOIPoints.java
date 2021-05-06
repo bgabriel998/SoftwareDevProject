@@ -87,7 +87,7 @@ public class ComputePOIPoints implements Observer {
     private static void getPOIs(UserPoint userPoint){
         // clear the old points
         POIs.clear();
-        
+
         // first check that if offline mode is active
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         boolean offlineModeValue = prefs.getBoolean(ctx.getResources().getString(R.string.offline_mode_key), false);
