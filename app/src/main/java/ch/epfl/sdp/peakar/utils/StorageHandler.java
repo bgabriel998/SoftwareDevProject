@@ -70,7 +70,7 @@ public final class StorageHandler {
      *
      * @return outputdirectory as a File
      */
-    private static File getOutputDirectoryMedia(Context context) {
+    public static File getOutputDirectoryMedia(Context context) {
         Context appContext = context.getApplicationContext();
         File mediaDir;
         File[] mediaDirs = context.getExternalMediaDirs();
