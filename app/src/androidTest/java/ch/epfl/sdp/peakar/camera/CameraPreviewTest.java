@@ -2,6 +2,7 @@ package ch.epfl.sdp.peakar.camera;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.ImageFormat;
 import android.media.Image;
@@ -22,8 +23,10 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
+import androidx.preference.PreferenceManager;
 import androidx.test.annotation.UiThreadTest;
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
@@ -47,8 +50,12 @@ import ch.epfl.sdp.peakar.R;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static ch.epfl.sdp.peakar.TestingConstants.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -164,7 +171,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         });
         // wait until onImageAvailable is invoked. retry several times
         for (int repeat=50; repeat>=0; repeat--) {
-            Thread.sleep(1000);
+            Thread.sleep(SHORT_SLEEP_TIME);
             int value = counter.get();
             Log.i("CameraPreviewTest", String.format("count: %d", value));
             if (value > 0) return;
@@ -176,6 +183,65 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
     @Override
     public Lifecycle getLifecycle() {
         return registry;
+    }
+
+    /**
+     * Test that the visibility of the developer options appears ans disappears
+     */
+    @Test
+    public void displayDeveloperOptions() throws InterruptedException {
+        Context context = ApplicationProvider.getApplicationContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear().commit();
+
+        String devOptionsKey = context.getResources().getString(R.string.devOptions_key);
+
+        boolean isEnabled = sharedPreferences.getBoolean(devOptionsKey, false);
+        Thread.sleep(SHORT_SLEEP_TIME);
+        assertFalse(isEnabled);
+        testRule.getScenario().recreate();
+        Thread.sleep(SHORT_SLEEP_TIME);
+        onView(ViewMatchers.withId(R.id.headingHorizontal)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)));
+        onView(ViewMatchers.withId(R.id.headingVertical)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)));
+        onView(ViewMatchers.withId(R.id.fovHorizontal)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)));
+        onView(ViewMatchers.withId(R.id.fovVertical)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)));
+
+        editor.putBoolean(devOptionsKey, true);
+        editor.commit();
+
+        isEnabled = sharedPreferences.getBoolean(devOptionsKey, false);
+        Thread.sleep(SHORT_SLEEP_TIME);
+        assertTrue(isEnabled);
+        testRule.getScenario().recreate();
+        Thread.sleep(SHORT_SLEEP_TIME);
+        onView(ViewMatchers.withId(R.id.headingHorizontal)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(ViewMatchers.withId(R.id.headingVertical)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(ViewMatchers.withId(R.id.fovHorizontal)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(ViewMatchers.withId(R.id.fovVertical)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+    }
+
+    /**
+     * Tests that the modes are changed when clicking on the button
+     */
+    @Test
+    public void displayModesPOIs() throws InterruptedException {
+        Context context = ApplicationProvider.getApplicationContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear().commit();
+
+        String displayPOIsKey = context.getResources().getString(R.string.displayPOIs_key);
+
+        String displayMode = sharedPreferences.getString(displayPOIsKey, DISPLAY_ALL_POIS);
+        assertEquals("0", displayMode);
+
+        for(int i = 1; i<5; i++){
+            onView(withId(R.id.switchDisplayPOIs)).perform(click());
+            Thread.sleep(SHORT_SLEEP_TIME);
+            displayMode = sharedPreferences.getString(displayPOIsKey, DISPLAY_ALL_POIS);
+            assertEquals("" + i%3, displayMode);
+        }
     }
 
     /**
@@ -207,12 +273,12 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         });
 
         //Wait for the view to be correctly displayed
-        Thread.sleep(6000);
+        Thread.sleep(THREAD_SLEEP_6S);
 
         //Take a picture, needs to be done outside of onActivity
         onView(withId(R.id.takePicture)).perform(click());
 
-        Thread.sleep(6000);
+        Thread.sleep(THREAD_SLEEP_6S);
 
         testRule.getScenario().onActivity(activity -> {
             try {
@@ -232,13 +298,13 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         });
 
         //Wait for orientation changes
-        Thread.sleep(6000);
+        Thread.sleep(THREAD_SLEEP_6S);
 
         //Take a picture
         onView(withId(R.id.takePicture)).perform(click());
 
         //Wait for the toast to get displayed
-        Thread.sleep(6000);
+        Thread.sleep(THREAD_SLEEP_6S);
 
         testRule.getScenario().onActivity(activity -> {
             try {
