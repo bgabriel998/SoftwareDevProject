@@ -10,6 +10,8 @@ import android.view.View;
 
 import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.utils.CameraUtilities;
+import ch.epfl.sdp.peakar.utils.StorageHandler;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
 import java.io.File;
@@ -36,7 +38,7 @@ public class GalleryActivity extends AppCompatActivity {
      * Gets the recycler view and fills it up with all images.
      */
     private void setupGallery(){
-        List<String> imagePaths = getImagePaths();
+        List<String> imagePaths = StorageHandler.getImagePaths(this);
         if (!imagePaths.isEmpty()) {
             findViewById(R.id.gallery_empty).setVisibility(View.GONE);
         }
@@ -50,21 +52,5 @@ public class GalleryActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.gallery_recyclerview);
         recyclerView.setLayoutManager(new GridLayoutManager(this, COLUMNS));
         recyclerView.setAdapter(galleryAdapter);
-    }
-
-    /**
-     * Retrieves all paths the images and sends back a list of them.
-     * @return list of all image paths.
-     */
-    private List<String> getImagePaths(){
-        List<String> imagePaths = new ArrayList<>();
-        File[] imgFiles = CameraActivity.getOutputDirectory(this).listFiles();
-        if (imgFiles != null) {
-            for (File imgFile : imgFiles) {
-                imagePaths.add(imgFile.getPath());
-            }
-        }
-        imagePaths.sort(Collections.reverseOrder());
-        return imagePaths;
     }
 }
