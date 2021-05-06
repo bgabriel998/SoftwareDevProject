@@ -18,6 +18,15 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.stream.IntStream;
 
+/**
+ * Class to request the topography map of the bounding box around a point.
+ * The Elevation map is retrieved using the OpenTopography API as an AAIGrid and then converted into
+ * an array of integers representing the height. Using the SRTMGL3 data a precision of 3 arc second
+ * (~90 meter) is obtained.
+ *
+ * This class should not be used to directly get the topographyMap. To get the topographyMap use
+ * the DownloadTopographyTask.
+ */
 public class HttpClientTopographyMap {
 
     static final int BOUNDING_BOX_RANGE = 20; //range of the bounding box in km
@@ -48,12 +57,12 @@ public class HttpClientTopographyMap {
                 result =  parseResponse(response);
             } else {
                 Log.d("3d MAP", "Http error code: " + response.getStatusLine().getStatusCode());
+                result = null;
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        result = null;
     }
 
     /**
