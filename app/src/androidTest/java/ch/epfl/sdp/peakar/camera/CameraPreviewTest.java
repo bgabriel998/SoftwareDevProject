@@ -231,13 +231,15 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear().commit();
 
-        String displayMode = sharedPreferences.getString("display_pois_preference", "0");
+        String displayPOIsKey = context.getResources().getString(R.string.displayPOIs_key);
+
+        String displayMode = sharedPreferences.getString(displayPOIsKey, DISPLAY_ALL_POIS);
         assertEquals("0", displayMode);
 
         for(int i = 1; i<5; i++){
             onView(withId(R.id.switchDisplayPOIs)).perform(click());
             Thread.sleep(SHORT_SLEEP_TIME);
-            displayMode = sharedPreferences.getString("display_pois_preference", "0");
+            displayMode = sharedPreferences.getString(displayPOIsKey, DISPLAY_ALL_POIS);
             assertEquals("" + i%3, displayMode);
         }
     }
@@ -313,6 +315,4 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
             }
         });
     }
-
-
 }

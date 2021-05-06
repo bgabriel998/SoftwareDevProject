@@ -53,9 +53,8 @@ public class TestingConstants {
     //Cache constants
     public static final String CACHE_FILE_NAME_TEST = "POIPointsCache.txt";
 
-    //Coordinates cirrus
-    public static final double LATITUDE = 45.802537;
-    public static final double DEFAULT_LAT = 27.988056;
-    public static final double DEFAULT_LON = 86.925278;
-    public static final double DEFAULT_ALT = 8848.86;
+    //Display modes POIs preferences
+    public static final String DISPLAY_ALL_POIS = "0";
+    public static final String DISPLAY_POIS_IN_SIGHT = "1";
+    public static final String DISPLAY_POIS_OUT_OF_SIGHT = "2";
 }
