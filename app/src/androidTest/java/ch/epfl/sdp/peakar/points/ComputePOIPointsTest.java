@@ -94,7 +94,7 @@ public class ComputePOIPointsTest {
     @Test
     public void getPOIPointsTest() {
         POIPoint filteredLabeledOutOfSight = new POIPoint("Lobuche", 27.9691317, 86.7816135, 6145);
-        POIPoint LabeledOutOfSight = new POIPoint("Cholatse", 27.9190402, 86.7648644, 6440);
+        POIPoint LabeledOutOfSight = new POIPoint("Baruntse", 27.8720615, 86.9796489, 7075);
         POIPoint filteredLabeledInSight = new POIPoint("Khartaphu", 28.0641783, 86.977291, 7283);
         POIPoint LabeledInLineOfSight = new POIPoint("Hungchi", 28.0346849, 86.7597051, 7036);
 
