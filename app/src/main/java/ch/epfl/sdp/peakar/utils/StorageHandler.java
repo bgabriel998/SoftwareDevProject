@@ -20,6 +20,8 @@ public final class StorageHandler {
     private static final String FILENAME_PHOTO = "yyyy-MM-dd-HH-mm-ss-SSS";
     private static final String PHOTO_EXTENSION = ".jpg";
 
+    private static final int NO_COMPRESSION = 100;
+
     /**
      * Stores the bitmap on the device.
      *
@@ -30,14 +32,14 @@ public final class StorageHandler {
     public static void storeBitmap(Context context, Bitmap bitmap) throws IOException {
         File screenshotFile = createPhotoFile(context);
         FileOutputStream outputStream = new FileOutputStream(screenshotFile);
-        int quality = 100;
-        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, NO_COMPRESSION, outputStream);
         outputStream.flush();
         outputStream.close();
     }
 
     /**
      * Retrieves all paths the images and sends back a list of them.
+     * @param context Context of the application
      * @return list of all image paths.
      */
     public static List<String> getImagePaths(Context context){
