@@ -34,9 +34,33 @@
             android:key="@string/offline_mode_key"
             android:summary="@string/offline_mode_summary"
             android:title="@string/offline_mode_title" />
+            android:icon="@drawable/ic_baseline_signal_cellular_off_24"/>
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/devOptions_key"
+            android:title="@string/display_dev_options"
+            android:icon="@drawable/ic_developer_options"/>
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="@string/camera_header">
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/displayPOIs_entries"
+            android:entryValues="@array/displayPOIs_values"
+            android:key="@string/displayPOIs_key"
+            android:title="@string/display_pois_title"
+            app:useSimpleSummaryProvider="true"
+            android:dialogIcon="@drawable/ic_line_of_sight_camera"
+            android:icon="@drawable/ic_line_of_sight_camera"/>
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/filterPOIs_key"
+            android:title="@string/filter_pois_title"
+            android:icon="@drawable/ic_filter_pois_camera"/>
+
+    </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/language_header">
 
@@ -49,7 +73,7 @@
             app:useSimpleSummaryProvider="true"
             android:dialogIcon="@drawable/ic_baseline_language_24"
             android:icon="@drawable/ic_baseline_language_24"/>
-    </PreferenceCategory>We
+    </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/storage_header">
 

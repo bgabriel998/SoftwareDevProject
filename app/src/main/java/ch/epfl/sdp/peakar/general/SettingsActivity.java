@@ -47,7 +47,6 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,11 +166,10 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        Intent setIntent = new Intent(this, MainMenuActivity.class);
-        startActivity(setIntent);
+    /** Changes view to SettingsMapActivity */
+    public void offlineModeButton(View view) {
+        Intent intent = new Intent(this, SettingsMapActivity.class);
+        startActivity(intent);
     }
-
 }
 

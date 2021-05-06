@@ -36,6 +36,7 @@
     <string name="general_header">Général</string>
     <string name="language_header">Préférences linguistiques</string>
     <string name="storage_header">Stockage</string>
+    <string name="camera_header">Caméra</string>
     <string name="language_title">Langue</string>
     <string name="range_title">Distance de découverte</string>
     <string name="range_summary">Distance maximale pour la détection de sommet</string>
@@ -47,4 +48,8 @@
     <string name="offline_mode_on_toast">Vous êtes désormais en mode hors ligne!</string>
     <string name="offline_mode_off_toast">En ligne!</string>
     <string name="offline_mode_summary">Ouvre l\'éditeur pour selectionner une zone à télécharger. Ceci permet à l\'application de fonctionner sans connexion internet</string>
+    <string name="display_pois_title">Selectionner les montagnes à afficher</string>
+    <string name="filter_pois_title">Filtrer les montagnes</string>
+    <string name="display_dev_options">Afficher les options développeur</string>
+    <string name="lineOfSightNotDownloaded">Le téléchargement de la carte pour les montagnes dans la ligne de mire.</string>
 </resources>

@@ -138,7 +138,7 @@ public class OSMMapTest {
         List<Overlay> overlayList = osmMap.getMapView().getOverlays();
         for(Overlay overlay : overlayList){
             if(overlay instanceof MyLocationNewOverlay){
-                Thread.sleep(4000);
+                Thread.sleep(6000);
                 GeoPoint geoPoint = ((MyLocationNewOverlay) overlay).getMyLocation();
                 assertNotNull(geoPoint);
                 return;
