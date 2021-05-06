@@ -86,7 +86,7 @@ public class ComputePOIPoints {
             POIs.put(poiPoint, false);
         });
         //TODO use this method to merge caching of the POIs and 3D map
-        //getLabeledPOIs(userPoint);
+        getLabeledPOIs(userPoint);
         //TODO =========================================<<
     }
 
