@@ -1,7 +1,5 @@
 package ch.epfl.sdp.peakar.gallery;
 
-import android.content.Context;
-
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.Intents;
