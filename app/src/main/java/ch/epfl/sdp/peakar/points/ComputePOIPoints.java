@@ -64,9 +64,6 @@ public class ComputePOIPoints implements Observer {
 
     private static boolean isLineOfSightAvailable = false;
 
-    private static final int HALF_MARKER_SIZE_WIDTH = 3;
-    private static final int HALF_MARKER_SIZE_HEIGHT = 5;
-
     /**
      * Constructor of ComputePOIPoints, updates userPoint and gets the POIs for the userPoint
      * @param context Context of activity
@@ -90,14 +87,7 @@ public class ComputePOIPoints implements Observer {
     private static void getPOIs(UserPoint userPoint){
         // clear the old points
         POIs.clear();
-        filteredPOIPoints.clear();
-        labeledPOIs.clear();
-        filteredLabeledPOIPoints.clear();
-        labeledPOIsInSight.clear();
-        filteredLabeledPOIsInSight.clear();
-        labeledPOIsOutOfSight.clear();
-        filteredLabeledPOIsOutOfSight.clear();
-      
+        
         // first check that if offline mode is active
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         boolean offlineModeValue = prefs.getBoolean(ctx.getResources().getString(R.string.offline_mode_key), false);
@@ -253,9 +243,10 @@ public class ComputePOIPoints implements Observer {
 
         if (distance < MAX_LOADING_DISTANCE) {
             Pair<int[][], Double> topography = offlineContent.topography;
-            for(POIPoints poiPoint : offlineContent.POIPoints){
+            for(POIPoint poiPoint : offlineContent.POIPoints){
               POIs.put(poiPoint, false);
             }
+            LineOfSight lineOfSight = new LineOfSight(topography, userPoint);
             labeledPOIs = lineOfSight.getVisiblePointsLabeled(new ArrayList<>(POIs.keySet()));
             filteredLabeledPOIPoints = filterHighestPOIs(labeledPOIs);
 
@@ -280,6 +271,7 @@ public class ComputePOIPoints implements Observer {
 
     }
 
+    /**
      * Checks if the line of sight is available or not
      * @return True if the line of sight is available, false otherwise
      */
