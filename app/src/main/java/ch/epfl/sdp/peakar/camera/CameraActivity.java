@@ -2,6 +2,7 @@ package ch.epfl.sdp.peakar.camera;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -13,8 +14,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
+import androidx.preference.PreferenceManager;
 
-import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.map.MapActivity;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.utils.CameraUtilities;
@@ -40,6 +41,10 @@ public class CameraActivity extends AppCompatActivity{
     private TextView fovVertical;
     private Compass compass;
 
+    //SharedPreferences
+    private SharedPreferences sharedPref;
+
+    private static final String DISPLAY_ALL_POIS = "0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,14 +63,9 @@ public class CameraActivity extends AppCompatActivity{
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        // TextView that will tell the user what degree he's heading
-        // Used for demo and debug
-        headingHorizontal = findViewById(R.id.headingHorizontal);
-        headingVertical = findViewById(R.id.headingVertical);
-        // TextView that will tell the user what fov in degrees
-        // Used for demo and debug
-        fovHorizontal = findViewById(R.id.fovHorizontal);
-        fovVertical = findViewById(R.id.fovVertical);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        displayDeveloperOptions(sharedPref.getBoolean(getResources().getString(R.string.devOptions_key), false));
 
         //Create compass view
         cameraUiView = findViewById(R.id.compass);
@@ -105,10 +105,6 @@ public class CameraActivity extends AppCompatActivity{
 
         //Bind the compassListener with the compass
         compass.setListener(compassListener);
-
-        //Set the POIs for the compass
-        //TODO check settings to select the POIPoints
-        cameraUiView.setPOIs(ComputePOIPoints.POIPoints, ComputePOIPoints.highestPOIPoints);
     }
 
     /**
@@ -234,6 +230,50 @@ public class CameraActivity extends AppCompatActivity{
         File[] mediaDirs = context.getExternalMediaDirs();
         mediaDir = mediaDirs != null ? mediaDirs[0] : null;
         return (mediaDir != null && mediaDir.exists()) ? mediaDir : appContext.getFilesDir();
+    }
+
+    /**
+     * Displays the developer options (horizontal and vertical heading and the camera fov) if
+     * devOption is true.
+     * @param devOption Boolean, to determine if the developer options are shown or not
+     */
+    private void displayDeveloperOptions(boolean devOption) {
+        headingHorizontal = findViewById(R.id.headingHorizontal);
+        headingVertical = findViewById(R.id.headingVertical);
+        fovHorizontal = findViewById(R.id.fovHorizontal);
+        fovVertical = findViewById(R.id.fovVertical);
+
+        if(devOption){
+            headingHorizontal.setVisibility(View.VISIBLE);
+            headingVertical.setVisibility(View.VISIBLE);
+            fovHorizontal.setVisibility(View.VISIBLE);
+            fovVertical.setVisibility(View.VISIBLE);
+        }
+        else{
+            headingHorizontal.setVisibility(View.INVISIBLE);
+            headingVertical.setVisibility(View.INVISIBLE);
+            fovHorizontal.setVisibility(View.INVISIBLE);
+            fovVertical.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    /**
+     * Callback for the switchDisplayPOIs ImageButton, iterates over the different representation modes:
+     * 1. Display all POIs
+     * 2. Display only POIs in line of sight
+     * 3. Display only POIS out of line of sight
+     *
+     * @param view ImageButton
+     */
+    public void switchDisplayPOIMode(View view) {
+        String displayPOIsKey = getResources().getString(R.string.displayPOIs_key);
+        String mode = sharedPref.getString(displayPOIsKey, DISPLAY_ALL_POIS);
+        int actualMode = Integer.parseInt(mode);
+        int newMode = (actualMode + 1) % 3;
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(displayPOIsKey, "" + newMode);
+        editor.apply();
     }
 
     /**

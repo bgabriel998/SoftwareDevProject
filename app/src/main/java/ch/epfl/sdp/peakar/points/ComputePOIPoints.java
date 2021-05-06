@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -25,12 +24,21 @@ import java.util.stream.Collectors;
  * is visible or not. If no points are available or if they are not computed yet, they will be null
  */
 public class ComputePOIPoints {
-    public static List<POIPoint> POIPoints;
-    public static Map<POIPoint, Boolean> labeledPOIPoints;
-    public static Map<POIPoint, Boolean> highestPOIPoints;
+    //public static List<POIPoint> POIPoints;
     public static UserPoint userPoint;
     @SuppressLint("StaticFieldLeak")
     public static Context ctx;
+
+    private static Map<POIPoint, Boolean> POIs;
+    private static Map<POIPoint, Boolean> filteredPOIPoints;
+    private static Map<POIPoint, Boolean> labeledPOIs;
+    private static Map<POIPoint, Boolean> filteredLabeledPOIPoints;
+    private static Map<POIPoint, Boolean> labeledPOIsInSight;
+    private static Map<POIPoint, Boolean> filteredLabeledPOIsInSight;
+    private static Map<POIPoint, Boolean> labeledPOIsOutOfSight;
+    private static Map<POIPoint, Boolean> filteredLabeledPOIsOutOfSight;
+
+    private static boolean isLineOfSightAvailable = false;
 
     private static final int HALF_MARKER_SIZE_WIDTH = 3;
     private static final int HALF_MARKER_SIZE_HEIGHT = 5;
@@ -40,8 +48,8 @@ public class ComputePOIPoints {
      * @param context Context of activity
      */
     public ComputePOIPoints(Context context){
+        POIs = new HashMap<>();
         ctx = context;
-        POIPoints = new ArrayList<>();
         userPoint = UserPoint.getInstance(context);
         userPoint.update();
         getPOIs(userPoint);
@@ -71,13 +79,14 @@ public class ComputePOIPoints {
      */
     private static void getPOIsFromCache(UserPoint userPoint){
         ArrayList<POIPoint> cachedPOIs = POICache.getInstance().getCachedPOIPoints(ctx.getCacheDir());
-        POIPoints.addAll(cachedPOIs.stream().peek(poiPoint ->
-        {
+
+        cachedPOIs.forEach(poiPoint -> {
             poiPoint.setHorizontalBearing(userPoint);
             poiPoint.setVerticalBearing(userPoint);
-        }).collect(Collectors.toList()));
+            POIs.put(poiPoint, false);
+        });
         //TODO use this method to merge caching of the POIs and 3D map
-        //getLabeledPOIs(userPoint);
+        getLabeledPOIs(userPoint);
         //TODO =========================================<<
     }
 
@@ -94,9 +103,12 @@ public class ComputePOIPoints {
                         POIPoint poiPoint = new POIPoint(poi);
                         poiPoint.setHorizontalBearing(userPoint);
                         poiPoint.setVerticalBearing(userPoint);
-                        POIPoints.add(poiPoint);
+                        POIs.put(poiPoint, false);
                     }
-                    POICache.getInstance().savePOIDataToCache(new ArrayList<>(POIPoints),userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM), ctx.getCacheDir());
+                    filteredPOIPoints = filterHighestPOIs(POIs);
+                    POICache.getInstance().savePOIDataToCache(new ArrayList<>(POIs.keySet()),
+                            userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM),
+                            ctx.getCacheDir());
                     getLabeledPOIs(userPoint);
                 }
             }
@@ -113,12 +125,84 @@ public class ComputePOIPoints {
             public void onResponseReceived(Pair<int[][], Double> topography) {
                 super.onResponseReceived(topography);
                 LineOfSight lineOfSight = new LineOfSight(topography, userPoint);
-                labeledPOIPoints = lineOfSight.getVisiblePointsLabeled(POIPoints);
-                //Filter highest mountains
-                highestPOIPoints = filterHighestPOIs(labeledPOIPoints);
+                labeledPOIs = lineOfSight.getVisiblePointsLabeled(new ArrayList<>(POIs.keySet()));
+                filteredLabeledPOIPoints = filterHighestPOIs(labeledPOIs);
+
+                labeledPOIsInSight = new HashMap<>();
+                labeledPOIsOutOfSight = new HashMap<>();
+
+                labeledPOIs.forEach((poi, inSight) -> {
+                    if (inSight) {
+                        labeledPOIsInSight.put(poi, inSight);
+                    } else {
+                        labeledPOIsOutOfSight.put(poi, inSight);
+                    }
+                });
+
+                filteredLabeledPOIsInSight = filterHighestPOIs(labeledPOIsInSight);
+                filteredLabeledPOIsOutOfSight = filterHighestPOIs(labeledPOIsOutOfSight);
+
+                isLineOfSightAvailable = true;
             }
         }.execute(userPoint);
     }
+
+    /**
+     * Checks if the line of sight is available or not
+     * @return True if the line of sight is available, false otherwise
+     */
+    public static Boolean isLineOfSightAvailable(){
+        return isLineOfSightAvailable;
+    }
+
+    /**
+     * Gets a Map of all surrounding POIPoints
+     * @return Map<POIPoint, Boolean> containing POIPoints.
+     */
+    public static Map<POIPoint, Boolean> getPOIs(){
+        return isLineOfSightAvailable() ? labeledPOIs : POIs;
+    }
+
+    /**
+     * Gets a filtered Map of all surrounding POIPoints
+     * @return Map<POIPoint, Boolean> containing the filtered POIPoints.
+     */
+    public static Map<POIPoint, Boolean> getFilteredPOIs(){
+        return isLineOfSightAvailable() ? filteredLabeledPOIPoints : filteredPOIPoints;
+    }
+
+    /**
+     * Gets a Map of the POIPoints that are in the line of sight
+     * @return Map<POIPoint, Boolean> containing only the POIPoints in the lineOfSight.
+     */
+    public static Map<POIPoint, Boolean> getPOIsInSight(){
+        return isLineOfSightAvailable() ? labeledPOIsInSight : POIs;
+    }
+
+    /**
+     * Gets a Map of the POIPoints that are in the line of sight and filtered
+     * @return Map<POIPoint, Boolean> containing the filtered POIPoints in the lineOfSight.
+     */
+    public static Map<POIPoint, Boolean> getFilteredPOIsInSight(){
+        return isLineOfSightAvailable() ? filteredLabeledPOIsInSight : filteredPOIPoints;
+    }
+
+    /**
+     * Gets a Map of the POIPoints that are out of the line of sight
+     * @return Map<POIPoint, Boolean> containing only the POIPoints out of the lineOfSight.
+     */
+    public static Map<POIPoint, Boolean> getPOIsOutOfSight(){
+        return isLineOfSightAvailable() ? labeledPOIsOutOfSight : POIs;
+    }
+
+    /**
+     * Gets a Map of the POIPoints that are out of the line of sight and filtered
+     * @return Map<POIPoint, Boolean> containing the filtered POIPoints out of the lineOfSight.
+     */
+    public static Map<POIPoint, Boolean> getFilteredPOIsOutOfSight(){
+        return isLineOfSightAvailable() ? filteredLabeledPOIsOutOfSight : filteredPOIPoints;
+    }
+
 
     /**
      * Filters the labeled POIPoints and takes only the highest s.t. there are no other markers

@@ -4,7 +4,9 @@ public class TestingConstants {
     //User constants
     public final static String BASIC_USERNAME = "test";
     public final static int SHORT_SLEEP_TIME = 500;
+    public final static int THREAD_SLEEP_1S = 1000;
     public final static int LONG_SLEEP_TIME = 1500;
+    public final static int THREAD_SLEEP_6S = 6000;
     public final static int USER_SCORE = 200000;
 
     //Map constant
@@ -50,4 +52,9 @@ public class TestingConstants {
 
     //Cache constants
     public static final String CACHE_FILE_NAME_TEST = "POIPointsCache.txt";
+
+    //Display modes POIs preferences
+    public static final String DISPLAY_ALL_POIS = "0";
+    public static final String DISPLAY_POIS_IN_SIGHT = "1";
+    public static final String DISPLAY_POIS_OUT_OF_SIGHT = "2";
 }

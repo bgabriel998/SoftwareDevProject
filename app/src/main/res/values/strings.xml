@@ -81,6 +81,9 @@
     <string name="pictureSavedFailed">Failed to take picture:</string>
     <string name="pictureSavedSuccessfully">Picture saved at:</string>
 
+    <!-- CAMERA BUTTONS STRINGS -->
+    <string name="buttonChangeDisplayModePOI" translatable="false">Change displaying of POIs in sight</string>
+    <string name="lineOfSightNotDownloaded">Line of sight downlaod is not yet finished, please wait.</string>
 
     <!-- MAP MARKERS STRINGS -->
     <string name="marker_altitude">Altitude: %s m</string>
@@ -96,6 +99,12 @@
     <string name="general_header">General</string>
     <string name="language_header">Language preference</string>
     <string name="storage_header">Storage</string>
+    <string name="camera_header">Camera</string>
+
+    <!-- Camera Preferences -->
+    <string name="display_pois_title">Select displayed mountains</string>
+    <string name="filter_pois_title">Filter mountains</string>
+    <string name="display_dev_options">Display developer options</string>
 
     <!-- Language Preferences -->
     <string name="language_title">Language</string>
@@ -121,6 +130,12 @@
     <string name="offline_mode_key" translatable="false">offline_mode_preference</string>
     <string name="range_key" translatable="false">range_preference</string>
     <string name="language_key" translatable="false">language_preference</string>
+    <string name="displayPOIs_key" translatable="false">display_pois_preference</string>
+    <string name="filterPOIs_key" translatable="false">filter_pois</string>
+    <string name="devOptions_key" translatable="false">developer_options</string>
     <string name="disable_caching_key" translatable="false">disable_caching</string>
     <string name="offline_mode_summary">Opens the editor to select an area to download. This allows the application to work without internet connexion</string>
+
+
+
 </resources>

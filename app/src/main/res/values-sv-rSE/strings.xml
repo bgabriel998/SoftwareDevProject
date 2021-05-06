@@ -45,4 +45,9 @@
     <string name="caching_summary">Använd enhetslagring för caching. Ökar hastighet för applikation.</string>
     <string name="offline_mode_summary">Öppnar editorn för att välja area att ladda ned. Tillåter applikationen användas i offline läge.</string>
     <string name="pictureTakenToast">Bild sparad på: file: ///storage/emulated/0/Android/media/ch.epfl.sdp.peakar/</string>
+    <string name="display_pois_title">Välj visade berg</string>
+    <string name="filter_pois_title">Filtrera berg</string>
+    <string name="display_dev_options">Visa alternativ för utvecklare</string>
+    <string name="camera_header">Kamera</string>
+    <string name="lineOfSightNotDownloaded">Nedladdningen av Line of sight är ännu inte klar, vänligen vänta.</string>
 </resources>

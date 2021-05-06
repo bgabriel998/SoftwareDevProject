@@ -48,7 +48,6 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -157,13 +156,6 @@ public class SettingsActivity extends AppCompatActivity {
         //TODO Implement
         Toast.makeText(this,"Setting not implemented yet !", Toast.LENGTH_SHORT).show();
     }
-
-    @Override
-    public void onBackPressed() {
-        Intent setIntent = new Intent(this,MainMenuActivity.class);
-        startActivity(setIntent);
-    }
-
 
     /** Changes view to SettingsMapActivity */
     public void offlineModeButton(View view) {
