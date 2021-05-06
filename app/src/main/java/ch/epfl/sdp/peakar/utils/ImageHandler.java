@@ -39,31 +39,9 @@ public final class ImageHandler {
             ExifInterface exifInterface = new ExifInterface(imagePath);
             return exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                     ExifInterface.ORIENTATION_NORMAL);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return ExifInterface.ORIENTATION_NORMAL;
-        }
-    }
-
-    /**
-     * Returns an array with the latitude, longitude and altitude from where the picture was taken
-     * 
-     * @param imagePath the path to image
-     * @return array of doubles that contain the latitude, longitude and altitude
-     */
-    private static double[] getLocation(String imagePath) {
-        try {
-            ExifInterface exifInterface = new ExifInterface(imagePath);
-            double[] location = new double[3];
-            location[0] = exifInterface.getLatLong()[0];
-            location[1] = exifInterface.getLatLong()[1];
-            location[2] = exifInterface.getAltitude(0);
-            return location;
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-            return null;
         }
     }
 
