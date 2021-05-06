@@ -65,7 +65,7 @@ public final class StorageHandler {
     }
 
     /**
-     * Returns outpudirectory to store images. Use externel media if it is available, our app's
+     * Returns outpudirectory to store images. Use external media if it is available, our app's
      * file directory otherwise
      *
      * @return outputdirectory as a File
