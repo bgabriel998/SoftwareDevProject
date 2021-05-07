@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -22,6 +21,7 @@ import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 public class SettingsActivity extends AppCompatActivity {
 
     private static final String  TOOLBAR_TITLE = "Settings";
+    private SharedPreferences sharedPref;
     /**
      * Preference listener. Callback that is triggered
      * every time a preference is changed
@@ -65,8 +65,9 @@ public class SettingsActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPref.registerOnSharedPreferenceChangeListener(listener);
+
     }
 
     /**
@@ -167,10 +168,11 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    /** Changes view to SettingsMapActivity */
-    public void offlineModeButton(View view) {
-        Intent intent = new Intent(this, SettingsMapActivity.class);
-        startActivity(intent);
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        sharedPref.unregisterOnSharedPreferenceChangeListener(listener);
     }
+
 }
 
