@@ -13,13 +13,6 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 
-import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.camera.CameraActivity;
-import ch.epfl.sdp.peakar.collection.CollectionActivity;
-import ch.epfl.sdp.peakar.gallery.GalleryActivity;
-import ch.epfl.sdp.peakar.rankings.RankingsActivity;
-import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -28,6 +21,13 @@ import org.junit.runner.RunWith;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.camera.CameraActivity;
+import ch.epfl.sdp.peakar.collection.CollectionActivity;
+import ch.epfl.sdp.peakar.gallery.GalleryActivity;
+import ch.epfl.sdp.peakar.rankings.RankingsActivity;
+import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;

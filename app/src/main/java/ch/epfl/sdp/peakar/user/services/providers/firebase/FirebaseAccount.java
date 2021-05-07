@@ -14,10 +14,10 @@ import java.util.HashSet;
 import java.util.Optional;
 
 import ch.epfl.sdp.peakar.database.Database;
+import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
 import ch.epfl.sdp.peakar.general.remote.RemoteResource;
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.points.POIPoint;
-import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
 import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.services.Account;
 

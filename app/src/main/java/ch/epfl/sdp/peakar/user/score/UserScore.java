@@ -5,15 +5,15 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.util.Log;
 
-import ch.epfl.sdp.peakar.points.CountryHighPoint;
-import ch.epfl.sdp.peakar.database.DatabaseHelper;
-import ch.epfl.sdp.peakar.points.POIPoint;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+
+import ch.epfl.sdp.peakar.database.DatabaseHelper;
+import ch.epfl.sdp.peakar.points.CountryHighPoint;
+import ch.epfl.sdp.peakar.points.POIPoint;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 
 public class UserScore {
 

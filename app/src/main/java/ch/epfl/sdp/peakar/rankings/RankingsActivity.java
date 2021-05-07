@@ -1,14 +1,11 @@
 package ch.epfl.sdp.peakar.rankings;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
 
-import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.utils.ToolbarHandler;
-import ch.epfl.sdp.peakar.database.Database;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -17,6 +14,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.database.Database;
+import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
 public class RankingsActivity extends AppCompatActivity {
 

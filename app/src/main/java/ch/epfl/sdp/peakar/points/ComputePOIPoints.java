@@ -2,18 +2,34 @@ package ch.epfl.sdp.peakar.points;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
 
 import androidx.core.util.Pair;
+import androidx.preference.PreferenceManager;
+
+import com.google.gson.Gson;
 
 import org.osmdroid.bonuspack.location.POI;
+import org.osmdroid.util.BoundingBox;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.stream.Collectors;
+
+import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.general.SettingsMapActivity;
+import ch.epfl.sdp.peakar.utils.OfflineContentContainer;
 
 /**
  * Requests the POIPoints around the user location and then downloads the topography map once the
@@ -22,10 +38,18 @@ import java.util.stream.Collectors;
  * To use, simply call ComputePOIPoints.POIPoints to get a List of POIPoints or
  * ComputePOIPoints to get a map with the POIPoints as keys and a boolean indicating if the POIPoint
  * is visible or not. If no points are available or if they are not computed yet, they will be null
+ *
+ * TODO handle the updates more efficiently
  */
-public class ComputePOIPoints {
-    //public static List<POIPoint> POIPoints;
+public class ComputePOIPoints implements Observer {
+
+    private static final int MAX_LOADING_DISTANCE = 20000; // in m
+
+    private static final int HALF_MARKER_SIZE_WIDTH = 3;
+    private static final int HALF_MARKER_SIZE_HEIGHT = 5;
+
     public static UserPoint userPoint;
+  
     @SuppressLint("StaticFieldLeak")
     public static Context ctx;
 
@@ -40,9 +64,6 @@ public class ComputePOIPoints {
 
     private static boolean isLineOfSightAvailable = false;
 
-    private static final int HALF_MARKER_SIZE_WIDTH = 3;
-    private static final int HALF_MARKER_SIZE_HEIGHT = 5;
-
     /**
      * Constructor of ComputePOIPoints, updates userPoint and gets the POIs for the userPoint
      * @param context Context of activity
@@ -51,7 +72,7 @@ public class ComputePOIPoints {
         POIs = new HashMap<>();
         ctx = context;
         userPoint = UserPoint.getInstance(context);
-        userPoint.update();
+        userPoint.addObserver(this);
         getPOIs(userPoint);
     }
 
@@ -64,12 +85,23 @@ public class ComputePOIPoints {
      * @param userPoint user location
      */
     private static void getPOIs(UserPoint userPoint){
+        // clear the old points
+        POIs.clear();
+
+        // first check that if offline mode is active
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        boolean offlineModeValue = prefs.getBoolean(ctx.getResources().getString(R.string.offline_mode_key), false);
+        if (offlineModeValue) {
+           getPOISOffline(userPoint);
+           return;
+        }
         //Retrieve cache instance
         POICache poiCache = POICache.getInstance();
         //Check if file is present and if user is in BB
         if(poiCache.isCacheFilePresent(ctx.getApplicationContext().getCacheDir()) && poiCache.isUserInBoundingBox(userPoint, ctx.getCacheDir()))
             getPOIsFromCache(userPoint);
         else
+            Log.d("DEBUG", "Downmloaded");
             getPOIsFromProvider(userPoint);
     }
 
@@ -116,8 +148,55 @@ public class ComputePOIPoints {
     }
 
     /**
-     * Gets the labeled POIs and filters them
-     * @param userPoint userPoint for which the labeled POIs are computed
+     * Handles the creation and filtration of the list of the POIPoints when offline mode
+     * is enables.
+     *
+     * @param userPoint around which the list is computed.
+     */
+    private static void getPOISOffline(UserPoint userPoint) {
+
+        try {
+            OfflineContentContainer offlineContent = readFromFile();
+            getLabeledPOIsOffline(userPoint, offlineContent);
+        } catch (IOException e) {
+            Log.d("ComputePOIPoints", "There was an error reading the file");
+        }
+
+    }
+
+    /**
+     * Helper method to load the downloaded json.
+     *
+     * @return an OfflineContainer containing the downloaded content.
+     */
+    private static OfflineContentContainer readFromFile() throws IOException {
+
+        Gson gson = new Gson();
+
+        String ret = "";
+
+        InputStream inputStream =  ctx.openFileInput(SettingsMapActivity.OFFLINE_CONTENT_FILE);
+        if ( inputStream != null ) {
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String receiveString;
+            StringBuilder stringBuilder = new StringBuilder();
+            while ( (receiveString = bufferedReader.readLine()) != null ) {
+                stringBuilder.append(receiveString);
+            }
+            inputStream.close();
+            ret = stringBuilder.toString();
+        }
+
+        Log.d("ComputePOIPoints", "Offline content downloaded");
+        return gson.fromJson(ret, OfflineContentContainer.class);
+
+    }
+
+    /**
+     * Gets the labeled POIs and filters them.
+     *
+     * @param userPoint userPoint for which the labeled POIs are computed.
      */
     private static void getLabeledPOIs(UserPoint userPoint){
         new DownloadTopographyTask(){
@@ -146,6 +225,67 @@ public class ComputePOIPoints {
             }
         }.execute(userPoint);
     }
+
+    /**
+     * Gets the labeled POIs from a JSONObject and filters them. The points are not added if the
+     * userPoint is more thant MAX_LOADING_DISTANCE from the center of the downloaded bounding
+     * box.
+     *
+     * @param userPoint         userPoint for which the labeled POIs are computed.
+     * @param offlineContent    container containing offline content.
+     */
+    private static void getLabeledPOIsOffline(UserPoint userPoint, OfflineContentContainer offlineContent) {
+
+        BoundingBox boundingBox = offlineContent.boundingBox;
+
+        double distance = userPoint.computeFlatDistance(new POIPoint(boundingBox.getCenterWithDateLine()));
+
+        Log.d("ComputePOIPoints", "Distance = " + distance);
+
+        if (distance < MAX_LOADING_DISTANCE) {
+            Pair<int[][], Double> topography = offlineContent.topography;
+            for(POIPoint poiPoint : offlineContent.POIPoints){
+              POIs.put(poiPoint, false);
+            }
+            LineOfSight lineOfSight = new LineOfSight(topography, userPoint);
+            labeledPOIs = lineOfSight.getVisiblePointsLabeled(new ArrayList<>(POIs.keySet()));
+            filteredLabeledPOIPoints = filterHighestPOIs(labeledPOIs);
+
+            labeledPOIsInSight = new HashMap<>();
+            labeledPOIsOutOfSight = new HashMap<>();
+
+            labeledPOIs.forEach((poi, inSight) -> {
+                if (inSight) {
+                    labeledPOIsInSight.put(poi, inSight);
+                } else {
+                    labeledPOIsOutOfSight.put(poi, inSight);
+                }
+            });
+
+            filteredLabeledPOIsInSight = filterHighestPOIs(labeledPOIsInSight);
+            filteredLabeledPOIsOutOfSight = filterHighestPOIs(labeledPOIsOutOfSight);
+
+            isLineOfSightAvailable = true;
+        } else {
+            resetPOIs();
+            Log.d("ComputePOIPoints", "Distance is > " + MAX_LOADING_DISTANCE);
+        }
+
+    }
+
+    /**
+     * Reset lists of POIPoints
+     */
+    private static void resetPOIs() {
+        if (filteredPOIPoints != null) filteredPOIPoints.clear();
+        if (labeledPOIs != null) labeledPOIs.clear();
+        if (filteredLabeledPOIPoints != null) filteredLabeledPOIPoints.clear();
+        if (labeledPOIsInSight != null) labeledPOIsInSight.clear();
+        if (filteredLabeledPOIsInSight != null) filteredLabeledPOIsInSight.clear();
+        if (labeledPOIsOutOfSight != null) labeledPOIsOutOfSight.clear();
+        if (filteredLabeledPOIsOutOfSight != null) filteredLabeledPOIsOutOfSight.clear();
+    }
+
 
     /**
      * Checks if the line of sight is available or not
@@ -202,7 +342,6 @@ public class ComputePOIPoints {
     public static Map<POIPoint, Boolean> getFilteredPOIsOutOfSight(){
         return isLineOfSightAvailable() ? filteredLabeledPOIsOutOfSight : filteredPOIPoints;
     }
-
 
     /**
      * Filters the labeled POIPoints and takes only the highest s.t. there are no other markers
@@ -267,5 +406,10 @@ public class ComputePOIPoints {
             }
         }
         return true;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        getPOIs(userPoint);
     }
 }

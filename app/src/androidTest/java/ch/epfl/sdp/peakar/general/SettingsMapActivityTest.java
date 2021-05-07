@@ -1,8 +1,11 @@
 package ch.epfl.sdp.peakar.general;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
+import androidx.preference.PreferenceManager;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
@@ -70,9 +73,9 @@ public class SettingsMapActivityTest {
                 .check(matches(isDisplayed()));
     }
 
-    /* Test that pressing the back button finish the activity */
+    /* Test that pressing the back button finish the activity and resets the offline mode value */
     @Test
-    public void TestBackButton(){
+    public void testBackButton() {
         ViewInteraction button = onView(withId(R.id.settingsMapBackButton));
         button.perform(ViewActions.click());
         try {
@@ -82,6 +85,13 @@ public class SettingsMapActivityTest {
             e.printStackTrace();
             fail("TestBackButton failed");
         }
+
+        Context ctx = ApplicationProvider.getApplicationContext();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        // check that the offline mode value has been reset
+        Assert.assertFalse(prefs.getBoolean(ctx.getResources().getString(R.string.offline_mode_key), false));
+
     }
 
     /* Tests that the activity is terminated after the ok button is pressed. */
@@ -99,7 +109,7 @@ public class SettingsMapActivityTest {
             assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
         } catch (InterruptedException e) {
             e.printStackTrace();
-            fail("TestBackButton failed");
+            fail("TestOkButton failed");
         }
 
     }
@@ -125,7 +135,7 @@ public class SettingsMapActivityTest {
         String ret = "";
 
         try {
-            InputStream inputStream =  ApplicationProvider.getApplicationContext().openFileInput("save.txt");
+            InputStream inputStream =  ApplicationProvider.getApplicationContext().openFileInput(SettingsMapActivity.OFFLINE_CONTENT_FILE);
 
             if ( inputStream != null ) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);

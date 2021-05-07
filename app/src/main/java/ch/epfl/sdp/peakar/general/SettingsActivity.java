@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -22,6 +21,7 @@ import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 public class SettingsActivity extends AppCompatActivity {
 
     private static final String  TOOLBAR_TITLE = "Settings";
+    private SharedPreferences sharedPref;
     /**
      * Preference listener. Callback that is triggered
      * every time a preference is changed
@@ -43,7 +43,7 @@ public class SettingsActivity extends AppCompatActivity {
                     case "disable_caching":
                         disableCachingChanged();
                         break;
-                    case "offline_mode_key":
+                    case "offline_mode_preference":
                         offlineModeChanged();
                 }
             };
@@ -65,8 +65,9 @@ public class SettingsActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPref.registerOnSharedPreferenceChangeListener(listener);
+
     }
 
     /**
@@ -77,6 +78,24 @@ public class SettingsActivity extends AppCompatActivity {
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        sharedPref.unregisterOnSharedPreferenceChangeListener(listener);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        sharedPref.unregisterOnSharedPreferenceChangeListener(listener);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        sharedPref.registerOnSharedPreferenceChangeListener(listener);
     }
 
     /**
@@ -150,17 +169,28 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     /**
-     * Change offline mode
+     * If the offline mode is off, it will prompt the user to the SettingsMapActivity, otherwise
+     * it will reconnect the app to the internet.
      */
     private void offlineModeChanged(){
-        //TODO Implement
-        Toast.makeText(this,"Setting not implemented yet !", Toast.LENGTH_SHORT).show();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        boolean offlineModeValue = prefs.getBoolean(this.getResources().getString(R.string.offline_mode_key), false);
+
+        if (offlineModeValue) {
+            Intent setIntent = new Intent(this, SettingsMapActivity.class);
+            startActivity(setIntent);
+        } else {
+            Toast.makeText(this,this.getResources().getString(R.string.offline_mode_off_toast), Toast.LENGTH_SHORT).show();
+        }
     }
 
-    /** Changes view to SettingsMapActivity */
-    public void offlineModeButton(View view) {
-        Intent intent = new Intent(this, SettingsMapActivity.class);
-        startActivity(intent);
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        sharedPref.unregisterOnSharedPreferenceChangeListener(listener);
     }
+
 }
 

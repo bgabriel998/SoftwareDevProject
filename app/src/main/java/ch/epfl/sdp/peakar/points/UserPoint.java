@@ -2,7 +2,9 @@ package ch.epfl.sdp.peakar.points;
 
 import android.content.Context;
 
-
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Observer;
 
 
 /**
@@ -21,8 +23,13 @@ import android.content.Context;
  * It provides a method to get updates on the user location.
  *
  * This class should be used as a observer that observes a GPSTracker.
+ *
+ * This class can be observed; The updates will be called only if the location changes
+ * more than MIN_DISTANCE_FOR_UPDATES meters.
  */
 public final class UserPoint extends Point {
+
+    public static final int MIN_DISTANCE_FOR_UPDATES = 100; // in meters
 
     private static UserPoint single_instance = null; // singleton instance
   
@@ -31,6 +38,10 @@ public final class UserPoint extends Point {
     private double accuracy;
 
     private boolean customLocation;
+
+    private final List<Observer> observers;
+
+    private final Point lastLocation;
 
     /**
      * Constructor for the UserPoint. Private because it is a singleton.
@@ -42,6 +53,17 @@ public final class UserPoint extends Point {
         gpsTracker = new GPSTracker(mContext, this);
         customLocation = false;
         single_instance = this;
+        observers = new LinkedList<>();
+        lastLocation = new Point(0,0,0);
+    }
+
+    /**
+     * Allows to add observers to the UserPoint.
+     *
+     * @param o observer to add
+     */
+    public void addObserver(Observer o) {
+        this.observers.add(o);
     }
 
     /**
@@ -57,6 +79,9 @@ public final class UserPoint extends Point {
 
     /**
      * Method that is used to update the current user location.
+     *
+     * It updates the observers if the point has moved more than MIN_DISTANCE_FOR_UPDATES
+     * from the last saved location.
      */
     public void update() {
         if (!customLocation) {
@@ -65,9 +90,15 @@ public final class UserPoint extends Point {
             super.setAltitude(gpsTracker.getAltitude());
             accuracy = gpsTracker.getAccuracy();
         }
+        if (this.computeDistance(lastLocation) > MIN_DISTANCE_FOR_UPDATES) {
+            lastLocation.setLatitude(this.latitude);
+            lastLocation.setLongitude(this.longitude);
+            lastLocation.setAltitude(this.altitude);
+            observers.forEach(o -> o.update(null, null));
+        }
     }
 
-    /*
+    /**
      * Getter for the accuracy.
      *
      * @return accuracy of the current location (in meters)

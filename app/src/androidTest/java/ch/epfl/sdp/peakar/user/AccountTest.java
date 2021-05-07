@@ -3,14 +3,6 @@ package ch.epfl.sdp.peakar.user;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import ch.epfl.sdp.peakar.database.Database;
-import ch.epfl.sdp.peakar.points.CountryHighPoint;
-import ch.epfl.sdp.peakar.user.services.Account;
-import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
-import ch.epfl.sdp.peakar.user.services.AuthService;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
-import ch.epfl.sdp.peakar.user.score.ScoringConstants;
-
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,7 +20,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static ch.epfl.sdp.peakar.TestingConstants.*;
+import ch.epfl.sdp.peakar.database.Database;
+import ch.epfl.sdp.peakar.points.CountryHighPoint;
+import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
+import ch.epfl.sdp.peakar.user.score.ScoringConstants;
+import ch.epfl.sdp.peakar.user.services.Account;
+import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
+
+import static ch.epfl.sdp.peakar.TestingConstants.LONG_SLEEP_TIME;
+import static ch.epfl.sdp.peakar.TestingConstants.SHORT_SLEEP_TIME;
+import static ch.epfl.sdp.peakar.TestingConstants.USER_SCORE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;

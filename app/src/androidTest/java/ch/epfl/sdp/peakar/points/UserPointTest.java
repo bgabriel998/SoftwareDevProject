@@ -21,7 +21,7 @@ import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 
-import static ch.epfl.sdp.peakar.TestingConstants.*;
+import static ch.epfl.sdp.peakar.TestingConstants.SHORT_SLEEP_TIME;
 import static ch.epfl.sdp.peakar.user.AccountTest.registerAuthUser;
 import static ch.epfl.sdp.peakar.user.AccountTest.removeAuthUser;
 

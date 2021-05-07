@@ -9,21 +9,21 @@ import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
-import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.collection.MountainActivity;
-import ch.epfl.sdp.peakar.user.friends.FriendItemActivity;
-
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.Locale;
+
+import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.collection.MountainActivity;
+import ch.epfl.sdp.peakar.user.friends.FriendItemActivity;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.peakar.TestingConstants.*;
+import static ch.epfl.sdp.peakar.TestingConstants.LONG_SLEEP_TIME;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 

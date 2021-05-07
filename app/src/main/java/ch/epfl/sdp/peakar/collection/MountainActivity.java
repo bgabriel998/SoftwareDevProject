@@ -1,15 +1,15 @@
 package ch.epfl.sdp.peakar.collection;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.utils.ToolbarHandler;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Locale;
+
+import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
 public class MountainActivity extends AppCompatActivity {
 

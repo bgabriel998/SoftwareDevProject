@@ -12,12 +12,6 @@ import android.widget.Toast;
 
 import androidx.core.content.res.ResourcesCompat;
 
-import ch.epfl.sdp.peakar.points.POIPoint;
-import ch.epfl.sdp.peakar.points.Point;
-import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.user.services.Account;
-import ch.epfl.sdp.peakar.user.services.AuthService;
-
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
@@ -40,6 +34,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+
+import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.points.POIPoint;
+import ch.epfl.sdp.peakar.points.Point;
+import ch.epfl.sdp.peakar.user.services.Account;
+import ch.epfl.sdp.peakar.user.services.AuthService;
 
 public class OSMMap {
 

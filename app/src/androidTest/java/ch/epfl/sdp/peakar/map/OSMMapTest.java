@@ -12,13 +12,6 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.database.Database;
-import ch.epfl.sdp.peakar.points.POIPoint;
-import ch.epfl.sdp.peakar.user.services.AuthService;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
-import ch.epfl.sdp.peakar.user.score.UserScore;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -35,6 +28,13 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.database.Database;
+import ch.epfl.sdp.peakar.points.POIPoint;
+import ch.epfl.sdp.peakar.user.score.UserScore;
+import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;

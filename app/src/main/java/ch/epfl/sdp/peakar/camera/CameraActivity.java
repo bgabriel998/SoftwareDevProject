@@ -13,6 +13,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 import androidx.preference.PreferenceManager;
 
+import ch.epfl.sdp.peakar.map.MapActivity;
+import ch.epfl.sdp.peakar.points.ComputePOIPoints;
+import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.utils.CameraUtilities;
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Locale;
 

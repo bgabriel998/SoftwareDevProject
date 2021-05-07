@@ -18,6 +18,7 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.UITestHelper;
+import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
 
 import static androidx.test.espresso.Espresso.onView;

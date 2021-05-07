@@ -1,21 +1,22 @@
 package ch.epfl.sdp.peakar.gallery;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import androidx.exifinterface.media.ExifInterface;
-
 import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.ImageView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.exifinterface.media.ExifInterface;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.utils.ImageHandler;
 
 import java.io.IOException;
+
+import ch.epfl.sdp.peakar.R;
 
 public class ImageActivity extends AppCompatActivity {
 

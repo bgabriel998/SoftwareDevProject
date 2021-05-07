@@ -1,13 +1,12 @@
 package ch.epfl.sdp.peakar.gallery;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.utils.CameraUtilities;
@@ -18,6 +17,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.camera.CameraActivity;
+import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
 public class GalleryActivity extends AppCompatActivity {
 

@@ -11,22 +11,22 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
-import ch.epfl.sdp.peakar.user.services.Account;
-import ch.epfl.sdp.peakar.user.services.AuthProvider;
-import ch.epfl.sdp.peakar.user.services.AuthService;
-import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
-import ch.epfl.sdp.peakar.utils.ToolbarHandler;
-import ch.epfl.sdp.peakar.user.friends.AddFriendActivity;
-import ch.epfl.sdp.peakar.user.friends.FriendsActivity;
-
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.material.snackbar.Snackbar;
 
-import static ch.epfl.sdp.peakar.user.services.AuthProvider.*;
+import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
+import ch.epfl.sdp.peakar.user.friends.AddFriendActivity;
+import ch.epfl.sdp.peakar.user.friends.FriendsActivity;
+import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
+import ch.epfl.sdp.peakar.user.services.Account;
+import ch.epfl.sdp.peakar.user.services.AuthProvider;
+import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.utils.ToolbarHandler;
+
+import static ch.epfl.sdp.peakar.user.services.AuthProvider.GOOGLE;
 
 public class ProfileActivity extends AppCompatActivity {
 

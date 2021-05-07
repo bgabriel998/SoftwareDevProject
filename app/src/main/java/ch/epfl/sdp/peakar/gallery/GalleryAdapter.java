@@ -15,6 +15,8 @@ import ch.epfl.sdp.peakar.utils.ImageHandler;
 
 import java.util.List;
 
+import ch.epfl.sdp.peakar.R;
+
 /**
  * Adapter for gallery to show all images
  */

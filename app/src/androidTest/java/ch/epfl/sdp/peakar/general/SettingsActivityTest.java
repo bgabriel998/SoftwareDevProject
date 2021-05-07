@@ -9,22 +9,26 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.espresso.intent.Intents;
+import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.sdp.peakar.R;
-
 import java.util.concurrent.atomic.AtomicReference;
+
+import ch.epfl.sdp.peakar.R;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -70,11 +74,18 @@ public class SettingsActivityTest{
     }
 
 
+    /* Create intent */
     @Before
-    public void init(){
+    public void setup(){
+        Intents.init();
         activity = getActivity(testRule);
     }
 
+    /* Release Intent */
+    @After
+    public void cleanUp(){
+        Intents.release();
+    }
 
 
     /*Test discovery distance button*/
@@ -183,7 +194,7 @@ public class SettingsActivityTest{
 
     /*Test offline mode button click*/
     @Test
-    public void TestOfflineModeButton(){
+    public void TestOfflineModeButton() throws InterruptedException {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         //Get selected value
         Boolean startVal = prefs.getBoolean(activity.getResources().getString(R.string.offline_mode_key), false);
@@ -194,6 +205,10 @@ public class SettingsActivityTest{
 
         Boolean endVal = prefs.getBoolean(activity.getResources().getString(R.string.offline_mode_key), false);
         assertThat(startVal, not(is(endVal)));
+        Thread.sleep(THREAD_SLEEP_1S);
+        if (endVal) {
+            intended(IntentMatchers.hasComponent(SettingsMapActivity.class.getName()));
+        }
     }
 
     /*Test language selection menu */

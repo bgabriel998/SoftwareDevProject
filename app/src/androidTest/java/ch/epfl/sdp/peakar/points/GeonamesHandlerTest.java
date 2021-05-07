@@ -15,7 +15,6 @@ import org.osmdroid.bonuspack.location.POI;
 
 import java.util.ArrayList;
 
-
 import static ch.epfl.sdp.peakar.TestingConstants.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
