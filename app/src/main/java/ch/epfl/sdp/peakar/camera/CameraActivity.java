@@ -1,11 +1,8 @@
 package ch.epfl.sdp.peakar.camera;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.hardware.camera2.CameraAccessException;
 import android.os.Bundle;
 import android.view.View;
@@ -24,8 +21,12 @@ import ch.epfl.sdp.peakar.utils.CameraUtilities;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Locale;
+
+import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.map.MapActivity;
+import ch.epfl.sdp.peakar.utils.CameraUtilities;
+import ch.epfl.sdp.peakar.utils.StorageHandler;
 
 /**
  * CameraActivity handles the AR part of the application.
@@ -169,68 +170,9 @@ public class CameraActivity extends AppCompatActivity{
         //Create a bitmap of the compass-view
         Bitmap compassBitmap = cameraUiView.getBitmap();
         //Combine the two bitmaps
-        Bitmap bitmap = overlay(cameraBitmap, compassBitmap);
+        Bitmap bitmap = CameraUtilities.combineBitmaps(cameraBitmap, compassBitmap);
         //Store the bitmap on the user device
-        storeBitmap(bitmap);
-    }
-
-    /**
-     * Combines two bitmaps into one
-     *
-     * @param base first bitmap
-     * @param overlay second bitmap that is drawn on first bitmap
-     * @return A bitmap that combine the two bitmaps
-     */
-    private Bitmap overlay(Bitmap base, Bitmap overlay) {
-        Bitmap bitmap = Bitmap.createBitmap(base.getWidth(), base.getHeight(), base.getConfig());
-        Canvas canvas = new Canvas(bitmap);
-        canvas.drawBitmap(base, new Matrix(), null);
-        canvas.drawBitmap(overlay, new Matrix(), null);
-        return bitmap;
-    }
-
-    /**
-     * Stores the bitmap on the device.
-     *
-     * @param bitmap Bitmap that is to be stored
-     * @throws IOException thrown when bitmap could not be stores
-     */
-    private void storeBitmap(Bitmap bitmap) throws IOException {
-        //Create the file
-        String FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS";
-        String PHOTO_EXTENSION = ".jpg";
-        File screenshotFile = createFile(this, FILENAME, PHOTO_EXTENSION);
-        FileOutputStream outputStream = new FileOutputStream(screenshotFile);
-        int quality = 100;
-        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
-        outputStream.flush();
-        outputStream.close();
-    }
-
-    /**
-     * Creates a file which will be used to store the bitmaps
-     *
-     * @param format    Format of file name
-     * @param extension File extension
-     * @return A file with the
-     */
-    static File createFile(Context context, String format, String extension) {
-        return new File(getOutputDirectory(context),
-                new SimpleDateFormat(format, Locale.ENGLISH).format(System.currentTimeMillis()) + extension);
-    }
-
-    /**
-     * Returns outpudirectory to store images. Use externel media if it is available, our app's
-     * file directory otherwise
-     *
-     * @return outputdirectory as a File
-     */
-    public static File getOutputDirectory(Context context) {
-        Context appContext = context.getApplicationContext();
-        File mediaDir;
-        File[] mediaDirs = context.getExternalMediaDirs();
-        mediaDir = mediaDirs != null ? mediaDirs[0] : null;
-        return (mediaDir != null && mediaDir.exists()) ? mediaDir : appContext.getFilesDir();
+        StorageHandler.storeBitmap(this, bitmap);
     }
 
     /**
