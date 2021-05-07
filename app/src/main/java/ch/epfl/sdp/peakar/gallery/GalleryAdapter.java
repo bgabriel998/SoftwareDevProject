@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.utils.ImageHandler;
 
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String imagePath = imagePaths.get(position);
-        Bitmap imageBitmap = ImageActivity.getBitmapUpwards(imagePath);
+        Bitmap imageBitmap = ImageHandler.getBitmapUpwards(imagePath);
 
         holder.image.setImageBitmap(imageBitmap);
         holder.itemView.setOnClickListener(v -> photoListener.onPhotoClick(imagePath));

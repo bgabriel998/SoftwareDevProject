@@ -8,9 +8,6 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.camera.CameraActivity;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -19,7 +16,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.UITestHelper;
+import ch.epfl.sdp.peakar.utils.StorageHandler;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -72,8 +71,8 @@ public class FullGalleryActivityTest {
     /* Test to scroll trough elements in recycler view and press last item, to see correct intent is sent */
     @Test
     public void TestPressLastItem(){
-        String path = CameraActivity.getOutputDirectory(ApplicationProvider.getApplicationContext()) +
-                      "/TestImage0";
+        String path = StorageHandler.getOutputDirectoryMedia(ApplicationProvider.getApplicationContext())
+                + "/TestImage0";
         onView(withId(R.id.gallery_recyclerview))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(19,
                         click()));

@@ -38,6 +38,7 @@ import java.util.concurrent.Executors;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.utils.CameraUtilities;
+import ch.epfl.sdp.peakar.utils.StorageHandler;
 
 /**
  * A {@link Fragment} subclass that represents the camera-preview.
@@ -53,8 +54,6 @@ public class CameraPreview extends Fragment{
     private ExecutorService cameraExecutor;
     private Context context;
 
-    private final String FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS";
-    private final String PHOTO_EXTENSION = ".jpg";
     private final int PICTURE_TAKEN = 1;
     private final int FAILED_TO_TAKE_PICTURE = 0;
     private final int FILE_LENGTH = 27;
@@ -258,7 +257,7 @@ public class CameraPreview extends Fragment{
      */
     public void takePicture(){
         //Create the file
-        File photoFile = CameraActivity.createFile(context, FILENAME, PHOTO_EXTENSION);
+        File photoFile = StorageHandler.createPhotoFile(context);
 
         //Configure output options
         ImageCapture.OutputFileOptions outputOptions = new ImageCapture.OutputFileOptions.Builder(
