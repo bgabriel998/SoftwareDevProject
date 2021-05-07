@@ -18,7 +18,7 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.UITestHelper;
-import ch.epfl.sdp.peakar.camera.CameraActivity;
+import ch.epfl.sdp.peakar.utils.StorageHandler;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -30,7 +30,7 @@ import static org.junit.Assert.fail;
 @RunWith(AndroidJUnit4.class)
 public class ImageActivityTest {
 
-    private static final String imagePath = CameraActivity.getOutputDirectory(ApplicationProvider.getApplicationContext()) +
+    private static final String imagePath = StorageHandler.getOutputDirectoryMedia(ApplicationProvider.getApplicationContext()) +
                                                 "/TestImage";
 
     private static final String IMAGE_DESCRIPTION = "Gallery fullscreen image";

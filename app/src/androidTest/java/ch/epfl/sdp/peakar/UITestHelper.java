@@ -14,6 +14,10 @@ import androidx.core.content.ContextCompat;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.matcher.BoundedMatcher;
 
+import ch.epfl.sdp.peakar.camera.CameraActivity;
+import ch.epfl.sdp.peakar.gallery.ZoomableImageView;
+import ch.epfl.sdp.peakar.utils.StorageHandler;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
@@ -185,7 +189,7 @@ public class UITestHelper {
             assert image != null;
             Bitmap bitmap = getBitmap(image);
 
-            File imageFile = new File(CameraActivity.getOutputDirectory(ApplicationProvider.getApplicationContext()),
+            File imageFile = new File(StorageHandler.getOutputDirectoryMedia(ApplicationProvider.getApplicationContext()),
                     filename);
             FileOutputStream outputStream = new FileOutputStream(imageFile);
             int quality = 100;
@@ -203,7 +207,7 @@ public class UITestHelper {
      * Removes all files in gallery
      */
     public static void ClearGallery(){
-        File[] imgFiles = CameraActivity.getOutputDirectory(ApplicationProvider.getApplicationContext()).listFiles();
+        File[] imgFiles = StorageHandler.getOutputDirectoryMedia(ApplicationProvider.getApplicationContext()).listFiles();
         if (imgFiles != null)
         {
             for (File imgFile : imgFiles) {

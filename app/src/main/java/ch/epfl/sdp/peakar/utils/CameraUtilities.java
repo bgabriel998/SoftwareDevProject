@@ -2,6 +2,9 @@ package ch.epfl.sdp.peakar.utils;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
@@ -107,5 +110,20 @@ public final class CameraUtilities {
         for(int i=0; i<orientationMat.length; i++){
             orientationMat[i] = (float)(Math.toDegrees(orientationMat[i]));
         }
+    }
+
+    /**
+     * Combines two bitmaps into one
+     *
+     * @param base first bitmap
+     * @param overlay second bitmap that is drawn on first bitmap
+     * @return A bitmap that combine the two bitmaps
+     */
+    public static Bitmap combineBitmaps(Bitmap base, Bitmap overlay) {
+        Bitmap bitmap = Bitmap.createBitmap(base.getWidth(), base.getHeight(), base.getConfig());
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawBitmap(base, new Matrix(), null);
+        canvas.drawBitmap(overlay, new Matrix(), null);
+        return bitmap;
     }
 }
