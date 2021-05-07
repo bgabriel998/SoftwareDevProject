@@ -205,7 +205,7 @@ public class SettingsActivityTest{
 
         Boolean endVal = prefs.getBoolean(activity.getResources().getString(R.string.offline_mode_key), false);
         assertThat(startVal, not(is(endVal)));
-        Thread.sleep(1000);
+        Thread.sleep(THREAD_SLEEP_1S);
         if (endVal) {
             intended(IntentMatchers.hasComponent(SettingsMapActivity.class.getName()));
         }
