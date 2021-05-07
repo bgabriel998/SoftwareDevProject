@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.TestingConstants;
 import ch.epfl.sdp.peakar.general.SettingsMapActivity;
 import ch.epfl.sdp.peakar.utils.OfflineContentContainer;
 
@@ -50,7 +51,7 @@ public class ComputePOIPointsTest {
         //Set userPoint to the mont blanc
         mContext = ApplicationProvider.getApplicationContext();
         userPoint = UserPoint.getInstance(mContext); 
-        userPoint.setLocation(45.802537, 6.850328, 4809, 0);
+        userPoint.setLocation(TestingConstants.MONT_BLANC_LAT, TestingConstants.MONT_BLANC_LONG, TestingConstants.MONT_BLANC_ALT, 0);
     }
 
     @Before
@@ -218,7 +219,7 @@ public class ComputePOIPointsTest {
         Assert.assertTrue(loadedPOIPoints.isEmpty());
 
         // Reset location
-        userPoint.setLocation(45.802537, 6.850328, 4809, 0);
+        userPoint.setLocation(TestingConstants.MONT_BLANC_LAT, TestingConstants.MONT_BLANC_LONG, TestingConstants.MONT_BLANC_ALT, 0);
 
     }
 
