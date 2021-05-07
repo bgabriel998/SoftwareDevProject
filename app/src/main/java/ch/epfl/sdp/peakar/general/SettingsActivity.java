@@ -80,6 +80,24 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        sharedPref.unregisterOnSharedPreferenceChangeListener(listener);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        sharedPref.unregisterOnSharedPreferenceChangeListener(listener);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        sharedPref.registerOnSharedPreferenceChangeListener(listener);
+    }
+
     /**
      * Change measurement system
      */
