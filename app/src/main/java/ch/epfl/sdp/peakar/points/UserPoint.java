@@ -41,7 +41,7 @@ public final class UserPoint extends Point {
 
     private List<Observer> observers;
 
-    private Point lastLocation;
+    private final Point lastLocation;
 
     /**
      * Constructor for the UserPoint. Private because it is a singleton.
