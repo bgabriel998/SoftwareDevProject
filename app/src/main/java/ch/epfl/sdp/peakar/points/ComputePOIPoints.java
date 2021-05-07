@@ -101,6 +101,7 @@ public class ComputePOIPoints implements Observer {
         if(poiCache.isCacheFilePresent(ctx.getApplicationContext().getCacheDir()) && poiCache.isUserInBoundingBox(userPoint, ctx.getCacheDir()))
             getPOIsFromCache(userPoint);
         else
+            Log.d("DEBUG", "Downmloaded");
             getPOIsFromProvider(userPoint);
     }
 
@@ -266,10 +267,25 @@ public class ComputePOIPoints implements Observer {
 
             isLineOfSightAvailable = true;
         } else {
+            resetPOIs();
             Log.d("ComputePOIPoints", "Distance is > " + MAX_LOADING_DISTANCE);
         }
 
     }
+
+    /**
+     * Reset lists of POIPoints
+     */
+    private static void resetPOIs() {
+        if (filteredPOIPoints != null) filteredPOIPoints.clear();
+        if (labeledPOIs != null) labeledPOIs.clear();
+        if (filteredLabeledPOIPoints != null) filteredLabeledPOIPoints.clear();
+        if (labeledPOIsInSight != null) labeledPOIsInSight.clear();
+        if (filteredLabeledPOIsInSight != null) filteredLabeledPOIsInSight.clear();
+        if (labeledPOIsOutOfSight != null) labeledPOIsOutOfSight.clear();
+        if (filteredLabeledPOIsOutOfSight != null) filteredLabeledPOIsOutOfSight.clear();
+    }
+
 
     /**
      * Checks if the line of sight is available or not

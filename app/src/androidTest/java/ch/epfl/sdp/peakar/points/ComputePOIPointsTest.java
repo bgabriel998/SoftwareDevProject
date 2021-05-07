@@ -173,8 +173,6 @@ public class ComputePOIPointsTest {
     @Test
     public void loadPOIsFromFileTest() {
 
-        new ComputePOIPoints(mContext);
-
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         // Activate offline mode
