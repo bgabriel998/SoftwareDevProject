@@ -39,7 +39,7 @@ public final class UserPoint extends Point {
 
     private boolean customLocation;
 
-    private List<Observer> observers;
+    private final List<Observer> observers;
 
     private final Point lastLocation;
 
