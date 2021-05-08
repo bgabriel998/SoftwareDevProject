@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.user.score.ScoringConstants;
-import ch.epfl.sdp.peakar.user.services.Account;
+import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
@@ -52,7 +52,7 @@ public class CollectionActivity extends AppCompatActivity {
      * @return array list of all collected items.
      */
     private ArrayList<CollectedItem> getCollection(){
-        Account account = AuthService.getInstance().getAuthAccount();
+        AuthAccount account = AuthService.getInstance().getAuthAccount();
         ArrayList<CollectedItem> collectedItems = ((ArrayList<CollectedItem>)
                 (account.getDiscoveredPeaks().stream().map(poi-> new CollectedItem(poi.getName(),
                 (int)(poi.getAltitude()* ScoringConstants.PEAK_FACTOR),

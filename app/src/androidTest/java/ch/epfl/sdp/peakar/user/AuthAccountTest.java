@@ -24,7 +24,7 @@ import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.score.ScoringConstants;
-import ch.epfl.sdp.peakar.user.services.Account;
+import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 
@@ -38,7 +38,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
-public class AccountTest {
+public class AuthAccountTest {
     private static String user1;
     private static String user2;
 
@@ -77,8 +77,8 @@ public class AccountTest {
         /* Create a new one */
         registerAuthUser();
 
-        user1 = ("test" + AuthService.getInstance().getID()).substring(0, Account.NAME_MAX_LENGTH - 1);
-        user2 = ("test" + AuthService.getInstance().getID()).substring(0, Account.NAME_MAX_LENGTH - 2);
+        user1 = ("test" + AuthService.getInstance().getID()).substring(0, AuthAccount.NAME_MAX_LENGTH - 1);
+        user2 = ("test" + AuthService.getInstance().getID()).substring(0, AuthAccount.NAME_MAX_LENGTH - 2);
     }
 
     /* Clean environment */
@@ -122,7 +122,7 @@ public class AccountTest {
     @Test
     public void noRegisteredTest() {
         assertNotNull(AuthService.getInstance().getAuthAccount());
-        assertEquals(Account.USERNAME_BEFORE_REGISTRATION, AuthService.getInstance().getAuthAccount().getUsername());
+        assertEquals(AuthAccount.USERNAME_BEFORE_REGISTRATION, AuthService.getInstance().getAuthAccount().getUsername());
     }
 
     /**
@@ -131,10 +131,10 @@ public class AccountTest {
     @Test
     public void changeUsernameTest() {
         /* Get account */
-        Account account = AuthService.getInstance().getAuthAccount();
+        AuthAccount account = AuthService.getInstance().getAuthAccount();
 
         // Assert basic username
-        assertEquals(Account.USERNAME_BEFORE_REGISTRATION, AuthService.getInstance().getAuthAccount().getUsername());
+        assertEquals(AuthAccount.USERNAME_BEFORE_REGISTRATION, AuthService.getInstance().getAuthAccount().getUsername());
         
         // Add username
         account.changeUsername(user1);
@@ -148,7 +148,7 @@ public class AccountTest {
     @Test
     public void addFriendTest() throws InterruptedException {
         /* Get account */
-        Account account = AuthService.getInstance().getAuthAccount();
+        AuthAccount account = AuthService.getInstance().getAuthAccount();
 
         /* Add friend remotely */
         Database.setChild(Database.CHILD_USERS + user2, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user2));
@@ -174,7 +174,7 @@ public class AccountTest {
     @Test
     public void setAndGetScoreTest() {
         /* Get account */
-        Account account = AuthService.getInstance().getAuthAccount();
+        AuthAccount account = AuthService.getInstance().getAuthAccount();
 
         account.setScore(USER_SCORE);
         assertEquals(USER_SCORE, account.getScore());
@@ -187,7 +187,7 @@ public class AccountTest {
     @Test
     public void synchronizeFriendsTest() throws InterruptedException {
         /* Get account */
-        Account account = AuthService.getInstance().getAuthAccount();
+        AuthAccount account = AuthService.getInstance().getAuthAccount();
 
         Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Database.setChild(Database.CHILD_USERS + user2, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user2));
@@ -208,7 +208,7 @@ public class AccountTest {
     @Test
     public void synchronizeUserScoreTest()throws InterruptedException{
         /* Get account */
-        Account account = AuthService.getInstance().getAuthAccount();
+        AuthAccount account = AuthService.getInstance().getAuthAccount();
 
         Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
 
@@ -228,7 +228,7 @@ public class AccountTest {
     @Test
     public void setAndGetDiscoveredCountryHighPoints() {
         /* Get account */
-        Account account = AuthService.getInstance().getAuthAccount();
+        AuthAccount account = AuthService.getInstance().getAuthAccount();
 
         CountryHighPoint newEntry = new CountryHighPoint("France","Mont Blanc",4810);
         account.setDiscoveredCountryHighPoint(newEntry);
@@ -243,7 +243,7 @@ public class AccountTest {
     @Test
     public void synchronizeDiscoveredCountryHighPointsTest() throws InterruptedException{
         /* Get account */
-        Account account = AuthService.getInstance().getAuthAccount();
+        AuthAccount account = AuthService.getInstance().getAuthAccount();
 
         Database.setChild(Database.CHILD_USERS +  AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         CountryHighPoint newEntry = new CountryHighPoint("France","Mont Blanc",4810);
@@ -266,7 +266,7 @@ public class AccountTest {
     @Test
     public void synchronizeDiscoveredHeights() throws InterruptedException {
         /* Get account */
-        Account account = AuthService.getInstance().getAuthAccount();
+        AuthAccount account = AuthService.getInstance().getAuthAccount();
 
         Database.setChild(Database.CHILD_USERS +  AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
         Thread.sleep(SHORT_SLEEP_TIME);
@@ -292,8 +292,8 @@ public class AccountTest {
     public void isValidTest() {
         List<String> invalidStrings = Arrays.asList("", null, " ", "ab", "@@@@", "1.Z" ,"....", "aaaaaaaaaaaaaaaa");
         List<String> validStrings = Arrays.asList("abc", "null", "123", "ab_", "____", "aaaaaaaaaaaaaaa");
-        for(String s: validStrings) assertTrue(s + " is not valid.", Account.checkUsernameValidity(s));
-        for(String s: invalidStrings) assertFalse(s + " is valid.", Account.checkUsernameValidity(s));
+        for(String s: validStrings) assertTrue(s + " is not valid.", AuthAccount.checkUsernameValidity(s));
+        for(String s: invalidStrings) assertFalse(s + " is valid.", AuthAccount.checkUsernameValidity(s));
     }
 
 }

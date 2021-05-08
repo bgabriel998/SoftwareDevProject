@@ -24,7 +24,6 @@ public class FirebaseFriendItem extends FriendItem implements RemoteResource {
     public FirebaseFriendItem(String uid) {
         super(uid);
         retrieveData();
-        loadData();
     }
 
     /**
@@ -52,12 +51,9 @@ public class FirebaseFriendItem extends FriendItem implements RemoteResource {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         };
-        return null;
-    }
 
-    @Override
-    public void loadData() {
         // Add the listener that will load data whenever something changes
         dbRef.addValueEventListener(itemListener);
+        return null;
     }
 }

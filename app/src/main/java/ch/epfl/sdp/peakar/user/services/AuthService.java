@@ -35,7 +35,7 @@ public interface AuthService {
      * Get the authenticated account or a null reference if no auth has been performed.
      * @return
      */
-    Account getAuthAccount();
+    AuthAccount getAuthAccount();
 
     /**
      * Sign the current authenticated user out, or do nothing if no auth has been performed. This method blocks the caller until the sign out is over.
