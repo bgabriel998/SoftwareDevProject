@@ -1,8 +1,12 @@
 package ch.epfl.sdp.peakar.points;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import androidx.preference.PreferenceManager;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -20,6 +24,7 @@ import org.osmdroid.util.GeoPoint;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+import ch.epfl.sdp.peakar.R;
 
 
 public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>> implements GeonamesHandlerInterface {
@@ -38,7 +43,7 @@ public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>
     private final OverpassAPIProvider poiProvider;
 
     private final Point userLocation;
-    private final double rangeInKm;
+    private final int rangeInKm;
     private final int queryMaxResults;
     private final int queryTimeout;
     private String queryUrl;
@@ -48,17 +53,20 @@ public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>
      * Initializes provider
      * @param userLocation Point containing user location inforamtions
      */
-    public GeonamesHandler(Point userLocation) {
+    public GeonamesHandler(Point userLocation, Context context) {
         if(userLocation == null)
             throw new IllegalArgumentException("UserPoint user location can't be null");
         this.userLocation = userLocation;
         this.poiProvider = new OverpassAPIProvider();
         this.POIs = new ArrayList<POI>();
-        this.rangeInKm = DEFAULT_RANGE_IN_KM;
+
+        //Retrieve the range from the shared preferences
+        this.rangeInKm = getSelectedRange(context);
         this.queryMaxResults = DEFAULT_QUERY_MAX_RESULT;
         this.queryTimeout = DEFAULT_QUERY_TIMEOUT;
         this.retryNbr = 0;
     }
+
 
     /**
      * Class constructor.
@@ -69,7 +77,7 @@ public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>
      * @param queryMaxResults max results that the query should return (please do not exceed 500)
      * @param queryTimeout query timeout
      */
-    public GeonamesHandler(Point userLocation, double boundingBoxRangeKm, int queryMaxResults, int queryTimeout){
+    public GeonamesHandler(Point userLocation, int boundingBoxRangeKm, int queryMaxResults, int queryTimeout){
         if(userLocation == null)
             throw new IllegalArgumentException("UserPoint user location can't be null");
         if(boundingBoxRangeKm <= 0.1)
@@ -86,6 +94,36 @@ public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>
         this.poiProvider = new OverpassAPIProvider();
         this.POIs = new ArrayList<POI>();
         this.retryNbr = 0;
+    }
+
+    /**
+     * Retrieve range from preferences
+     * @param context application context
+     * @return range in integer format
+     */
+    private int getSelectedRange(Context context){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String selectedRange = sharedPreferences.getString(context.getResources().getString(R.string.range_key),
+                context.getResources().getStringArray(R.array.range_values)[3]);
+        int returnVal = DEFAULT_RANGE_IN_KM;
+        switch (selectedRange){
+            case "first_range":
+                returnVal = 5;
+                break;
+            case "sec_range":
+                returnVal = 10;
+                break;
+            case "third_range":
+                returnVal = 20;
+                break;
+            case "fourth_range":
+                returnVal = 30;
+                break;
+            case "fifth_range":
+                returnVal = 50;
+                break;
+        }
+        return returnVal;
     }
 
 

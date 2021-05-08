@@ -2,6 +2,8 @@ package ch.epfl.sdp.peakar.points;
 
 import android.util.Log;
 
+import androidx.core.util.Pair;
+
 import com.google.gson.Gson;
 
 import org.osmdroid.util.BoundingBox;
@@ -27,8 +29,14 @@ public class POICache {
     private static POICache instance;
     /*List of POIs contained in the cache*/
     private static ArrayList<POIPoint> cachedPOIPoints;
+
     /*Bounding box saved to cache*/
     private static BoundingBox cachedBoundingBox;
+
+    /*Topography map saved in the cache*/
+    private static Pair<int[][], Double> cachedTopography;
+
+
 
     private static Gson gson;
 
@@ -38,6 +46,7 @@ public class POICache {
     private POICache(){
         cachedPOIPoints = null;
         cachedBoundingBox = null;
+        cachedTopography = null;
         gson = new Gson();
     }
 
@@ -52,11 +61,16 @@ public class POICache {
     }
 
     /**
-     * Save downloaded POIs and bounding box to cache file
+     * Save downloaded POIs, bounding box and topography map to cache file
      */
-    public void savePOIDataToCache(ArrayList<POIPoint> cachedPOIPoints, BoundingBox cachedBoundingBox, File path){
+    public void savePOIDataToCache(ArrayList<POIPoint> cachedPOIPoints,
+                                   BoundingBox cachedBoundingBox,
+                                   Pair<int[][], Double> cachedTopography,
+                                   File path){
         //Create a new object with all needed information to save in JSON
-        POICacheContent poiCacheContent = new POICacheContent(cachedPOIPoints,cachedBoundingBox);
+        POICacheContent poiCacheContent = new POICacheContent(cachedPOIPoints,
+                cachedBoundingBox,
+                cachedTopography);
         //Convert to JSON
         String serializesCache = gson.toJson(poiCacheContent);
         saveJson(serializesCache,path);
@@ -82,14 +96,15 @@ public class POICache {
 
 
     /**
-     * Retrieve POI data from cache and overwrite cachedPOIPoints and cachedBoundingBox
-     * with cache file values
+     * Retrieve POI data from cache and overwrite cachedPOIPoints, cachedBoundingBox
+     * and cached topography map with cache file values
      */
     private static void retrievePOIDataFromCache(File path){
         String fileContent = readJSON(path);
         POICacheContent poiCacheContent = gson.fromJson(fileContent, POICacheContent.class);
         cachedPOIPoints = poiCacheContent.getCachedPOIPoints();
         cachedBoundingBox = poiCacheContent.getCachedBoundingBox();
+        cachedTopography = poiCacheContent.getCachedTopography();
     }
 
 
@@ -147,8 +162,12 @@ public class POICache {
      * @return list of POI Points
      */
     public ArrayList<POIPoint> getCachedPOIPoints(File file){
-
         retrievePOIDataFromCache(file);
         return cachedPOIPoints;
+    }
+
+    public Pair<int[][], Double> getCachedTopography(File file){
+        retrievePOIDataFromCache(file);
+        return cachedTopography;
     }
 }

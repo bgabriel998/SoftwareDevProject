@@ -1,3 +1,4 @@
+
 package ch.epfl.sdp.peakar.points;
 
 import android.annotation.SuppressLint;
@@ -98,10 +99,11 @@ public class ComputePOIPoints implements Observer {
         //Retrieve cache instance
         POICache poiCache = POICache.getInstance();
         //Check if file is present and if user is in BB
-        if(poiCache.isCacheFilePresent(ctx.getApplicationContext().getCacheDir()) && poiCache.isUserInBoundingBox(userPoint, ctx.getCacheDir()))
+        if( isCachingAllowed()
+            && poiCache.isCacheFilePresent(ctx.getApplicationContext().getCacheDir())
+            && poiCache.isUserInBoundingBox(userPoint, ctx.getCacheDir()))
             getPOIsFromCache(userPoint);
         else
-            Log.d("DEBUG", "Downmloaded");
             getPOIsFromProvider(userPoint);
     }
 
@@ -127,7 +129,7 @@ public class ComputePOIPoints implements Observer {
      * @param userPoint location of the user
      */
     private static void getPOIsFromProvider(UserPoint userPoint){
-        new GeonamesHandler(userPoint){
+        new GeonamesHandler(userPoint,ctx){
             @Override
             public void onResponseReceived(ArrayList<POI> result) {
                 if(result!=null){
@@ -148,9 +150,18 @@ public class ComputePOIPoints implements Observer {
     }
 
     /**
+     * Check if the user has allowed the caching in the
+     * @return true if the caching is allowed in the settings
+     */
+    private static boolean isCachingAllowed(){
+        //Get shared preferences
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ctx);
+        return sharedPreferences.getBoolean(ctx.getResources().getString(R.string.disable_caching_key), true);
+    }
+
+    /**
      * Handles the creation and filtration of the list of the POIPoints when offline mode
-     * is enables.
-     *
+     * is enabled.
      * @param userPoint around which the list is computed.
      */
     private static void getPOISOffline(UserPoint userPoint) {
@@ -161,7 +172,6 @@ public class ComputePOIPoints implements Observer {
         } catch (IOException e) {
             Log.d("ComputePOIPoints", "There was an error reading the file");
         }
-
     }
 
     /**
@@ -228,7 +238,7 @@ public class ComputePOIPoints implements Observer {
 
     /**
      * Gets the labeled POIs from a JSONObject and filters them. The points are not added if the
-     * userPoint is more thant MAX_LOADING_DISTANCE from the center of the downloaded bounding
+     * userPoint is more than MAX_LOADING_DISTANCE from the center of the downloaded bounding
      * box.
      *
      * @param userPoint         userPoint for which the labeled POIs are computed.

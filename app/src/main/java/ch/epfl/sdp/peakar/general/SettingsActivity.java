@@ -14,6 +14,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import java.util.Locale;
+import java.util.Objects;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
@@ -38,10 +39,7 @@ public class SettingsActivity extends AppCompatActivity {
                         rangeChanged();
                         break;
                     case "language_preference":
-                        languageChanged((String) prefs.getAll().get("language_preference"));
-                        break;
-                    case "disable_caching":
-                        disableCachingChanged();
+                        languageChanged((String) Objects.requireNonNull(prefs.getAll().get("language_preference")));
                         break;
                     case "offline_mode_preference":
                         offlineModeChanged();
@@ -160,13 +158,7 @@ public class SettingsActivity extends AppCompatActivity {
         overridePendingTransition(0, 0);
     }
 
-    /**
-     * Change caching
-     */
-    private void disableCachingChanged(){
-        //TODO : Implement
-        Toast.makeText(this,"Setting not implemented yet !", Toast.LENGTH_SHORT).show();
-    }
+
 
     /**
      * If the offline mode is off, it will prompt the user to the SettingsMapActivity, otherwise
