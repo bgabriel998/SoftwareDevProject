@@ -123,7 +123,8 @@ public class ProfileActivity extends AppCompatActivity {
      */
     public void signInButton(View view) {
         // Set the options for Google Sign In intent
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).
+                requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
 
         // Create a new Google Sign In intent
         Intent googleSignInIntent = GoogleSignIn.getClient(this, gso).getSignInIntent();
@@ -254,7 +255,7 @@ public class ProfileActivity extends AppCompatActivity {
      */
     public void setUsernameChoiceUI() {
         loggedLayout.setVisibility(View.GONE);
-        signOutButton.setVisibility(View.GONE);
+        signOutButton.setVisibility(View.VISIBLE);
         signInButton.setVisibility(View.GONE);
         submitUsernameButton.setVisibility(View.VISIBLE);
         editTextUsername.setVisibility(View.VISIBLE);

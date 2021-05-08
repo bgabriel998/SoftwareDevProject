@@ -18,7 +18,7 @@ import java.util.Locale;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.points.UserPoint;
-import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
+import ch.epfl.sdp.peakar.user.profile.ProfileLauncherActivity;
 import ch.epfl.sdp.peakar.utils.CameraUtilities;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
 
@@ -92,7 +92,7 @@ public class CameraActivity extends AppCompatActivity{
             e.printStackTrace();
         }
 
-        if (showDevOptions) {
+        if (showDevOptions && cameraFieldOfView!=null) {
             //Set text for demo/debug
             fovHorizontal.setText(String.format(Locale.ENGLISH, "%.1f °", cameraFieldOfView.first));
             fovVertical.setText(String.format(Locale.ENGLISH, "%.1f °", cameraFieldOfView.second));
@@ -247,9 +247,11 @@ public class CameraActivity extends AppCompatActivity{
         cameraPreview.lastToast = lastToast;
     }
 
-    /** Changes view to ProfileActivity */
+    /**
+     * Callback for the profile button
+     */
     public void profileButton(View view) {
-        Intent intent = new Intent(this, ProfileActivity.class);
+        Intent intent = new Intent(this, ProfileLauncherActivity.class);
         startActivity(intent);
     }
 }
