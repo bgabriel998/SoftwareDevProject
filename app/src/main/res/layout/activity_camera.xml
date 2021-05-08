@@ -23,29 +23,20 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
+
     <!-- Back Icon button -->
     <ImageButton
-        android:id="@+id/cameraBackButton"
-        style="@style/IconButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/profileButton"
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
-        android:onClick="backButton"
+        android:onClick="profileButton"
+        android:background="@drawable/ic_circle_background"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_back"
-        android:contentDescription="@string/description_back_button" />
-
-    <!-- Map Icon Button -->
-    <ImageButton
-        android:id="@+id/mapButton"
-        style="@style/IconButton"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:onClick="mapButton"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_map"
-        android:contentDescription="@string/description_map_button"/>
+        app:srcCompat="@drawable/ic_user"
+        android:contentDescription="@string/description_profile_button" />
 
     <!-- Image button to take a picture, ratio of the button image is 1.3 -->
     <ImageButton

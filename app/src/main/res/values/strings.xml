@@ -137,7 +137,7 @@
     <string name="devOptions_key" translatable="false">developer_options</string>
     <string name="disable_caching_key" translatable="false">disable_caching</string>
     <string name="offline_mode_summary">Opens the editor to select an area to download. This allows the application to work without internet connexion</string>
-
+    <string name="background_button" translatable="false">background_button</string>
 
 
 </resources>

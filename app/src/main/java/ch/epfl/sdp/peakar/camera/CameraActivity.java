@@ -16,6 +16,7 @@ import androidx.preference.PreferenceManager;
 import ch.epfl.sdp.peakar.map.MapActivity;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
 import ch.epfl.sdp.peakar.utils.CameraUtilities;
 
 import java.io.File;
@@ -235,14 +236,9 @@ public class CameraActivity extends AppCompatActivity{
         cameraPreview.lastToast = lastToast;
     }
 
-    /* Calls finish */
-    public void backButton(View view) {
-        finish();
-    }
-
-    /* Changes view to MapActivity */
-    public void mapButton(View view) {
-        Intent intent = new Intent(this, MapActivity.class);
+    /** Changes view to ProfileActivity */
+    public void profileButton(View view) {
+        Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
     }
 }
