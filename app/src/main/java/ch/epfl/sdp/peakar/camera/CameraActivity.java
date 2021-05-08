@@ -13,19 +13,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 import androidx.preference.PreferenceManager;
 
-import ch.epfl.sdp.peakar.map.MapActivity;
-import ch.epfl.sdp.peakar.points.ComputePOIPoints;
-import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
-import ch.epfl.sdp.peakar.utils.CameraUtilities;
-
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Locale;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.map.MapActivity;
+import ch.epfl.sdp.peakar.points.UserPoint;
+import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
 import ch.epfl.sdp.peakar.utils.CameraUtilities;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
 
@@ -35,6 +28,7 @@ import ch.epfl.sdp.peakar.utils.StorageHandler;
 public class CameraActivity extends AppCompatActivity{
 
 
+    private static final int FLASH_TIME_MS = 5;
     //Widgets
     private CameraPreview cameraPreview;
     private CameraUiView cameraUiView;
@@ -42,10 +36,15 @@ public class CameraActivity extends AppCompatActivity{
     private TextView headingVertical;
     private TextView fovHorizontal;
     private TextView fovVertical;
+    private TextView userLocation;
+    private TextView userAltitude;
     private Compass compass;
+    private View flash;
 
     //SharedPreferences
     private SharedPreferences sharedPref;
+
+    private boolean showDevOptions;
 
     private static final String DISPLAY_ALL_POIS = "0";
 
@@ -68,10 +67,11 @@ public class CameraActivity extends AppCompatActivity{
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        displayDeveloperOptions(sharedPref.getBoolean(getResources().getString(R.string.devOptions_key), false));
+        showDevOptions = sharedPref.getBoolean(getResources().getString(R.string.devOptions_key), false);
+        displayDeveloperOptions(showDevOptions);
 
-        //Create compass view
         cameraUiView = findViewById(R.id.compass);
+        flash = findViewById(R.id.take_picture_flash);
 
         //Create camera preview on the previewView
         cameraPreview = (CameraPreview) getSupportFragmentManager().findFragmentById(R.id.fragment_camera);
@@ -92,10 +92,13 @@ public class CameraActivity extends AppCompatActivity{
             e.printStackTrace();
         }
 
-        if (cameraFieldOfView != null) {
+        if (showDevOptions) {
             //Set text for demo/debug
             fovHorizontal.setText(String.format(Locale.ENGLISH, "%.1f °", cameraFieldOfView.first));
             fovVertical.setText(String.format(Locale.ENGLISH, "%.1f °", cameraFieldOfView.second));
+            UserPoint userPoint = UserPoint.getInstance(this);
+            userLocation.setText(String.format(Locale.ENGLISH, "%.4f °, %.4f °", userPoint.getLatitude(), userPoint.getLongitude()));
+            userAltitude.setText(String.format(Locale.ENGLISH, "%.1f m", userPoint.getAltitude()));
         }
 
         cameraUiView.setRange(cameraFieldOfView);
@@ -103,11 +106,8 @@ public class CameraActivity extends AppCompatActivity{
         //Create new compass
         compass = new Compass(this);
 
-        //Create compass listener
-        CompassListenerInterface compassListener = getCompassListener();
-
         //Bind the compassListener with the compass
-        compass.setListener(compassListener);
+        compass.setListener(getCompassListener());
     }
 
     /**
@@ -164,6 +164,7 @@ public class CameraActivity extends AppCompatActivity{
      * @throws IOException if the bitmap could not be stored
      */
     public void takePictureListener(View view) throws IOException {
+        flash.setVisibility(View.VISIBLE);
         //Take a picture with the camera without the UI
         cameraPreview.takePicture();
         //Create a bitmap of the camera preview
@@ -174,6 +175,8 @@ public class CameraActivity extends AppCompatActivity{
         Bitmap bitmap = CameraUtilities.combineBitmaps(cameraBitmap, compassBitmap);
         //Store the bitmap on the user device
         StorageHandler.storeBitmap(this, bitmap);
+        //Set visibility to invisible again after 100ms
+        flash.postDelayed(() -> flash.setVisibility(View.GONE), FLASH_TIME_MS);
     }
 
     /**
@@ -186,18 +189,24 @@ public class CameraActivity extends AppCompatActivity{
         headingVertical = findViewById(R.id.headingVertical);
         fovHorizontal = findViewById(R.id.fovHorizontal);
         fovVertical = findViewById(R.id.fovVertical);
+        userLocation = findViewById(R.id.userLocation);
+        userAltitude = findViewById(R.id.userAltitude);
 
         if(devOption){
             headingHorizontal.setVisibility(View.VISIBLE);
             headingVertical.setVisibility(View.VISIBLE);
             fovHorizontal.setVisibility(View.VISIBLE);
             fovVertical.setVisibility(View.VISIBLE);
+            userLocation.setVisibility(View.VISIBLE);
+            userAltitude.setVisibility(View.VISIBLE);
         }
         else{
-            headingHorizontal.setVisibility(View.INVISIBLE);
-            headingVertical.setVisibility(View.INVISIBLE);
-            fovHorizontal.setVisibility(View.INVISIBLE);
-            fovVertical.setVisibility(View.INVISIBLE);
+            headingHorizontal.setVisibility(View.GONE);
+            headingVertical.setVisibility(View.GONE);
+            fovHorizontal.setVisibility(View.GONE);
+            fovVertical.setVisibility(View.GONE);
+            userLocation.setVisibility(View.GONE);
+            userAltitude.setVisibility(View.GONE);
         }
     }
 
@@ -210,6 +219,7 @@ public class CameraActivity extends AppCompatActivity{
      * @param view ImageButton
      */
     public void switchDisplayPOIMode(View view) {
+        flash.setVisibility(View.VISIBLE);
         String displayPOIsKey = getResources().getString(R.string.displayPOIs_key);
         String mode = sharedPref.getString(displayPOIsKey, DISPLAY_ALL_POIS);
         int actualMode = Integer.parseInt(mode);
@@ -218,6 +228,7 @@ public class CameraActivity extends AppCompatActivity{
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(displayPOIsKey, "" + newMode);
         editor.apply();
+        flash.postDelayed(() -> flash.setVisibility(View.GONE), FLASH_TIME_MS);
     }
 
     /**

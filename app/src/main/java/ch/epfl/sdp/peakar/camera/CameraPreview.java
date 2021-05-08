@@ -278,41 +278,13 @@ public class CameraPreview extends Fragment{
             public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
                 //Get the Uri of the saved picture
                 Uri savedUri = outputFileResults.getSavedUri() != null ? outputFileResults.getSavedUri() : Uri.fromFile(photoFile);
-                handler.sendMessage(handler.obtainMessage(PICTURE_TAKEN, savedUri));
+                lastToast = getResources().getString(R.string.pictureSavedSuccessfully) + " " +
+                        savedUri.toString().substring(0, savedUri.toString().length() - FILE_LENGTH);
             }
 
             @Override
             public void onError(@NonNull ImageCaptureException exception) {
-                handler.sendMessage(handler.obtainMessage(FAILED_TO_TAKE_PICTURE, exception));
-            }
-
-            //Create a handler to display the toast inside of the onImageSaved callback
-            final Handler handler = pictureMessageHandler();
-        };
-    }
-
-    /**
-     * Handler that is used to display the toast inside the onImageSavedCallback
-     * @return Handler for the toast messages
-     */
-    private Handler pictureMessageHandler(){
-        return new Handler(Looper.getMainLooper()){
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-                //Make the toasts depending on the Message code
-                if(msg.what == FAILED_TO_TAKE_PICTURE){
-                    String toastMessage = getResources().getString(R.string.pictureSavedFailed) + " " + msg.obj.toString();
-                    lastToast = toastMessage;
-                    Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show();
-                }
-                else if(msg.what == PICTURE_TAKEN){
-                    //Display only the file location
-                    String toastMessage = getResources().getString(R.string.pictureSavedSuccessfully) + " " +
-                            msg.obj.toString().substring(0, msg.obj.toString().length() - FILE_LENGTH);
-                    lastToast = toastMessage;
-                    Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show();
-                }
+                lastToast = getResources().getString(R.string.pictureSavedFailed) + " " + exception;
             }
         };
     }
