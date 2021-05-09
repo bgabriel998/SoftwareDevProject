@@ -27,16 +27,11 @@ public class TestMenuBarActivityTest {
         Intents.release();
     }
 
-    @Test
-    public void TestTrue(){
-        assert true;
-    }
-
     /* Test that menu bars settings icon works as intended */
-    /*@Test
+    @Test
     public void TestMenuBarSettings(){
         MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_settings);
-    }*/
+    }
 
     /* Test that menu bars gallery icon works as intended */
     /*@Test
