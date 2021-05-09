@@ -241,6 +241,20 @@ public class CameraActivity extends AppCompatActivity{
     }
 
     /**
+     * Callback for the switchDisplayPOIs ImageButton, if true, then display the compass
+     *
+     * @param view CompassButton
+     */
+    public void switchDisplayCompass(View view) {
+        String displayCompassString = getResources().getString(R.string.displayCompass_key);
+        boolean displayCompass = sharedPref.getBoolean(displayCompassString, false);
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(displayCompassString, !displayCompass);
+        editor.apply();
+    }
+
+    /**
      * Used for testing, gets the last displayed toast
      * @return Returns the last displayed toast
      */

@@ -72,12 +72,13 @@
         app:srcCompat="@drawable/ic_binoculars" />
 
     <!-- Image button to switch between the different possibilities to display the POIs -->
-    <ImageView
+    <ImageButton
         android:id="@+id/compassMiniature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/buttonChangeDisplayModePOI"
         android:background="@drawable/ic_circle_background"
+        android:onClick="switchDisplayCompass"
         app:layout_constraintEnd_toStartOf="@+id/takePicture"
         app:layout_constraintTop_toTopOf="@+id/takePicture"
         app:layout_constraintBottom_toBottomOf="@+id/takePicture"

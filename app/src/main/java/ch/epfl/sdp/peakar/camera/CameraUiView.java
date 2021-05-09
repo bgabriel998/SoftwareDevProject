@@ -102,6 +102,7 @@ public class CameraUiView extends View {
             (prefs, key) -> {
                 String displayMode = prefs.getString(getResources().getString(R.string.displayPOIs_key), DISPLAY_ALL_POIS);
                 boolean filterPOIs = prefs.getBoolean(getResources().getString(R.string.filterPOIs_key), true);
+                displayCompass = prefs.getBoolean(getResources().getString(R.string.displayCompass_key), false);
 
                 switch (displayMode){
                     case DISPLAY_ALL_POIS:

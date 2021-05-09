@@ -40,6 +40,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sdp.peakar.TestingConstants.BASIC_USERNAME;
 import static ch.epfl.sdp.peakar.user.AccountTest.registerAuthUser;
 import static ch.epfl.sdp.peakar.user.AccountTest.removeAuthUser;
+import static org.junit.Assert.assertTrue;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -49,17 +50,17 @@ public class CameraActivityTest {
     public ActivityScenarioRule<CameraActivity> testRule = new ActivityScenarioRule<>(CameraActivity.class);
 
     private static String user1;
+    private static SharedPreferences sharedPreferences;
+    private static Context context;
 
     /* Setup environment */
     @BeforeClass
     public static void computePOIPoints(){
-        Context context = ApplicationProvider.getApplicationContext();
+        context = ApplicationProvider.getApplicationContext();
         new ComputePOIPoints(context);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear().commit();
-        editor.putBoolean(context.getResources().getString(R.string.displayCompass_key), true);
-        editor.apply();
 
         /* Make sure no user is signed in before tests */
         AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
@@ -94,6 +95,19 @@ public class CameraActivityTest {
     @After
     public void cleanUp(){
         Intents.release();
+    }
+
+    /* Test that the compass is changed when clicking on the compass button */
+    @Test
+    public void TestChangeCompassButton(){
+        String displayCompassKey = context.getResources().getString(R.string.displayCompass_key);
+        sharedPreferences.edit().putBoolean(displayCompassKey, false).apply();
+
+        ViewInteraction button = Espresso.onView(withId(R.id.compassMiniature));
+        button.perform(ViewActions.click());
+
+        boolean displayCompass = sharedPreferences.getBoolean(displayCompassKey, false);
+        assertTrue(displayCompass);
     }
 
     /* Test that pressing the profile button when signed-out launches the ProfileLaunchActivity */
