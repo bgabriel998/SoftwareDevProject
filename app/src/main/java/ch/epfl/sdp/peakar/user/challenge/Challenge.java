@@ -1,9 +1,10 @@
 package ch.epfl.sdp.peakar.user.challenge;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
+/**
+ * Interface of a basic challenge.
+ */
 public interface Challenge {
     long AWARDED_POINTS_PER_USER = 100;
     String FOUNDER = "founder";

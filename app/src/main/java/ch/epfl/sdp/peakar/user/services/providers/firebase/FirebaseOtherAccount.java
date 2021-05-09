@@ -36,10 +36,10 @@ public class FirebaseOtherAccount extends OtherAccount implements RemoteResource
 
     /**
      * Get a Firebase account instance.
-     * WARNING: you SHOULD NOT call this method. To get an account you should call <code>Account.getInstance(String authID)</code>.
+     * WARNING: you SHOULD NOT call this method. To get an account you should call <code>OtherAccount.getInstance(String authID)</code>.
      * @param userID id of the user.
      */
-    protected static FirebaseOtherAccount getInstance(String userID) {
+    public static FirebaseOtherAccount getInstance(String userID) {
         // If the user account was already loaded, return the same instance
         FirebaseOtherAccount instance = loadedAccounts.get(userID);
 
@@ -57,11 +57,6 @@ public class FirebaseOtherAccount extends OtherAccount implements RemoteResource
     @Override
     public String getUserID() {
         return userID;
-    }
-
-    @Override
-    public Uri getPhotoUrl() {
-        return null;
     }
 
     @Override

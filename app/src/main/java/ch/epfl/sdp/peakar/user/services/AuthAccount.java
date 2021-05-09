@@ -23,7 +23,7 @@ import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthAccount;
  */
 public abstract class AuthAccount extends Account {
     /**
-     * Get an account instance.
+     * Get an authenticated account instance.
      * @param userID id of the user.
      */
     protected static AuthAccount getInstance(String userID) {
