@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -47,6 +48,8 @@ public class CameraActivityTest {
     @Rule
     public ActivityScenarioRule<CameraActivity> testRule = new ActivityScenarioRule<>(CameraActivity.class);
 
+    private static String user1;
+
     /* Setup environment */
     @BeforeClass
     public static void computePOIPoints(){
@@ -57,8 +60,29 @@ public class CameraActivityTest {
         editor.clear().commit();
         editor.putBoolean(context.getResources().getString(R.string.displayCompass_key), true);
         editor.apply();
+
+        /* Make sure no user is signed in before tests */
+        AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+        /* Create a new one */
+        registerAuthUser();
+        user1 = (BASIC_USERNAME + AuthService.getInstance().getID()).substring(0, Account.NAME_MAX_LENGTH - 1);
     }
 
+    /* Clean environment */
+    @AfterClass
+    public static void end() {
+        removeTestUsers();
+        removeAuthUser();
+    }
+
+    private static void removeTestUsers() {
+        Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
+        try {
+            Tasks.await(task1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /* Create Intent */
     @Before
@@ -75,8 +99,6 @@ public class CameraActivityTest {
     /* Test that pressing the profile button when signed-out launches the ProfileLaunchActivity */
     @Test
     public void TestProfileButtonNotSignedIn(){
-        /* Make sure no user is signed in before tests */
-        AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
         removeAuthUser();
         ViewInteraction button = Espresso.onView(withId(R.id.profileButton));
         button.perform(ViewActions.click());
@@ -86,47 +108,23 @@ public class CameraActivityTest {
     /* Test that pressing the profile button when signed in launches the ProfileLaunchActivity */
     @Test
     public void TestProfileButtonSignedIn(){
-//        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-//            AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
-//            registerAuthUser();
-//        }
-//        else {
-//            FirebaseAuthService.getInstance().forceRetrieveData();
-//        }
-//
-//        /* Make sure no user is signed in before tests */
-//        AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
-        /* Create a new one */
-        registerAuthUser();
-
-        String user1 = (BASIC_USERNAME + AuthService.getInstance().getID()).substring(0, Account.NAME_MAX_LENGTH - 1);
-
-        Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
-        try {
-            Tasks.await(task1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        FirebaseAuthService.getInstance().forceRetrieveData();
+        createTestUser();
 
         ViewInteraction button = Espresso.onView(withId(R.id.profileButton));
         button.perform(ViewActions.click());
 
         intended(IntentMatchers.hasComponent(ProfileActivity.class.getName()));
+    }
 
-        task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
-        try {
-            Tasks.await(task1);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void createTestUser() {
+        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+            AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+            registerAuthUser();
         }
-
-        task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
-        try {
-            Tasks.await(task1);
-        } catch (Exception e) {
-            e.printStackTrace();
+        else {
+            FirebaseAuthService.getInstance().forceRetrieveData();
         }
+        removeTestUsers();
     }
 }
