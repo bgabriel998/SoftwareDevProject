@@ -1,6 +1,5 @@
 package ch.epfl.sdp.peakar.camera;
 
-import android.app.Activity;
 import android.content.Context;
 
 import androidx.test.core.app.ApplicationProvider;
@@ -9,9 +8,13 @@ import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.matcher.IntentMatchers;
-import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.junit.After;
 import org.junit.Before;
@@ -21,13 +24,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.map.MapActivity;
+import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
+import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
+import ch.epfl.sdp.peakar.user.profile.ProfileLauncherActivity;
+import ch.epfl.sdp.peakar.user.services.Account;
+import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.fail;
+import static ch.epfl.sdp.peakar.TestingConstants.BASIC_USERNAME;
+import static ch.epfl.sdp.peakar.user.AccountTest.registerAuthUser;
+import static ch.epfl.sdp.peakar.user.AccountTest.removeAuthUser;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -43,6 +52,7 @@ public class CameraActivityTest {
         new ComputePOIPoints(context);
     }
 
+
     /* Create Intent */
     @Before
     public void setup(){
@@ -55,27 +65,61 @@ public class CameraActivityTest {
         Intents.release();
     }
 
-
-    /* Test that pressing the map icon button changes view to MapActivity */
+    /* Test that pressing the profile button when signed-out launches the ProfileLaunchActivity */
     @Test
-    public void TestMapIconButton(){
-        ViewInteraction button = Espresso.onView(ViewMatchers.withId(R.id.mapButton));
+    public void TestProfileButtonNotSignedIn(){
+        /* Make sure no user is signed in before tests */
+        AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+        removeAuthUser();
+        ViewInteraction button = Espresso.onView(withId(R.id.profileButton));
         button.perform(ViewActions.click());
-        // Catch intent
-        intended(IntentMatchers.hasComponent(MapActivity.class.getName()));
+        intended(IntentMatchers.hasComponent(ProfileLauncherActivity.class.getName()));
     }
 
-    /* Test that pressing the back button finish the activity */
+    /* Test that pressing the profile button when signed in launches the ProfileLaunchActivity */
     @Test
-    public void TestBackButton(){
-        ViewInteraction button = Espresso.onView(withId(R.id.cameraBackButton));
-        button.perform(ViewActions.click());
+    public void TestProfileButtonSignedIn(){
+        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+            AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+            registerAuthUser();
+        }
+        else {
+            FirebaseAuthService.getInstance().forceRetrieveData();
+        }
+
+        /* Make sure no user is signed in before tests */
+        AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+
+        /* Create a new one */
+        registerAuthUser();
+
+        String user1 = (BASIC_USERNAME + AuthService.getInstance().getID()).substring(0, Account.NAME_MAX_LENGTH - 1);
+
+        Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
         try {
-            Thread.sleep(1000);
-            assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
-        } catch (InterruptedException e) {
+            Tasks.await(task1);
+        } catch (Exception e) {
             e.printStackTrace();
-            fail("TestBackButton failed");
+        }
+        FirebaseAuthService.getInstance().forceRetrieveData();
+
+        ViewInteraction button = Espresso.onView(withId(R.id.profileButton));
+        button.perform(ViewActions.click());
+
+        intended(IntentMatchers.hasComponent(ProfileActivity.class.getName()));
+
+        task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
+        try {
+            Tasks.await(task1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
+        try {
+            Tasks.await(task1);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
