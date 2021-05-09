@@ -1,7 +1,9 @@
 package ch.epfl.sdp.peakar.camera;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
+import androidx.preference.PreferenceManager;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
@@ -50,6 +52,11 @@ public class CameraActivityTest {
     public static void computePOIPoints(){
         Context context = ApplicationProvider.getApplicationContext();
         new ComputePOIPoints(context);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear().commit();
+        editor.putBoolean(context.getResources().getString(R.string.displayCompass_key), true);
+        editor.apply();
     }
 
 
@@ -79,16 +86,16 @@ public class CameraActivityTest {
     /* Test that pressing the profile button when signed in launches the ProfileLaunchActivity */
     @Test
     public void TestProfileButtonSignedIn(){
-        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-            AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
-            registerAuthUser();
-        }
-        else {
-            FirebaseAuthService.getInstance().forceRetrieveData();
-        }
-
-        /* Make sure no user is signed in before tests */
-        AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+//        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+//            AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+//            registerAuthUser();
+//        }
+//        else {
+//            FirebaseAuthService.getInstance().forceRetrieveData();
+//        }
+//
+//        /* Make sure no user is signed in before tests */
+//        AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
         /* Create a new one */
         registerAuthUser();
