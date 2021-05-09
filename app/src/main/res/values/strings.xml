@@ -110,6 +110,8 @@
     <string name="displayPOIs_key" translatable="false">display_pois_preference</string>
     <string name="filterPOIs_key" translatable="false">filter_pois</string>
     <string name="devOptions_key" translatable="false">developer_options</string>
+    <string name="displayCompass_key" translatable="false">display_compass_preference</string>
+    <string name="displayCompass_title">Display compass</string>
 
     <!-- Language Preferences -->
     <string name="language_title">Language</string>

@@ -20,13 +20,26 @@ import java.util.Map;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.points.POIPoint;
+import ch.epfl.sdp.peakar.utils.CameraUtilities;
 
 /**
  * CameraUiView draws a canvas with the compass and mountain information on the camera-preview
  */
 public class CameraUiView extends View {
-    //Paints used to draw the mountain info
+    //Paints used to draw the lines and heading of the compass on the camera-preview
+    private Paint mainLinePaint;
+    private Paint secondaryLinePaint;
+    private Paint terciaryLinePaint;
+    private Paint mainTextPaint;
     private Paint mountainInfo;
+    private Paint secondaryTextPaint;
+
+    //Colors of the compass-view
+    private int compassColor;
+    private int mountainInfoColor;
+
+    //Font size of the text
+    private int mainTextSize;
 
     //Max opacity for the paints
     private static final int MAX_ALPHA = 255;
@@ -38,6 +51,10 @@ public class CameraUiView extends View {
 
     //Factors for the sizes
     private static final int MAIN_TEXT_FACTOR = 20;
+    private static final int SEC_TEXT_FACTOR = 15;
+    private static final int MAIN_LINE_FACTOR = 5;
+    private static final int SEC_LINE_FACTOR = 3;
+    private static final int TER_LINE_FACTOR = 2;
 
     //Heading of the user
     private float horizontalDegrees;
@@ -48,11 +65,18 @@ public class CameraUiView extends View {
 
     //Range of the for-loop to draw the compass
     private float minDegrees;
+    private float maxDegrees;
     private float rangeDegreesVertical;
     private float rangeDegreesHorizontal;
 
     //Compass canvas
     private Canvas canvas;
+
+    //Heights of the compass
+    private int textHeight;
+    private int mainLineHeight;
+    private int secondaryLineHeight;
+    private int terciaryLineHeight;
 
     //Height of the view in pixel
     private int height;
@@ -67,7 +91,7 @@ public class CameraUiView extends View {
     private final SharedPreferences sharedPref;
 
     private Boolean displayedToastMode;
-
+    private Boolean displayCompass;
 
     private static final String DISPLAY_ALL_POIS = "0";
     private static final String DISPLAY_POIS_IN_SIGHT = "1";
@@ -104,8 +128,11 @@ public class CameraUiView extends View {
 
         widgetInit();
 
+        //setCompassBackground(context, attrs);
+
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         sharedPref.registerOnSharedPreferenceChangeListener(listenerPreferences);
+        displayCompass = sharedPref.getBoolean(getResources().getString(R.string.displayCompass_key), false);
 
         displayedToastMode = false;
     }
@@ -115,11 +142,12 @@ public class CameraUiView extends View {
      */
     private void widgetInit(){
         //Initialize colors
-        //Colors of the compass-view
-        int mountainInfoColor = getResources().getColor(R.color.Black, null);
+        compassColor = getResources().getColor(R.color.Black, null);
+        mountainInfoColor = getResources().getColor(R.color.Black, null);
 
         //Initialize fonts
         float screenDensity = getResources().getDisplayMetrics().scaledDensity;
+        mainTextSize = (int) (MAIN_TEXT_FACTOR * screenDensity);
 
         //Initialize mountain marker that are in line of sight
         mountainMarkerVisible = getBitmapFromVectorDrawable(getContext(), R.drawable.ic_mountain_marker_visible);
@@ -133,6 +161,21 @@ public class CameraUiView extends View {
         mountainInfo.setTextSize(MAIN_TEXT_FACTOR*screenDensity);
         mountainInfo.setColor(mountainInfoColor);
         mountainInfo.setAlpha(MAX_ALPHA);
+
+        //Paint used for the main text heading (N, E, S, W)
+        mainTextPaint = configureTextPaint(mainTextSize);
+
+        //Paint used for the secondary text heading (NE, SE, SW, NW)
+        secondaryTextPaint = configureTextPaint(SEC_TEXT_FACTOR*screenDensity);
+
+        //Paint used for the main lines (0°, 90°, 180°, ...)
+        mainLinePaint = configureLinePaint(MAIN_LINE_FACTOR*screenDensity);
+
+        //Paint used for the secondary lines (45°, 135°, 225°, ...)
+        secondaryLinePaint = configureLinePaint(SEC_LINE_FACTOR*screenDensity);
+
+        //Paint used for the terciary lines (15°, 30°, 60°, 75°, 105°, ...)
+        terciaryLinePaint = configureLinePaint(TER_LINE_FACTOR*screenDensity);
     }
 
     public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
@@ -144,6 +187,33 @@ public class CameraUiView extends View {
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
         return bitmap;
+    }
+
+    /**
+     * Method to create the line paints for the compass
+     * @param strokeWidth width of the lines
+     * @return configured paint
+     */
+    private Paint configureLinePaint(float strokeWidth){
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setStrokeWidth(strokeWidth);
+        paint.setColor(compassColor);
+        paint.setAlpha(MAX_ALPHA);
+        return paint;
+    }
+
+    /**
+     * Method to create the text paints for the compass
+     * @param textSize size of the text
+     * @return configured paint
+     */
+    private Paint configureTextPaint(float textSize){
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setTextSize(textSize);
+        paint.setColor(compassColor);
+        paint.setAlpha(MAX_ALPHA);
+        return paint;
     }
 
     /**
@@ -186,10 +256,11 @@ public class CameraUiView extends View {
 
 
     /**
-     * onDraw method is used to draw the POIs on the screen. The POIs are drawn by going through
-     * a for-loop starting from minDegree until maxDegrees. They correspond to the actual heading
-     * minus and plus half of the field of vie of the device camera.
-     *
+     * onDraw method is used to draw the compass on the screen.
+     * To draw the compass, 3 different types of lines are used, mainLinePaint, secondaryLinePaint
+     * and terciaryLinePaint. The compass is drawn by going through a for-loop starting from minDegree
+     * until maxDegrees. They correspond to the actual heading minus and plus half of the field of view
+     * of the device camera.
      * @param canvas Canvas on which the compass is drawn
      */
     @Override
@@ -200,16 +271,39 @@ public class CameraUiView extends View {
         //Get width and height of the view in Pixels
         int width = getMeasuredWidth();
         height = getMeasuredHeight();
+        //Make the canvas take 1/5 of the screen height
+        //The text is at the highest point
+        textHeight = height - height/5;
+        //mainLineHeight is just under the text
+        //The text is centered thus we add the textsize divided by 2
+        mainLineHeight = textHeight + mainTextSize/2;
+        //Then increment each by mainTextSize to get the next line height
+        // (the higher the result the lower the line)
+        secondaryLineHeight = mainLineHeight + mainTextSize;
+        terciaryLineHeight = secondaryLineHeight + mainTextSize;
 
         //Get the starting degree and ending degree of the compass
         minDegrees = horizontalDegrees - rangeDegreesHorizontal/2;
-        float maxDegrees = horizontalDegrees + rangeDegreesHorizontal / 2;
+        maxDegrees = horizontalDegrees + rangeDegreesHorizontal/2;
 
         //Calculate the width in pixel of one degree
         pixDeg = width/rangeDegreesHorizontal;
 
-        //Draws the POIs
+        //Draws the compass
+        drawCanvas();
+    }
+
+    /**
+     * Draws the compass on the canvas
+     */
+    private void drawCanvas(){
+        //Start going through the loop to draw the compass
         for(int i = (int)Math.floor(minDegrees); i <= Math.ceil(maxDegrees); i++){
+            //Draw the compass
+            if(displayCompass){
+                drawCompass(i);
+            }
+
             //Draw the mountains on the canvas
             if(labeledPOIPoints != null && !labeledPOIPoints.isEmpty()) {
                 drawLabeledPOIs(i);
@@ -217,6 +311,31 @@ public class CameraUiView extends View {
             else{
                 listenerPreferences.onSharedPreferenceChanged(sharedPref, null);
             }
+        }
+    }
+
+    /**
+     * Draws the compass on the canvas. Compass consists of a for-loop going from the heading -
+     * fov/2 until heading + fov/2.
+     * @param i degree of the compass
+     */
+    private void drawCompass(int i) {
+        float lineXpos = pixDeg * (i - minDegrees);
+        //Draw a main line and heading for every 90°
+        if (i % 90 == 0){
+            canvas.drawLine(lineXpos, height, lineXpos, mainLineHeight, mainLinePaint);
+            canvas.drawText(CameraUtilities.selectHeadingString(i), pixDeg * (i - minDegrees), textHeight, mainTextPaint);
+        }
+
+        //Draw a secondary line for every 45° excluding every 90° (45°, 135°, 225° ...)
+        else if (i % 45 == 0){
+            canvas.drawLine(lineXpos, height, lineXpos, secondaryLineHeight, secondaryLinePaint);
+            canvas.drawText(CameraUtilities.selectHeadingString(i), pixDeg * (i - minDegrees), textHeight, secondaryTextPaint);
+        }
+
+        //Draw tertiary line for every 15° excluding every 45° and 90° (15, 30, 60, 75, ...)
+        else if (i % 15 == 0){
+            canvas.drawLine(lineXpos, height, lineXpos, terciaryLineHeight, terciaryLinePaint);
         }
     }
 

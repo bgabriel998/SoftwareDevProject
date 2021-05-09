@@ -60,6 +60,12 @@
             android:title="@string/filter_pois_title"
             android:icon="@drawable/ic_filter_pois_camera"/>
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/displayCompass_key"
+            android:title="@string/displayCompass_title"
+            android:icon="@drawable/ic_compass_settings"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/language_header">
