@@ -21,17 +21,6 @@
         android:background="@drawable/rectangle"
         android:visibility="gone"/>
 
-    <!-- background of the compass -->
-    <ImageView
-        android:id="@+id/background_compass"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/background_compass"
-        android:alpha="0.8"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
     <!-- Compass View-->
     <ch.epfl.sdp.peakar.camera.CameraUiView
         android:id="@+id/compass"
@@ -81,6 +70,48 @@
         app:layout_constraintTop_toTopOf="@+id/takePicture"
         app:layout_constraintBottom_toBottomOf="@+id/takePicture"
         app:srcCompat="@drawable/ic_binoculars" />
+
+    <!-- Image button to switch between the different possibilities to display the POIs -->
+    <ImageView
+        android:id="@+id/compassMiniature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/buttonChangeDisplayModePOI"
+        android:background="@drawable/ic_circle_background"
+        app:layout_constraintEnd_toStartOf="@+id/takePicture"
+        app:layout_constraintTop_toTopOf="@+id/takePicture"
+        app:layout_constraintBottom_toBottomOf="@+id/takePicture"
+        app:srcCompat="@drawable/ic_compass_ring" />
+
+    <!-- layout to display the arrow and heading inside the compass-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toLeftOf="@+id/compassMiniature"
+        app:layout_constraintRight_toRightOf="@+id/compassMiniature"
+        app:layout_constraintTop_toTopOf="@+id/compassMiniature"
+        app:layout_constraintBottom_toBottomOf="@+id/compassMiniature">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/buttonChangeDisplayModePOI"
+            android:layout_gravity="center"
+            android:layout_marginTop="-2dp"
+            app:srcCompat="@drawable/ic_compass_arrow" />
+
+        <!--TextView indicates the horizontal heading of the user-->
+        <TextView
+            android:id="@+id/headingCompass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/White"
+            android:textSize="11sp"
+            android:text=""
+            android:layout_marginTop="-4dp" />
+    </LinearLayout>
 
     <!--TextView indicates the horizontal heading of the user-->
     <TextView

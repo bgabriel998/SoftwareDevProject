@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
@@ -96,7 +97,6 @@ public class CameraUiView extends View {
 
     private Boolean displayedToastMode;
 
-    private SurfaceView compassBackground;
 
     private static final String DISPLAY_ALL_POIS = "0";
     private static final String DISPLAY_POIS_IN_SIGHT = "1";
@@ -132,8 +132,6 @@ public class CameraUiView extends View {
         super(context, attrs);
 
         widgetInit();
-
-        //setCompassBackground(context, attrs);
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         sharedPref.registerOnSharedPreferenceChangeListener(listenerPreferences);
@@ -304,7 +302,7 @@ public class CameraUiView extends View {
         //Start going through the loop to draw the compass
         for(int i = (int)Math.floor(minDegrees); i <= Math.ceil(maxDegrees); i++){
             //Draw the compass
-            drawCompass(i);
+            //drawCompass(i);
 
             //Draw the mountains on the canvas
             if(labeledPOIPoints != null && !labeledPOIPoints.isEmpty()) {

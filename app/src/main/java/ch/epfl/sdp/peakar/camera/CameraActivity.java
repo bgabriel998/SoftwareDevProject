@@ -7,6 +7,7 @@ import android.hardware.camera2.CameraAccessException;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,6 +48,9 @@ public class CameraActivity extends AppCompatActivity{
     private boolean showDevOptions;
 
     private static final String DISPLAY_ALL_POIS = "0";
+
+    private ImageView compassMiniature;
+    private TextView headingCompass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +110,9 @@ public class CameraActivity extends AppCompatActivity{
         //Create new compass
         compass = new Compass(this);
 
+        compassMiniature = findViewById(R.id.compassMiniature);
+        headingCompass = findViewById(R.id.headingCompass);
+
         //Bind the compassListener with the compass
         compass.setListener(getCompassListener());
     }
@@ -120,7 +127,9 @@ public class CameraActivity extends AppCompatActivity{
         return (heading, headingV) -> {
             //Update the compass when the heading changes
             cameraUiView.setDegrees(heading, headingV);
+            compassMiniature.setRotation(-1*heading);
             //Update the textviews with the new headings
+            headingCompass.setText(String.format(Locale.ENGLISH, "%.0f°", heading));
             headingHorizontal.setText(String.format(Locale.ENGLISH, "%.1f °", heading));
             headingVertical.setText(String.format(Locale.ENGLISH, "%.1f °", headingV));
         };
