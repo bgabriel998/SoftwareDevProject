@@ -28,32 +28,32 @@ public class TestMenuBarActivityTest {
     }
 
     /* Test that menu bars settings icon works as intended */
-    @Test
+    /*@Test
     public void TestMenuBarSettings(){
         MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_settings);
-    }
+    }*/
 
     /* Test that menu bars gallery icon works as intended */
-    @Test
+    /*@Test
     public void TestMenuBarGallery(){
         MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_gallery);
-    }
+    }*/
 
     /* Test that menu bars camera icon works as intended */
-    @Test
+    /*@Test
     public void TestMenuBarCamera(){
         MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_camera);
-    }
+    }/*
 
     /* Test that menu bars map icon works as intended */
-    @Test
+    /*@Test
     public void TestMenuBarMap(){
         MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_map);
-    }
+    }*/
 
     /* Test that menu bars social icon works as intended */
-    @Test
+    /*@Test
     public void TestMenuBarSocial(){
         MenuBarTestHelper.TestSelectedIconButton(R.id.menu_bar_social);
-    }
+    }*/
 }
