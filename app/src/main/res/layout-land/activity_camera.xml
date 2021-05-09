@@ -13,6 +13,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <!-- Black rectangle that is displayed when a picture is taken to simulate a flash-->
+    <View
+        android:id="@+id/take_picture_flash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/rectangle"
+        android:visibility="gone"/>
+
     <!-- Compass View-->
     <ch.epfl.sdp.peakar.camera.CameraUiView
         android:id="@+id/compass"
@@ -33,15 +41,18 @@
         android:onClick="takePictureListener"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:contentDescription="@string/button_used_to_take_a_picture" />
 
-    <!-- Back Icon button -->
+    <!-- Profile Icon button -->
     <ImageButton
         android:id="@+id/profileButton"
-        style="@style/IconButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:onClick="profileButton"
+        android:background="@drawable/ic_circle_background"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_user"
@@ -52,78 +63,109 @@
         android:id="@+id/switchDisplayPOIs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:background="@drawable/ic_circle_background"
         android:contentDescription="@string/buttonChangeDisplayModePOI"
-        android:background="@drawable/button_bg_round"
         android:onClick="switchDisplayPOIMode"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_line_of_sight_camera" />
+        app:layout_constraintBottom_toTopOf="@+id/takePicture"
+        app:layout_constraintEnd_toEndOf="@+id/takePicture"
+        app:layout_constraintStart_toStartOf="@+id/takePicture"
+        app:srcCompat="@drawable/ic_binoculars" />
 
-    <!--TextView indicates the horizontal degrees and the direction in which the user is heading-->
+    <!--TextView indicates the horizontal heading of the user-->
     <TextView
         android:id="@+id/headingHorizontal"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="5dp"
         android:gravity="top"
         android:textColor="@color/White"
-        android:background="@color/Black"
+        android:background="@drawable/rectangle"
         android:text=""
         android:layout_marginStart="20dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
 
-    <!--TextView indicates the vertical degrees-->
+    <!--TextView indicates the vertical heading of the user-->
     <TextView
         android:id="@+id/headingVertical"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/headingHorizontal"
         android:layout_below="@+id/headingHorizontal"
         android:gravity="top"
         android:textColor="@color/White"
-        android:background="@color/Black"
+        android:background="@drawable/rectangle"
         android:text=""
         android:layout_marginStart="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/headingHorizontal" />
 
-    <!--TextView indicates the vertical degrees-->
+    <!--TextView indicates the horizontal fov in degrees-->
     <TextView
         android:id="@+id/fovHorizontal"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/headingVertical"
         android:layout_below="@+id/headingVertical"
         android:gravity="top"
         android:textColor="@color/White"
-        android:background="@color/Black"
+        android:background="@drawable/rectangle"
         android:text=""
         android:layout_marginStart="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/headingVertical" />
 
-    <!--TextView indicates the vertical degrees-->
+    <!--TextView indicates the horizontal fov in degrees-->
     <TextView
         android:id="@+id/fovVertical"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/fovHorizontal"
         android:layout_below="@+id/fovHorizontal"
         android:gravity="top"
         android:textColor="@color/White"
-        android:background="@color/Black"
+        android:background="@drawable/rectangle"
         android:text=""
         android:layout_marginStart="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fovHorizontal" />
+
+    <!--TextView indicates the user location-->
+    <TextView
+        android:id="@+id/userLocation"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/fovHorizontal"
+        android:layout_below="@+id/fovHorizontal"
+        android:gravity="top"
+        android:textColor="@color/White"
+        android:background="@drawable/rectangle"
+        android:text=""
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fovVertical" />
+
+    <!--TextView indicates the altitude of the user-->
+    <TextView
+        android:id="@+id/userAltitude"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/fovHorizontal"
+        android:layout_below="@+id/fovHorizontal"
+        android:gravity="top"
+        android:textColor="@color/White"
+        android:background="@drawable/rectangle"
+        android:text=""
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userLocation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
