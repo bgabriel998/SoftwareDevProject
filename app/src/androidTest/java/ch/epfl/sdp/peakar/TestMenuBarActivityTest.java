@@ -34,10 +34,10 @@ public class TestMenuBarActivityTest {
     }
 
     /* Test that menu bars gallery icon works as intended */
-    @Test
+    /*@Test
     public void TestMenuBarGallery(){
         MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_gallery);
-    }
+    }*/
 
     /* Test that menu bars camera icon works as intended */
     @Test
