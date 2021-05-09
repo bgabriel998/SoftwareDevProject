@@ -6,14 +6,10 @@ import android.graphics.Bitmap;
 import android.hardware.display.DisplayManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -54,8 +50,6 @@ public class CameraPreview extends Fragment{
     private ExecutorService cameraExecutor;
     private Context context;
 
-    private final int PICTURE_TAKEN = 1;
-    private final int FAILED_TO_TAKE_PICTURE = 0;
     private final int FILE_LENGTH = 27;
 
     private ImageAnalysis imageAnalysis;

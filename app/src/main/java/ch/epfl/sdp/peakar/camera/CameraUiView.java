@@ -36,7 +36,6 @@ public class CameraUiView extends View {
 
     //Colors of the compass-view
     private int compassColor;
-    private int mountainInfoColor;
 
     //Font size of the text
     private int mainTextSize;
@@ -129,8 +128,6 @@ public class CameraUiView extends View {
 
         widgetInit();
 
-        //setCompassBackground(context, attrs);
-
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         sharedPref.registerOnSharedPreferenceChangeListener(listenerPreferences);
         displayCompass = sharedPref.getBoolean(getResources().getString(R.string.displayCompass_key), false);
@@ -144,7 +141,7 @@ public class CameraUiView extends View {
     private void widgetInit(){
         //Initialize colors
         compassColor = getResources().getColor(R.color.Black, null);
-        mountainInfoColor = getResources().getColor(R.color.Black, null);
+        int mountainInfoColor = getResources().getColor(R.color.Black, null);
 
         //Initialize fonts
         float screenDensity = getResources().getDisplayMetrics().scaledDensity;

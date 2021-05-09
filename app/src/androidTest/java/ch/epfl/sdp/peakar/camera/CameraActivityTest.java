@@ -37,7 +37,6 @@ import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static ch.epfl.sdp.peakar.TestingConstants.BASIC_USERNAME;
 import static ch.epfl.sdp.peakar.TestingConstants.SHORT_SLEEP_TIME;
 import static ch.epfl.sdp.peakar.TestingConstants.USERNAME_CAMERA;
 import static ch.epfl.sdp.peakar.user.AccountTest.registerAuthUser;
