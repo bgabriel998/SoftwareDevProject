@@ -27,6 +27,11 @@ public class TestMenuBarActivityTest {
         Intents.release();
     }
 
+    @Test
+    public void TestTrue(){
+        assert true;
+    }
+
     /* Test that menu bars settings icon works as intended */
     /*@Test
     public void TestMenuBarSettings(){
