@@ -239,10 +239,10 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
 
         String displayMode = sharedPreferences.getString(displayPOIsKey, DISPLAY_ALL_POIS);
         assertEquals("0", displayMode);
-        onView(ViewMatchers.withId(R.id.take_picture_flash)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+        //onView(ViewMatchers.withId(R.id.take_picture_flash)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
         for(int i = 1; i<6; i++){
             onView(withId(R.id.switchDisplayPOIs)).perform(click());
-            Thread.sleep(1);
+            Thread.sleep(2);
             onView(ViewMatchers.withId(R.id.take_picture_flash)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             Thread.sleep(SHORT_SLEEP_TIME);
             displayMode = sharedPreferences.getString(displayPOIsKey, DISPLAY_ALL_POIS);
