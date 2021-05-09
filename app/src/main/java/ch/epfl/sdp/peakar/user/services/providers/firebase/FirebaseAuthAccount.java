@@ -18,6 +18,7 @@ import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.services.AccountData;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
+import ch.epfl.sdp.peakar.user.services.AuthService;
 
 /**
  * This class extends AuthAccount to handle operations on a Firebase Realtime Database
@@ -26,8 +27,6 @@ public class FirebaseAuthAccount extends AuthAccount implements RemoteResource {
     private static String currentID = null;
     private static FirebaseAuthAccount instance = null;
     private static DatabaseReference dbRefUser = null;
-
-    private DataSnapshot data;
 
     /**
      * Create a new account instance.
@@ -109,6 +108,20 @@ public class FirebaseAuthAccount extends AuthAccount implements RemoteResource {
 
             // If not, register the new username
             Task<Void> changeTask = dbRefUser.child(Database.CHILD_USERNAME).setValue(newUsername);
+
+            // If the user was not registered yet, register him by adding the missing fields on the DB.
+            if(getUsername().equals(USERNAME_BEFORE_REGISTRATION)) {
+                // Add the photo
+                Task<Void> addPhotoUrl = dbRefUser.child(Database.CHILD_PHOTO_URL).setValue(AuthService.getInstance().getPhotoUrl().toString());
+                try {
+                    // Wait for task to finish
+                    Tasks.await(addPhotoUrl);
+                    Log.d("Account", "changeUsername - addPhotoUrl: added");
+                } catch (Exception e) {
+                    Log.d("Account", "changeUsername - addPhotoUrl: failed");
+                    return ProfileOutcome.FAIL;
+                }
+            }
 
             try {
                 // Wait for task to finish

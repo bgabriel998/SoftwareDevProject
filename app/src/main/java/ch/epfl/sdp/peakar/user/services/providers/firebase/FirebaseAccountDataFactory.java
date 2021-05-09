@@ -1,5 +1,6 @@
 package ch.epfl.sdp.peakar.user.services.providers.firebase;
 
+import android.net.Uri;
 import android.util.Log;
 
 import com.google.android.gms.tasks.Task;
@@ -7,6 +8,10 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import ch.epfl.sdp.peakar.database.Database;
@@ -14,8 +19,10 @@ import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
 import ch.epfl.sdp.peakar.general.remote.RemoteResource;
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.points.POIPoint;
+import ch.epfl.sdp.peakar.user.challenge.Challenge;
 import ch.epfl.sdp.peakar.user.services.AccountData;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
+import ch.epfl.sdp.peakar.user.services.AuthService;
 
 public class FirebaseAccountDataFactory implements RemoteResource {
     private final AccountData accountData;
@@ -47,30 +54,24 @@ public class FirebaseAccountDataFactory implements RemoteResource {
     @Override
     public RemoteOutcome retrieveData() {
         Task<DataSnapshot> retrieveTask = dbRefUser.get();
-        Log.d("RegisterUserTest", "retrieveData: entered");
 
         try {
             // Wait for task to finish
             Tasks.await(retrieveTask);
-            Log.d("RegisterUserTest", "retrieveData: waited");
             // Get the obtained data
             DataSnapshot data = retrieveTask.getResult();
             assert data != null;
-            Log.d("RegisterUserTest", "retrieveData: asserted");
             // If there is no data on DB, return such outcome
             if(!data.exists()) {
-                new AccountData();
                 return RemoteOutcome.NOT_FOUND;
             }
-            Log.d("RegisterUserTest", "retrieveData: exists");
             // Otherwise, update the attributes with retrieve data
             this.data = data;
             loadData();
-            Log.d("RegisterUserTest", "retrieveData: loaded");
             return RemoteOutcome.FOUND;
 
         } catch (Exception e) {
-            Log.d("AUTH", "retrieveData: failed " + e.getMessage());
+            Log.d("FirebaseAccountDataFactory", "retrieveData: fail");
             return RemoteOutcome.FAIL;
         }
     }
@@ -78,10 +79,24 @@ public class FirebaseAccountDataFactory implements RemoteResource {
     public void loadData() {
         // Load username
         accountData.setUsername((Optional.ofNullable(data.child(Database.CHILD_USERNAME).getValue(String.class)).orElse(AuthAccount.USERNAME_BEFORE_REGISTRATION)));
-        Log.d("RegisterUserTest", "Factory - loadData: username after = " + accountData.getUsername());
 
         // Load score
         accountData.setScore(Optional.ofNullable(data.child(Database.CHILD_SCORE).getValue(long.class)).orElse(0L));
+
+        // Load photo url
+        accountData.setPhotoUrl(Uri.parse(Optional.ofNullable(data.child(Database.CHILD_PHOTO_URL).getValue(String.class)).orElse("")));
+        // If this is loading the auth account, check if the photo is updated.
+        // If photo has changed from last access, update it.
+        if(dbRefUser.toString().equals(Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).toString()) && !AuthService.getInstance().getPhotoUrl().equals(accountData.getPhotoUrl())) {
+            // Locally
+            accountData.setPhotoUrl(AuthService.getInstance().getPhotoUrl());
+            // Remotely
+            dbRefUser.child(Database.CHILD_PHOTO_URL).setValue(AuthService.getInstance().getPhotoUrl().toString());
+            Log.d("FirebaseAccountDataFactory", "retrieveData: updating photo");
+        }
+
+        // Load challenges
+        loadChallenges(data.child(Database.CHILD_CHALLENGES));
 
         // Load discovered peaks
         loadPeaks(data.child(Database.CHILD_DISCOVERED_PEAKS));
@@ -157,5 +172,45 @@ public class FirebaseAccountDataFactory implements RemoteResource {
             // Add the friend
             accountData.getFriends().add(newFriendItem);
         }
+    }
+
+    /**
+     * Load added challenges.
+     */
+    private void loadChallenges(DataSnapshot data) {
+        for (DataSnapshot challengeEntry : data.getChildren()) {
+            String challengeId = challengeEntry.getKey();
+            assert challengeId != null;
+            String challengeType = challengeEntry.getValue(String.class);
+            assert challengeType != null;
+            if(challengeType.equals(Database.VALUE_POINTS_CHALLENGE)) {
+                loadPointsChallenge(Objects.requireNonNull(Database.refRoot.child(Database.CHILD_CHALLENGES).child(challengeId).get().getResult()));
+            }
+        }
+    }
+
+    /**
+     * Load added challenges.
+     */
+    private void loadPointsChallenge(DataSnapshot data) {
+
+        // Get ID of new challenge
+        String id = data.getKey();
+        assert id != null;
+
+        // Get users
+        List<String> users = new ArrayList<>();
+        for (DataSnapshot user : data.getChildren()) {
+            users.add(user.getKey());
+        }
+
+        // Add goal
+        long goal = Optional.ofNullable(data.child(Database.CHILD_CHALLENGE_GOAL).getValue(Long.class)).orElse(0L);
+
+        // Add prize
+        long prize = users.size() * Challenge.AWARDED_POINTS_PER_USER;
+
+        // Add the challenge
+        accountData.getChallenges().add(new FirebasePointsChallenge(id, users, prize, goal));
     }
 }

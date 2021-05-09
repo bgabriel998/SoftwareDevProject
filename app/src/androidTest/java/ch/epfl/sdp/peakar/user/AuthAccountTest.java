@@ -1,5 +1,7 @@
 package ch.epfl.sdp.peakar.user;
 
+import android.net.Uri;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -110,10 +112,15 @@ public class AuthAccountTest {
      */
     @Test
     public void noAccountTest() {
+        // Assert EMPTY uri before sign out as the anonymous user has not a photo
+        assertEquals(Uri.EMPTY, AuthService.getInstance().getPhotoUrl());
+
         removeAuthUser();
         AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
         assertNull(AuthService.getInstance().getAuthAccount());
+        // Assert EMPTY uri after sign out as no user is signed in
+        assertEquals(Uri.EMPTY, AuthService.getInstance().getPhotoUrl());
     }
 
     /**

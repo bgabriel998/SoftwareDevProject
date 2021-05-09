@@ -1,6 +1,7 @@
 package ch.epfl.sdp.peakar.user.services.providers.firebase;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 
 import com.firebase.ui.auth.AuthUI;
@@ -143,6 +144,17 @@ public class FirebaseAuthService implements AuthService {
             return Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         } catch (NullPointerException e) {
             return "null";
+        }
+
+    }
+
+    @Override
+    public Uri getPhotoUrl() {
+        try {
+            Uri photoUri = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getPhotoUrl();
+            return photoUri == null ? Uri.EMPTY : photoUri;
+        } catch (NullPointerException e) {
+            return Uri.EMPTY;
         }
 
     }

@@ -1,5 +1,6 @@
 package ch.epfl.sdp.peakar.user.services.providers.firebase;
 
+import android.net.Uri;
 import android.util.Log;
 
 import com.google.android.gms.tasks.Task;
@@ -23,8 +24,6 @@ public class FirebaseOtherAccount extends OtherAccount implements RemoteResource
     protected static final Hashtable<String, FirebaseOtherAccount> loadedAccounts = new Hashtable<>();
     private final String userID;
     private final DatabaseReference dbRefUser;
-
-    private DataSnapshot data;
 
     /**
      * Create a new account instance.
@@ -58,6 +57,11 @@ public class FirebaseOtherAccount extends OtherAccount implements RemoteResource
     @Override
     public String getUserID() {
         return userID;
+    }
+
+    @Override
+    public Uri getPhotoUrl() {
+        return null;
     }
 
     @Override

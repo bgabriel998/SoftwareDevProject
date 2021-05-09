@@ -1,5 +1,6 @@
 package ch.epfl.sdp.peakar.user.services;
 
+import android.net.Uri;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class AccountData {
     private final HashSet<Integer> discoveredPeakHeights;
     private final List<FriendItem> friends;
     private final List<Challenge> challenges;
+    private Uri photoUrl;
 
     public AccountData() {
         username = AuthAccount.USERNAME_BEFORE_REGISTRATION;
@@ -29,6 +31,7 @@ public class AccountData {
         discoveredPeakHeights = new HashSet<>();
         friends = new ArrayList<>();
         challenges = new ArrayList<>();
+        photoUrl = Uri.EMPTY;
     }
 
     public String getUsername() {
@@ -59,13 +62,19 @@ public class AccountData {
         return challenges;
     }
 
-    public void setUsername(String username) {
+    public Uri getPhotoUrl() {
+        return photoUrl;
+    }
 
-        Log.d("AccountData", "setUsername: CHANGING USERNAME from " + this.username + " to " + username);
+    public void setUsername(String username) {
         this.username = username;
     }
 
     public void setScore(long score) {
         this.score = score;
+    }
+
+    public void setPhotoUrl(Uri photoUrl) {
+        this.photoUrl = photoUrl;
     }
 }
