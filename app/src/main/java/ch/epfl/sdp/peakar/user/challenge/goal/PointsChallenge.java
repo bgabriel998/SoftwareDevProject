@@ -49,11 +49,6 @@ public abstract class PointsChallenge implements GoalChallengeInterface {
     }
 
     @Override
-    public void addUser(String userID) {
-        users.add(userID);
-    }
-
-    @Override
     public long getPoints() {
         return awardPoints;
     }
@@ -71,14 +66,9 @@ public abstract class PointsChallenge implements GoalChallengeInterface {
 
     @Override
     public ChallengeOutcome claimVictory() {
-        AuthAccount authAccount = AuthService.getInstance().getAuthAccount();
-        long oldScore = authAccount.getScore();
-        if(meetRequirements()) {
-            authAccount.setScore(oldScore + getPoints());
-            return ChallengeOutcome.AWARDED;
-        }
-        else {
-            return ChallengeOutcome.NOT_POSSIBLE;
-        }
+        if(!meetRequirements()) return ChallengeOutcome.MISSING_REQUIREMENTS;
+        // Otherwise, remove the challenge from the local account
+        AuthService.getInstance().getAuthAccount().getChallenges().remove(this);
+        return ChallengeOutcome.AWARDED;
     }
 }

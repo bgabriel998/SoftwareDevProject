@@ -21,11 +21,6 @@ public interface Challenge {
     List<String> getUsers();
 
     /**
-     * Add a user to the challenge.
-     */
-    void addUser(String userID);
-
-    /**
      * Get the points that will be assigned to the winner after the challenge ends.
      */
     long getPoints();

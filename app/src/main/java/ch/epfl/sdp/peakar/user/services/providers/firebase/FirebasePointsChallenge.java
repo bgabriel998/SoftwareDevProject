@@ -1,5 +1,8 @@
 package ch.epfl.sdp.peakar.user.services.providers.firebase;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
@@ -7,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import ch.epfl.sdp.peakar.database.Database;
+import ch.epfl.sdp.peakar.user.challenge.Challenge;
 import ch.epfl.sdp.peakar.user.challenge.ChallengeOutcome;
 import ch.epfl.sdp.peakar.user.challenge.goal.PointsChallenge;
 import ch.epfl.sdp.peakar.user.services.AuthService;
@@ -32,7 +36,7 @@ public class FirebasePointsChallenge extends PointsChallenge {
      * @param founderID ID of the founder of the challenge.
      * @param goalPoints score to be reached to win.
      */
-    public static ChallengeOutcome generateNewChallenge(String founderID, long goalPoints) {
+    public static Challenge generateNewChallenge(String founderID, long goalPoints) {
         // Create a new challenge remotely
         DatabaseReference challengeRef = Database.refRoot.child(Database.CHILD_CHALLENGES).push();
         // Get ID of new challenge
@@ -48,7 +52,7 @@ public class FirebasePointsChallenge extends PointsChallenge {
         FirebasePointsChallenge newChallenge = new FirebasePointsChallenge(id, users, 0L, goalPoints);
         // Add locally if the founder is the authenticated user
         if(founderID.equals(AuthService.getInstance().getID())) AuthService.getInstance().getAuthAccount().getChallenges().add(newChallenge);
-        return ChallengeOutcome.CREATED;
+        return newChallenge;
     }
 
     @Override
@@ -60,5 +64,40 @@ public class FirebasePointsChallenge extends PointsChallenge {
         // Add locally
         AuthService.getInstance().getAuthAccount().getChallenges().add(this);
         return super.join();
+    }
+
+    @Override
+    public ChallengeOutcome claimVictory() {
+        ChallengeOutcome localOutcome = super.claimVictory();
+
+        // If still miss requirements, return it.
+        if(localOutcome == ChallengeOutcome.AWARDED) {
+            // Check if the challenge is still there
+            Task<DataSnapshot> checkTask = Database.refRoot.child(Database.CHILD_CHALLENGES).child(getID()).get();
+            try {
+                Tasks.await(checkTask);
+                DataSnapshot data = checkTask.getResult();
+                assert data != null;
+                // If the challenge is still there, the authenticated user is indeed the winner.
+                if(data.exists()) {
+                    // Update local score
+                    long newScore = AuthService.getInstance().getAuthAccount().getScore() + getPoints();
+                    AuthService.getInstance().getAuthAccount().setScore(newScore);
+
+                    // Remove from the users
+                    getUsers().forEach(x -> Database.refRoot.child(Database.CHILD_USERS).child(x).child(Database.CHILD_CHALLENGES).child(getID()).removeValue());
+
+                    // Remove from the challenges
+                    Database.refRoot.child(Database.CHILD_CHALLENGES).child(getID()).removeValue();
+                } else {
+                    localOutcome = ChallengeOutcome.ALREADY_OVER;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return ChallengeOutcome.NOT_POSSIBLE;
+            }
+        }
+
+        return localOutcome;
     }
 }

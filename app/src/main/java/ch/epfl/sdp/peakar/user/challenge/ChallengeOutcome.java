@@ -5,5 +5,6 @@ public enum ChallengeOutcome {
     JOINED,
     ALREADY_OVER,
     AWARDED,
-    NOT_POSSIBLE
+    NOT_POSSIBLE,
+    MISSING_REQUIREMENTS
 }

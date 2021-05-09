@@ -24,26 +24,18 @@ import ch.epfl.sdp.peakar.user.services.AccountData;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 
+/**
+ * This class implements helper methods that can generate an AccountData retrieving data from the DB.
+ */
 public class FirebaseAccountDataFactory implements RemoteResource {
     private final AccountData accountData;
 
-    private DatabaseReference dbRefUser;
+    private final DatabaseReference dbRefUser;
     private DataSnapshot data;
-
-    private FirebaseAccountDataFactory(DataSnapshot dataSnapshot) {
-        this.accountData = new AccountData();
-        this.data = dataSnapshot;
-    }
 
     private FirebaseAccountDataFactory(AccountData accountData, DatabaseReference dbRefUser) {
         this.accountData = accountData;
         this.dbRefUser = dbRefUser;
-    }
-
-    public static AccountData generateAccountData(DataSnapshot dataSnapshot) {
-        FirebaseAccountDataFactory newFactory = new FirebaseAccountDataFactory(dataSnapshot);
-        newFactory.loadData();
-        return newFactory.accountData;
     }
 
     public static RemoteOutcome retrieveAccountData(AccountData accountData, DatabaseReference dbRefUser) {
@@ -178,13 +170,24 @@ public class FirebaseAccountDataFactory implements RemoteResource {
      * Load added challenges.
      */
     private void loadChallenges(DataSnapshot data) {
+        Log.d("FirebaseAccountDataFactory", "loadChallenges: entered");
         for (DataSnapshot challengeEntry : data.getChildren()) {
+            Log.d("FirebaseAccountDataFactory", "loadChallenges: entered for");
             String challengeId = challengeEntry.getKey();
             assert challengeId != null;
+            Log.d("FirebaseAccountDataFactory", "loadChallenges: challenge id = " + challengeId);
             String challengeType = challengeEntry.getValue(String.class);
             assert challengeType != null;
+            Log.d("FirebaseAccountDataFactory", "loadChallenges: before if. Current challenge type = " + challengeType);
             if(challengeType.equals(Database.VALUE_POINTS_CHALLENGE)) {
-                loadPointsChallenge(Objects.requireNonNull(Database.refRoot.child(Database.CHILD_CHALLENGES).child(challengeId).get().getResult()));
+                Log.d("FirebaseAccountDataFactory", "loadChallenges: entered if");
+                Task<DataSnapshot> retrieveChallenge = Database.refRoot.child(Database.CHILD_CHALLENGES).child(challengeId).get();
+                try {
+                    Tasks.await(retrieveChallenge);
+                    loadPointsChallenge(Objects.requireNonNull(retrieveChallenge.getResult()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -193,24 +196,30 @@ public class FirebaseAccountDataFactory implements RemoteResource {
      * Load added challenges.
      */
     private void loadPointsChallenge(DataSnapshot data) {
+        Log.d("FirebaseAccountDataFactory", "loadPointsChallenge: entered");
 
         // Get ID of new challenge
         String id = data.getKey();
         assert id != null;
+        Log.d("FirebaseAccountDataFactory", "loadPointsChallenge: id = " + id);
 
         // Get users
         List<String> users = new ArrayList<>();
-        for (DataSnapshot user : data.getChildren()) {
+        for (DataSnapshot user : data.child(Database.CHILD_USERS).getChildren()) {
+            Log.d("FirebaseAccountDataFactory", "loadPointsChallenge: added user = " + user.getKey());
             users.add(user.getKey());
         }
 
-        // Add goal
+        // Get goal
         long goal = Optional.ofNullable(data.child(Database.CHILD_CHALLENGE_GOAL).getValue(Long.class)).orElse(0L);
+        Log.d("FirebaseAccountDataFactory", "loadPointsChallenge: goal = " + goal);
 
-        // Add prize
-        long prize = users.size() * Challenge.AWARDED_POINTS_PER_USER;
+        // Compute prize
+        long prize = (users.size() - 1) * Challenge.AWARDED_POINTS_PER_USER;
+        Log.d("FirebaseAccountDataFactory", "loadPointsChallenge: prize = " + prize);
 
         // Add the challenge
         accountData.getChallenges().add(new FirebasePointsChallenge(id, users, prize, goal));
+        Log.d("FirebaseAccountDataFactory", "loadPointsChallenge: new challenges size = " + accountData.getChallenges().size());
     }
 }
