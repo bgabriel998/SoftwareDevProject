@@ -43,7 +43,7 @@ public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>
     private final OverpassAPIProvider poiProvider;
 
     private final Point userLocation;
-    private final int rangeInKm;
+    private final double rangeInKm;
     private final int queryMaxResults;
     private final int queryTimeout;
     private String queryUrl;
@@ -77,7 +77,7 @@ public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>
      * @param queryMaxResults max results that the query should return (please do not exceed 500)
      * @param queryTimeout query timeout
      */
-    public GeonamesHandler(Point userLocation, int boundingBoxRangeKm, int queryMaxResults, int queryTimeout){
+    public GeonamesHandler(Point userLocation, double boundingBoxRangeKm, int queryMaxResults, int queryTimeout){
         if(userLocation == null)
             throw new IllegalArgumentException("UserPoint user location can't be null");
         if(boundingBoxRangeKm <= 0.1)

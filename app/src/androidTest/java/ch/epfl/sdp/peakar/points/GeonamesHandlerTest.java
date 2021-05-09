@@ -54,7 +54,7 @@ public class GeonamesHandlerTest {
 
         startTimeMs = System.currentTimeMillis();
 
-        GeonamesHandler handler = (GeonamesHandler) new GeonamesHandler(userPoint) {
+        GeonamesHandler handler = (GeonamesHandler) new GeonamesHandler(userPoint,context) {
             @Override
             public void onResponseReceived(ArrayList<POI> result) {
                 resultPOI = result;
@@ -154,7 +154,7 @@ public class GeonamesHandlerTest {
         Assert.assertNotNull(context);
         UserPoint userPoint = null;
 
-        new GeonamesHandler(userPoint) {
+        new GeonamesHandler(userPoint, context) {
             @Override
             public void onResponseReceived(ArrayList<POI> result) {
             }

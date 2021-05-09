@@ -3,6 +3,7 @@ package ch.epfl.sdp.peakar.points;
 import android.Manifest;
 import android.content.Context;
 
+import androidx.core.util.Pair;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.rule.GrantPermissionRule;
 
@@ -50,10 +51,37 @@ public class POICacheTest {
     @Rule
     public GrantPermissionRule grantCameraPermissionRule2 = GrantPermissionRule.grant(Manifest.permission.READ_EXTERNAL_STORAGE);
 
+
+    private static Pair<int[][], Double> topographyPair;
+    private static UserPoint userPoint;
+
     @BeforeClass
-    public static void setup(){
+    public static void setup() throws InterruptedException {
         //Remove potentially created file (due to test suite)
         deleteCacheFile();
+        Context mContext = ApplicationProvider.getApplicationContext();
+        userPoint = UserPoint.getInstance(mContext);
+        userPoint.setLocation(GPSTracker.DEFAULT_LAT, GPSTracker.DEFAULT_LON,GPSTracker.DEFAULT_ALT, GPSTracker.DEFAULT_ACC);
+        new DownloadTopographyTask(){
+            @Override
+            public void onResponseReceived(Pair<int[][], Double> topography) {
+                super.onResponseReceived(topography);
+                topographyPair = topography;
+            }
+        }.execute(userPoint);
+
+        //Wait for the map to be downloaded
+        int counter=0;
+        while(topographyPair==null && counter<20){
+            Thread.sleep(1000);
+            counter++;
+        }
+        counter=0;
+        Assert.assertNotNull(topographyPair);
+        while(topographyPair.first==null && counter<20){
+            Thread.sleep(1000);
+            counter++;
+        }
     }
 
 
@@ -119,11 +147,20 @@ public class POICacheTest {
                 0);
         BoundingBox boundingBox = userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM);
 
+        new DownloadTopographyTask(){
+            @Override
+            public void onResponseReceived(Pair<int[][], Double> topography) {
+                super.onResponseReceived(topography);
+                //Save POIs, BB and topography to the cache
+
+            }
+        }.execute(userPoint);
+
         //Check if file is present
         assertFalse("Old Cache file found",POICache.getInstance().isCacheFilePresent(context.getCacheDir()));
 
         //Create new cache file
-        POICache.getInstance().savePOIDataToCache(inputArrayList,boundingBox,context.getCacheDir());
+        POICache.getInstance().savePOIDataToCache(inputArrayList,boundingBox,topographyPair,context.getCacheDir());
 
         //Check if file is present
         assertTrue("Cache file not found",POICache.getInstance().isCacheFilePresent(context.getCacheDir()));
@@ -137,5 +174,10 @@ public class POICacheTest {
         assertTrue(inputArrayList.contains(result.get(1)));
         assertTrue(inputArrayList.contains(result.get(2)));
         assertTrue(inputArrayList.contains(result.get(3)));
+
+        Pair<int[][], Double> topography = POICache.getInstance().getCachedTopography(context.getCacheDir());
+        //Compare retrieved topo map with initial map
+        assertEquals(topographyPair.first,topography.first);
+        assertEquals(topographyPair.second,topography.second);
     }
 }
