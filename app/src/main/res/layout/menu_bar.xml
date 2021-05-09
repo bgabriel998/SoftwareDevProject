@@ -23,7 +23,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_weight="1">
             <ImageButton
                 android:id="@+id/menu_bar_settings"
                 style="@style/MenuBarButton"
@@ -43,7 +44,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_weight="1">
             <ImageButton
                 android:id="@+id/menu_bar_gallery"
                 style="@style/MenuBarButton"
@@ -63,7 +65,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_weight="1">
             <ImageButton
                 android:id="@+id/menu_bar_camera"
                 style="@style/MenuBarButton"
@@ -83,7 +86,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_weight="1">
             <ImageButton
                 android:id="@+id/menu_bar_map"
                 style="@style/MenuBarButton"
@@ -103,7 +107,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_weight="1">
             <ImageButton
                 android:id="@+id/menu_bar_social"
                 style="@style/MenuBarButton"

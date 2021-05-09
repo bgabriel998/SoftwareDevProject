@@ -64,8 +64,6 @@
     <style name="MenuBarButton" parent="android:style/Widget.Button">
         <item name="android:layout_width">25dp</item>
         <item name="android:layout_height">25dp</item>
-        <item name="android:layout_marginLeft">25dp</item>
-        <item name="android:layout_marginRight">25dp</item>
         <item name="android:layout_marginTop">13dp</item>
         <item name="android:layout_marginBottom">2dp</item>
         <!-- TODO Add background that is a transparent circle that becomes grey on select -->
