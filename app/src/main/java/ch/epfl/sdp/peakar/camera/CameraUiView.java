@@ -1,5 +1,6 @@
 package ch.epfl.sdp.peakar.camera;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -8,7 +9,9 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.view.SurfaceView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
@@ -93,6 +96,8 @@ public class CameraUiView extends View {
 
     private Boolean displayedToastMode;
 
+    private SurfaceView compassBackground;
+
     private static final String DISPLAY_ALL_POIS = "0";
     private static final String DISPLAY_POIS_IN_SIGHT = "1";
     private static final String DISPLAY_POIS_OUT_OF_SIGHT = "2";
@@ -128,6 +133,8 @@ public class CameraUiView extends View {
 
         widgetInit();
 
+        //setCompassBackground(context, attrs);
+
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         sharedPref.registerOnSharedPreferenceChangeListener(listenerPreferences);
 
@@ -139,8 +146,8 @@ public class CameraUiView extends View {
      */
     private void widgetInit(){
         //Initialize colors
-        compassColor = R.color.Black;
-        mountainInfoColor = R.color.Black;
+        compassColor = getResources().getColor(R.color.White, null);
+        mountainInfoColor = getResources().getColor(R.color.Black, null);
 
         //Initialize fonts
         float screenDensity = getResources().getDisplayMetrics().scaledDensity;
@@ -156,7 +163,7 @@ public class CameraUiView extends View {
         mountainInfo = new Paint(Paint.ANTI_ALIAS_FLAG);
         mountainInfo.setTextAlign(Paint.Align.LEFT);
         mountainInfo.setTextSize(MAIN_TEXT_FACTOR*screenDensity);
-        mountainInfo.setColor(compassColor);
+        mountainInfo.setColor(mountainInfoColor);
         mountainInfo.setAlpha(MAX_ALPHA);
 
         //Paint used for the main text heading (N, E, S, W)
@@ -230,6 +237,7 @@ public class CameraUiView extends View {
      * Sets the range in degrees of the compass-view, corresponds to the field of view of the camera
      * @param cameraFieldOfView Pair containing the horizontal and vertical field of view
      */
+    @SuppressWarnings("ConstantConditions")
     public void setRange(Pair<Float, Float> cameraFieldOfView) {
         int orientation = getResources().getConfiguration().orientation;
 
@@ -364,8 +372,8 @@ public class CameraUiView extends View {
 
         //Draw the marker on the preview depending on the line of sight
         Bitmap mountainMarker = isVisible ? mountainMarkerVisible : mountainMarkerNotVisible;
-        mountainInfo.setColor(isVisible ? getResources().getColor(mountainInfoColor, null) : compassColor);
-        mountainInfo.setAlpha(MAX_ALPHA);
+        //mountainInfo.setColor(isVisible ? getResources().getColor(mountainInfoColor, null) : compassColor);
+        //mountainInfo.setAlpha(MAX_ALPHA);
 
         canvas.drawBitmap(mountainMarker, left, mountainMarkerPosition, null);
 
