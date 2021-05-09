@@ -242,6 +242,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
 
         for(int i = 1; i<6; i++){
             onView(withId(R.id.switchDisplayPOIs)).perform(click());
+            Thread.sleep(1);
             onView(ViewMatchers.withId(R.id.take_picture_flash)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             Thread.sleep(SHORT_SLEEP_TIME);
             onView(ViewMatchers.withId(R.id.take_picture_flash)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
