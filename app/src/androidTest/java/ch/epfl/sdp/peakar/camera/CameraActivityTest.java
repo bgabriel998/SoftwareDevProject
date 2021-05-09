@@ -38,6 +38,8 @@ import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sdp.peakar.TestingConstants.BASIC_USERNAME;
+import static ch.epfl.sdp.peakar.TestingConstants.SHORT_SLEEP_TIME;
+import static ch.epfl.sdp.peakar.TestingConstants.USERNAME_CAMERA;
 import static ch.epfl.sdp.peakar.user.AccountTest.registerAuthUser;
 import static ch.epfl.sdp.peakar.user.AccountTest.removeAuthUser;
 import static org.junit.Assert.assertTrue;
@@ -49,7 +51,6 @@ public class CameraActivityTest {
     @Rule
     public ActivityScenarioRule<CameraActivity> testRule = new ActivityScenarioRule<>(CameraActivity.class);
 
-    private static String user1;
     private static SharedPreferences sharedPreferences;
     private static Context context;
 
@@ -66,7 +67,7 @@ public class CameraActivityTest {
         AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
         /* Create a new one */
         registerAuthUser();
-        user1 = (BASIC_USERNAME + AuthService.getInstance().getID()).substring(0, Account.NAME_MAX_LENGTH - 1);
+        String user1 = (USERNAME_CAMERA + AuthService.getInstance().getID()).substring(0, Account.NAME_MAX_LENGTH - 1);
     }
 
     /* Clean environment */
@@ -99,12 +100,14 @@ public class CameraActivityTest {
 
     /* Test that the compass is changed when clicking on the compass button */
     @Test
-    public void TestChangeCompassButton(){
+    public void TestChangeCompassButton() throws InterruptedException {
         String displayCompassKey = context.getResources().getString(R.string.displayCompass_key);
         sharedPreferences.edit().putBoolean(displayCompassKey, false).apply();
 
         ViewInteraction button = Espresso.onView(withId(R.id.compassMiniature));
         button.perform(ViewActions.click());
+
+        Thread.sleep(SHORT_SLEEP_TIME);
 
         boolean displayCompass = sharedPreferences.getBoolean(displayCompassKey, false);
         assertTrue(displayCompass);
