@@ -22,7 +22,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.Overlay;
 
 import java.io.BufferedReader;
 import java.io.IOException;
