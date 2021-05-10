@@ -35,45 +35,62 @@ import ch.epfl.sdp.peakar.utils.OfflineContentContainer;
  * Requests the POIPoints around the user location and then downloads the topography map once the
  * POIPoints are available.
  *
- * To use, simply call ComputePOIPoints.POIPoints to get a List of POIPoints or
- * ComputePOIPoints to get a map with the POIPoints as keys and a boolean indicating if the POIPoint
+ * To use, simply call computePOIPointsInstance.POIPoints to get a List of POIPoints or
+ * computePOIPointsInstance to get a map with the POIPoints as keys and a boolean indicating if the POIPoint
  * is visible or not. If no points are available or if they are not computed yet, they will be null
+ *
+ * This class is a singleton class.
+ *
+ * This class can be observed, it will notify observers when new POIPoints are computed
  *
  * TODO handle the updates more efficiently
  */
-public class ComputePOIPoints implements Observer {
+public class ComputePOIPoints extends Observable implements Observer{
 
     private static final int MAX_LOADING_DISTANCE = 20000; // in m
 
     private static final int HALF_MARKER_SIZE_WIDTH = 3;
     private static final int HALF_MARKER_SIZE_HEIGHT = 5;
 
+    private static ComputePOIPoints single_instance = null; // singleton instance
+
     public static UserPoint userPoint;
   
     @SuppressLint("StaticFieldLeak")
     public static Context ctx;
 
-    private static Map<POIPoint, Boolean> POIs;
-    private static Map<POIPoint, Boolean> filteredPOIPoints;
-    private static Map<POIPoint, Boolean> labeledPOIs;
-    private static Map<POIPoint, Boolean> filteredLabeledPOIPoints;
-    private static Map<POIPoint, Boolean> labeledPOIsInSight;
-    private static Map<POIPoint, Boolean> filteredLabeledPOIsInSight;
-    private static Map<POIPoint, Boolean> labeledPOIsOutOfSight;
-    private static Map<POIPoint, Boolean> filteredLabeledPOIsOutOfSight;
+    private  Map<POIPoint, Boolean> POIs;
+    private  Map<POIPoint, Boolean> filteredPOIPoints;
+    private  Map<POIPoint, Boolean> labeledPOIs;
+    private  Map<POIPoint, Boolean> filteredLabeledPOIPoints;
+    private  Map<POIPoint, Boolean> labeledPOIsInSight;
+    private  Map<POIPoint, Boolean> filteredLabeledPOIsInSight;
+    private  Map<POIPoint, Boolean> labeledPOIsOutOfSight;
+    private  Map<POIPoint, Boolean> filteredLabeledPOIsOutOfSight;
 
     private static boolean isLineOfSightAvailable = false;
 
     /**
-     * Constructor of ComputePOIPoints, updates userPoint and gets the POIs for the userPoint
+     * Constructor of computePOIPointsInstance, updates userPoint and gets the POIs for the userPoint
      * @param context Context of activity
      */
-    public ComputePOIPoints(Context context){
+    private ComputePOIPoints(Context context){
         POIs = new HashMap<>();
         ctx = context;
         userPoint = UserPoint.getInstance(context);
         userPoint.addObserver(this);
         getPOIs(userPoint);
+    }
+
+    /**
+     * Method to get the singleton instance of this class. If the class was already
+     * initialized the parameter will be ignored.
+     *
+     * @param mContext  context of the application.
+     * @return          single instance of the user point.
+     */
+    public static ComputePOIPoints getInstance(Context mContext) {
+        return single_instance == null ? new ComputePOIPoints(mContext) : single_instance;
     }
 
 
@@ -84,7 +101,7 @@ public class ComputePOIPoints implements Observer {
      * are retrieved from cached file
      * @param userPoint user location
      */
-    private static void getPOIs(UserPoint userPoint){
+    private void getPOIs(UserPoint userPoint){
         // clear the old points
         POIs.clear();
 
@@ -109,7 +126,7 @@ public class ComputePOIPoints implements Observer {
      * Get surrounding POIs from cache
      * @param userPoint location of the user
      */
-    private static void getPOIsFromCache(UserPoint userPoint){
+    private void getPOIsFromCache(UserPoint userPoint){
         ArrayList<POIPoint> cachedPOIs = POICache.getInstance().getCachedPOIPoints(ctx.getCacheDir());
 
         cachedPOIs.forEach(poiPoint -> {
@@ -126,7 +143,8 @@ public class ComputePOIPoints implements Observer {
      * Gets the POIs for the userPoint from Provider
      * @param userPoint location of the user
      */
-    private static void getPOIsFromProvider(UserPoint userPoint){
+    @SuppressLint("StaticFieldLeak")
+    private void getPOIsFromProvider(UserPoint userPoint){
         new GeonamesHandler(userPoint){
             @Override
             public void onResponseReceived(ArrayList<POI> result) {
@@ -153,13 +171,13 @@ public class ComputePOIPoints implements Observer {
      *
      * @param userPoint around which the list is computed.
      */
-    private static void getPOISOffline(UserPoint userPoint) {
+    private void getPOISOffline(UserPoint userPoint) {
 
         try {
             OfflineContentContainer offlineContent = readFromFile();
             getLabeledPOIsOffline(userPoint, offlineContent);
         } catch (IOException e) {
-            Log.d("ComputePOIPoints", "There was an error reading the file");
+            Log.d("computePOIPointsInstance", "There was an error reading the file");
         }
 
     }
@@ -169,7 +187,7 @@ public class ComputePOIPoints implements Observer {
      *
      * @return an OfflineContainer containing the downloaded content.
      */
-    private static OfflineContentContainer readFromFile() throws IOException {
+    private OfflineContentContainer readFromFile() throws IOException {
 
         Gson gson = new Gson();
 
@@ -188,7 +206,7 @@ public class ComputePOIPoints implements Observer {
             ret = stringBuilder.toString();
         }
 
-        Log.d("ComputePOIPoints", "Offline content downloaded");
+        Log.d("computePOIPointsInstance", "Offline content downloaded");
         return gson.fromJson(ret, OfflineContentContainer.class);
 
     }
@@ -198,7 +216,8 @@ public class ComputePOIPoints implements Observer {
      *
      * @param userPoint userPoint for which the labeled POIs are computed.
      */
-    private static void getLabeledPOIs(UserPoint userPoint){
+    @SuppressLint("StaticFieldLeak")
+    private void getLabeledPOIs(UserPoint userPoint){
         new DownloadTopographyTask(){
             @Override
             public void onResponseReceived(Pair<int[][], Double> topography) {
@@ -222,6 +241,8 @@ public class ComputePOIPoints implements Observer {
                 filteredLabeledPOIsOutOfSight = filterHighestPOIs(labeledPOIsOutOfSight);
 
                 isLineOfSightAvailable = true;
+                hasChanged();
+                notifyObservers();
             }
         }.execute(userPoint);
     }
@@ -234,13 +255,13 @@ public class ComputePOIPoints implements Observer {
      * @param userPoint         userPoint for which the labeled POIs are computed.
      * @param offlineContent    container containing offline content.
      */
-    private static void getLabeledPOIsOffline(UserPoint userPoint, OfflineContentContainer offlineContent) {
+    private void getLabeledPOIsOffline(UserPoint userPoint, OfflineContentContainer offlineContent) {
 
         BoundingBox boundingBox = offlineContent.boundingBox;
 
         double distance = userPoint.computeFlatDistance(new POIPoint(boundingBox.getCenterWithDateLine()));
 
-        Log.d("ComputePOIPoints", "Distance = " + distance);
+        Log.d("computePOIPointsInstance", "Distance = " + distance);
 
         if (distance < MAX_LOADING_DISTANCE) {
             Pair<int[][], Double> topography = offlineContent.topography;
@@ -266,9 +287,11 @@ public class ComputePOIPoints implements Observer {
             filteredLabeledPOIsOutOfSight = filterHighestPOIs(labeledPOIsOutOfSight);
 
             isLineOfSightAvailable = true;
+            hasChanged();
+            notifyObservers();
         } else {
             resetPOIs();
-            Log.d("ComputePOIPoints", "Distance is > " + MAX_LOADING_DISTANCE);
+            Log.d("computePOIPointsInstance", "Distance is > " + MAX_LOADING_DISTANCE);
         }
 
     }
@@ -276,7 +299,7 @@ public class ComputePOIPoints implements Observer {
     /**
      * Reset lists of POIPoints
      */
-    private static void resetPOIs() {
+    private void resetPOIs() {
         if (filteredPOIPoints != null) filteredPOIPoints.clear();
         if (labeledPOIs != null) labeledPOIs.clear();
         if (filteredLabeledPOIPoints != null) filteredLabeledPOIPoints.clear();
@@ -291,7 +314,7 @@ public class ComputePOIPoints implements Observer {
      * Checks if the line of sight is available or not
      * @return True if the line of sight is available, false otherwise
      */
-    public static Boolean isLineOfSightAvailable(){
+    public Boolean isLineOfSightAvailable(){
         return isLineOfSightAvailable;
     }
 
@@ -299,7 +322,7 @@ public class ComputePOIPoints implements Observer {
      * Gets a Map of all surrounding POIPoints
      * @return Map<POIPoint, Boolean> containing POIPoints.
      */
-    public static Map<POIPoint, Boolean> getPOIs(){
+    public Map<POIPoint, Boolean> getPOIs(){
         return isLineOfSightAvailable() ? labeledPOIs : POIs;
     }
 
@@ -307,7 +330,7 @@ public class ComputePOIPoints implements Observer {
      * Gets a filtered Map of all surrounding POIPoints
      * @return Map<POIPoint, Boolean> containing the filtered POIPoints.
      */
-    public static Map<POIPoint, Boolean> getFilteredPOIs(){
+    public Map<POIPoint, Boolean> getFilteredPOIs(){
         return isLineOfSightAvailable() ? filteredLabeledPOIPoints : filteredPOIPoints;
     }
 
@@ -315,7 +338,7 @@ public class ComputePOIPoints implements Observer {
      * Gets a Map of the POIPoints that are in the line of sight
      * @return Map<POIPoint, Boolean> containing only the POIPoints in the lineOfSight.
      */
-    public static Map<POIPoint, Boolean> getPOIsInSight(){
+    public Map<POIPoint, Boolean> getPOIsInSight(){
         return isLineOfSightAvailable() ? labeledPOIsInSight : POIs;
     }
 
@@ -323,7 +346,7 @@ public class ComputePOIPoints implements Observer {
      * Gets a Map of the POIPoints that are in the line of sight and filtered
      * @return Map<POIPoint, Boolean> containing the filtered POIPoints in the lineOfSight.
      */
-    public static Map<POIPoint, Boolean> getFilteredPOIsInSight(){
+    public Map<POIPoint, Boolean> getFilteredPOIsInSight(){
         return isLineOfSightAvailable() ? filteredLabeledPOIsInSight : filteredPOIPoints;
     }
 
@@ -331,7 +354,7 @@ public class ComputePOIPoints implements Observer {
      * Gets a Map of the POIPoints that are out of the line of sight
      * @return Map<POIPoint, Boolean> containing only the POIPoints out of the lineOfSight.
      */
-    public static Map<POIPoint, Boolean> getPOIsOutOfSight(){
+    public Map<POIPoint, Boolean> getPOIsOutOfSight(){
         return isLineOfSightAvailable() ? labeledPOIsOutOfSight : POIs;
     }
 
@@ -339,7 +362,7 @@ public class ComputePOIPoints implements Observer {
      * Gets a Map of the POIPoints that are out of the line of sight and filtered
      * @return Map<POIPoint, Boolean> containing the filtered POIPoints out of the lineOfSight.
      */
-    public static Map<POIPoint, Boolean> getFilteredPOIsOutOfSight(){
+    public Map<POIPoint, Boolean> getFilteredPOIsOutOfSight(){
         return isLineOfSightAvailable() ? filteredLabeledPOIsOutOfSight : filteredPOIPoints;
     }
 
@@ -351,7 +374,7 @@ public class ComputePOIPoints implements Observer {
      * @param labeledPOIPoints labeled POIPoints that get sorted
      * @return Map<POIPoint, Boolean> of the highest filtered POIs
      */
-     static Map<POIPoint, Boolean> filterHighestPOIs(Map<POIPoint, Boolean> labeledPOIPoints) {
+    Map<POIPoint, Boolean> filterHighestPOIs(Map<POIPoint, Boolean> labeledPOIPoints) {
         //sort the labeledPOIPoints by altitude in decreasing order
         Map<POIPoint, Boolean> sortedPoisByAlt = labeledPOIPoints.entrySet().stream()
                 .sorted(Collections.reverseOrder(Comparator.comparingDouble(p -> p.getKey().altitude)))
@@ -377,7 +400,7 @@ public class ComputePOIPoints implements Observer {
      * @param filteredPOIs Map<POIPoint, Boolean> that contains the filtered POIPOints
      * @return True if the POIPoint should be added, false otherwise
      */
-    private static boolean comparePoiToFiltered(Map.Entry<POIPoint, Boolean> poiPoint, Map<POIPoint, Boolean> filteredPOIs) {
+    private boolean comparePoiToFiltered(Map.Entry<POIPoint, Boolean> poiPoint, Map<POIPoint, Boolean> filteredPOIs) {
         //Iterate over all mountains in the filtered Map
         for (Map.Entry<POIPoint, Boolean> resPoiPoints : filteredPOIs.entrySet()) {
             //If the difference between one of the filtered POIPoints and the actual POIPoint
@@ -412,4 +435,5 @@ public class ComputePOIPoints implements Observer {
     public void update(Observable o, Object arg) {
         getPOIs(userPoint);
     }
+
 }
