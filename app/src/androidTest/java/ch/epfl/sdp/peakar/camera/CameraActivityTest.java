@@ -38,9 +38,9 @@ public class CameraActivityTest {
 
     /* Setup environment */
     @BeforeClass
-    public static void computePOIPoints(){
+    public static void computePOIPointsInstance(){
         Context context = ApplicationProvider.getApplicationContext();
-        new ComputePOIPoints(context);
+        ComputePOIPoints.getInstance(context);
     }
 
     /* Create Intent */

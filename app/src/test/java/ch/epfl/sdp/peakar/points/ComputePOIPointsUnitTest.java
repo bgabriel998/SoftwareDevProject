@@ -7,7 +7,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class ComputePOIPointsUnitTest {
+public class computePOIPointsInstanceUnitTest {
 
     /**
      * Test that only the highest mountains within a horizontal bearing of 6° are filtered and that
@@ -25,7 +25,7 @@ public class ComputePOIPointsUnitTest {
             pois.put(poi, false);
         }
 
-        Map<POIPoint, Boolean> filteredPois = ComputePOIPoints.filterHighestPOIs(pois);
+        Map<POIPoint, Boolean> filteredPois = computePOIPointsInstance.filterHighestPOIs(pois);
         assertEquals(1, filteredPois.size());
         POIPoint highestPoi = (POIPoint) filteredPois.keySet().toArray()[0];
         assertEquals(9, highestPoi.altitude, 0);
@@ -39,7 +39,7 @@ public class ComputePOIPointsUnitTest {
         poiInLineOfSight2.setVerticalBearing(startPoint);
         pois.put(poiInLineOfSight1, true);
         pois.put(poiInLineOfSight2, true);
-        filteredPois = ComputePOIPoints.filterHighestPOIs(pois);
+        filteredPois = computePOIPointsInstance.filterHighestPOIs(pois);
         //Check that the old highest mountain gets removed
         assertEquals(1, filteredPois.size());
         highestPoi = (POIPoint) filteredPois.keySet().toArray()[0];
@@ -51,7 +51,7 @@ public class ComputePOIPointsUnitTest {
         poiOutside6.setHorizontalBearing(startPoint);
         poiOutside6.setVerticalBearing(startPoint);
         pois.put(poiOutside6, false);
-        filteredPois = ComputePOIPoints.filterHighestPOIs(pois);
+        filteredPois = computePOIPointsInstance.filterHighestPOIs(pois);
         //Check that the size increased
         assertEquals(2, filteredPois.size());
         POIPoint newlyAdded = (POIPoint) filteredPois.keySet().toArray()[1];
@@ -64,7 +64,7 @@ public class ComputePOIPointsUnitTest {
         poiHigh.setHorizontalBearing(startPoint);
         poiHigh.setVerticalBearing(startPoint);
         pois.put(poiHigh, false);
-        filteredPois = ComputePOIPoints.filterHighestPOIs(pois);
+        filteredPois = computePOIPointsInstance.filterHighestPOIs(pois);
         //Check that the size increased
         assertEquals(3, filteredPois.size());
         newlyAdded = (POIPoint) filteredPois.keySet().toArray()[2];
