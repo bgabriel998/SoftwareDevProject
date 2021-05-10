@@ -129,7 +129,8 @@ public class CameraActivity extends AppCompatActivity{
             cameraUiView.setDegrees(heading, headingV);
             compassMiniature.setRotation(-1*heading);
             //Update the textviews with the new headings
-            headingCompass.setText(String.format(Locale.ENGLISH, "%.0f°", heading));
+            int headingInt = (int)heading == 360 ? 0 : (int)heading;
+            headingCompass.setText(String.format(Locale.ENGLISH, "%d°", headingInt));
             headingHorizontal.setText(String.format(Locale.ENGLISH, "%.1f °", heading));
             headingVertical.setText(String.format(Locale.ENGLISH, "%.1f °", headingV));
         };
