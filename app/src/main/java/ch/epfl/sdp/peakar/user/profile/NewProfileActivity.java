@@ -15,7 +15,12 @@ import ch.epfl.sdp.peakar.collection.NewCollectedItem;
 import ch.epfl.sdp.peakar.collection.NewCollectionListAdapter;
 import ch.epfl.sdp.peakar.utils.StatusBarHandler;
 
+/**
+ * TODO Rename to remove new part.
+ */
 public class NewProfileActivity extends AppCompatActivity {
+
+    private View selectedCollected = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +36,19 @@ public class NewProfileActivity extends AppCompatActivity {
         fillListView();
     }
 
+    /**
+     * Setup activity as it is the actual users profile.
+     */
     private void setupUser(){
         // TODO Remove Social
         findViewById(R.id.profile_add_friend).setVisibility(View.INVISIBLE);
         findViewById(R.id.profile_remove_friend).setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * Setup activity as an other users profile
+     * @param friends boolean if the user is friend with the owner of this profile.
+     */
     private void setupOtherUser(boolean friends) {
         findViewById(R.id.profile_sign_out).setVisibility(View.INVISIBLE);
         if (friends) {
@@ -49,6 +61,10 @@ public class NewProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Fill list view.
+     * TODO get list from DB?
+     */
     private void fillListView() {
         ArrayList<NewCollectedItem> items = new ArrayList<>(Arrays.asList(
                 new NewCollectedItem("Mont Blanc - Monte Bianco", 4810000, 4810,
@@ -70,12 +86,32 @@ public class NewProfileActivity extends AppCompatActivity {
         if (items.size() > 0) {
             findViewById(R.id.profile_empty_text).setVisibility(View.INVISIBLE);
         }
-
         collectionListView.setOnItemClickListener(collectionClicked);
     }
 
+    /**
+     * Called when an item is pressed. Expands the clicked item, unless already expanded.
+     * Then it shrinks it.
+     */
     private final AdapterView.OnItemClickListener collectionClicked = (parent, view, position, id) -> {
-        view.findViewById(R.id.collected_position).setVisibility(View.VISIBLE);
-        view.findViewById(R.id.collected_date).setVisibility(View.VISIBLE);
+        expandSelected(false);
+        if (view == selectedCollected) {
+            selectedCollected = null;
+        }
+        else {
+            selectedCollected = view;
+            expandSelected(true);
+        }
     };
+
+    /**
+     * Expand or shrink the selected collected view.
+     * @param expand boolean if expand or shrink.
+     */
+    private void expandSelected(boolean expand) {
+        if (selectedCollected != null) {
+            selectedCollected.findViewById(R.id.collected_position).setVisibility(expand ? View.VISIBLE:View.GONE);
+            selectedCollected.findViewById(R.id.collected_date).setVisibility(expand ? View.VISIBLE:View.GONE);
+        }
+    }
 }

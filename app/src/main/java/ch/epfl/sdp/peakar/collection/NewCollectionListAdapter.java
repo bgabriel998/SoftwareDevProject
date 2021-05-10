@@ -45,7 +45,7 @@ public class NewCollectionListAdapter extends ArrayAdapter<NewCollectedItem> {
             convertView = ListAdapterInflater.createLayout(resourceLayout, mContext, parent);
         }
 
-        setItemText(convertView, getItem(position));
+        setupItemView(convertView, getItem(position));
 
         return convertView;
     }
@@ -55,7 +55,7 @@ public class NewCollectionListAdapter extends ArrayAdapter<NewCollectedItem> {
      * @param view the view to place text on.
      * @param item the item to base text off.
      */
-    private void setItemText(View view, NewCollectedItem item) {
+    private void setupItemView(View view, NewCollectedItem item) {
         if (item != null) {
             TextView nameText = view.findViewById(R.id.collected_name);
             TextView heightText = view.findViewById(R.id.collected_height);
@@ -78,7 +78,7 @@ public class NewCollectionListAdapter extends ArrayAdapter<NewCollectedItem> {
 
             positionText.setVisibility(View.GONE);
             dateText.setVisibility(View.GONE);
+
         }
     }
-
 }
