@@ -66,7 +66,6 @@ public class CameraActivityTest {
         AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
         /* Create a new one */
         registerAuthUser();
-        String user1 = (USERNAME_CAMERA + AuthService.getInstance().getID()).substring(0, Account.NAME_MAX_LENGTH - 1);
     }
 
     /* Clean environment */
