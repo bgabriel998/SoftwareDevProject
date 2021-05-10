@@ -15,7 +15,7 @@ import java.util.List;
 
 
 public class Database {
-    public static final String dbAddress = "https://peakar-default-rtdb.europe-west1.firebasedatabase.app/";
+    public static final String DATABASE_ADDRESS= "https://peakar-default-rtdb.europe-west1.firebasedatabase.app/";
     public static final String CHILD_USERS = "users/";
     public static final String CHILD_FRIENDS = "/friends/";
     public static final String CHILD_EMAIL = "email";
