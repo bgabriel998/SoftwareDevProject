@@ -29,19 +29,16 @@ public class FirebaseRankingsList {
      * @param listAdapter adapter to notify on changes.
      */
     public static void synchronizeRankings(List<RankingItem> rankingItems, RankingListAdapter listAdapter) {
-        // Clear the previous list
         rankingItems.clear();
-        // Fill the list and listen to changes
-        DatabaseReference dbRef = Database.refRoot.child("users");
-        ChildEventListener rankingListener = new ChildEventListener() {
+        DatabaseReference dbRef = Database.refRoot.child(Database.CHILD_USERS);
+        dbRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 String uid = snapshot.getKey();
                 String childUsername = snapshot.child("username").getValue(String.class);
                 Long childScore = snapshot.child("score").getValue(Long.class);
                 rankingItems.add(new RankingItem(uid, childUsername, childScore == null ? 0L : childScore));
-                rankingItems.sort(Comparator.comparing(RankingItem::getPoints).reversed());
-                listAdapter.notifyDataSetChanged();
+                sortAndNotify(rankingItems, listAdapter);
             }
 
             @Override
@@ -50,18 +47,15 @@ public class FirebaseRankingsList {
                 String childUsername = snapshot.child("username").getValue(String.class);
                 Integer childScore = snapshot.child("score").getValue(Integer.class);
                 rankingItems.removeIf(x -> x.getUid().equals(uid));
-                rankingItems.add(new RankingItem(uid, childUsername, childScore == null ? 0 : childScore));
-                rankingItems.sort(Comparator.comparing(RankingItem::getPoints).reversed());
-                listAdapter.notifyDataSetChanged();
+                rankingItems.add(new RankingItem(uid, childUsername, childScore == null ? 0L : childScore));
+                sortAndNotify(rankingItems, listAdapter);
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
                 String uid = snapshot.getKey();
                 rankingItems.removeIf(x -> x.getUid().equals(uid));
-                rankingItems.sort(Comparator.comparing(RankingItem::getPoints).reversed());
-                listAdapter.notifyDataSetChanged();
-                Log.d("SYNCHRONIZE_RANKING", "onDataChange");
+                sortAndNotify(rankingItems, listAdapter);
             }
 
             @Override
@@ -70,16 +64,22 @@ public class FirebaseRankingsList {
                 String childUsername = snapshot.child("username").getValue(String.class);
                 Integer childScore = snapshot.child("score").getValue(Integer.class);
                 rankingItems.removeIf(x -> x.getUid().equals(uid));
-                rankingItems.add(new RankingItem(uid, childUsername, childScore == null ? 0 : childScore));
-                rankingItems.sort(Comparator.comparing(RankingItem::getPoints).reversed());
-                listAdapter.notifyDataSetChanged();
+                rankingItems.add(new RankingItem(uid, childUsername, childScore == null ? 0L : childScore));
+                sortAndNotify(rankingItems, listAdapter);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.d("RankingsActivity", "onCancelled: " + databaseError.getDetails());
             }
-        };
-        dbRef.orderByChild("score").addChildEventListener(rankingListener);
+        });
+    }
+
+    /**
+     * Helper method to sort the list and notify the adapter.
+     */
+    private static void sortAndNotify(List<RankingItem> rankingItems, RankingListAdapter listAdapter) {
+        rankingItems.sort(Comparator.comparing(RankingItem::getPoints).reversed());
+        listAdapter.notifyDataSetChanged();
     }
 }
