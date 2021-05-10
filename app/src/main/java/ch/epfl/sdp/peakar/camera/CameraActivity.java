@@ -185,7 +185,7 @@ public class CameraActivity extends AppCompatActivity{
         Bitmap bitmap = CameraUtilities.combineBitmaps(cameraBitmap, compassBitmap);
         //Store the bitmap on the user device
         StorageHandler.storeBitmap(this, bitmap);
-        //Set visibility to invisible again after 100ms
+        //Set visibility to invisible again after FLASH_TIME_MS
         flash.postDelayed(() -> flash.setVisibility(View.GONE), FLASH_TIME_MS);
     }
 
