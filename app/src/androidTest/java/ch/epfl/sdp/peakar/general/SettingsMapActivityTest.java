@@ -13,6 +13,7 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -20,11 +21,14 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Overlay;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 
 import ch.epfl.sdp.peakar.R;
 
@@ -71,6 +75,24 @@ public class SettingsMapActivityTest {
                 .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView((withId((R.id.settingsMapOkButton))))
                 .check(matches(isDisplayed()));
+    }
+
+    /* Test that the overlays are set correctly before and after a long press) */
+    @Test
+    public void TestMapLongPressOverlays() {
+        // checks that there are no overlays
+        testRule.getScenario().onActivity(a -> {
+            MapView mapView = a.findViewById(R.id.settingsMapView);
+            Assert.assertEquals(2,mapView.getOverlays().size());
+        });
+        // performs long press
+        ViewInteraction view = onView(withId(R.id.settingsMapView));
+        view.perform(ViewActions.longClick());
+        // check if ok button is visible and displayed
+        testRule.getScenario().onActivity(a -> {
+            MapView mapView = a.findViewById(R.id.settingsMapView);
+            Assert.assertEquals(4,mapView.getOverlays().size());
+        });
     }
 
     /* Test that pressing the back button finish the activity and resets the offline mode value */
