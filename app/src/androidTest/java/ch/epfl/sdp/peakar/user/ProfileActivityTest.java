@@ -47,7 +47,7 @@ import static ch.epfl.sdp.peakar.user.AccountTest.removeAuthUser;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
-public class    ProfileActivityTest {
+public class ProfileActivityTest {
     private static String user1;
     private static String user2;
 
