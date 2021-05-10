@@ -46,8 +46,14 @@ public class AuthAccountTest {
 
     // Helper method, register a new test user using a certain random offset given as input
     public static void registerAuthUser() {
-        // Generate user
-        AuthService.getInstance().authAnonymously();
+        // Generate user or force retrieve data if a user is already here.
+        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+            AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+            AuthService.getInstance().authAnonymously();
+        }
+        else {
+            FirebaseAuthService.getInstance().forceRetrieveData();
+        }
     }
 
     // Helper method, delete the current user

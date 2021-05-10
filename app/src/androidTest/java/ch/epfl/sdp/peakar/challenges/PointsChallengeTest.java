@@ -51,13 +51,7 @@ public class PointsChallengeTest {
     /* Make sure that an account is signed in and as new before each test */
     @Before
     public void createTestUser() {
-        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-            AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
-            registerAuthUser();
-        }
-        else {
-            FirebaseAuthService.getInstance().forceRetrieveData();
-        }
+        registerAuthUser();
         removeTestUsers();
     }
 
