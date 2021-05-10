@@ -16,7 +16,6 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.auth.FirebaseAuth;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -32,13 +31,12 @@ import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
 import ch.epfl.sdp.peakar.user.profile.ProfileLauncherActivity;
 import ch.epfl.sdp.peakar.user.services.AuthService;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sdp.peakar.TestingConstants.SHORT_SLEEP_TIME;
-import static ch.epfl.sdp.peakar.user.AccountTest.registerAuthUser;
-import static ch.epfl.sdp.peakar.user.AccountTest.removeAuthUser;
+import static ch.epfl.sdp.peakar.user.AuthAccountTest.registerAuthUser;
+import static ch.epfl.sdp.peakar.user.AuthAccountTest.removeAuthUser;
 import static org.junit.Assert.assertTrue;
 
 
@@ -121,7 +119,6 @@ public class CameraActivityTest {
     /* Test that pressing the profile button when signed in launches the ProfileLaunchActivity */
     @Test
     public void TestProfileButtonSignedIn(){
-
         createTestUser();
 
         ViewInteraction button = Espresso.onView(withId(R.id.profileButton));
@@ -131,14 +128,7 @@ public class CameraActivityTest {
     }
 
     public void createTestUser() {
-        //TODO replace with registerAuthUser(); after merge of PR rankings, challenges, accounts
-        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-            AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
-            registerAuthUser();
-        }
-        else {
-            FirebaseAuthService.getInstance().forceRetrieveData();
-        }
+        registerAuthUser();
         removeTestUsers();
     }
 }
