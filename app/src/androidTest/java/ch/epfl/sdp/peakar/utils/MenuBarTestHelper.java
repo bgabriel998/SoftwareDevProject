@@ -1,10 +1,12 @@
-package ch.epfl.sdp.peakar;
+package ch.epfl.sdp.peakar.utils;
 
 import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 
 import java.util.HashMap;
 
+import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.TestMenuBarActivity;
 import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.gallery.GalleryActivity;
 import ch.epfl.sdp.peakar.general.SettingsActivity;
@@ -43,12 +45,11 @@ public class MenuBarTestHelper {
         iconPointerMap.put(R.id.menu_bar_gallery, R.id.menu_bar_gallery_pointer);
         iconPointerMap.put(R.id.menu_bar_camera, R.id.menu_bar_camera_pointer);
         iconPointerMap.put(R.id.menu_bar_map, R.id.menu_bar_map_pointer);
-        // TODO: iconPointerMap.put(R.id.menu_bar_social, R.id.menu_bar_social_pointer);
         iconPointerMap.put(R.id.menu_bar_social, R.id.menu_bar_social_pointer);
     }
 
     /**
-     * Test if a button is clickable and that it's pointer is invisible
+     * Test if a button is clickable and that its pointer is invisible
      * @param iconId id for icon to test
      */
     public static void TestClickableIconButton(int iconId){

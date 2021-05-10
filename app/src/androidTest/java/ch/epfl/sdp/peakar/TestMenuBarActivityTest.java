@@ -1,17 +1,16 @@
 package ch.epfl.sdp.peakar;
 
-import android.Manifest;
-
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import ch.epfl.sdp.peakar.utils.MenuBarTestHelper;
 
 @RunWith(AndroidJUnit4.class)
 public class TestMenuBarActivityTest {
@@ -41,12 +40,6 @@ public class TestMenuBarActivityTest {
     public void TestMenuBarGallery(){
         MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_gallery);
     }
-
-    /* Test that menu bars camera icon works as intended */
-    /*@Test
-    public void TestMenuBarCamera(){
-        MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_camera);
-    }*/
 
     /* Test that menu bars map icon works as intended */
     @Test

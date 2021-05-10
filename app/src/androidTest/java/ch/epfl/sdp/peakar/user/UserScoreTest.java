@@ -14,7 +14,7 @@ import ch.epfl.sdp.peakar.user.score.ScoringConstants;
 import ch.epfl.sdp.peakar.user.score.UserScore;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 
-import static ch.epfl.sdp.peakar.TestingConstants.*;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.*;
 import static ch.epfl.sdp.peakar.user.AuthAccountTest.registerAuthUser;
 import static ch.epfl.sdp.peakar.user.AuthAccountTest.removeAuthUser;
 import static org.junit.Assert.assertEquals;

@@ -48,7 +48,6 @@ public class MenuBarHandler {
         iconPointerMap.put(R.id.menu_bar_gallery, R.id.menu_bar_gallery_pointer);
         iconPointerMap.put(R.id.menu_bar_camera, R.id.menu_bar_camera_pointer);
         iconPointerMap.put(R.id.menu_bar_map, R.id.menu_bar_map_pointer);
-        // TODO: iconPointerMap.put(R.id.menu_bar_social, R.id.menu_bar_social_pointer);
         iconPointerMap.put(R.id.menu_bar_social, R.id.menu_bar_social_pointer);
     }
 

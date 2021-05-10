@@ -41,8 +41,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibilit
 import static androidx.test.espresso.matcher.ViewMatchers.withHint;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.peakar.TestingConstants.BASIC_USERNAME;
-import static ch.epfl.sdp.peakar.TestingConstants.LONG_SLEEP_TIME;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.BASIC_USERNAME;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.LONG_SLEEP_TIME;
 import static ch.epfl.sdp.peakar.user.AuthAccountTest.registerAuthUser;
 import static ch.epfl.sdp.peakar.user.AuthAccountTest.removeAuthUser;
 import static org.junit.Assert.assertSame;
