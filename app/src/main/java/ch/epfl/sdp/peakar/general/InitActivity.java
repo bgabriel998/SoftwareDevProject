@@ -61,7 +61,7 @@ public class InitActivity extends AppCompatActivity {
     private synchronized void initApp(){
         if(AuthService.getInstance().getAuthAccount() != null) AuthService.getInstance().getAuthAccount().init();
         //Request and compute the POIPoints
-        new ComputePOIPoints(this);
+        ComputePOIPoints.getInstance(this);
     }
 
 
