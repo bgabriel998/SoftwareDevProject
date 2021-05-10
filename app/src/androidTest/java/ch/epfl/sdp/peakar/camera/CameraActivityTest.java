@@ -134,6 +134,7 @@ public class CameraActivityTest {
     }
 
     public void createTestUser() {
+        //TODO replace with registerAuthUser(); after merge of PR rankings, challenges, accounts
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
             registerAuthUser();
