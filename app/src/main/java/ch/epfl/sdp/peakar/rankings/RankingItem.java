@@ -5,16 +5,16 @@ package ch.epfl.sdp.peakar.rankings;
  * used to fill rankings list.
  */
 public class RankingItem {
-    private String uid;
-    private String username;
-    private int points;
+    private final String uid;
+    private final String username;
+    private final long points;
 
     /**
      * Constructor
      * @param username of user.
      * @param points user has.
      */
-    public RankingItem(String uid, String username, int points) {
+    public RankingItem(String uid, String username, long points) {
         this.uid = uid;
         this.username = username;
         this.points = points;
@@ -40,7 +40,7 @@ public class RankingItem {
      * Getter of the ranking item user points
      * @return points of the user
      */
-    public int getPoints() {
+    public long getPoints() {
         return points;
     }
 }
