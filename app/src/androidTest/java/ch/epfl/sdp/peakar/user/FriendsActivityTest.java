@@ -30,7 +30,7 @@ import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.user.friends.FriendItem;
 import ch.epfl.sdp.peakar.user.friends.FriendItemActivity;
 import ch.epfl.sdp.peakar.user.friends.FriendsActivity;
-import ch.epfl.sdp.peakar.user.services.Account;
+import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseFriendItem;
@@ -46,8 +46,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.peakar.TestingConstants.BASIC_USERNAME;
 import static ch.epfl.sdp.peakar.TestingConstants.LONG_SLEEP_TIME;
 import static ch.epfl.sdp.peakar.TestingConstants.SHORT_SLEEP_TIME;
-import static ch.epfl.sdp.peakar.user.AccountTest.registerAuthUser;
-import static ch.epfl.sdp.peakar.user.AccountTest.removeAuthUser;
+import static ch.epfl.sdp.peakar.user.AuthAccountTest.registerAuthUser;
+import static ch.epfl.sdp.peakar.user.AuthAccountTest.removeAuthUser;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertNotNull;
@@ -68,7 +68,7 @@ public class FriendsActivityTest {
         /* Create a new one */
         registerAuthUser();
 
-        username = (BASIC_USERNAME + AuthService.getInstance().getID()).substring(0, Account.NAME_MAX_LENGTH - 4);
+        username = (BASIC_USERNAME + AuthService.getInstance().getID()).substring(0, AuthAccount.NAME_MAX_LENGTH - 4);
     }
 
     /* Clean environment */
@@ -80,13 +80,7 @@ public class FriendsActivityTest {
     /* Make sure that an account is signed in and as new before each test */
     @Before
     public void createTestUser() {
-        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-            AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
-            registerAuthUser();
-        }
-        else {
-            FirebaseAuthService.getInstance().forceRetrieveData();
-        }
+        registerAuthUser();
     }
 
     /* Make sure that mock users are not on the database after a test */

@@ -9,9 +9,4 @@ public interface RemoteResource {
      * @return Outcome of the retrieval.
      */
     RemoteOutcome retrieveData();
-
-    /**
-     * Load data into the local resource.
-     */
-    void loadData();
 }
