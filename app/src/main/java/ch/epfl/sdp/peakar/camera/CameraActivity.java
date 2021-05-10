@@ -202,22 +202,12 @@ public class CameraActivity extends AppCompatActivity{
         userLocation = findViewById(R.id.userLocation);
         userAltitude = findViewById(R.id.userAltitude);
 
-        if(devOption){
-            headingHorizontal.setVisibility(View.VISIBLE);
-            headingVertical.setVisibility(View.VISIBLE);
-            fovHorizontal.setVisibility(View.VISIBLE);
-            fovVertical.setVisibility(View.VISIBLE);
-            userLocation.setVisibility(View.VISIBLE);
-            userAltitude.setVisibility(View.VISIBLE);
-        }
-        else{
-            headingHorizontal.setVisibility(View.GONE);
-            headingVertical.setVisibility(View.GONE);
-            fovHorizontal.setVisibility(View.GONE);
-            fovVertical.setVisibility(View.GONE);
-            userLocation.setVisibility(View.GONE);
-            userAltitude.setVisibility(View.GONE);
-        }
+        headingHorizontal.setVisibility(devOption ? View.VISIBLE : View.GONE);
+        headingVertical.setVisibility(devOption ? View.VISIBLE : View.GONE);
+        fovHorizontal.setVisibility(devOption ? View.VISIBLE : View.GONE);
+        fovVertical.setVisibility(devOption ? View.VISIBLE : View.GONE);
+        userLocation.setVisibility(devOption ? View.VISIBLE : View.GONE);
+        userAltitude.setVisibility(devOption ? View.VISIBLE : View.GONE);
     }
 
     /**
