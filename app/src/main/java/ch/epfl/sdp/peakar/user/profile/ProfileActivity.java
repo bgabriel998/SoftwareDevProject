@@ -21,7 +21,7 @@ import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
 import ch.epfl.sdp.peakar.user.friends.AddFriendActivity;
 import ch.epfl.sdp.peakar.user.friends.FriendsActivity;
 import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
-import ch.epfl.sdp.peakar.user.services.Account;
+import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthProvider;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
@@ -112,7 +112,7 @@ public class ProfileActivity extends AppCompatActivity {
         if(authService.getAuthAccount() == null) setMenuUI();
         else {
             // If there is a user already logged, check if the user is already registered
-            if(authService.getAuthAccount().getUsername().equals(Account.USERNAME_BEFORE_REGISTRATION)) setUsernameChoiceUI();
+            if(authService.getAuthAccount().getUsername().equals(AuthAccount.USERNAME_BEFORE_REGISTRATION)) setUsernameChoiceUI();
             else setMenuUI();
         }
     }
