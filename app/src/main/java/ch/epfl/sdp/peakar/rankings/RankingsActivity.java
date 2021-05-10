@@ -1,19 +1,9 @@
 package ch.epfl.sdp.peakar.rankings;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.firebase.client.Firebase;
-import com.firebase.client.Query;
-import com.firebase.ui.FirebaseListAdapter;
-import com.google.firebase.FirebaseApp;
 
 import java.util.ArrayList;
 import java.util.Collections;
