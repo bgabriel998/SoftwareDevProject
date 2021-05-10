@@ -41,7 +41,6 @@ import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.points.GeonamesHandler;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.points.Point;
-import ch.epfl.sdp.peakar.points.UserPoint;
 import ch.epfl.sdp.peakar.user.services.Account;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 
