@@ -2,34 +2,36 @@ package ch.epfl.sdp.peakar.rankings;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.firebase.client.Firebase;
+import com.firebase.client.Query;
+import com.firebase.ui.FirebaseListAdapter;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.database.Database;
+import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseRankingsList;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
 public class RankingsActivity extends AppCompatActivity {
 
     private static final String  TOOLBAR_TITLE = "Rankings";
-    private static ArrayList<RankingItem> rankingItems = new ArrayList<>();
+    private final static List<RankingItem> rankingItems = Collections.synchronizedList(new ArrayList<>());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO MOVE TO MAIN MENU ACTIVITY
-        FirebaseApp.initializeApp(this);
-        synchronizeRanking();
+
         setContentView(R.layout.activity_rankings);
 
         ToolbarHandler.SetupToolbar(this, TOOLBAR_TITLE);
@@ -47,39 +49,11 @@ public class RankingsActivity extends AppCompatActivity {
                 R.layout.ranking_item,
                 rankingItems);
 
+        listAdapter.setNotifyOnChange(true);
+
+        // Start rankings synchronization
+        FirebaseRankingsList.synchronizeRankings(rankingItems, listAdapter);
 
         rankingsListView.setAdapter(listAdapter);
     }
-
-    /**
-     * Update the ranking whenever the DB changes
-     */
-
-    public void synchronizeRanking() {
-        DatabaseReference dbRef = Database.refRoot.child("users");
-        ValueEventListener rankingListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot parent) {
-                ArrayList<RankingItem> tempRankings =  new ArrayList<>();
-                for (DataSnapshot child : parent.getChildren()) {
-                    boolean found = false;
-                    String uid = child.getKey() != null ? child.getKey() : "null";
-                    String childUsername = child.child("username").getValue(String.class);
-                    Integer childScore = child.child("score").getValue(Integer.class);
-                    tempRankings.add(new RankingItem(uid, childUsername, childScore == null ? 0 : childScore));
-                }
-                Collections.reverse(tempRankings);
-                rankingItems = tempRankings;
-                fillRankingsList();
-                Log.d("SYNCHRONIZE_RANKING", "onDataChange");
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        };
-        dbRef.orderByChild("score").addValueEventListener(rankingListener);
-
-    }
-
 }

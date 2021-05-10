@@ -15,7 +15,7 @@ import java.util.List;
 
 
 public class Database {
-
+    public static final String dbAddress = "https://peakar-default-rtdb.europe-west1.firebasedatabase.app/";
     public static final String CHILD_USERS = "users/";
     public static final String CHILD_FRIENDS = "/friends/";
     public static final String CHILD_EMAIL = "email";
@@ -36,7 +36,7 @@ public class Database {
     public static final String CHILD_CHALLENGE_GOAL = "goal";
     public final static String VALUE_POINTS_CHALLENGE = "points_challenge";
     // This is a reference to the database root
-    public static final DatabaseReference refRoot = FirebaseDatabase.getInstance("https://peakar-default-rtdb.europe-west1.firebasedatabase.app/").getReference();
+    public static final DatabaseReference refRoot = FirebaseDatabase.getInstance(dbAddress).getReference();
 
     /**
      * Sets the childKeys fields of the desired database path with the given values
