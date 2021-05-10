@@ -13,8 +13,6 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.google.firebase.auth.FirebaseAuth;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
