@@ -255,7 +255,7 @@ public class ProfileActivity extends AppCompatActivity {
      */
     public void setUsernameChoiceUI() {
         loggedLayout.setVisibility(View.GONE);
-        signOutButton.setVisibility(View.VISIBLE);
+        signOutButton.setVisibility(View.GONE);
         signInButton.setVisibility(View.GONE);
         submitUsernameButton.setVisibility(View.VISIBLE);
         editTextUsername.setVisibility(View.VISIBLE);
