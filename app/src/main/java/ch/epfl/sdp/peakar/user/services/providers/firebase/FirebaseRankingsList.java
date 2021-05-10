@@ -69,7 +69,7 @@ public class FirebaseRankingsList {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.d("RankingsActivity", "onCancelled: " + databaseError.getDetails());
             }
         });
