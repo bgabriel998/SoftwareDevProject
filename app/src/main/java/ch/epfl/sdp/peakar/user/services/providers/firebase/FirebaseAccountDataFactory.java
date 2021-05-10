@@ -25,7 +25,7 @@ import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 
 /**
- * This class implements helper methods that can generate an AccountData retrieving data from the DB.
+ * This class implements helper methods that can generate an <code>AccountData</code> retrieving data from the DB.
  */
 public class FirebaseAccountDataFactory implements RemoteResource {
     private final AccountData accountData;
@@ -33,11 +33,19 @@ public class FirebaseAccountDataFactory implements RemoteResource {
     private final DatabaseReference dbRefUser;
     private DataSnapshot data;
 
+    /**
+     * Constructor.
+     */
     private FirebaseAccountDataFactory(AccountData accountData, DatabaseReference dbRefUser) {
         this.accountData = accountData;
         this.dbRefUser = dbRefUser;
     }
 
+    /**
+     * Retrieve the account data from the remote resource indicated.
+     * @param accountData account data to modify with the remote resource.
+     * @param dbRefUser database reference to the user.
+     */
     public static RemoteOutcome retrieveAccountData(AccountData accountData, DatabaseReference dbRefUser) {
         FirebaseAccountDataFactory newFactory = new FirebaseAccountDataFactory(accountData, dbRefUser);
         return newFactory.retrieveData();
@@ -68,6 +76,9 @@ public class FirebaseAccountDataFactory implements RemoteResource {
         }
     }
 
+    /**
+     * Load retrieved data into the <code>AccountData</code> object.
+     */
     public void loadData() {
         // Load username
         accountData.setUsername((Optional.ofNullable(data.child(Database.CHILD_USERNAME).getValue(String.class)).orElse(AuthAccount.USERNAME_BEFORE_REGISTRATION)));
@@ -115,7 +126,7 @@ public class FirebaseAccountDataFactory implements RemoteResource {
                     Optional.ofNullable(peak.child(Database.CHILD_ATTRIBUTE_PEAK_ALTITUDE).getValue(Long.class)).orElse(0L));
 
             // Add the peak
-            accountData.getDiscoveredPeaks().add(newPeak);
+            accountData.addPeak(newPeak);
         }
     }
 
@@ -133,7 +144,7 @@ public class FirebaseAccountDataFactory implements RemoteResource {
                     Optional.ofNullable(countryHighPoint.child(Database.CHILD_ATTRIBUTE_HIGH_POINT_HEIGHT).getValue(Long.class)).orElse(0L));
 
             // Add the high point
-            accountData.getDiscoveredCountryHighPoint().put(newCountryHighPoint.getCountryName(), newCountryHighPoint);
+            accountData.addDiscoveredCountryHighPoint(newCountryHighPoint.getCountryName(), newCountryHighPoint);
         }
     }
 
@@ -146,7 +157,7 @@ public class FirebaseAccountDataFactory implements RemoteResource {
             int newHeight = Optional.ofNullable(heightEntry.child("0").getValue(Integer.class)).orElse(0);
 
             // Add the height locally
-            accountData.getDiscoveredPeakHeights().add(newHeight);
+            accountData.addDiscoveredPeakHeight(newHeight);
         }
     }
 
@@ -162,7 +173,7 @@ public class FirebaseAccountDataFactory implements RemoteResource {
             FirebaseFriendItem newFriendItem = new FirebaseFriendItem(uidFriend);
 
             // Add the friend
-            accountData.getFriends().add(newFriendItem);
+            accountData.addFriend(newFriendItem);
         }
     }
 
@@ -193,7 +204,7 @@ public class FirebaseAccountDataFactory implements RemoteResource {
     }
 
     /**
-     * Load added challenges.
+     * Load points challenge.
      */
     private void loadPointsChallenge(DataSnapshot data) {
         Log.d("FirebaseAccountDataFactory", "loadPointsChallenge: entered");
@@ -219,7 +230,7 @@ public class FirebaseAccountDataFactory implements RemoteResource {
         Log.d("FirebaseAccountDataFactory", "loadPointsChallenge: prize = " + prize);
 
         // Add the challenge
-        accountData.getChallenges().add(new FirebasePointsChallenge(id, users, prize, goal));
+        accountData.addChallenge(new FirebasePointsChallenge(id, users, prize, goal));
         Log.d("FirebaseAccountDataFactory", "loadPointsChallenge: new challenges size = " + accountData.getChallenges().size());
     }
 }

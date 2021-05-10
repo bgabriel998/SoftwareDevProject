@@ -76,7 +76,7 @@ public abstract class AuthAccount extends Account {
      * @param friendItem <code>friendItem</code> corresponding to a new friend.
      */
     protected void addFriend(FriendItem friendItem) {
-        accountData.getFriends().add(friendItem);
+        accountData.addFriend(friendItem);
     }
 
     /**
@@ -84,7 +84,7 @@ public abstract class AuthAccount extends Account {
      * @param friendID friend's ID
      */
     public void removeFriend(String friendID) {
-        accountData.getFriends().removeIf(x -> x.hasID(friendID));
+        accountData.removeFriend(friendID);
     }
 
     /**
@@ -93,7 +93,7 @@ public abstract class AuthAccount extends Account {
      */
     public void setDiscoveredCountryHighPoint(CountryHighPoint entry) {
         if(!getDiscoveredCountryHighPoint().containsKey(entry.getCountryName())) {
-            accountData.getDiscoveredCountryHighPoint().put(entry.getCountryName(), entry);
+            accountData.addDiscoveredCountryHighPoint(entry.getCountryName(), entry);
         }
     }
 
@@ -103,7 +103,7 @@ public abstract class AuthAccount extends Account {
      * @param badge height badge (see ScoringConstants.java)
      */
     public void setDiscoveredPeakHeights(int badge) {
-        accountData.getDiscoveredPeakHeights().add(badge);
+        accountData.addDiscoveredPeakHeight(badge);
     }
 
     /**
@@ -111,7 +111,7 @@ public abstract class AuthAccount extends Account {
      * WARNING : On DB, the list given to the method filter out all peaks already present.
      */
     public void setDiscoveredPeaks(ArrayList<POIPoint> newDiscoveredPeaks) {
-        accountData.getDiscoveredPeaks().addAll(newDiscoveredPeaks);
+        newDiscoveredPeaks.forEach(x -> accountData.addPeak(x));
     }
 
 
@@ -128,7 +128,7 @@ public abstract class AuthAccount extends Account {
     public ArrayList<POIPoint> filterNewDiscoveredPeaks(ArrayList<POIPoint> unfilteredDiscoveredPeaks){
         ArrayList<POIPoint> resultList = unfilteredDiscoveredPeaks.stream().filter(newPeak -> !accountData.getDiscoveredPeaks().contains(newPeak)).collect(Collectors.toCollection(ArrayList::new));
         // Update the list of discovered peaks (local HashSet)
-        accountData.getDiscoveredPeaks().addAll(resultList);
+        resultList.forEach(x -> accountData.addPeak(x));
         return resultList;
     }
 }
