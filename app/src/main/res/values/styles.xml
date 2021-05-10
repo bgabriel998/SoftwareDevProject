@@ -139,6 +139,11 @@
         <item name="android:textColor">@color/LightBlue</item>
     </style>
 
+    <!-- Small Dark Green Text -->
+    <style name="SmallText.DarkGreen">
+        <item name="android:textColor">@color/DarkGreen</item>
+    </style>
+
     <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">@color/BabyBlue</item>
     </style>
