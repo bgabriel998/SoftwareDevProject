@@ -1,11 +1,7 @@
 package ch.epfl.sdp.peakar.user.services.providers.firebase;
 
-import android.net.Uri;
 import android.util.Log;
 
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.Hashtable;
@@ -13,7 +9,6 @@ import java.util.Hashtable;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
 import ch.epfl.sdp.peakar.general.remote.RemoteResource;
-import ch.epfl.sdp.peakar.user.services.Account;
 import ch.epfl.sdp.peakar.user.services.AccountData;
 import ch.epfl.sdp.peakar.user.services.OtherAccount;
 

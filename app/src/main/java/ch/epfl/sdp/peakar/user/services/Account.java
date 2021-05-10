@@ -1,7 +1,5 @@
 package ch.epfl.sdp.peakar.user.services;
 
-import android.net.Uri;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,7 +10,6 @@ import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.user.challenge.Challenge;
 import ch.epfl.sdp.peakar.user.friends.FriendItem;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseOtherAccount;
 
 /**
  * This class describes the local behaviour of the account model regardless of the Database provider.

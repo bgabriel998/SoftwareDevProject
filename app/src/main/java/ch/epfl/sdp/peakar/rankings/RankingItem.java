@@ -5,9 +5,9 @@ package ch.epfl.sdp.peakar.rankings;
  * used to fill rankings list.
  */
 public class RankingItem {
-    private String uid;
-    private String username;
-    private long points;
+    private final String uid;
+    private final String username;
+    private final long points;
 
     /**
      * Constructor

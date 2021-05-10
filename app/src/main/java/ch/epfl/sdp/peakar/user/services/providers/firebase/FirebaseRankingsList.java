@@ -1,7 +1,6 @@
 package ch.epfl.sdp.peakar.user.services.providers.firebase;
 
 import android.util.Log;
-import android.widget.ListAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

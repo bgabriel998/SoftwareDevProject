@@ -34,7 +34,6 @@ public interface AuthService {
 
     /**
      * Get the authenticated account or a null reference if no auth has been performed.
-     * @return
      */
     AuthAccount getAuthAccount();
 
