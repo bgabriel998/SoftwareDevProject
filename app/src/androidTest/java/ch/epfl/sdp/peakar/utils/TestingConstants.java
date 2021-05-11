@@ -1,9 +1,8 @@
-package ch.epfl.sdp.peakar;
+package ch.epfl.sdp.peakar.utils;
 
 public class TestingConstants {
     //User constants
     public final static String BASIC_USERNAME = "test";
-    public final static String USERNAME_CAMERA = "abcd";
 
     public final static int SHORT_SLEEP_TIME = 500;
     public final static int THREAD_SLEEP_1S = 1000;

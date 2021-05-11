@@ -53,10 +53,13 @@
 
     <!-- Image Descriptions -->
     <string name="description_back_button" translatable="false">Back Button</string>
-    <string name="description_map_button" translatable="false">Map Button</string>
-    <string name="description_camera_button" translatable="false">Camera Button</string>
     <string name="description_profile_button" translatable="false">Profile Button</string>
     <string name="description_settings_button" translatable="false">Settings Button</string>
+    <string name="description_gallery_button" translatable="false">Gallery Button</string>
+    <string name="description_camera_button" translatable="false">Camera Button</string>
+    <string name="description_map_button" translatable="false">Map Button</string>
+    <string name="description_social_button" translatable="false">Social Button</string>
+    <string name="description_menu_pointer" translatable="false">Menu Pointer</string>
     <string name='description_remove_friend_button' translatable="false">Remove friend button</string>
     <string name="description_icon" translatable="false">Peak AR Icon</string>
     <string name="description_collected_image" translatable="false">Photo over collected mountain</string>

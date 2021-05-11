@@ -23,7 +23,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.peakar.TestingConstants.LONG_SLEEP_TIME;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.LONG_SLEEP_TIME;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 

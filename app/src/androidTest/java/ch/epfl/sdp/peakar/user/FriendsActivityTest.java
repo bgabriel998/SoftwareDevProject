@@ -13,8 +13,6 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.google.firebase.auth.FirebaseAuth;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -43,9 +41,9 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.peakar.TestingConstants.BASIC_USERNAME;
-import static ch.epfl.sdp.peakar.TestingConstants.LONG_SLEEP_TIME;
-import static ch.epfl.sdp.peakar.TestingConstants.SHORT_SLEEP_TIME;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.BASIC_USERNAME;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.LONG_SLEEP_TIME;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.SHORT_SLEEP_TIME;
 import static ch.epfl.sdp.peakar.user.AuthAccountTest.registerAuthUser;
 import static ch.epfl.sdp.peakar.user.AuthAccountTest.removeAuthUser;
 import static org.hamcrest.Matchers.allOf;
