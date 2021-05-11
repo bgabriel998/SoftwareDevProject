@@ -334,7 +334,6 @@ public class OSMMap {
         edges.add(edges.get(0));    //forces the loop to close(connect last point to first point)
         boundingBoxPolygon.getFillPaint().setColor(Color.parseColor(POLYGON_BOUNDING_BOX_COLOR)); //set fill color
         boundingBoxPolygon.setPoints(edges);
-        boundingBoxPolygon.setTitle("Bounding box");
 
         mapView.getOverlays().add(boundingBoxPolygon);
 
