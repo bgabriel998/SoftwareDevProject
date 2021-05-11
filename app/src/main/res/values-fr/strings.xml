@@ -53,10 +53,10 @@
     <string name="display_dev_options">Afficher les options développeur</string>
     <string name="lineOfSightNotDownloaded">Le téléchargement de la carte pour les montagnes dans la ligne de mire.</string>
     <string name="permission_rationale_title">Des permissions sont nécessaires!</string>
-    <string name="permission_rationale_message">L\'autorisation de la caméra est nécessaire pour ouvrir l\'aperçu de la caméra,
-        l\'autorisation de localisation est nécessaire pour afficher les sommets environnants,
-        l\'écriture et la lecture du stockage externe est nécessaire pour sauvegarder et lire les montagnes et les images sauvegardées.
-        est nécessaire pour sauvegarder et lire les montagnes et les images sauvegardées, alors s'il vous plaît, permettez-le !</string>
-    <string name="camera_request_title">L\'autorisation de la caméra est nécessaire !</string>
-    <string name="camera_request_body">L\'autorisation de la caméra est nécessaire pour pouvoir utiliser l\'aperçu de la caméra.</string>
+    <string name="permission_rationale_message">"L'autorisation de la caméra est nécessaire pour ouvrir l'aperçu de la caméra,
+        l'autorisation de localisation est nécessaire pour afficher les sommets environnants,
+        l'écriture et la lecture du stockage externe est nécessaire pour sauvegarder et lire les montagnes et les images sauvegardées.
+        est nécessaire pour sauvegarder et lire les montagnes et les images sauvegardées, alors s'il vous plaît, permettez-le!"</string>
+    <string name="camera_request_title">"L'autorisation de la caméra est nécessaire!"</string>
+    <string name="camera_request_body">"L'autorisation de la caméra est nécessaire pour pouvoir utiliser l'aperçu de la caméra."</string>
 </resources>
