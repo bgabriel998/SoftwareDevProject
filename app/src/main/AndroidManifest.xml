@@ -23,10 +23,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:remove="android:appComponentFactory">
-        <activity android:name=".user.friends.AddFriendActivity"/>
-        <activity android:name=".user.friends.FriendItemActivity"/>
-        <activity android:name=".user.friends.FriendsActivity"/>
-        <activity android:name=".gallery.ImageActivity"/>
+        <activity android:name=".TestMenuBarActivity"/>
+        <activity android:name=".user.friends.AddFriendActivity" />
+        <activity android:name=".user.friends.FriendItemActivity" />
+        <activity android:name=".user.friends.FriendsActivity" />
+        <activity android:name=".gallery.ImageActivity" />
         <activity android:name=".gallery.GalleryActivity" />
         <activity android:name=".camera.CameraActivity" />
         <activity android:name=".collection.MountainActivity" />
@@ -37,7 +38,8 @@
         <activity android:name=".general.SettingsActivity" />
         <activity android:name=".general.SettingsMapActivity" />
         <activity android:name=".general.MainMenuActivity" />
-        <activity android:name=".general.InitActivity"
+        <activity
+            android:name=".general.InitActivity"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

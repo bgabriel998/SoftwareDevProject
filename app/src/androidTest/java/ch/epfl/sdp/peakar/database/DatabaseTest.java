@@ -11,8 +11,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
-import static ch.epfl.sdp.peakar.TestingConstants.BASIC_USERNAME;
-import static ch.epfl.sdp.peakar.TestingConstants.SHORT_SLEEP_TIME;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.BASIC_USERNAME;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.SHORT_SLEEP_TIME;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
