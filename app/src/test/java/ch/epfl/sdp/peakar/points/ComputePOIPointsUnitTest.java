@@ -1,5 +1,6 @@
 package ch.epfl.sdp.peakar.points;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -7,7 +8,14 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class computePOIPointsInstanceUnitTest {
+public class ComputePOIPointsUnitTest {
+
+    ComputePOIPoints computePOIPointsInstance;
+
+    @BeforeClass
+    public void getInstance() {
+        computePOIPointsInstance = ComputePOIPoints.getInstance(null);
+    }
 
     /**
      * Test that only the highest mountains within a horizontal bearing of 6° are filtered and that
