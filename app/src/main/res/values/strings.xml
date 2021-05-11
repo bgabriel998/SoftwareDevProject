@@ -148,12 +148,6 @@
         is needed to save and read the saved mountains and pictures so please, allow it!</string>
     <string name="camera_request_title">Camera permission required!</string>
     <string name="camera_request_body">Camera permission is required to be able to use the camera-preview.</string>
-    <string name="location_request_title">Location permission required!</string>
-    <string name="location_request_body">Location permission is required to be able to display the mountains around your location.</string>
-
-    <!-- Alert dialog -->
-    <string name="positive_alert_dialog">OK</string>
-    <string name="negative_alert_dialog">Cancel</string>
 
 
 </resources>
