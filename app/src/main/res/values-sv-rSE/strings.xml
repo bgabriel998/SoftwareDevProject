@@ -58,4 +58,5 @@
     krävs för att spara och läsa sparade berg och bilder, så låt det vara!</string>
     <string name="camera_request_title">Kameratillstånd krävs!</string>
     <string name="camera_request_body">Det krävs kameratillstånd för att kunna använda kamerapremiären.</string>
+    <string name="displayCompass_title">Visa kompass</string>
 </resources>

@@ -59,4 +59,5 @@
         est nécessaire pour sauvegarder et lire les montagnes et les images sauvegardées, alors s'il vous plaît, permettez-le!"</string>
     <string name="camera_request_title">"L'autorisation de la caméra est nécessaire!"</string>
     <string name="camera_request_body">"L'autorisation de la caméra est nécessaire pour pouvoir utiliser l'aperçu de la caméra."</string>
+    <string name="displayCompass_title">Afficher la boussole</string>
 </resources>
