@@ -290,7 +290,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         //Take a picture, needs to be done outside of onActivity
         onView(withId(R.id.takePicture)).perform(click());
 
-        Thread.sleep(SHORT_SLEEP_TIME);
+        Thread.sleep(THREAD_SLEEP_1S);
 
         testRule.getScenario().onActivity(activity -> {
             try {
@@ -315,7 +315,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         //Take a picture
         onView(withId(R.id.takePicture)).perform(click());
 
-        Thread.sleep(SHORT_SLEEP_TIME);
+        Thread.sleep(THREAD_SLEEP_1S);
 
         testRule.getScenario().onActivity(activity -> {
             try {
