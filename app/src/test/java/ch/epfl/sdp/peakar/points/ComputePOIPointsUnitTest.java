@@ -10,10 +10,10 @@ import static org.junit.Assert.assertEquals;
 
 public class ComputePOIPointsUnitTest {
 
-    ComputePOIPoints computePOIPointsInstance;
+    static ComputePOIPoints computePOIPointsInstance;
 
     @BeforeClass
-    public void getInstance() {
+    public static void getInstance() {
         computePOIPointsInstance = ComputePOIPoints.getInstance(null);
     }
 
