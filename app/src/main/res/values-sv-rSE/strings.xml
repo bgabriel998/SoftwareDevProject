@@ -52,4 +52,5 @@
     <string name="display_dev_options">Visa alternativ för utvecklare</string>
     <string name="camera_header">Kamera</string>
     <string name="lineOfSightNotDownloaded">Nedladdningen av Line of sight är ännu inte klar, vänligen vänta.</string>
+    <string name="displayCompass_title">Visa kompass</string>
 </resources>
