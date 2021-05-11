@@ -15,10 +15,11 @@ import java.util.List;
 
 
 public class Database {
-
+    public static final String DATABASE_ADDRESS = "https://peakar-default-rtdb.europe-west1.firebasedatabase.app/";
     public static final String CHILD_USERS = "users/";
     public static final String CHILD_FRIENDS = "/friends/";
     public static final String CHILD_EMAIL = "email";
+    public static final String CHILD_PHOTO_URL = "photo";
     public static final String CHILD_DISCOVERED_PEAKS = "DiscoveredPeaks";
     public static final String CHILD_DISCOVERED_PEAKS_HEIGHTS = "DiscoveredHeights";
     public static final String CHILD_USERNAME = "username";
@@ -31,8 +32,11 @@ public class Database {
     public static final String CHILD_ATTRIBUTE_PEAK_LATITUDE = "latitude";
     public static final String CHILD_ATTRIBUTE_PEAK_LONGITUDE = "longitude";
     public static final String CHILD_ATTRIBUTE_PEAK_ALTITUDE = "altitude";
+    public static final String CHILD_CHALLENGES = "challenges";
+    public static final String CHILD_CHALLENGE_GOAL = "goal";
+    public final static String VALUE_POINTS_CHALLENGE = "points_challenge";
     // This is a reference to the database root
-    public static final DatabaseReference refRoot = FirebaseDatabase.getInstance("https://peakar-default-rtdb.europe-west1.firebasedatabase.app/").getReference();
+    public static final DatabaseReference refRoot = FirebaseDatabase.getInstance(DATABASE_ADDRESS).getReference();
 
     /**
      * Sets the childKeys fields of the desired database path with the given values

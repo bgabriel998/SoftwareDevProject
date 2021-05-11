@@ -17,14 +17,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.UITestHelper;
+import ch.epfl.sdp.peakar.utils.UITestHelper;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static ch.epfl.sdp.peakar.UITestHelper.withScaleEqualTo;
-import static ch.epfl.sdp.peakar.UITestHelper.withScaleGreaterThan;
+import static ch.epfl.sdp.peakar.utils.UITestHelper.withScaleEqualTo;
+import static ch.epfl.sdp.peakar.utils.UITestHelper.withScaleGreaterThan;
 import static org.junit.Assert.fail;
 
 @RunWith(AndroidJUnit4.class)

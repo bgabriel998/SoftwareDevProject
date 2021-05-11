@@ -38,7 +38,7 @@ import java.util.function.Consumer;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.points.Point;
-import ch.epfl.sdp.peakar.user.services.Account;
+import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 
 public class OSMMap {
@@ -200,7 +200,7 @@ public class OSMMap {
      * box
      * @param userAccount firebase account
      */
-    private void setZoomBoundingBox(Account userAccount){
+    private void setZoomBoundingBox(AuthAccount userAccount){
         //Create a bounding box and zoom in
         if(userAccount.getDiscoveredPeaks().size() != 0) {
             BoundingBox boundingBox = computeArea(new ArrayList<>(userAccount.getDiscoveredPeaks()));

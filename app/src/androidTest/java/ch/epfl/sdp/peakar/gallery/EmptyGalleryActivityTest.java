@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.UITestHelper;
+import ch.epfl.sdp.peakar.utils.UITestHelper;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
