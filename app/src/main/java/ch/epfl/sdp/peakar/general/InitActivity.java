@@ -24,7 +24,12 @@ import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 
-
+/**
+ * Initialises the application:
+ * - Requests location, read and write and camera permissions
+ * - Initialises firebase
+ * - Computes the POIPoints
+ */
 public class InitActivity extends AppCompatActivity {
 
     private MultiplePermissionsListener allPermissionsListener;
@@ -34,7 +39,7 @@ public class InitActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_init);
         
-        createPermissionListeners();
+        createPermissionListener();
 
         Dexter.withContext(this)
                 .withPermissions(
@@ -45,48 +50,19 @@ public class InitActivity extends AppCompatActivity {
                 ).withListener(allPermissionsListener)
                 .check();
 
-
-
         FirebaseApp.initializeApp(this);
 
         ProgressBar progressBar = findViewById(R.id.progressBarInitActivity);
         progressBar.setVisibility(View.VISIBLE);
 
         initApp();
-
-        //launchApp();
     }
 
-    private void createPermissionListeners() {
-        allPermissionsListener = new MultiplePermissionsListener() {
-            @Override
-            public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
-                new ComputePOIPoints(getApplicationContext());
-                launchApp();
-            }
-
-            @Override
-            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
-                showPermissionRationale(permissionToken);
-            }
-        };
-    }
-
-    private void showPermissionRationale(PermissionToken permissionToken) {
-        new AlertDialog.Builder(this).setTitle(R.string.permission_rationale_title)
-                .setMessage(R.string.permission_rationale_message)
-                .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-                    dialog.dismiss();
-                    permissionToken.cancelPermissionRequest();
-                })
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                    dialog.dismiss();
-                    permissionToken.continuePermissionRequest();
-                })
-                .setOnDismissListener(dialog -> {
-                    permissionToken.cancelPermissionRequest();
-                })
-                .show();
+    /**
+     * Init application global stuff before opening the main menu
+     */
+    private synchronized void initApp(){
+        if(AuthService.getInstance().getAuthAccount() != null) AuthService.getInstance().getAuthAccount().init();
     }
 
     /**
@@ -106,20 +82,42 @@ public class InitActivity extends AppCompatActivity {
     }
 
     /**
-     * Init application global stuff before opening the main menu
+     * Creates the permission listener for the requested permissions.
+     * After checking the permissions it computes the POIPoints and launches the application
      */
-    private synchronized void initApp(){
-        if(AuthService.getInstance().getAuthAccount() != null) AuthService.getInstance().getAuthAccount().init();
-        //Request and compute the POIPoints
-        if(hasLocationPermission()){
-            new ComputePOIPoints(this);
-        }
+    private void createPermissionListener() {
+        allPermissionsListener = new MultiplePermissionsListener() {
+            @Override
+            public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+                new ComputePOIPoints(getApplicationContext());
+                launchApp();
+            }
+
+            @Override
+            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
+                showPermissionRationale(permissionToken);
+            }
+        };
     }
 
-
-
-
-
+    /**
+     * Shows a dialog on why the permissions are needed
+     * @param permissionToken permissionToken of the rational request
+     */
+    private void showPermissionRationale(PermissionToken permissionToken) {
+        new AlertDialog.Builder(this).setTitle(R.string.permission_rationale_title)
+                .setMessage(R.string.permission_rationale_message)
+                .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                    dialog.dismiss();
+                    permissionToken.cancelPermissionRequest();
+                })
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    dialog.dismiss();
+                    permissionToken.continuePermissionRequest();
+                })
+                .setOnDismissListener(dialog -> permissionToken.cancelPermissionRequest())
+                .show();
+    }
 
     /**
      * Checks if the camera permission was already granted
@@ -128,16 +126,6 @@ public class InitActivity extends AppCompatActivity {
         return ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.CAMERA
-        ) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    /**
-     * Checks if the camera permission was already granted
-     */
-    private boolean hasLocationPermission() {
-        return ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED;
     }
 }
