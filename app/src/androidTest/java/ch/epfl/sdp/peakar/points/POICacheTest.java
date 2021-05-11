@@ -53,14 +53,13 @@ public class POICacheTest {
 
 
     private static Pair<int[][], Double> topographyPair;
-    private static UserPoint userPoint;
 
     @BeforeClass
     public static void setup() throws InterruptedException {
         //Remove potentially created file (due to test suite)
         deleteCacheFile();
         Context mContext = ApplicationProvider.getApplicationContext();
-        userPoint = UserPoint.getInstance(mContext);
+        UserPoint userPoint = UserPoint.getInstance(mContext);
         userPoint.setLocation(GPSTracker.DEFAULT_LAT, GPSTracker.DEFAULT_LON,GPSTracker.DEFAULT_ALT, GPSTracker.DEFAULT_ACC);
         new DownloadTopographyTask(){
             @Override

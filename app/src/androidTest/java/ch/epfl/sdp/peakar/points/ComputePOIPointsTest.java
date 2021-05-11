@@ -51,6 +51,7 @@ public class ComputePOIPointsTest {
         mContext = ApplicationProvider.getApplicationContext();
         userPoint = UserPoint.getInstance(mContext); 
         userPoint.setLocation(45.802537, 6.850328, 4809, 0);
+        //new ComputePOIPoints(mContext);
     }
 
     @Before
