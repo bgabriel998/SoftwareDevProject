@@ -30,9 +30,9 @@ import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 
-import static ch.epfl.sdp.peakar.TestingConstants.LONG_SLEEP_TIME;
-import static ch.epfl.sdp.peakar.TestingConstants.SHORT_SLEEP_TIME;
-import static ch.epfl.sdp.peakar.TestingConstants.USER_SCORE;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.LONG_SLEEP_TIME;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.SHORT_SLEEP_TIME;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.USER_SCORE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
