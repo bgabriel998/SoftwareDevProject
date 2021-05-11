@@ -1,4 +1,4 @@
-package ch.epfl.sdp.peakar;
+package ch.epfl.sdp.peakar.utils;
 
 public class TestingConstants {
     //User constants
