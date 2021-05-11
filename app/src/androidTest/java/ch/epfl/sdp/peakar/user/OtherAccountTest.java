@@ -4,10 +4,8 @@ import android.net.Uri;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.auth.FirebaseAuth;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -20,9 +18,8 @@ import ch.epfl.sdp.peakar.user.services.Account;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.services.OtherAccount;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 
-import static ch.epfl.sdp.peakar.TestingConstants.BASIC_USERNAME;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.BASIC_USERNAME;
 import static ch.epfl.sdp.peakar.user.AuthAccountTest.registerAuthUser;
 import static ch.epfl.sdp.peakar.user.AuthAccountTest.removeAuthUser;
 
