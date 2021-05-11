@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="60dp"
@@ -17,7 +16,8 @@
         android:layout_marginTop="10dp"
         android:layout_marginStart="10dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:contentDescription="@string/description_icon_country"/>
 
     <!-- Mountain name -->
     <TextView
@@ -28,8 +28,7 @@
         android:layout_marginTop="6dp"
         android:layout_marginStart="60dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:text="Mont Blanc - Monte Bianco"/>
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <!-- Trophy icon -->
     <ImageView
@@ -40,7 +39,8 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="40dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/description_icon_trophy"/>
 
     <!-- Mountain height -->
     <TextView
@@ -51,8 +51,7 @@
         android:gravity="center"
         android:layout_marginEnd="10dp"
         app:layout_constraintTop_toBottomOf="@id/collected_trophy"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="4810 m"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <!-- Info container -->
     <LinearLayout
@@ -70,24 +69,21 @@
             android:id="@+id/collected_points"
             style="@style/SmallText.LightBlue"
             android:layout_width="match_parent"
-            android:layout_height="21dp"
-            android:text="Points: 4 810 000"/>
+            android:layout_height="21dp"/>
 
         <!-- Mountain position -->
         <TextView
             android:id="@+id/collected_position"
             style="@style/SmallText.LightBlue"
             android:layout_width="match_parent"
-            android:layout_height="21dp"
-            android:text="Position: (6.86, 45.83)"/>
+            android:layout_height="21dp"/>
 
         <!-- Mountain date -->
         <TextView
             android:id="@+id/collected_date"
             style="@style/SmallText.LightBlue"
             android:layout_width="match_parent"
-            android:layout_height="21dp"
-            android:text="Date: 2021-04-30"/>
+            android:layout_height="21dp"/>
     </LinearLayout>
 
 

@@ -2,10 +2,16 @@ package ch.epfl.sdp.peakar.user.profile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,6 +20,7 @@ import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.collection.NewCollectedItem;
 import ch.epfl.sdp.peakar.collection.NewCollectionListAdapter;
 import ch.epfl.sdp.peakar.utils.StatusBarHandler;
+import ch.epfl.sdp.peakar.utils.UIUtils;
 
 /**
  * TODO Rename to remove new part.
@@ -29,35 +36,46 @@ public class NewProfileActivity extends AppCompatActivity {
 
         StatusBarHandler.StatusBarTransparent(this);
 
-        //setupUser();
-        //setupOtherUser(true);
-        setupOtherUser(false);
+        hideUI(false, false);
+        setupProfile("Alexander", 4978);
 
         fillListView();
     }
 
     /**
-     * Setup activity as it is the actual users profile.
+     * Setup profile text
+     * @param username  of profile
+     * @param points of profile
      */
-    private void setupUser(){
-        // TODO Remove Social
-        findViewById(R.id.profile_add_friend).setVisibility(View.INVISIBLE);
-        findViewById(R.id.profile_remove_friend).setVisibility(View.INVISIBLE);
+    private void setupProfile(String username, int points){
+        TextView usernameText = findViewById(R.id.profile_username);
+        TextView pointsText = findViewById(R.id.profile_points);
+
+        String profileText = "Score: " + UIUtils.IntegerConvert(points);
+        usernameText.setText(username);
+        pointsText.setText(profileText);
     }
 
     /**
-     * Setup activity as an other users profile
-     * @param friends boolean if the user is friend with the owner of this profile.
+     * Hide the correct views based on if the profile is the user itself
+     * or if it is a friend or not of the user.
+     * @param self
+     * @param friends
      */
-    private void setupOtherUser(boolean friends) {
-        findViewById(R.id.profile_sign_out).setVisibility(View.INVISIBLE);
+    private void hideUI(boolean self, boolean friends) {
+        findViewById(R.id.profile_add_friend).setVisibility(self || friends ? View.INVISIBLE : View.VISIBLE);
+        findViewById(R.id.profile_remove_friend).setVisibility(self || !friends ? View.INVISIBLE : View.VISIBLE);
+        findViewById(R.id.profile_sign_out).setVisibility(self ? View.VISIBLE : View.INVISIBLE);
+        findViewById(R.id.profile_change_username).setVisibility(self ? View.VISIBLE : View.INVISIBLE);
+
+        ImageView v = findViewById(R.id.profile_friend);
+        v.setVisibility(self ? View.INVISIBLE : View.VISIBLE);
         if (friends) {
-            // TODO Set Social color
-            findViewById(R.id.profile_add_friend).setVisibility(View.INVISIBLE);
-        }
-        else {
-            // TODO Set Social color
-            findViewById(R.id.profile_remove_friend).setVisibility(View.INVISIBLE);
+            Drawable d = v.getDrawable();
+            d.setColorFilter(
+                    new PorterDuffColorFilter(getColor(R.color.DarkGreen),
+                            PorterDuff.Mode.SRC_ATOP));
+            v.setImageDrawable(d);
         }
     }
 
