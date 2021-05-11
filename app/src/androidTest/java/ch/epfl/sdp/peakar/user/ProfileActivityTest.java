@@ -1,6 +1,7 @@
 package ch.epfl.sdp.peakar.user;
 
 import android.app.Activity;
+import android.util.Log;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.Espresso;
@@ -13,7 +14,6 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.auth.FirebaseAuth;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -27,7 +27,7 @@ import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.user.friends.AddFriendActivity;
 import ch.epfl.sdp.peakar.user.friends.FriendsActivity;
 import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
-import ch.epfl.sdp.peakar.user.services.Account;
+import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 
@@ -40,10 +40,10 @@ import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibilit
 import static androidx.test.espresso.matcher.ViewMatchers.withHint;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.peakar.TestingConstants.BASIC_USERNAME;
-import static ch.epfl.sdp.peakar.TestingConstants.LONG_SLEEP_TIME;
-import static ch.epfl.sdp.peakar.user.AccountTest.registerAuthUser;
-import static ch.epfl.sdp.peakar.user.AccountTest.removeAuthUser;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.BASIC_USERNAME;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.LONG_SLEEP_TIME;
+import static ch.epfl.sdp.peakar.user.AuthAccountTest.registerAuthUser;
+import static ch.epfl.sdp.peakar.user.AuthAccountTest.removeAuthUser;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
@@ -61,8 +61,8 @@ public class ProfileActivityTest {
         /* Create a new one */
         registerAuthUser();
 
-        user1 = (BASIC_USERNAME + AuthService.getInstance().getID()).substring(0, Account.NAME_MAX_LENGTH - 1);
-        user2 = (BASIC_USERNAME + AuthService.getInstance().getID()).substring(0, Account.NAME_MAX_LENGTH - 2);
+        user1 = (BASIC_USERNAME + AuthService.getInstance().getID()).substring(0, AuthAccount.NAME_MAX_LENGTH - 1);
+        user2 = (BASIC_USERNAME + AuthService.getInstance().getID()).substring(0, AuthAccount.NAME_MAX_LENGTH - 2);
     }
 
     /* Clean environment */
@@ -75,13 +75,7 @@ public class ProfileActivityTest {
     /* Make sure that an account is signed in and as new before each test */
     @Before
     public void createTestUser() {
-        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-            AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
-            registerAuthUser();
-        }
-        else {
-            FirebaseAuthService.getInstance().forceRetrieveData();
-        }
+        registerAuthUser();
         removeTestUsers();
     }
 
@@ -106,6 +100,7 @@ public class ProfileActivityTest {
     /* Release Intent */
     @After
     public void releaseIntent(){
+        if(AuthService.getInstance().getAuthAccount() != null) Log.d("ProfileActivityTest", "username after test: " + AuthService.getInstance().getAuthAccount().getUsername());
         Intents.release();
     }
 
@@ -190,6 +185,14 @@ public class ProfileActivityTest {
     /* The account created is then removed */
     @Test
     public void registerUserTest() {
+        Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
+        try {
+            Tasks.await(task1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        FirebaseAuthService.getInstance().forceRetrieveData();
+        Log.d("ProfileActivityTest", "registerUserTest: username before " + AuthService.getInstance().getAuthAccount().getUsername());
         testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
         onView(withId(R.id.editTextUsername)).perform(typeText(user1));
         Espresso.closeSoftKeyboard();

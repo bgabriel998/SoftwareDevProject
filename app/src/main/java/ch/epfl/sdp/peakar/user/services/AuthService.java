@@ -1,6 +1,7 @@
 package ch.epfl.sdp.peakar.user.services;
 
 import android.content.Context;
+import android.net.Uri;
 
 import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
 import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
@@ -33,9 +34,8 @@ public interface AuthService {
 
     /**
      * Get the authenticated account or a null reference if no auth has been performed.
-     * @return
      */
-    Account getAuthAccount();
+    AuthAccount getAuthAccount();
 
     /**
      * Sign the current authenticated user out, or do nothing if no auth has been performed. This method blocks the caller until the sign out is over.
@@ -47,4 +47,9 @@ public interface AuthService {
      * Retrieve the ID of the authenticated account, or "null" if no auth has been performed.
      */
     String getID();
+
+    /**
+     * Retrieve the photo url of the authenticated account, or Uri.EMPTY if no auth has been performed.
+     */
+    Uri getPhotoUrl();
 }

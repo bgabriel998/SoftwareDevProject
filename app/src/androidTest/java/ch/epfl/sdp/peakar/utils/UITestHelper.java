@@ -1,4 +1,4 @@
-package ch.epfl.sdp.peakar;
+package ch.epfl.sdp.peakar.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.matcher.BoundedMatcher;
 
+import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.gallery.ZoomableImageView;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
