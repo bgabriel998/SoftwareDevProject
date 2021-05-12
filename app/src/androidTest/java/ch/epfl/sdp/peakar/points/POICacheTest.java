@@ -15,14 +15,12 @@ import org.junit.Test;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import static ch.epfl.sdp.peakar.utils.TestingConstants.AIGUILLE_DU_PLAN_ALT;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.AIGUILLE_DU_PLAN_LAT;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.AIGUILLE_DU_PLAN_LONG;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.AIGUILLE_DU_PLAN_NAME;
-import static ch.epfl.sdp.peakar.utils.TestingConstants.CACHE_FILE_NAME_TEST;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.DENT_DU_GEANT_ALT;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.DENT_DU_GEANT_LAT;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.DENT_DU_GEANT_LONG;
@@ -57,7 +55,7 @@ public class POICacheTest {
     @BeforeClass
     public static void setup() throws InterruptedException {
         //Remove potentially created file (due to test suite)
-        deleteCacheFile();
+        POICache.getInstance().deleteCacheFile(ApplicationProvider.getApplicationContext().getCacheDir());
         Context mContext = ApplicationProvider.getApplicationContext();
         UserPoint userPoint = UserPoint.getInstance(mContext);
         userPoint.setLocation(GPSTracker.DEFAULT_LAT, GPSTracker.DEFAULT_LON,GPSTracker.DEFAULT_ALT, GPSTracker.DEFAULT_ACC);
@@ -87,15 +85,7 @@ public class POICacheTest {
     @AfterClass
     public static void cleanup(){
         //Remove manually created file
-        deleteCacheFile();
-    }
-
-    /*Remove cache file --> method used in this test file only*/
-    private static void deleteCacheFile(){
-        File cacheDir = ApplicationProvider.getApplicationContext().getCacheDir();
-        File outputFile = new File(cacheDir,CACHE_FILE_NAME_TEST);
-        //noinspection ResultOfMethodCallIgnored
-        outputFile.delete();
+        POICache.getInstance().deleteCacheFile(ApplicationProvider.getApplicationContext().getCacheDir());
     }
 
 

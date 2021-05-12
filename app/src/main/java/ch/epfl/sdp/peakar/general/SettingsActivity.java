@@ -17,6 +17,8 @@ import java.util.Locale;
 import java.util.Objects;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.points.ComputePOIPoints;
+import ch.epfl.sdp.peakar.points.POICache;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -105,11 +107,13 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     /**
-     * Change measurement system
+     * Change measurement system callback
+     * Deletes the cache file an recompute the POI list
      */
     private void rangeChanged(){
-        //TODO : Implement
-        Toast.makeText(this,"Setting not implemented yet !", Toast.LENGTH_SHORT).show();
+        POICache.getInstance().deleteCacheFile(this.getCacheDir());
+        //recompute the POIs using the new range
+        new ComputePOIPoints(this);
     }
 
     /**
