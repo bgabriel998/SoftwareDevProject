@@ -109,7 +109,14 @@
     <string name="title_activity_settings" translatable="false">SettingsActivity</string>
 
     <!-- PROFILE TEXT -->
+    <string name="score_display" translatable="true">Score: %s</string>
     <string name="empty_collection" translatable="false">Empty Collection</string>
+
+    <!-- COLLECTED TEXT -->
+    <string name="height_display" translatable="false">%s m</string>
+    <string name="points_display" translatable="true">Points: %s</string>
+    <string name="date_display" translatable="true">Date: %s</string>
+    <string name="position_display" translatable="true">Position: (1%.2f, 2%.2f) </string>
 
     <!-- Preference Titles -->
     <string name="general_header">General</string>

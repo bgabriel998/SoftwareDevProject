@@ -8,6 +8,7 @@ public class UIUtils {
     /**
      * Convert an given integer into a string follow the pattern of
      * 12 345 678
+     * @param number Integer number to convert to string
      * @return String representing int.
      */
     public static String IntegerConvert(Integer number) {

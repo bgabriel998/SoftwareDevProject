@@ -10,6 +10,7 @@ import java.util.List;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.utils.ListAdapterInflater;
+import ch.epfl.sdp.peakar.utils.UIUtils;
 
 /**
  * List adapter for collected items to set correct text for each collected item.
@@ -64,10 +65,14 @@ public class NewCollectionListAdapter extends ArrayAdapter<NewCollectedItem> {
             TextView dateText = view.findViewById(R.id.collected_date);
 
             nameText.setText(item.getName());
-            heightText.setText(item.getHeightText());
-            pointsText.setText(item.getPointsText());
-            positionText.setText(item.getPositionText());
-            dateText.setText(item.getDateText());
+            heightText.setText(mContext.getResources().getString(R.string.height_display,
+                                            UIUtils.IntegerConvert(item.getHeight())));
+            positionText.setText(mContext.getResources().getString(R.string.position_display,
+                                                    item.getLongitude(), item.getLatitude()));
+            pointsText.setText(mContext.getResources().getString(R.string.points_display,
+                                                 UIUtils.IntegerConvert(item.getPoints())));
+            dateText.setText(mContext.getResources().getString(R.string.date_display,
+                                                                    item.getDate()));
 
             if (item.isTopInCountry()) {
                 view.findViewById(R.id.collected_trophy).setVisibility(View.VISIBLE);

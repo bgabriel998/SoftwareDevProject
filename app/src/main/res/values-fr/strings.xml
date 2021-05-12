@@ -60,4 +60,8 @@
     <string name="camera_request_title">"L'autorisation de la caméra est nécessaire!"</string>
     <string name="camera_request_body">"L'autorisation de la caméra est nécessaire pour pouvoir utiliser l'aperçu de la caméra."</string>
     <string name="displayCompass_title">Afficher la boussole</string>
+    <string name="score_display">Score: %s</string>
+    <string name="points_display">Points: %s</string>
+    <string name="position_display">"Position: (1%.2f, 2%.2f) "</string>
+    <string name="date_display">Date: %s</string>
 </resources>

@@ -51,7 +51,8 @@ public class NewProfileActivity extends AppCompatActivity {
         TextView usernameText = findViewById(R.id.profile_username);
         TextView pointsText = findViewById(R.id.profile_points);
 
-        String profileText = "Score: " + UIUtils.IntegerConvert(points);
+        String profileText = getResources().getString(R.string.score_display,
+                                             UIUtils.IntegerConvert(points));
         usernameText.setText(username);
         pointsText.setText(profileText);
     }
@@ -59,8 +60,8 @@ public class NewProfileActivity extends AppCompatActivity {
     /**
      * Hide the correct views based on if the profile is the user itself
      * or if it is a friend or not of the user.
-     * @param self
-     * @param friends
+     * @param self true if it is the users profile.
+     * @param friends true if the profile is friend with the user
      */
     private void hideUI(boolean self, boolean friends) {
         findViewById(R.id.profile_add_friend).setVisibility(self || friends ? View.INVISIBLE : View.VISIBLE);

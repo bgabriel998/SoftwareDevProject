@@ -1,7 +1,10 @@
 package ch.epfl.sdp.peakar.collection;
 
+import android.content.Context;
+
 import java.util.Locale;
 
+import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.utils.UIUtils;
 
 /**
@@ -52,8 +55,39 @@ public class NewCollectedItem implements Comparable< NewCollectedItem >{
         return points;
     }
 
+    /**
+     * @return true if collected is top in country
+     */
     public boolean isTopInCountry() {
         return topInCountry;
+    }
+
+    /**
+     * @return collected height
+     */
+    public int getHeight() {
+        return height;
+    }
+
+    /**
+     * @return collected longitude
+     */
+    public float getLongitude() {
+        return longitude;
+    }
+
+    /**
+     * @return collected latitude
+     */
+    public float getLatitude() {
+        return latitude;
+    }
+
+    /**
+     * @return collected date
+     */
+    public String getDate() {
+        return date;
     }
 
     /**
@@ -64,34 +98,6 @@ public class NewCollectedItem implements Comparable< NewCollectedItem >{
     @Override
     public int compareTo(NewCollectedItem c){
         return this.getPoints().compareTo(c.getPoints());
-    }
-
-    /**
-     * @return the points in text format how it should be displayed.
-     */
-    public String getPointsText() {
-        return "Points: " + UIUtils.IntegerConvert(points);
-    }
-
-    /**
-     * @return the height in text format how it should be displayed.
-     */
-    public String getHeightText() {
-        return UIUtils.IntegerConvert(height) + "m";
-    }
-
-    /**
-     * @return the position in text format how it should be displayed.
-     */
-    public String getPositionText() {
-        return String.format(Locale.getDefault(), "Position: (%.2f, %.2f)", longitude, latitude);
-    }
-
-    /**
-     * @return the date in text format how it should be displayed.
-     */
-    public String getDateText() {
-        return "Date: " + date;
     }
 }
 
