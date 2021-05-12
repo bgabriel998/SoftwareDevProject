@@ -52,4 +52,11 @@
     <string name="display_dev_options">Visa alternativ för utvecklare</string>
     <string name="camera_header">Kamera</string>
     <string name="lineOfSightNotDownloaded">Nedladdningen av Line of sight är ännu inte klar, vänligen vänta.</string>
+    <string name="permission_rationale_title">Det behövs tillstånd!</string>
+    <string name="permission_rationale_message">Det krävs kameratillstånd för att öppna kamerapremiären,
+    Behörighet för plats krävs för att visa de omgivande topparna, skriva och läsa extern lagring.
+    krävs för att spara och läsa sparade berg och bilder, så låt det vara!</string>
+    <string name="camera_request_title">Kameratillstånd krävs!</string>
+    <string name="camera_request_body">Det krävs kameratillstånd för att kunna använda kamerapremiären.</string>
+    <string name="displayCompass_title">Visa kompass</string>
 </resources>

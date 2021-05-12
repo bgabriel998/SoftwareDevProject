@@ -202,10 +202,12 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         assertFalse(isEnabled);
         testRule.getScenario().recreate();
         Thread.sleep(SHORT_SLEEP_TIME);
-        onView(ViewMatchers.withId(R.id.headingHorizontal)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)));
-        onView(ViewMatchers.withId(R.id.headingVertical)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)));
-        onView(ViewMatchers.withId(R.id.fovHorizontal)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)));
-        onView(ViewMatchers.withId(R.id.fovVertical)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)));
+        onView(ViewMatchers.withId(R.id.headingHorizontal)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+        onView(ViewMatchers.withId(R.id.headingVertical)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+        onView(ViewMatchers.withId(R.id.fovHorizontal)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+        onView(ViewMatchers.withId(R.id.fovVertical)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+        onView(ViewMatchers.withId(R.id.userLocation)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+        onView(ViewMatchers.withId(R.id.userAltitude)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
 
         editor.putBoolean(devOptionsKey, true);
         editor.commit();
@@ -219,6 +221,8 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         onView(ViewMatchers.withId(R.id.headingVertical)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(ViewMatchers.withId(R.id.fovHorizontal)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(ViewMatchers.withId(R.id.fovVertical)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(ViewMatchers.withId(R.id.userLocation)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(ViewMatchers.withId(R.id.userAltitude)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
     /**
@@ -234,14 +238,22 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         String displayPOIsKey = context.getResources().getString(R.string.displayPOIs_key);
 
         String displayMode = sharedPreferences.getString(displayPOIsKey, DISPLAY_ALL_POIS);
-        assertEquals("0", displayMode);
+        assertEquals(DISPLAY_ALL_POIS, displayMode);
 
-        for(int i = 1; i<5; i++){
-            onView(withId(R.id.switchDisplayPOIs)).perform(click());
-            Thread.sleep(SHORT_SLEEP_TIME);
-            displayMode = sharedPreferences.getString(displayPOIsKey, DISPLAY_ALL_POIS);
-            assertEquals("" + i%3, displayMode);
-        }
+        onView(withId(R.id.switchDisplayPOIs)).perform(click());
+        Thread.sleep(SHORT_SLEEP_TIME);
+        displayMode = sharedPreferences.getString(displayPOIsKey, DISPLAY_ALL_POIS);
+        assertEquals(DISPLAY_POIS_IN_SIGHT, displayMode);
+
+        onView(withId(R.id.switchDisplayPOIs)).perform(click());
+        Thread.sleep(SHORT_SLEEP_TIME);
+        displayMode = sharedPreferences.getString(displayPOIsKey, DISPLAY_ALL_POIS);
+        assertEquals(DISPLAY_POIS_OUT_OF_SIGHT, displayMode);
+
+        onView(withId(R.id.switchDisplayPOIs)).perform(click());
+        Thread.sleep(SHORT_SLEEP_TIME);
+        displayMode = sharedPreferences.getString(displayPOIsKey, DISPLAY_ALL_POIS);
+        assertEquals(DISPLAY_ALL_POIS, displayMode);
     }
 
     /**
@@ -278,7 +290,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         //Take a picture, needs to be done outside of onActivity
         onView(withId(R.id.takePicture)).perform(click());
 
-        Thread.sleep(THREAD_SLEEP_6S);
+        Thread.sleep(THREAD_SLEEP_1S);
 
         testRule.getScenario().onActivity(activity -> {
             try {
@@ -303,8 +315,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         //Take a picture
         onView(withId(R.id.takePicture)).perform(click());
 
-        //Wait for the toast to get displayed
-        Thread.sleep(THREAD_SLEEP_6S);
+        Thread.sleep(THREAD_SLEEP_1S);
 
         testRule.getScenario().onActivity(activity -> {
             try {

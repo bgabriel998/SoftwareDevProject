@@ -2,9 +2,9 @@ package ch.epfl.sdp.peakar.map;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
@@ -25,6 +25,7 @@ import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.overlay.Polygon;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -36,6 +37,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.points.GeonamesHandler;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.points.Point;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
@@ -47,6 +49,7 @@ public class OSMMap {
     private static final float TILE_SCALING_FACTOR = 1.5f;
     private static final float DEFAULT_ZOOM_FACTOR = 3.5f;
     private static final float BOUNDING_BOX_ZOOM_FACTOR = 1.7f;
+    private static final String POLYGON_BOUNDING_BOX_COLOR = "#1EFFE70E";
     //Provider URL for satellite view
     private static final String SATELLITE_MAP_PROVIDER = "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/";
 
@@ -264,6 +267,7 @@ public class OSMMap {
         Overlay touchOverlay = new Overlay(){
 
             ItemizedIconOverlay<OverlayItem> anotherItemizedIconOverlay = null;
+            Polygon boundingBoxPolygon = null;
 
             @Override
             public boolean onLongPress(final MotionEvent e, final MapView mapView) {
@@ -273,10 +277,11 @@ public class OSMMap {
                 Projection proj = mapView.getProjection();
 
                 GeoPoint loc = (GeoPoint) proj.fromPixels((int)e.getX(), (int)e.getY());
-                Log.d("OSMMAP", "Coordinates: (Latitude = " + loc.getLatitude() + ", Longitude = " + loc.getLongitude());
                 ArrayList<OverlayItem> overlayArray = new ArrayList<>();
                 GeoPoint addedGeoPoint = new GeoPoint(loc.getLatitude(), loc.getLongitude());
                 OverlayItem mapItem = new OverlayItem("", "", addedGeoPoint);
+
+                boundingBoxPolygon = drawBoundingBox(new POIPoint(addedGeoPoint), mapView, boundingBoxPolygon);
 
                 pointUpdater.accept(new POIPoint(addedGeoPoint));
                 mapItem.setMarker(marker);
@@ -297,9 +302,43 @@ public class OSMMap {
 
         };
 
-        // TODO add bounding box drawing
         mapView.getOverlays().add(touchOverlay);
-mapView.invalidate();
+        mapView.invalidate();
+
+    }
+
+    /**
+     * Allows to draw a bounding box on the map around the selectedPoint.
+     *
+     * @param selectedPoint         point around which drawing the bounding box.
+     * @param mapView               mapView to draw the boundingBox polygon.
+     * @param boundingBoxPolygon    boundingBoxPolygon already in the overlays.
+     * @return                      the new Polygon that is drawn on the map.
+     */
+    public Polygon drawBoundingBox(Point selectedPoint, MapView mapView, Polygon boundingBoxPolygon) {
+
+        List<GeoPoint> edges = new ArrayList<>();
+        BoundingBox boundingBox = selectedPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM);
+
+        edges.add(new GeoPoint(boundingBox.getLatNorth(), boundingBox.getLonWest()));
+        edges.add(new GeoPoint(boundingBox.getLatNorth(), boundingBox.getLonEast()));
+        edges.add(new GeoPoint(boundingBox.getLatSouth(), boundingBox.getLonEast()));
+        edges.add(new GeoPoint(boundingBox.getLatSouth(), boundingBox.getLonWest()));
+
+        if (boundingBoxPolygon != null) {
+            mapView.getOverlays().remove(boundingBoxPolygon);
+            mapView.invalidate();
+        }
+
+        boundingBoxPolygon = new Polygon();
+        edges.add(edges.get(0));    //forces the loop to close(connect last point to first point)
+        boundingBoxPolygon.getFillPaint().setColor(Color.parseColor(POLYGON_BOUNDING_BOX_COLOR)); //set fill color
+        boundingBoxPolygon.setPoints(edges);
+
+        mapView.getOverlays().add(boundingBoxPolygon);
+
+        return boundingBoxPolygon;
+
     }
 
 }
