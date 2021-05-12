@@ -49,6 +49,7 @@ public class OSMMap {
     private static final float TILE_SCALING_FACTOR = 1.5f;
     private static final float DEFAULT_ZOOM_FACTOR = 3.5f;
     private static final float BOUNDING_BOX_ZOOM_FACTOR = 1.7f;
+    private static final String POLYGON_BOUNDING_BOX_COLOR = "#1EFFE70E";
     //Provider URL for satellite view
     private static final String SATELLITE_MAP_PROVIDER = "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/";
 
@@ -331,9 +332,8 @@ public class OSMMap {
 
         boundingBoxPolygon = new Polygon();
         edges.add(edges.get(0));    //forces the loop to close(connect last point to first point)
-        boundingBoxPolygon.getFillPaint().setColor(Color.parseColor("#1EFFE70E")); //set fill color
+        boundingBoxPolygon.getFillPaint().setColor(Color.parseColor(POLYGON_BOUNDING_BOX_COLOR)); //set fill color
         boundingBoxPolygon.setPoints(edges);
-        boundingBoxPolygon.setTitle("Bounding box");
 
         mapView.getOverlays().add(boundingBoxPolygon);
 

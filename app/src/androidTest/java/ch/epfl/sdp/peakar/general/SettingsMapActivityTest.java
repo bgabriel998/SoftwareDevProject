@@ -173,7 +173,6 @@ public class SettingsMapActivityTest {
             fail();
         }
 
-        Log.d("Debug", ret);
     }
 
 }

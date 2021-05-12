@@ -95,11 +95,11 @@ public class MainMenuActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialogTheme);
 
         //Set title and message
-        builder.setTitle("Camera permission required!");
-        builder.setMessage("Camera permission is required to be able to use the camera-preview.");
+        builder.setTitle(R.string.camera_request_title);
+        builder.setMessage(R.string.camera_request_body);
 
         //Set positive button and opens the permission request on button click
-        builder.setPositiveButton("Ok", (dialog, which) -> {
+        builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
             //Request permission after user clicked on Ok
             ActivityCompat.requestPermissions(
                     this,

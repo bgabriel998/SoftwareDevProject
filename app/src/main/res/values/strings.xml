@@ -87,6 +87,7 @@
     <!-- CAMERA BUTTONS STRINGS -->
     <string name="buttonChangeDisplayModePOI" translatable="false">Change displaying of POIs in sight</string>
     <string name="lineOfSightNotDownloaded">Line of sight downlaod is not yet finished, please wait.</string>
+    <string name="button_used_to_take_a_picture" translatable="false">Button used to take a picture</string>
 
     <!-- MAP MARKERS STRINGS -->
     <string name="marker_altitude">Altitude: %s m</string>
@@ -108,6 +109,11 @@
     <string name="display_pois_title">Select displayed mountains</string>
     <string name="filter_pois_title">Filter mountains</string>
     <string name="display_dev_options">Display developer options</string>
+    <string name="displayPOIs_key" translatable="false">display_pois_preference</string>
+    <string name="filterPOIs_key" translatable="false">filter_pois</string>
+    <string name="devOptions_key" translatable="false">developer_options</string>
+    <string name="displayCompass_key" translatable="false">display_compass_preference</string>
+    <string name="displayCompass_title">Display compass</string>
 
     <!-- Language Preferences -->
     <string name="language_title">Language</string>
@@ -135,11 +141,16 @@
     <string name="offline_mode_key" translatable="false">offline_mode_preference</string>
     <string name="range_key" translatable="false">range_preference</string>
     <string name="language_key" translatable="false">language_preference</string>
-    <string name="displayPOIs_key" translatable="false">display_pois_preference</string>
-    <string name="filterPOIs_key" translatable="false">filter_pois</string>
-    <string name="devOptions_key" translatable="false">developer_options</string>
     <string name="disable_caching_key" translatable="false">disable_caching</string>
     <string name="offline_mode_summary">Opens the editor to select an area to download. This allows the application to work without internet connexion</string>
+
+    <!-- Permissions -->
+    <string name="permission_rationale_title">Permissions are needed!</string>
+    <string name="permission_rationale_message">Camera permission is needed to open the camera-preview,
+        location permission is needed to display the surrounding peaks, write and read external storage
+        is needed to save and read the saved mountains and pictures so please, allow it!</string>
+    <string name="camera_request_title">Camera permission required!</string>
+    <string name="camera_request_body">Camera permission is required to be able to use the camera-preview.</string>
 
 
 </resources>
