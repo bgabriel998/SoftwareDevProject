@@ -21,6 +21,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 import ch.epfl.sdp.peakar.R;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -90,69 +92,69 @@ public class SettingsActivityTest{
     @Test
     public void TestDiscoveryDistanceButton() throws InterruptedException {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
+        activity = getActivity(testRule);
         //Open selector window
         onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(context.getResources().getString(R.string.range_title))),
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.range_title))),
                         click()));
         Thread.sleep(1000);
         //select first option
-        onView(withText(context.getResources().getStringArray(R.array.range_entries)[0])).perform(click());
+        onView(withText(activity.getResources().getStringArray(R.array.range_entries)[0])).perform(click());
         //Get selected value
-        String startString = prefs.getString(context.getResources().getString(R.string.range_key), "");
+        String startString = prefs.getString(activity.getResources().getString(R.string.range_key), "");
 
         // TEST 10KM
         onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(context.getResources().getString(R.string.range_title))),
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.range_title))),
                         click()));
         Thread.sleep(1000);
         //select first option
-        onView(withText(context.getResources().getStringArray(R.array.range_entries)[1])).perform(click());
+        onView(withText(activity.getResources().getStringArray(R.array.range_entries)[1])).perform(click());
 
         //Check that the selection happened
-        String endString = prefs.getString(context.getResources().getString(R.string.range_key), "");
+        String endString = prefs.getString(activity.getResources().getString(R.string.range_key), "");
         assertThat(startString, not(is(endString)));
 
         startString = endString;
 
         // TEST 20KM
         onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(context.getResources().getString(R.string.range_title))),
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.range_title))),
                         click()));
         Thread.sleep(1000);
         //select first option
-        onView(withText(context.getResources().getStringArray(R.array.range_entries)[2])).perform(click());
+        onView(withText(activity.getResources().getStringArray(R.array.range_entries)[2])).perform(click());
 
         //Check that the selection happened
-        endString = prefs.getString(context.getResources().getString(R.string.range_key), "");
+        endString = prefs.getString(activity.getResources().getString(R.string.range_key), "");
         assertThat(startString, not(is(endString)));
 
         startString = endString;
 
         // TEST 30KM
         onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(context.getResources().getString(R.string.range_title))),
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.range_title))),
                         click()));
         Thread.sleep(1000);
         //select first option
-        onView(withText(context.getResources().getStringArray(R.array.range_entries)[3])).perform(click());
+        onView(withText(activity.getResources().getStringArray(R.array.range_entries)[3])).perform(click());
 
         //Check that the selection happened
-        endString = prefs.getString(context.getResources().getString(R.string.range_key), "");
+        endString = prefs.getString(activity.getResources().getString(R.string.range_key), "");
         assertThat(startString, not(is(endString)));
 
         startString = endString;
 
         // TEST 50KM
         onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(context.getResources().getString(R.string.range_title))),
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.range_title))),
                         click()));
         Thread.sleep(1000);
         //select first option
-        onView(withText(context.getResources().getStringArray(R.array.range_entries)[4])).perform(click());
+        onView(withText(activity.getResources().getStringArray(R.array.range_entries)[4])).perform(click());
 
         //Check that the selection happened
-        endString = prefs.getString(context.getResources().getString(R.string.range_key), "");
+        endString = prefs.getString(activity.getResources().getString(R.string.range_key), "");
         assertThat(startString, not(is(endString)));
     }
 
@@ -160,22 +162,23 @@ public class SettingsActivityTest{
     @Test
     public void TestMeasuringSystemButton() throws InterruptedException {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        activity = getActivity(testRule);
         //Get selected value
-        String startString = prefs.getString(context.getResources().getString(R.string.measSys_key), "");
+        String startString = prefs.getString(activity.getResources().getString(R.string.measSys_key), "");
 
         //Open selector window
         onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(context.getResources().getString(R.string.measSys_title))),
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.measSys_title))),
                         click()));
         Thread.sleep(1000);
         //Select the opposite preference
-        if(startString.equals(context.getResources().getStringArray(R.array.measSys_values)[1]))
-            onView(withText(context.getResources().getStringArray(R.array.measSys_entries)[0])).perform(click());
+        if(startString.equals(activity.getResources().getStringArray(R.array.measSys_values)[1]))
+            onView(withText(activity.getResources().getStringArray(R.array.measSys_entries)[0])).perform(click());
         else
-            onView(withText(context.getResources().getStringArray(R.array.measSys_entries)[1])).perform(click());
+            onView(withText(activity.getResources().getStringArray(R.array.measSys_entries)[1])).perform(click());
 
         //Check that the selection happened
-        String endString = prefs.getString(context.getResources().getString(R.string.measSys_key), "");
+        String endString = prefs.getString(activity.getResources().getString(R.string.measSys_key), "");
         assertThat(startString, not(is(endString)));
     }
 
@@ -194,14 +197,15 @@ public class SettingsActivityTest{
     @Test
     public void TestOfflineModeButton() throws InterruptedException {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        activity = getActivity(testRule);
         //Get selected value
-        Boolean startVal = prefs.getBoolean(context.getResources().getString(R.string.offline_mode_key), false);
+        Boolean startVal = prefs.getBoolean(activity.getResources().getString(R.string.offline_mode_key), false);
 
         onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(context.getResources().getString(R.string.offline_mode_title))),
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.offline_mode_title))),
                         click()));
 
-        Boolean endVal = prefs.getBoolean(context.getResources().getString(R.string.offline_mode_key), false);
+        Boolean endVal = prefs.getBoolean(activity.getResources().getString(R.string.offline_mode_key), false);
         assertThat(startVal, not(is(endVal)));
         Thread.sleep(THREAD_SLEEP_1S);
         if (endVal) {
@@ -213,63 +217,65 @@ public class SettingsActivityTest{
     @Test
     public void TestLanguageButton() throws InterruptedException {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
+        activity = getActivity(testRule);
 
         //Open selector window
         onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(context.getResources().getString(R.string.language_title))),
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.language_title))),
                         click()));
         Thread.sleep(1000);
         //select first option
-        onView(withText(context.getResources().getStringArray(R.array.language_entries)[0])).perform(click());
+        onView(withText(activity.getResources().getStringArray(R.array.language_entries)[0])).perform(click());
         //Get selected value
-        String startString = prefs.getString(context.getResources().getString(R.string.language_key), "");
+        String startString = prefs.getString(activity.getResources().getString(R.string.language_key), "");
 
 
         onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(context.getResources().getString(R.string.language_title))),
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.language_title))),
                         click()));
         Thread.sleep(1000);
         //select first option
-        onView(withText(context.getResources().getStringArray(R.array.language_entries)[1])).perform(click());
+        onView(withText(activity.getResources().getStringArray(R.array.language_entries)[1])).perform(click());
 
         //Check that the selection happened
-        String endString = prefs.getString(context.getResources().getString(R.string.language_key), "");
+        String endString = prefs.getString(activity.getResources().getString(R.string.language_key), "");
+        Intents.release();
+        Intents.init();
         assertThat(startString, not(is(endString)));
 
         startString = endString;
         //Test GERMAN
         onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(context.getResources().getString(R.string.language_title))),
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.language_title))),
                         click()));
         Thread.sleep(1000);
         //select first option
-        onView(withText(context.getResources().getStringArray(R.array.language_entries)[2])).perform(click());
+        onView(withText(activity.getResources().getStringArray(R.array.language_entries)[2])).perform(click());
 
         //Check that the selection happened
-        endString = prefs.getString(context.getResources().getString(R.string.language_key), "");
+        endString = prefs.getString(activity.getResources().getString(R.string.language_key), "");
         assertThat(startString, not(is(endString)));
 
         startString = endString;
         //Test SWEDISH
         onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(context.getResources().getString(R.string.language_title))),
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.language_title))),
                         click()));
         Thread.sleep(1000);
         //select first option
-        onView(withText(context.getResources().getStringArray(R.array.language_entries)[3])).perform(click());
+        onView(withText(activity.getResources().getStringArray(R.array.language_entries)[3])).perform(click());
 
         //Check that the selection happened
-        endString = prefs.getString(context.getResources().getString(R.string.language_key), "");
+        endString = prefs.getString(activity.getResources().getString(R.string.language_key), "");
         assertThat(startString, not(is(endString)));
 
         //Open selector window
         onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(context.getResources().getString(R.string.language_title))),
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.language_title))),
                         click()));
         Thread.sleep(1000);
         //select first option
-        onView(withText(context.getResources().getStringArray(R.array.language_entries)[0])).perform(click());
+        onView(withText(activity.getResources().getStringArray(R.array.language_entries)[0])).perform(click());
         //Let context retrieves stability point
     }
 
@@ -348,4 +354,11 @@ public class SettingsActivityTest{
         assertThat(startString, not(is(endString)));
     }
 
+
+    /*Gets the activity for testing*/
+    private <T extends Activity> T getActivity(ActivityScenarioRule<T> activityScenarioRule) {
+        AtomicReference<T> activityRef = new AtomicReference<>();
+        activityScenarioRule.getScenario().onActivity(activityRef::set);
+        return activityRef.get();
+    }
 }
