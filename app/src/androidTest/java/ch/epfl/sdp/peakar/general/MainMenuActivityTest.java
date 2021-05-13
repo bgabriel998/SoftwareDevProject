@@ -77,6 +77,7 @@ public class MainMenuActivityTest {
     }
 
     /* Test that pressing the settings button changes view to SettingsActivity */
+     // TODO Fix test.
     //@Test
     public void TestSettingsButton() throws InterruptedException {
         ViewInteraction button = onView(withId(R.id.settingsButton));
