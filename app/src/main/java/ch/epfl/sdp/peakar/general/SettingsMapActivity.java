@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.osmdroid.bonuspack.location.POI;
+import org.osmdroid.views.MapView;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -48,6 +50,7 @@ public class SettingsMapActivity extends AppCompatActivity {
 
     private Button downloadButton;
     private View loadingView;
+    private MapView mapView;
 
     Activity thisActivity;
     Context thisContext;
@@ -71,7 +74,8 @@ public class SettingsMapActivity extends AppCompatActivity {
         thisActivity = this;
         thisContext = this;
 
-        osmMap = new OSMMap(this, findViewById(R.id.settingsMapView));
+        mapView = findViewById(R.id.settingsMapView);
+        osmMap = new OSMMap(this, mapView);
 
         // Invisible button and loading circle
         downloadButton.setVisibility(View.GONE);
@@ -89,8 +93,14 @@ public class SettingsMapActivity extends AppCompatActivity {
     // TODO handle disconnected from server (discuss with others)
     public void saveToJson() {
 
+        // Disable Touch
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+        // Display loading bar
         downloadButton.setVisibility(View.GONE);
         loadingView.bringToFront();
+
         loadingView.setVisibility(View.VISIBLE);
 
         OfflineContentContainer saveObject = new OfflineContentContainer();
