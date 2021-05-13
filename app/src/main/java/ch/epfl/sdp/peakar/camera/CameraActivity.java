@@ -24,6 +24,7 @@ import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.points.UserPoint;
 import ch.epfl.sdp.peakar.user.profile.ProfileLauncherActivity;
 import ch.epfl.sdp.peakar.user.score.UserScore;
+import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.CameraUtilities;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
@@ -181,7 +182,8 @@ public class CameraActivity extends AppCompatActivity{
     private void addDiscoveredPOIsToDatabase(){
         List<POIPoint> discoveredPOIPoints = cameraUiView.getDiscoveredPOIPoints();
         AuthService service = AuthService.getInstance();
-        if(service != null && !discoveredPOIPoints.isEmpty()){
+        AuthAccount acc = service.getAuthAccount();
+        if(acc != null && !discoveredPOIPoints.isEmpty()){
             UserScore userScore = new UserScore(this);
             userScore.updateUserScoreAndDiscoveredPeaks((ArrayList<POIPoint>) discoveredPOIPoints);
         }
