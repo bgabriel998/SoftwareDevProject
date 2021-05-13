@@ -181,7 +181,7 @@ public class CameraActivity extends AppCompatActivity{
     private void addDiscoveredPOIsToDatabase(){
         List<POIPoint> discoveredPOIPoints = cameraUiView.getDiscoveredPOIPoints();
         AuthService service = AuthService.getInstance();
-        if(service != null){
+        if(service != null && !discoveredPOIPoints.isEmpty()){
             UserScore userScore = new UserScore(this);
             userScore.updateUserScoreAndDiscoveredPeaks((ArrayList<POIPoint>) discoveredPOIPoints);
         }
