@@ -46,12 +46,13 @@ public class ComputePOIPointsTest {
     private static Context mContext;
 
     @BeforeClass
-    public static void setUserPoint(){
+    public static void setUserPoint() throws InterruptedException {
         //Set userPoint to the mont blanc
         mContext = ApplicationProvider.getApplicationContext();
         userPoint = UserPoint.getInstance(mContext); 
         userPoint.setLocation(45.802537, 6.850328, 4809, 0);
         //new ComputePOIPoints(mContext);
+        //Thread.sleep(20000);
     }
 
     @Before
