@@ -1,10 +1,8 @@
 package ch.epfl.sdp.peakar;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 
-import ch.epfl.sdp.peakar.utils.MenuBarHandler;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**Empty activity to create tests for menu bar.
  * TODO: Remove when integrating with actual UI.
@@ -16,6 +14,6 @@ public class TestMenuBarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_menu_bar);
 
-        MenuBarHandler.setup(this);
+        //MenuBarHandler.setup(this);
     }
 }
