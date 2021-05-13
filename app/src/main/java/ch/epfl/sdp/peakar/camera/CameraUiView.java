@@ -123,6 +123,8 @@ public class CameraUiView extends View implements Observer {
         sharedPref.registerOnSharedPreferenceChangeListener(listenerPreferences);
 
         displayedToastMode = false;
+        
+        displayCompass = sharedPref.getBoolean(getResources().getString(R.string.displayCompass_key), false);
 
         computePOIPointsInstanceInstance = ComputePOIPoints.getInstance(context);
 
