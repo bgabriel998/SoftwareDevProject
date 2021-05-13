@@ -31,6 +31,7 @@ import ch.epfl.sdp.peakar.points.GeonamesHandler;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.points.Point;
 import ch.epfl.sdp.peakar.utils.OfflineContentContainer;
+import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
 /**
  * Activity that allows the user to select a point around which compute and
@@ -39,6 +40,8 @@ import ch.epfl.sdp.peakar.utils.OfflineContentContainer;
  */
 public class SettingsMapActivity extends AppCompatActivity {
 
+    // CONSTANTS
+    private static final String  TOOLBAR_TITLE = "Offline Mode";
     public static final String OFFLINE_CONTENT_FILE =  "offline_content.txt";
 
     private OSMMap osmMap = null;
@@ -55,6 +58,9 @@ public class SettingsMapActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings_map);
+
+        // Setup the toolbar
+        ToolbarHandler.SetupToolbar(this, TOOLBAR_TITLE);
 
         this.downloadButton = findViewById(R.id.downloadButton);
         this.downloadButton.setOnClickListener(v -> saveToJson());

@@ -48,16 +48,16 @@
     <!-- Download button -->
     <Button
         android:id="@+id/downloadButton"
+        style="@style/ButtonDarkGreen"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="55dp"
         android:layout_marginEnd="55dp"
-        style="@style/ButtonDarkGreen"
-        android:text="@string/sign_out_button" />
+        android:layout_marginBottom="20dp"
+        android:text="@string/offline_mode_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
