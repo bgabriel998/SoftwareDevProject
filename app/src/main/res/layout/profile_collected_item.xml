@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="60dp"
+    android:layout_marginTop="9dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/rounded_rect">
+
+    <!-- Country Icon -->
+    <ImageView
+        android:id="@+id/collected_country"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:srcCompat="@drawable/temp_france"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:contentDescription="@string/description_icon_country"/>
+
+    <!-- Mountain name -->
+    <TextView
+        android:id="@+id/collected_name"
+        style="@style/SmallText.DarkGreen"
+        android:layout_width="220dp"
+        android:layout_height="21dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginStart="60dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- Trophy icon -->
+    <ImageView
+        android:id="@+id/collected_trophy"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        app:srcCompat="@drawable/collected_icon_trophy"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="40dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/description_icon_trophy"/>
+
+    <!-- Mountain height -->
+    <TextView
+        android:id="@+id/collected_height"
+        style="@style/SmallText.LightBlue"
+        android:layout_width="70dp"
+        android:layout_height="21dp"
+        android:gravity="center"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintTop_toBottomOf="@id/collected_trophy"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Info container -->
+    <LinearLayout
+        android:layout_width="190dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="9dp"
+        android:orientation="vertical"
+        android:layout_marginTop="3dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintTop_toBottomOf="@id/collected_name"
+        app:layout_constraintStart_toStartOf="@id/collected_name">
+
+        <!-- Mountain points -->
+        <TextView
+            android:id="@+id/collected_points"
+            style="@style/SmallText.LightBlue"
+            android:layout_width="match_parent"
+            android:layout_height="21dp"/>
+
+        <!-- Mountain position -->
+        <TextView
+            android:id="@+id/collected_position"
+            style="@style/SmallText.LightBlue"
+            android:layout_width="match_parent"
+            android:layout_height="21dp"/>
+
+        <!-- Mountain date -->
+        <TextView
+            android:id="@+id/collected_date"
+            style="@style/SmallText.LightBlue"
+            android:layout_width="match_parent"
+            android:layout_height="21dp"/>
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
