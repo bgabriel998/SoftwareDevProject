@@ -30,7 +30,7 @@ import ch.epfl.sdp.peakar.utils.CameraUtilities;
 public class CameraUiView extends View implements Observer {
 
     // computePOIPointsInstance instance
-    ComputePOIPoints computePOIPointsInstanceInstance;
+    ComputePOIPoints computePOIPointsInstance;
 
     //Paints used to draw the lines and heading of the compass on the camera-preview
     private Paint mainLinePaint;
@@ -126,9 +126,11 @@ public class CameraUiView extends View implements Observer {
         
         displayCompass = sharedPref.getBoolean(getResources().getString(R.string.displayCompass_key), false);
 
-        computePOIPointsInstanceInstance = ComputePOIPoints.getInstance(context);
+        computePOIPointsInstance = ComputePOIPoints.getInstance(context);
 
-        computePOIPointsInstanceInstance.addObserver(this);
+        computePOIPointsInstance.addObserver(this);
+
+        POISetter(sharedPref);
     }
 
     /**
@@ -143,14 +145,14 @@ public class CameraUiView extends View implements Observer {
 
         switch (displayMode){
             case DISPLAY_ALL_POIS:
-                setPOIs(filterPOIs ? computePOIPointsInstanceInstance.getFilteredPOIs() : computePOIPointsInstanceInstance.getPOIs());
+                setPOIs(filterPOIs ? computePOIPointsInstance.getFilteredPOIs() : computePOIPointsInstance.getPOIs());
                 break;
             case DISPLAY_POIS_IN_SIGHT:
-                setPOIs(filterPOIs ? computePOIPointsInstanceInstance.getFilteredPOIsInSight() : computePOIPointsInstanceInstance.getPOIsInSight());
+                setPOIs(filterPOIs ? computePOIPointsInstance.getFilteredPOIsInSight() : computePOIPointsInstance.getPOIsInSight());
                 checkIfLineOfSightAvailable();
                 break;
             case DISPLAY_POIS_OUT_OF_SIGHT:
-                setPOIs(filterPOIs ? computePOIPointsInstanceInstance.getFilteredPOIsOutOfSight() : computePOIPointsInstanceInstance.getPOIsOutOfSight());
+                setPOIs(filterPOIs ? computePOIPointsInstance.getFilteredPOIsOutOfSight() : computePOIPointsInstance.getPOIsOutOfSight());
                 checkIfLineOfSightAvailable();
                 break;
         }
@@ -328,9 +330,6 @@ public class CameraUiView extends View implements Observer {
             if(labeledPOIPoints != null && !labeledPOIPoints.isEmpty()) {
                 drawLabeledPOIs(i);
             }
-            else{
-                listenerPreferences.onSharedPreferenceChanged(sharedPref, null);
-            }
         }
     }
 
@@ -408,7 +407,7 @@ public class CameraUiView extends View implements Observer {
      * Checks if the line of sight has been computed. If not display only one toast informing the user
      */
     private void checkIfLineOfSightAvailable() {
-        if(!computePOIPointsInstanceInstance.isLineOfSightAvailable() && !displayedToastMode){
+        if(!computePOIPointsInstance.isLineOfSightAvailable() && !displayedToastMode){
             Toast.makeText(getContext(), getResources().getString(R.string.lineOfSightNotDownloaded), Toast.LENGTH_SHORT).show();
             displayedToastMode = true;
         }

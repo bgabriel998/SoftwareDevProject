@@ -52,6 +52,7 @@ public class ComputePOIPoints extends Observable implements Observer{
     private static final int HALF_MARKER_SIZE_WIDTH = 3;
     private static final int HALF_MARKER_SIZE_HEIGHT = 5;
 
+    @SuppressLint("StaticFieldLeak")
     private static ComputePOIPoints single_instance = null; // singleton instance
 
     public static UserPoint userPoint;
@@ -75,9 +76,11 @@ public class ComputePOIPoints extends Observable implements Observer{
      * @param context Context of activity
      */
     private ComputePOIPoints(Context context){
+        single_instance = this;
         POIs = new HashMap<>();
         ctx = context;
         userPoint = UserPoint.getInstance(context);
+        userPoint.update();
         userPoint.addObserver(this);
         getPOIs(userPoint);
     }
@@ -241,7 +244,7 @@ public class ComputePOIPoints extends Observable implements Observer{
                 filteredLabeledPOIsOutOfSight = filterHighestPOIs(labeledPOIsOutOfSight);
 
                 isLineOfSightAvailable = true;
-                hasChanged();
+                setChanged();
                 notifyObservers();
             }
         }.execute(userPoint);
