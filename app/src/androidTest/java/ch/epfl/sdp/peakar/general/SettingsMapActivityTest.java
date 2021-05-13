@@ -55,7 +55,7 @@ public class SettingsMapActivityTest {
         Intents.release();
     }
 
-    /* Test that the "OK" button appears after adding a pin to the map */
+    /* Test that the "Download" button appears after adding a pin to the map */
     @Test
     public void TestMapLongPress(){
         // checks that button and loading bar is not visible
@@ -119,7 +119,7 @@ public class SettingsMapActivityTest {
 
     }
 
-    /* Tests that the activity is terminated after the ok button is pressed. */
+    /* Tests that the activity is terminated after download button is pressed. */
     @Test
     public void downloadButtonPressed() {
         // performs long press
