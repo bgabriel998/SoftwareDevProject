@@ -60,11 +60,20 @@
     <string name="description_map_button" translatable="false">Map Button</string>
     <string name="description_social_button" translatable="false">Social Button</string>
     <string name="description_menu_pointer" translatable="false">Menu Pointer</string>
+    <string name='description_sign_out_button' translatable="false">Sign out button</string>
+    <string name='description_change_user_button' translatable="false">Change username button</string>
+    <string name='description_add_friend_button' translatable="false">Add friend button</string>
     <string name='description_remove_friend_button' translatable="false">Remove friend button</string>
+    <string name='description_sort_button' translatable="false">Sort button</string>
     <string name="description_icon" translatable="false">Peak AR Icon</string>
+    <string name='description_icon_country' translatable="false">Country icon</string>
+    <string name='description_icon_trophy' translatable="false">Trophy icon</string>
+    <string name='description_icon_collection' translatable="false">Collection icon</string>
     <string name="description_collected_image" translatable="false">Photo over collected mountain</string>
     <string name="description_gallery_image" translatable="false">Gallery image</string>
     <string name="description_gallery_fullscreen_image" translatable="false">Gallery fullscreen image</string>
+    <string name="description_dark_green_line" translatable="false">Dark green line</string>
+    <string name='description_user_avatar' translatable="false">User avatar</string>
 
     <string name="title_activity_init" translatable="false">initActivity</string>
     <!--
@@ -98,6 +107,16 @@
     <!-- GALLERY TEXT -->
     <string name="empty_gallery" translatable="false">Empty Gallery</string>
     <string name="title_activity_settings" translatable="false">SettingsActivity</string>
+
+    <!-- PROFILE TEXT -->
+    <string name="score_display" translatable="true">Score: %s</string>
+    <string name="empty_collection" translatable="false">Empty Collection</string>
+
+    <!-- COLLECTED TEXT -->
+    <string name="height_display" translatable="false">%s m</string>
+    <string name="points_display" translatable="true">Points: %s</string>
+    <string name="date_display" translatable="true">Date: %s</string>
+    <string name="position_display" translatable="true">Position: (1%.2f, 2%.2f) </string>
 
     <!-- Preference Titles -->
     <string name="general_header">General</string>
