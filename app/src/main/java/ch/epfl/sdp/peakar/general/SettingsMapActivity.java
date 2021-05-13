@@ -51,6 +51,7 @@ public class SettingsMapActivity extends AppCompatActivity {
     private Button downloadButton;
     private View loadingView;
     private MapView mapView;
+    private View backButton;
 
     Activity thisActivity;
     Context thisContext;
@@ -65,6 +66,9 @@ public class SettingsMapActivity extends AppCompatActivity {
 
         // Setup the toolbar
         ToolbarHandler.SetupToolbar(this, TOOLBAR_TITLE);
+
+        backButton = findViewById(R.id.toolbarBackButton);
+        backButton.setOnClickListener(v -> onBackPressed());
 
         downloadButton = findViewById(R.id.downloadButton);
         downloadButton.setOnClickListener(v -> saveToJson());
