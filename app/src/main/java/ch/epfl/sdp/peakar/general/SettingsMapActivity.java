@@ -46,12 +46,8 @@ public class SettingsMapActivity extends AppCompatActivity {
     private static final String  TOOLBAR_TITLE = "Offline Mode";
     public static final String OFFLINE_CONTENT_FILE =  "offline_content.txt";
 
-    private OSMMap osmMap = null;
-
     private Button downloadButton;
     private View loadingView;
-    private MapView mapView;
-    private View backButton;
 
     Activity thisActivity;
     Context thisContext;
@@ -67,7 +63,7 @@ public class SettingsMapActivity extends AppCompatActivity {
         // Setup the toolbar
         ToolbarHandler.SetupToolbar(this, TOOLBAR_TITLE);
 
-        backButton = findViewById(R.id.toolbarBackButton);
+        View backButton = findViewById(R.id.toolbarBackButton);
         backButton.setOnClickListener(v -> onBackPressed());
 
         downloadButton = findViewById(R.id.downloadButton);
@@ -78,8 +74,8 @@ public class SettingsMapActivity extends AppCompatActivity {
         thisActivity = this;
         thisContext = this;
 
-        mapView = findViewById(R.id.settingsMapView);
-        osmMap = new OSMMap(this, mapView);
+        MapView mapView = findViewById(R.id.settingsMapView);
+        OSMMap osmMap = new OSMMap(this, mapView);
 
         // Invisible button and loading circle
         downloadButton.setVisibility(View.GONE);
