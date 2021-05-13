@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class TopographyAsyncTest {
 
@@ -31,25 +32,16 @@ public class TopographyAsyncTest {
 
         userPoint = UserPoint.getInstance(mContext);
         userPoint.setLocation(GPSTracker.DEFAULT_LAT, GPSTracker.DEFAULT_LON,GPSTracker.DEFAULT_ALT, GPSTracker.DEFAULT_ACC);
-        new DownloadTopographyTask(){
-            @Override
-            public void onResponseReceived(Pair<int[][], Double> topography) {
-                super.onResponseReceived(topography);
-                topographyPair = topography;
-            }
-        }.execute(userPoint);
-
-        //Wait for the map to be downloaded
-        int counter=0;
-        while(topographyPair==null && counter<20){
-            Thread.sleep(1000);
-            counter++;
-        }
-        counter=0;
-        Assert.assertNotNull(topographyPair);
-        while(topographyPair.first==null && counter<20){
-            Thread.sleep(1000);
-            counter++;
+        try {
+            new DownloadTopographyTask(){
+                @Override
+                public void onResponseReceived(Pair<int[][], Double> topography) {
+                    super.onResponseReceived(topography);
+                    topographyPair = topography;
+                }
+            }.execute(userPoint).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
     }
 
