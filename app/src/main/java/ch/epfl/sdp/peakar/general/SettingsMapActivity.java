@@ -89,6 +89,10 @@ public class SettingsMapActivity extends AppCompatActivity {
     // TODO handle disconnected from server (discuss with others)
     public void saveToJson() {
 
+        downloadButton.setVisibility(View.GONE);
+        loadingView.bringToFront();
+        loadingView.setVisibility(View.VISIBLE);
+
         OfflineContentContainer saveObject = new OfflineContentContainer();
 
         addBoundingBoxToContainer(saveObject, selectedPoint);
