@@ -72,6 +72,7 @@ public class ComputePOIPoints implements Observer {
         POIs = new HashMap<>();
         ctx = context;
         userPoint = UserPoint.getInstance(context);
+        userPoint.update();
         userPoint.addObserver(this);
         getPOIs(userPoint);
     }

@@ -15,11 +15,16 @@ import androidx.core.util.Pair;
 import androidx.preference.PreferenceManager;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.points.UserPoint;
 import ch.epfl.sdp.peakar.user.profile.ProfileLauncherActivity;
+import ch.epfl.sdp.peakar.user.services.AuthAccount;
+import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.CameraUtilities;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
 
@@ -137,7 +142,8 @@ public class CameraActivity extends AppCompatActivity{
     }
 
     /**
-     * onPause release the sensor listener from compass when user leave the application
+     * onPause release the sensor listener from compass when user leave the application and add the
+     * discovered POIPoints
      * without closing it (app running in background)
      */
     @Override
@@ -145,6 +151,7 @@ public class CameraActivity extends AppCompatActivity{
         super.onPause();
         // releases the sensor listeners of the compass
         compass.stop();
+        //addDiscoveredPOIsToDatabase();
     }
 
     /**
@@ -159,12 +166,26 @@ public class CameraActivity extends AppCompatActivity{
     }
 
     /**
-     * Unbind and shutdown camera before exiting camera and stop the compass
+     * Unbind and shutdown camera before exiting camera and stop the compass and add the discovered
+     * POIPoints
      */
     @Override
     protected void onDestroy() {
         super.onDestroy();
         compass.stop();
+        addDiscoveredPOIsToDatabase();
+    }
+
+    /**
+     * Gets the currently logged in user account and adds the mountains to the discovered Peaks
+     */
+    private void addDiscoveredPOIsToDatabase(){
+        List<POIPoint> discoveredPOIPoints = cameraUiView.getDiscoveredPOIPoints();
+        AuthService service = AuthService.getInstance();
+        if(service != null){
+            AuthAccount user = service.getAuthAccount();
+            user.setDiscoveredPeaks((ArrayList<POIPoint>) discoveredPOIPoints);
+        }
     }
 
     /**
