@@ -185,6 +185,7 @@ public class CameraActivity extends AppCompatActivity{
         if(service != null){
             AuthAccount user = service.getAuthAccount();
             user.setDiscoveredPeaks((ArrayList<POIPoint>) discoveredPOIPoints);
+            user.
         }
     }
 
