@@ -123,7 +123,7 @@ public class CameraActivity extends AppCompatActivity{
      *
      * @return CompassListener for the compass
      */
-    private CompassListenerInterface getCompassListener() {
+    private CompassListener getCompassListener() {
         return (heading, headingV) -> {
             //Update the compass when the heading changes
             cameraUiView.setDegrees(heading, headingV);
