@@ -16,6 +16,7 @@ import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import static ch.epfl.sdp.peakar.utils.TestingConstants.AIGUILLE_DU_PLAN_ALT;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.AIGUILLE_DU_PLAN_LAT;
@@ -53,7 +54,7 @@ public class POICacheTest {
     private static Pair<int[][], Double> topographyPair;
 
     @BeforeClass
-    public static void setup() throws InterruptedException {
+    public static void setup() throws InterruptedException, ExecutionException {
         //Remove potentially created file (due to test suite)
         POICache.getInstance().deleteCacheFile(ApplicationProvider.getApplicationContext().getCacheDir());
         Context mContext = ApplicationProvider.getApplicationContext();
@@ -65,20 +66,7 @@ public class POICacheTest {
                 super.onResponseReceived(topography);
                 topographyPair = topography;
             }
-        }.execute(userPoint);
-
-        //Wait for the map to be downloaded
-        int counter=0;
-        while(topographyPair==null && counter<20){
-            Thread.sleep(1000);
-            counter++;
-        }
-        counter=0;
-        Assert.assertNotNull(topographyPair);
-        while(topographyPair.first==null && counter<20){
-            Thread.sleep(1000);
-            counter++;
-        }
+        }.execute(userPoint).get();
     }
 
 
