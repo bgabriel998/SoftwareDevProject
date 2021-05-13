@@ -61,8 +61,6 @@ public class MainMenuActivityTest {
     /* Test that pressing the ranking button changes view to RankingsActivity */
     @Test
     public void TestRankingsButton(){
-        Intents.release();
-        Intents.init();
         ViewInteraction button = onView(withId(R.id.rankingsButton));
         button.perform(click());
         // Catch intent
