@@ -75,6 +75,7 @@ public class ComputePOIPoints extends Observable implements Observer{
      * @param context Context of activity
      */
     private ComputePOIPoints(Context context){
+        single_instance = this;
         POIs = new HashMap<>();
         ctx = context;
         userPoint = UserPoint.getInstance(context);
