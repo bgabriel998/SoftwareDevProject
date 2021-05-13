@@ -49,12 +49,14 @@ public class ComputePOIPointsTest {
     private static Context mContext;
 
     @BeforeClass
-    public static void setUserPoint(){
+    public static void setUserPoint() throws InterruptedException {
         //Set userPoint to the mont blanc
         mContext = ApplicationProvider.getApplicationContext();
         userPoint = UserPoint.getInstance(mContext);
         computePOIPointsInstance = ComputePOIPoints.getInstance(mContext);
         userPoint.setLocation(45.802537, 6.850328, 4809, 0);
+        //new ComputePOIPoints(mContext);
+        //Thread.sleep(20000);
     }
 
     @Before
@@ -114,8 +116,9 @@ public class ComputePOIPointsTest {
     /**
      * Test if computePOIPointsInstance has computed the POIs
      */
-    /*
-    @Test
+
+    // TODO Fix test.
+    //@Test
     public void getPOIPointsTest() {
         POIPoint filteredLabeledOutOfSight = new POIPoint("Lobuche", 27.9691317, 86.7816135, 6145);
         POIPoint LabeledOutOfSight = new POIPoint("Baruntse", 27.8720615, 86.9796489, 7075);
@@ -173,8 +176,6 @@ public class ComputePOIPointsTest {
         assertFalse(computePOIPointsInstance.getFilteredPOIsOutOfSight().containsKey(filteredLabeledInSight));
         assertFalse(computePOIPointsInstance.getFilteredPOIsOutOfSight().containsKey(LabeledInLineOfSight));
     }
-
-     */
 
     /* Test if the offline content is loaded correctly */
     @Test
