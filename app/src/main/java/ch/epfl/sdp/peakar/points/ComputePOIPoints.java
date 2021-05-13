@@ -121,7 +121,6 @@ public class ComputePOIPoints extends Observable implements Observer{
         if(poiCache.isCacheFilePresent(ctx.getApplicationContext().getCacheDir()) && poiCache.isUserInBoundingBox(userPoint, ctx.getCacheDir()))
             getPOIsFromCache(userPoint);
         else
-            Log.d("DEBUG", "Downmloaded");
             getPOIsFromProvider(userPoint);
     }
 
