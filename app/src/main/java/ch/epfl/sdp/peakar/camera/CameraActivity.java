@@ -23,7 +23,7 @@ import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.points.UserPoint;
 import ch.epfl.sdp.peakar.user.profile.ProfileLauncherActivity;
-import ch.epfl.sdp.peakar.user.services.AuthAccount;
+import ch.epfl.sdp.peakar.user.score.UserScore;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.CameraUtilities;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
@@ -142,8 +142,7 @@ public class CameraActivity extends AppCompatActivity{
     }
 
     /**
-     * onPause release the sensor listener from compass when user leave the application and add the
-     * discovered POIPoints
+     * onPause release the sensor listener from compass when user leaves the application
      * without closing it (app running in background)
      */
     @Override
@@ -183,9 +182,8 @@ public class CameraActivity extends AppCompatActivity{
         List<POIPoint> discoveredPOIPoints = cameraUiView.getDiscoveredPOIPoints();
         AuthService service = AuthService.getInstance();
         if(service != null){
-            AuthAccount user = service.getAuthAccount();
-            user.setDiscoveredPeaks((ArrayList<POIPoint>) discoveredPOIPoints);
-            user.
+            UserScore userScore = new UserScore(this);
+            userScore.updateUserScoreAndDiscoveredPeaks((ArrayList<POIPoint>) discoveredPOIPoints);
         }
     }
 
