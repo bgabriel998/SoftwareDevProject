@@ -14,7 +14,6 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import java.util.Locale;
-import java.util.Objects;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
@@ -25,6 +24,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private static final String  TOOLBAR_TITLE = "Settings";
     private SharedPreferences sharedPref;
+
     /**
      * Preference listener. Callback that is triggered
      * every time a preference is changed
@@ -41,7 +41,7 @@ public class SettingsActivity extends AppCompatActivity {
                         rangeChanged();
                         break;
                     case "language_preference":
-                        languageChanged((String) Objects.requireNonNull(prefs.getAll().get("language_preference")));
+                        languageChanged((String) prefs.getAll().get("language_preference"));
                         break;
                     case "offline_mode_preference":
                         offlineModeChanged();
@@ -102,7 +102,7 @@ public class SettingsActivity extends AppCompatActivity {
      * Change measurement system
      */
     private void measurementSystemChanged(){
-        //TODO : Implement
+        //TODO : Implement -> wait new UI to see if the settings should be impl or removed
         Toast.makeText(this,"Setting not implemented yet !", Toast.LENGTH_SHORT).show();
     }
 
@@ -118,6 +118,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     /**
      * Change language
+     * @param value language code (2 letters)
      */
     private void languageChanged(String value){
         switch (value){
