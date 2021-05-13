@@ -99,11 +99,13 @@ public class ComputePOIPoints implements Observer {
         //Retrieve cache instance
         POICache poiCache = POICache.getInstance();
         //Check if file is present and if user is in BB
-        if(poiCache.isCacheFilePresent(ctx.getApplicationContext().getCacheDir()) && poiCache.isUserInBoundingBox(userPoint, ctx.getCacheDir()))
+        if(poiCache.isCacheFilePresent(ctx.getApplicationContext().getCacheDir()) && poiCache.isUserInBoundingBox(userPoint, ctx.getCacheDir())){
             getPOIsFromCache(userPoint);
-        else
+        }
+        else{
             Log.d("DEBUG", "Downmloaded");
             getPOIsFromProvider(userPoint);
+        }
     }
 
     /**
