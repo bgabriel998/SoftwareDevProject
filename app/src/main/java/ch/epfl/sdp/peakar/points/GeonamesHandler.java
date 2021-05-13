@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 import ch.epfl.sdp.peakar.R;
 
 
-public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>> implements GeonamesHandlerInterface {
+public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>> implements Geonames {
 
     //Query Constants
     public static final int DEFAULT_RANGE_IN_KM = 20;

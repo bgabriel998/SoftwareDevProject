@@ -5,6 +5,6 @@ import androidx.core.util.Pair;
 /**
  * Interface for the download of the topography task
  */
-public interface DownloadTopographyTaskInterface {
+public interface DownloadTopography {
     void onResponseReceived(Pair<int[][], Double> topography);
 }
