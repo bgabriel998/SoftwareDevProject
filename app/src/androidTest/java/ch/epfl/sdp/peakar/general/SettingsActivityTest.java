@@ -71,13 +71,15 @@ public class SettingsActivityTest{
                 Context.MODE_PRIVATE);
         editor = preferences.edit();
         editor.clear().commit();
+
     }
 
 
     /* Create intent */
     @Before
-    public void setup(){
+    public void setup() throws InterruptedException {
         Intents.init();
+        Thread.sleep(2000);
         activity = getActivity(testRule);
     }
 
@@ -284,8 +286,6 @@ public class SettingsActivityTest{
     /*Test preference allow caching button click*/
     @Test
     public void TestAllowCachingButton(){
-
-
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         //Get selected value
         Boolean startVal = prefs.getBoolean(activity.getResources().getString(R.string.disable_caching_key), false);
