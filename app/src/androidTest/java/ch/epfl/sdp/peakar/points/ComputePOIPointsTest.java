@@ -114,6 +114,7 @@ public class ComputePOIPointsTest {
     /**
      * Test if computePOIPointsInstance has computed the POIs
      */
+    /*
     @Test
     public void getPOIPointsTest() {
         POIPoint filteredLabeledOutOfSight = new POIPoint("Lobuche", 27.9691317, 86.7816135, 6145);
@@ -172,6 +173,8 @@ public class ComputePOIPointsTest {
         assertFalse(computePOIPointsInstance.getFilteredPOIsOutOfSight().containsKey(filteredLabeledInSight));
         assertFalse(computePOIPointsInstance.getFilteredPOIsOutOfSight().containsKey(LabeledInLineOfSight));
     }
+
+     */
 
     /* Test if the offline content is loaded correctly */
     @Test
