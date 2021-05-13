@@ -109,29 +109,7 @@ public class ComputePOIPointsTest {
         verticalBearing = samePoint.setVerticalBearing(userPoint);
         assertEquals(NaN, verticalBearing, 1);
     }
-
-    /**
-     * Test if ComputePOIPoints has computed the POIs
-     */
-    @Test
-    public void getPOIPointsTest() throws InterruptedException {
-        UserPoint userPoint = UserPoint.getInstance(mContext);
-        userPoint.update();
-        new ComputePOIPoints(mContext).wait();
-        Map<POIPoint, Boolean> pois = new HashMap<>();
-        try {
-            new GeonamesHandler(userPoint){
-                @Override
-                public void onResponseReceived(ArrayList<POI> result) {
-                    result.forEach(poi -> pois.put(new POIPoint(poi), false));
-                }
-            }.execute().get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        assertEquals(pois, ComputePOIPoints.getPOIs());
-    }
-
+    
     /* Test if the offline content is loaded correctly */
     @Test
     public void loadPOIsFromFileTest() {
