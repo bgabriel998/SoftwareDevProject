@@ -112,6 +112,7 @@ public class ComputePOIPointsTest {
     /**
      * Test if ComputePOIPoints has computed the POIs
      */
+    // TODO Fix test.
     //@Test
     public void getPOIPointsTest() {
         POIPoint filteredLabeledOutOfSight = new POIPoint("Lobuche", 27.9691317, 86.7816135, 6145);
