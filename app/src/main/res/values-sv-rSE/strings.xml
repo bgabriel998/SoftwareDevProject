@@ -59,4 +59,8 @@
     <string name="camera_request_title">Kameratillstånd krävs!</string>
     <string name="camera_request_body">Det krävs kameratillstånd för att kunna använda kamerapremiären.</string>
     <string name="displayCompass_title">Visa kompass</string>
+    <string name="score_display">Poäng: %s</string>
+    <string name="points_display">Poäng: %s</string>
+    <string name="date_display">Datum: %s</string>
+    <string name="position_display">"Position: (1%.2f, 2%.2f) "</string>
 </resources>
