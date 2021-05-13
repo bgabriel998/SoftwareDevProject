@@ -14,7 +14,7 @@ import ch.epfl.sdp.peakar.utils.CameraUtilities;
  */
 public class Compass implements SensorEventListener {
     //Compass listener to update the compass heading
-    private CompassListenerInterface compassListener;
+    private CompassListener compassListener;
 
     //SensorManager to access the sensors
     private final SensorManager sensorManager;
@@ -53,7 +53,7 @@ public class Compass implements SensorEventListener {
      * Sets the compass listener
      * @param listener CompassListener
      */
-    public void setListener(CompassListenerInterface listener) {
+    public void setListener(CompassListener listener) {
         this.compassListener = listener;
     }
 

@@ -3,17 +3,16 @@
 
     <PreferenceCategory app:title="@string/general_header">
         <ListPreference
-
-            android:defaultValue="20 km"
             android:entries="@array/range_entries"
             android:entryValues="@array/range_values"
             android:key="@string/range_key"
             android:title="@string/range_title"
             app:useSimpleSummaryProvider="true"
             android:dialogIcon="@drawable/ic_baseline_distance_24"
-            android:icon="@drawable/ic_baseline_distance_24"/>
+            android:icon="@drawable/ic_baseline_distance_24"
+            android:defaultValue="third_range"/>
         <ListPreference
-            android:defaultValue="Meters/Kilometers"
+            android:defaultValue="siSystem"
             android:entries="@array/measSys_entries"
             android:entryValues="@array/measSys_values"
             android:key="@string/measSys_key"
@@ -71,7 +70,7 @@
     <PreferenceCategory app:title="@string/language_header">
 
         <ListPreference
-            android:defaultValue="English"
+            android:defaultValue="english"
             android:entries="@array/language_entries"
             android:entryValues="@array/language_values"
             android:key="@string/language_key"

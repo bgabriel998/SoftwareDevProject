@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class TopographyAsyncTest {
 
@@ -26,7 +27,7 @@ public class TopographyAsyncTest {
      * @throws InterruptedException if any thread has interrupted the current thread
      */
     @BeforeClass
-    public static void setup() throws InterruptedException {
+    public static void setup() throws InterruptedException, ExecutionException {
         Context mContext = ApplicationProvider.getApplicationContext();
 
         userPoint = UserPoint.getInstance(mContext);
@@ -37,20 +38,8 @@ public class TopographyAsyncTest {
                 super.onResponseReceived(topography);
                 topographyPair = topography;
             }
-        }.execute(userPoint);
+        }.execute(userPoint).get();
 
-        //Wait for the map to be downloaded
-        int counter=0;
-        while(topographyPair==null && counter<20){
-            Thread.sleep(1000);
-            counter++;
-        }
-        counter=0;
-        Assert.assertNotNull(topographyPair);
-        while(topographyPair.first==null && counter<20){
-            Thread.sleep(1000);
-            counter++;
-        }
     }
 
     /**
