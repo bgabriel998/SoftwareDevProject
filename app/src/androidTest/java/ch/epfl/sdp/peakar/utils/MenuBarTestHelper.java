@@ -56,6 +56,11 @@ public class MenuBarTestHelper {
         onView(ViewMatchers.withId(iconPointerMap.get(iconId))).check(
                 matches(withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)));
         onView(ViewMatchers.withId(iconId)).perform(click());
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         intended(IntentMatchers.hasComponent(iconClassMap.get(iconId)));
     }
 

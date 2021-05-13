@@ -17,6 +17,7 @@ import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.TestMenuBarActivity;
 import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.gallery.GalleryActivity;
+import ch.epfl.sdp.peakar.general.SettingsActivity;
 import ch.epfl.sdp.peakar.map.MapActivity;
 
 /**
@@ -30,7 +31,7 @@ public class MenuBarHandler {
      */
     private static final HashMap<Integer, Class<?>> iconClassMap = new HashMap<>();
     static {
-        //iconClassMap.put(R.id.menu_bar_settings, SettingsActivity.class);
+        iconClassMap.put(R.id.menu_bar_settings, SettingsActivity.class);
         iconClassMap.put(R.id.menu_bar_gallery, GalleryActivity.class);
         iconClassMap.put(R.id.menu_bar_camera, CameraActivity.class);
         iconClassMap.put(R.id.menu_bar_map, MapActivity.class);
@@ -43,7 +44,7 @@ public class MenuBarHandler {
      */
     private static final HashMap<Integer, Integer> iconPointerMap = new HashMap<>();
     static {
-        //iconPointerMap.put(R.id.menu_bar_settings, R.id.menu_bar_settings_pointer);
+        iconPointerMap.put(R.id.menu_bar_settings, R.id.menu_bar_settings_pointer);
         iconPointerMap.put(R.id.menu_bar_gallery, R.id.menu_bar_gallery_pointer);
         iconPointerMap.put(R.id.menu_bar_camera, R.id.menu_bar_camera_pointer);
         iconPointerMap.put(R.id.menu_bar_map, R.id.menu_bar_map_pointer);
