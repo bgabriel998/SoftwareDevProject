@@ -7,6 +7,7 @@ import android.hardware.camera2.CameraAccessException;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +21,10 @@ import ch.epfl.sdp.peakar.utils.CameraUtilities;
 import java.io.IOException;
 import java.util.Locale;
 
+import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.points.UserPoint;
+import ch.epfl.sdp.peakar.user.profile.ProfileLauncherActivity;
+import ch.epfl.sdp.peakar.utils.CameraUtilities;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
 
 /**
@@ -28,6 +33,7 @@ import ch.epfl.sdp.peakar.utils.StorageHandler;
 public class CameraActivity extends AppCompatActivity{
 
 
+    private static final int FLASH_TIME_MS = 5;
     //Widgets
     private CameraPreview cameraPreview;
     private CameraUiView cameraUiView;
@@ -35,12 +41,20 @@ public class CameraActivity extends AppCompatActivity{
     private TextView headingVertical;
     private TextView fovHorizontal;
     private TextView fovVertical;
+    private TextView userLocation;
+    private TextView userAltitude;
     private Compass compass;
+    private View flash;
 
     //SharedPreferences
     private SharedPreferences sharedPref;
 
+    private boolean showDevOptions;
+
     private static final String DISPLAY_ALL_POIS = "0";
+
+    private ImageView compassMiniature;
+    private TextView headingCompass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +75,11 @@ public class CameraActivity extends AppCompatActivity{
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        displayDeveloperOptions(sharedPref.getBoolean(getResources().getString(R.string.devOptions_key), false));
+        showDevOptions = sharedPref.getBoolean(getResources().getString(R.string.devOptions_key), false);
+        displayDeveloperOptions(showDevOptions);
 
-        //Create compass view
         cameraUiView = findViewById(R.id.compass);
+        flash = findViewById(R.id.take_picture_flash);
 
         //Create camera preview on the previewView
         cameraPreview = (CameraPreview) getSupportFragmentManager().findFragmentById(R.id.fragment_camera);
@@ -85,10 +100,13 @@ public class CameraActivity extends AppCompatActivity{
             e.printStackTrace();
         }
 
-        if (cameraFieldOfView != null) {
+        if (showDevOptions && cameraFieldOfView!=null) {
             //Set text for demo/debug
             fovHorizontal.setText(String.format(Locale.ENGLISH, "%.1f °", cameraFieldOfView.first));
             fovVertical.setText(String.format(Locale.ENGLISH, "%.1f °", cameraFieldOfView.second));
+            UserPoint userPoint = UserPoint.getInstance(this);
+            userLocation.setText(String.format(Locale.ENGLISH, "%.4f °, %.4f °", userPoint.getLatitude(), userPoint.getLongitude()));
+            userAltitude.setText(String.format(Locale.ENGLISH, "%.1f m", userPoint.getAltitude()));
         }
 
         cameraUiView.setRange(cameraFieldOfView);
@@ -96,11 +114,11 @@ public class CameraActivity extends AppCompatActivity{
         //Create new compass
         compass = new Compass(this);
 
-        //Create compass listener
-        CompassListenerInterface compassListener = getCompassListener();
+        compassMiniature = findViewById(R.id.compassMiniature);
+        headingCompass = findViewById(R.id.headingCompass);
 
         //Bind the compassListener with the compass
-        compass.setListener(compassListener);
+        compass.setListener(getCompassListener());
     }
 
     /**
@@ -113,7 +131,10 @@ public class CameraActivity extends AppCompatActivity{
         return (heading, headingV) -> {
             //Update the compass when the heading changes
             cameraUiView.setDegrees(heading, headingV);
+            compassMiniature.setRotation(-1*heading);
             //Update the textviews with the new headings
+            int headingInt = (int)heading == 360 ? 0 : (int)heading;
+            headingCompass.setText(String.format(Locale.ENGLISH, "%d°", headingInt));
             headingHorizontal.setText(String.format(Locale.ENGLISH, "%.1f °", heading));
             headingVertical.setText(String.format(Locale.ENGLISH, "%.1f °", headingV));
         };
@@ -157,6 +178,7 @@ public class CameraActivity extends AppCompatActivity{
      * @throws IOException if the bitmap could not be stored
      */
     public void takePictureListener(View view) throws IOException {
+        flash.setVisibility(View.VISIBLE);
         //Take a picture with the camera without the UI
         cameraPreview.takePicture();
         //Create a bitmap of the camera preview
@@ -167,6 +189,8 @@ public class CameraActivity extends AppCompatActivity{
         Bitmap bitmap = CameraUtilities.combineBitmaps(cameraBitmap, compassBitmap);
         //Store the bitmap on the user device
         StorageHandler.storeBitmap(this, bitmap);
+        //Set visibility to invisible again after FLASH_TIME_MS
+        flash.postDelayed(() -> flash.setVisibility(View.GONE), FLASH_TIME_MS);
     }
 
     /**
@@ -179,19 +203,15 @@ public class CameraActivity extends AppCompatActivity{
         headingVertical = findViewById(R.id.headingVertical);
         fovHorizontal = findViewById(R.id.fovHorizontal);
         fovVertical = findViewById(R.id.fovVertical);
+        userLocation = findViewById(R.id.userLocation);
+        userAltitude = findViewById(R.id.userAltitude);
 
-        if(devOption){
-            headingHorizontal.setVisibility(View.VISIBLE);
-            headingVertical.setVisibility(View.VISIBLE);
-            fovHorizontal.setVisibility(View.VISIBLE);
-            fovVertical.setVisibility(View.VISIBLE);
-        }
-        else{
-            headingHorizontal.setVisibility(View.INVISIBLE);
-            headingVertical.setVisibility(View.INVISIBLE);
-            fovHorizontal.setVisibility(View.INVISIBLE);
-            fovVertical.setVisibility(View.INVISIBLE);
-        }
+        headingHorizontal.setVisibility(devOption ? View.VISIBLE : View.GONE);
+        headingVertical.setVisibility(devOption ? View.VISIBLE : View.GONE);
+        fovHorizontal.setVisibility(devOption ? View.VISIBLE : View.GONE);
+        fovVertical.setVisibility(devOption ? View.VISIBLE : View.GONE);
+        userLocation.setVisibility(devOption ? View.VISIBLE : View.GONE);
+        userAltitude.setVisibility(devOption ? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -203,6 +223,7 @@ public class CameraActivity extends AppCompatActivity{
      * @param view ImageButton
      */
     public void switchDisplayPOIMode(View view) {
+        flash.setVisibility(View.VISIBLE);
         String displayPOIsKey = getResources().getString(R.string.displayPOIs_key);
         String mode = sharedPref.getString(displayPOIsKey, DISPLAY_ALL_POIS);
         int actualMode = Integer.parseInt(mode);
@@ -210,6 +231,21 @@ public class CameraActivity extends AppCompatActivity{
 
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(displayPOIsKey, "" + newMode);
+        editor.apply();
+        flash.postDelayed(() -> flash.setVisibility(View.GONE), FLASH_TIME_MS);
+    }
+
+    /**
+     * Callback for the switchDisplayPOIs ImageButton, if true, then display the compass
+     *
+     * @param view CompassButton
+     */
+    public void switchDisplayCompass(View view) {
+        String displayCompassString = getResources().getString(R.string.displayCompass_key);
+        boolean displayCompass = sharedPref.getBoolean(displayCompassString, false);
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(displayCompassString, !displayCompass);
         editor.apply();
     }
 
@@ -229,14 +265,11 @@ public class CameraActivity extends AppCompatActivity{
         cameraPreview.lastToast = lastToast;
     }
 
-    /* Calls finish */
-    public void backButton(View view) {
-        finish();
-    }
-
-    /* Changes view to MapActivity */
-    public void mapButton(View view) {
-        Intent intent = new Intent(this, MapActivity.class);
+    /**
+     * Callback for the profile button
+     */
+    public void profileButton(View view) {
+        Intent intent = new Intent(this, ProfileLauncherActivity.class);
         startActivity(intent);
     }
 }
