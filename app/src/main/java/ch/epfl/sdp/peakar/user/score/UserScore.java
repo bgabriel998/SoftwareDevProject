@@ -91,7 +91,7 @@ public class UserScore {
      * a bonus is added to the his score
      * @return bonus to add
      */
-    public long computePeakHeightBonus(POIPoint poiPoint){
+    private long computePeakHeightBonus(POIPoint poiPoint){
         int roundedHeight = (int)(poiPoint.getAltitude() - (poiPoint.getAltitude() % 1000));
         if(!FirebaseAuthService.getInstance().getAuthAccount().getDiscoveredPeakHeights().contains(roundedHeight)){
             FirebaseAuthService.getInstance().getAuthAccount().setDiscoveredPeakHeights(roundedHeight);

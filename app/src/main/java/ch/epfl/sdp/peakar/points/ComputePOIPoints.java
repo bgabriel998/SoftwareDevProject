@@ -1,3 +1,4 @@
+
 package ch.epfl.sdp.peakar.points;
 
 import android.annotation.SuppressLint;
@@ -98,28 +99,30 @@ public class ComputePOIPoints implements Observer {
         //Retrieve cache instance
         POICache poiCache = POICache.getInstance();
         //Check if file is present and if user is in BB
-        if(poiCache.isCacheFilePresent(ctx.getApplicationContext().getCacheDir()) && poiCache.isUserInBoundingBox(userPoint, ctx.getCacheDir()))
+        if( isCachingAllowed()
+            && poiCache.isCacheFilePresent(ctx.getApplicationContext().getCacheDir())
+            && poiCache.isUserInBoundingBox(userPoint, ctx.getCacheDir()))
             getPOIsFromCache(userPoint);
         else
-            Log.d("DEBUG", "Downmloaded");
             getPOIsFromProvider(userPoint);
+        getLabeledPOIs(userPoint);
     }
 
     /**
-     * Get surrounding POIs from cache
+     * Get surrounding POIs and topography map from cache
      * @param userPoint location of the user
      */
     private static void getPOIsFromCache(UserPoint userPoint){
+        //Get poi list from cache
         ArrayList<POIPoint> cachedPOIs = POICache.getInstance().getCachedPOIPoints(ctx.getCacheDir());
-
         cachedPOIs.forEach(poiPoint -> {
             poiPoint.setHorizontalBearing(userPoint);
             poiPoint.setVerticalBearing(userPoint);
             POIs.put(poiPoint, false);
         });
-        //TODO use this method to merge caching of the POIs and 3D map
-        getLabeledPOIs(userPoint);
-        //TODO =========================================<<
+        //Retrieve topography map from cache
+        Pair<int[][], Double> cachedTopography = POICache.getInstance().getCachedTopography(ctx.getCacheDir());
+        applyFilteringLabeledPOIs(cachedTopography);
     }
 
     /**
@@ -127,7 +130,7 @@ public class ComputePOIPoints implements Observer {
      * @param userPoint location of the user
      */
     private static void getPOIsFromProvider(UserPoint userPoint){
-        new GeonamesHandler(userPoint){
+        new GeonamesHandler(userPoint,ctx){
             @Override
             public void onResponseReceived(ArrayList<POI> result) {
                 if(result!=null){
@@ -138,9 +141,6 @@ public class ComputePOIPoints implements Observer {
                         POIs.put(poiPoint, false);
                     }
                     filteredPOIPoints = filterHighestPOIs(POIs);
-                    POICache.getInstance().savePOIDataToCache(new ArrayList<>(POIs.keySet()),
-                            userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM),
-                            ctx.getCacheDir());
                     getLabeledPOIs(userPoint);
                 }
             }
@@ -148,9 +148,18 @@ public class ComputePOIPoints implements Observer {
     }
 
     /**
+     * Check if the user has allowed the caching in the
+     * @return true if the caching is allowed in the settings
+     */
+    private static boolean isCachingAllowed(){
+        //Get shared preferences
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ctx);
+        return sharedPreferences.getBoolean(ctx.getResources().getString(R.string.disable_caching_key), true);
+    }
+
+    /**
      * Handles the creation and filtration of the list of the POIPoints when offline mode
-     * is enables.
-     *
+     * is enabled.
      * @param userPoint around which the list is computed.
      */
     private static void getPOISOffline(UserPoint userPoint) {
@@ -161,7 +170,6 @@ public class ComputePOIPoints implements Observer {
         } catch (IOException e) {
             Log.d("ComputePOIPoints", "There was an error reading the file");
         }
-
     }
 
     /**
@@ -203,32 +211,46 @@ public class ComputePOIPoints implements Observer {
             @Override
             public void onResponseReceived(Pair<int[][], Double> topography) {
                 super.onResponseReceived(topography);
-                LineOfSight lineOfSight = new LineOfSight(topography, userPoint);
-                labeledPOIs = lineOfSight.getVisiblePointsLabeled(new ArrayList<>(POIs.keySet()));
-                filteredLabeledPOIPoints = filterHighestPOIs(labeledPOIs);
-
-                labeledPOIsInSight = new HashMap<>();
-                labeledPOIsOutOfSight = new HashMap<>();
-
-                labeledPOIs.forEach((poi, inSight) -> {
-                    if (inSight) {
-                        labeledPOIsInSight.put(poi, inSight);
-                    } else {
-                        labeledPOIsOutOfSight.put(poi, inSight);
-                    }
-                });
-
-                filteredLabeledPOIsInSight = filterHighestPOIs(labeledPOIsInSight);
-                filteredLabeledPOIsOutOfSight = filterHighestPOIs(labeledPOIsOutOfSight);
-
-                isLineOfSightAvailable = true;
+                //Save POIs, BB and topography to the cache
+                POICache.getInstance().savePOIDataToCache(new ArrayList<>(POIs.keySet()),
+                        userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM),
+                        topography,
+                        ctx.getCacheDir());
+                applyFilteringLabeledPOIs(topography);
             }
         }.execute(userPoint);
     }
 
     /**
+     * Apply filtering using topography map on POI list.
+     * @param topography topography map
+     */
+    private static void applyFilteringLabeledPOIs(Pair<int[][], Double> topography){
+        LineOfSight lineOfSight = new LineOfSight(topography, userPoint);
+        labeledPOIs = lineOfSight.getVisiblePointsLabeled(new ArrayList<>(POIs.keySet()));
+        filteredLabeledPOIPoints = filterHighestPOIs(labeledPOIs);
+
+        labeledPOIsInSight = new HashMap<>();
+        labeledPOIsOutOfSight = new HashMap<>();
+
+        labeledPOIs.forEach((poi, inSight) -> {
+            if (inSight) {
+                labeledPOIsInSight.put(poi, inSight);
+            } else {
+                labeledPOIsOutOfSight.put(poi, inSight);
+            }
+        });
+
+        filteredLabeledPOIsInSight = filterHighestPOIs(labeledPOIsInSight);
+        filteredLabeledPOIsOutOfSight = filterHighestPOIs(labeledPOIsOutOfSight);
+
+        isLineOfSightAvailable = true;
+    }
+
+
+    /**
      * Gets the labeled POIs from a JSONObject and filters them. The points are not added if the
-     * userPoint is more thant MAX_LOADING_DISTANCE from the center of the downloaded bounding
+     * userPoint is more than MAX_LOADING_DISTANCE from the center of the downloaded bounding
      * box.
      *
      * @param userPoint         userPoint for which the labeled POIs are computed.
