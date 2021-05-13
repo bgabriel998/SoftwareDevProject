@@ -1,5 +1,8 @@
 package ch.epfl.sdp.peakar.utils;
 
+/**
+ * Class with only static utility functions for UI.
+ */
 public class UIUtils {
 
     private final static int INTEGER_CHUNK = 3;
