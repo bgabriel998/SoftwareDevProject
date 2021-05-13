@@ -47,6 +47,7 @@ public class SettingsMapActivity extends AppCompatActivity {
     private OSMMap osmMap = null;
 
     private Button downloadButton;
+    private View loadingView;
 
     Activity thisActivity;
     Context thisContext;
@@ -62,17 +63,23 @@ public class SettingsMapActivity extends AppCompatActivity {
         // Setup the toolbar
         ToolbarHandler.SetupToolbar(this, TOOLBAR_TITLE);
 
-        this.downloadButton = findViewById(R.id.downloadButton);
-        this.downloadButton.setOnClickListener(v -> saveToJson());
+        downloadButton = findViewById(R.id.downloadButton);
+        downloadButton.setOnClickListener(v -> saveToJson());
 
-        this.thisActivity = this;
-        this.thisContext = this;
+        loadingView = findViewById(R.id.loadingView);
 
-        this.osmMap = new OSMMap(this, findViewById(R.id.settingsMapView));
+        thisActivity = this;
+        thisContext = this;
+
+        osmMap = new OSMMap(this, findViewById(R.id.settingsMapView));
+
+        // Invisible button and loading circle
+        downloadButton.setVisibility(View.GONE);
+        loadingView.setVisibility(View.GONE);
 
         osmMap.displayUserLocation();
 
-        osmMap.enablePinOnClick(() -> this.downloadButton.setVisibility(View.VISIBLE), (p) -> this.selectedPoint = p);
+        osmMap.enablePinOnClick(() -> downloadButton.setVisibility(View.VISIBLE), (p) -> selectedPoint = p);
 
     }
 
