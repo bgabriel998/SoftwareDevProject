@@ -43,8 +43,7 @@ public class SettingsMapActivity extends AppCompatActivity {
 
     private OSMMap osmMap = null;
 
-    private Button backButton;
-    private Button okButton;
+    private Button downloadButton;
 
     Activity thisActivity;
     Context thisContext;
@@ -57,11 +56,8 @@ public class SettingsMapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings_map);
 
-        this.backButton = findViewById(R.id.settingsMapBackButton);
-        this.backButton.setOnClickListener(v -> onBackPresses());
-
-        this.okButton = findViewById(R.id.settingsMapOkButton);
-        this.okButton.setOnClickListener(v -> saveToJson());
+        this.downloadButton = findViewById(R.id.downloadButton);
+        this.downloadButton.setOnClickListener(v -> saveToJson());
 
         this.thisActivity = this;
         this.thisContext = this;
@@ -70,7 +66,7 @@ public class SettingsMapActivity extends AppCompatActivity {
 
         osmMap.displayUserLocation();
 
-        osmMap.enablePinOnClick(() -> this.okButton.setVisibility(View.VISIBLE), (p) -> this.selectedPoint = p);
+        osmMap.enablePinOnClick(() -> this.downloadButton.setVisibility(View.VISIBLE), (p) -> this.selectedPoint = p);
 
     }
 
@@ -165,7 +161,8 @@ public class SettingsMapActivity extends AppCompatActivity {
         }
     }
 
-    private void onBackPresses() {
+    @Override
+    public void onBackPressed() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Offline mode not activated, reset shared preference

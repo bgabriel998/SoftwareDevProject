@@ -1,30 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profileLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context="ch.epfl.sdp.peakar.user.profile.ProfileActivity">
 
-    <LinearLayout
+    <!-- Toolbar -->
+    <include
+        android:id="@+id/include"
+        layout="@layout/toolbar" />
+
+    <RelativeLayout
+        android:id="@+id/loadingView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="55dp"
+        android:layout_marginEnd="55dp"
+        android:gravity="center"
+        android:orientation="vertical" >
 
-        <Button
-            android:id="@+id/settingsMapBackButton"
-            android:layout_width="163dp"
+
+        <ProgressBar
+            android:id="@+id/indeterminateBar"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="BACK" />
+            style="?android:attr/progressBarStyleLarge"
+            />
+    </RelativeLayout>
 
-        <Button
-            android:id="@+id/settingsMapOkButton"
-            android:layout_width="205dp"
-            android:layout_height="wrap_content"
-            android:text="DOWNLOAD"
-            android:visibility="gone" />
-    </LinearLayout>
+    <!-- Map view -->
+    <org.osmdroid.views.MapView
+        android:id="@+id/settingsMapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include" />
 
-    <org.osmdroid.views.MapView android:id="@+id/settingsMapView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
-</LinearLayout>
+    <!-- Download button -->
+    <Button
+        android:id="@+id/downloadButton"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="55dp"
+        android:layout_marginEnd="55dp"
+        style="@style/ButtonDarkGreen"
+        android:text="@string/sign_out_button" />
+
+    <!-- Username edit text -->
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
