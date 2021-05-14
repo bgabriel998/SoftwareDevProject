@@ -15,6 +15,8 @@ import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import androidx.preference.PreferenceManager;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
@@ -102,6 +104,7 @@ public class CameraUiView extends View implements Observer {
     private static final String DISPLAY_POIS_IN_SIGHT = "1";
     private static final String DISPLAY_POIS_OUT_OF_SIGHT = "2";
 
+    private final List<POIPoint> discoveredPOIPoints;
 
     private final SharedPreferences.OnSharedPreferenceChangeListener listenerPreferences =
             (prefs, key) -> {
@@ -121,6 +124,8 @@ public class CameraUiView extends View implements Observer {
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         sharedPref.registerOnSharedPreferenceChangeListener(listenerPreferences);
+
+        discoveredPOIPoints = new ArrayList<>();
 
         displayedToastMode = false;
         
@@ -371,12 +376,17 @@ public class CameraUiView extends View implements Observer {
     }
 
     /**
-     * Draws the mountain marker on the canvas depending on the visibility of the POIPoint
+     * Draws the mountain marker on the canvas depending on the visibility of the POIPoint and adds
+     * them to the discovered POIPoints if the user looks at them and they are in the line of sight
      * @param poiPoint POIPoint that gets drawn
      * @param isVisible Boolean that indicates if the POIPoint is visible or not
      * @param actualDegree degree on which the POIPoint is drawn
      */
     private void drawMountainMarker(POIPoint poiPoint, Boolean isVisible, int actualDegree){
+        if(isVisible && (int)poiPoint.getHorizontalBearing()== (int)horizontalDegrees && !discoveredPOIPoints.contains(poiPoint)){
+            discoveredPOIPoints.add(poiPoint);
+        }
+
         //Use both results and substract the actual vertical heading
         float deltaVerticalAngle = (float) (poiPoint.getVerticalBearing() - verticalDegrees);
 
@@ -401,6 +411,14 @@ public class CameraUiView extends View implements Observer {
                 mountainInfo);
         //Restore the saved state
         canvas.restore();
+    }
+
+    /**
+     * Gets the new discovered peaks
+     * @return List of the new discovered peaks
+     */
+    public List<POIPoint> getDiscoveredPOIPoints(){
+        return discoveredPOIPoints;
     }
 
     /**

@@ -63,4 +63,5 @@
     <string name="points_display">Poäng: %s</string>
     <string name="date_display">Datum: %s</string>
     <string name="position_display">"Position: (1%.2f, 2%.2f) "</string>
+    <string name="setUsername">Du måste först ange ett användarnamn för att spara de upptäckta topparna!</string>
 </resources>
