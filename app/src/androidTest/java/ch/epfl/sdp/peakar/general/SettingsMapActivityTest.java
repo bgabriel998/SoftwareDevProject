@@ -3,7 +3,6 @@ package ch.epfl.sdp.peakar.general;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import androidx.preference.PreferenceManager;
 import androidx.test.core.app.ApplicationProvider;
@@ -56,22 +55,29 @@ public class SettingsMapActivityTest {
         Intents.release();
     }
 
-    /* Test that the "OK" button appears after adding a pin to the map */
+    /* Test that the "Download" button appears after adding a pin to the map */
     @Test
     public void TestMapLongPress(){
-        // checks that button is not visible
-        onView((withId((R.id.settingsMapOkButton))))
+        // checks that button and loading bar is not visible
+        onView((withId((R.id.downloadButton))))
                 .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
-        onView((withId((R.id.settingsMapOkButton))))
+        onView((withId((R.id.downloadButton))))
                 .check(matches(not(isDisplayed())));
+        onView((withId((R.id.loadingView))))
+                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+        onView((withId((R.id.loadingView))));
         // performs long press
         ViewInteraction view = onView(withId(R.id.settingsMapView));
         view.perform(ViewActions.longClick());
-        // check if ok button is visible and displayed
-        onView((withId((R.id.settingsMapOkButton))))
+        // check if download button is visible and displayed
+        onView((withId((R.id.downloadButton))))
                 .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView((withId((R.id.settingsMapOkButton))))
+        onView((withId((R.id.downloadButton))))
                 .check(matches(isDisplayed()));
+        // check that the loading view is not visible and not displayed
+        onView((withId((R.id.loadingView))))
+                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+        onView((withId((R.id.loadingView))));
     }
 
     /* Test that the overlays are set correctly before and after a long press) */
@@ -95,7 +101,7 @@ public class SettingsMapActivityTest {
     /* Test that pressing the back button finish the activity and resets the offline mode value */
     @Test
     public void testBackButton() {
-        ViewInteraction button = onView(withId(R.id.settingsMapBackButton));
+        ViewInteraction button = onView(withId(R.id.toolbarBackButton));
         button.perform(ViewActions.click());
         try {
             Thread.sleep(1000);
@@ -113,14 +119,14 @@ public class SettingsMapActivityTest {
 
     }
 
-    /* Tests that the activity is terminated after the ok button is pressed. */
+    /* Tests that the activity is terminated after download button is pressed. */
     @Test
-    public void okButtonPressed() {
+    public void downloadButtonPressed() {
         // performs long press
         ViewInteraction mapView = onView(withId(R.id.settingsMapView));
         mapView.perform(ViewActions.longClick());
-        // press the ok button
-        ViewInteraction view = onView(withId(R.id.settingsMapOkButton));
+        // press the download button
+        ViewInteraction view = onView(withId(R.id.downloadButton));
         view.perform(ViewActions.click());
         // Check if activity is stopped
         try {
@@ -128,7 +134,7 @@ public class SettingsMapActivityTest {
             assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
         } catch (InterruptedException e) {
             e.printStackTrace();
-            fail("TestOkButton failed");
+            fail("TestDownloadButton failed");
         }
 
     }
@@ -139,8 +145,8 @@ public class SettingsMapActivityTest {
         // performs long press
         ViewInteraction mapView = onView(withId(R.id.settingsMapView));
         mapView.perform(ViewActions.longClick());
-        // press the ok button
-        ViewInteraction view = onView(withId(R.id.settingsMapOkButton));
+        // press the download button
+        ViewInteraction view = onView(withId(R.id.downloadButton));
         view.perform(ViewActions.click());
         // Check if the file exists
         Thread.sleep(15000);

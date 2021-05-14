@@ -102,5 +102,4 @@
         app:srcCompat="@drawable/ic_settings"
         android:onClick="settingsButton"
         android:contentDescription="@string/description_settings_button" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

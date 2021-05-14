@@ -111,8 +111,8 @@ public class ElevationMap {
         if (indexes != null) {
             int row = indexes.first;
             int col = indexes.second;
-            Log.d("3D MAP", "Accessing map at indexes (" + row + ", " + col + ")");
-            Log.d("3D MAP", "Height = " + topographyMap[row][col]);
+            //Log.d("3D MAP", "Accessing map at indexes (" + row + ", " + col + ")");
+            //Log.d("3D MAP", "Height = " + topographyMap[row][col]);
             return topographyMap[row][col];
         } else {
             return 0;
@@ -132,8 +132,8 @@ public class ElevationMap {
         int clampedRow = Math.max(0, Math.min(topographyMap.length-1, row));
         int clampedCol = Math.max(0, Math.min(topographyMap[0].length-1, col));
 
-        Log.d("3D MAP", "Accessing map at indexes (" + clampedRow + ", " + clampedCol + ")");
-        Log.d("3D MAP", "Height = " + topographyMap[clampedRow][clampedCol]);
+        //Log.d("3D MAP", "Accessing map at indexes (" + clampedRow + ", " + clampedCol + ")");
+        //Log.d("3D MAP", "Height = " + topographyMap[clampedRow][clampedCol]);
         return topographyMap[clampedRow][clampedCol];
 
     }

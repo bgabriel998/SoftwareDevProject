@@ -53,7 +53,7 @@ public class CameraActivityTest {
     @BeforeClass
     public static void computePOIPoints(){
         context = ApplicationProvider.getApplicationContext();
-        new ComputePOIPoints(context);
+        ComputePOIPoints.getInstance(context);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear().commit();

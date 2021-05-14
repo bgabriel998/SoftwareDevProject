@@ -16,12 +16,15 @@ import androidx.preference.PreferenceManager;
 import java.util.Locale;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.points.ComputePOIPoints;
+import ch.epfl.sdp.peakar.points.POICache;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
 public class SettingsActivity extends AppCompatActivity {
 
     private static final String  TOOLBAR_TITLE = "Settings";
     private SharedPreferences sharedPref;
+
     /**
      * Preference listener. Callback that is triggered
      * every time a preference is changed
@@ -39,9 +42,6 @@ public class SettingsActivity extends AppCompatActivity {
                         break;
                     case "language_preference":
                         languageChanged((String) prefs.getAll().get("language_preference"));
-                        break;
-                    case "disable_caching":
-                        disableCachingChanged();
                         break;
                     case "offline_mode_preference":
                         offlineModeChanged();
@@ -102,20 +102,23 @@ public class SettingsActivity extends AppCompatActivity {
      * Change measurement system
      */
     private void measurementSystemChanged(){
-        //TODO : Implement
+        //TODO : Implement -> wait new UI to see if the settings should be impl or removed
         Toast.makeText(this,"Setting not implemented yet !", Toast.LENGTH_SHORT).show();
     }
 
     /**
-     * Change measurement system
+     * Change measurement system callback
+     * Deletes the cache file an recompute the POI list
      */
     private void rangeChanged(){
-        //TODO : Implement
-        Toast.makeText(this,"Setting not implemented yet !", Toast.LENGTH_SHORT).show();
+        POICache.getInstance().deleteCacheFile(this.getCacheDir());
+        //recompute the POIs using the new range
+        ComputePOIPoints.getInstance(this);
     }
 
     /**
      * Change language
+     * @param value language code (2 letters)
      */
     private void languageChanged(String value){
         switch (value){
@@ -160,13 +163,7 @@ public class SettingsActivity extends AppCompatActivity {
         overridePendingTransition(0, 0);
     }
 
-    /**
-     * Change caching
-     */
-    private void disableCachingChanged(){
-        //TODO : Implement
-        Toast.makeText(this,"Setting not implemented yet !", Toast.LENGTH_SHORT).show();
-    }
+
 
     /**
      * If the offline mode is off, it will prompt the user to the SettingsMapActivity, otherwise

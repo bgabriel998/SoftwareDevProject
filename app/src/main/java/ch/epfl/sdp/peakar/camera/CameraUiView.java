@@ -15,7 +15,11 @@ import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import androidx.preference.PreferenceManager;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
@@ -25,7 +29,11 @@ import ch.epfl.sdp.peakar.utils.CameraUtilities;
 /**
  * CameraUiView draws a canvas with the compass and mountain information on the camera-preview
  */
-public class CameraUiView extends View {
+public class CameraUiView extends View implements Observer {
+
+    // computePOIPointsInstance instance
+    ComputePOIPoints computePOIPointsInstance;
+
     //Paints used to draw the lines and heading of the compass on the camera-preview
     private Paint mainLinePaint;
     private Paint secondaryLinePaint;
@@ -96,26 +104,12 @@ public class CameraUiView extends View {
     private static final String DISPLAY_POIS_IN_SIGHT = "1";
     private static final String DISPLAY_POIS_OUT_OF_SIGHT = "2";
 
+    private final List<POIPoint> discoveredPOIPoints;
 
     private final SharedPreferences.OnSharedPreferenceChangeListener listenerPreferences =
             (prefs, key) -> {
-                String displayMode = prefs.getString(getResources().getString(R.string.displayPOIs_key), DISPLAY_ALL_POIS);
-                boolean filterPOIs = prefs.getBoolean(getResources().getString(R.string.filterPOIs_key), true);
+                POISetter(prefs);
                 displayCompass = prefs.getBoolean(getResources().getString(R.string.displayCompass_key), false);
-
-                switch (displayMode){
-                    case DISPLAY_ALL_POIS:
-                        setPOIs(filterPOIs ? ComputePOIPoints.getFilteredPOIs() : ComputePOIPoints.getPOIs());
-                        break;
-                    case DISPLAY_POIS_IN_SIGHT:
-                        setPOIs(filterPOIs ? ComputePOIPoints.getFilteredPOIsInSight() : ComputePOIPoints.getPOIsInSight());
-                        checkIfLineOfSightAvailable();
-                        break;
-                    case DISPLAY_POIS_OUT_OF_SIGHT:
-                        setPOIs(filterPOIs ? ComputePOIPoints.getFilteredPOIsOutOfSight() : ComputePOIPoints.getPOIsOutOfSight());
-                        checkIfLineOfSightAvailable();
-                        break;
-                }
             };
 
     /**
@@ -130,9 +124,44 @@ public class CameraUiView extends View {
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         sharedPref.registerOnSharedPreferenceChangeListener(listenerPreferences);
-        displayCompass = sharedPref.getBoolean(getResources().getString(R.string.displayCompass_key), false);
+
+        discoveredPOIPoints = new ArrayList<>();
 
         displayedToastMode = false;
+        
+        displayCompass = sharedPref.getBoolean(getResources().getString(R.string.displayCompass_key), false);
+
+        computePOIPointsInstance = ComputePOIPoints.getInstance(context);
+
+        computePOIPointsInstance.addObserver(this);
+
+        POISetter(sharedPref);
+    }
+
+    /**
+     * Handles the setting of the displayed POIpoints
+     *
+     * @param prefs sharedPreferences to determine the POIPoints to be displayed
+     */
+    private void POISetter(SharedPreferences prefs) {
+
+        String displayMode = prefs.getString(getResources().getString(R.string.displayPOIs_key), DISPLAY_ALL_POIS);
+        boolean filterPOIs = prefs.getBoolean(getResources().getString(R.string.filterPOIs_key), true);
+
+        switch (displayMode){
+            case DISPLAY_ALL_POIS:
+                setPOIs(filterPOIs ? computePOIPointsInstance.getFilteredPOIs() : computePOIPointsInstance.getPOIs());
+                break;
+            case DISPLAY_POIS_IN_SIGHT:
+                setPOIs(filterPOIs ? computePOIPointsInstance.getFilteredPOIsInSight() : computePOIPointsInstance.getPOIsInSight());
+                checkIfLineOfSightAvailable();
+                break;
+            case DISPLAY_POIS_OUT_OF_SIGHT:
+                setPOIs(filterPOIs ? computePOIPointsInstance.getFilteredPOIsOutOfSight() : computePOIPointsInstance.getPOIsOutOfSight());
+                checkIfLineOfSightAvailable();
+                break;
+        }
+
     }
 
     /**
@@ -306,9 +335,6 @@ public class CameraUiView extends View {
             if(labeledPOIPoints != null && !labeledPOIPoints.isEmpty()) {
                 drawLabeledPOIs(i);
             }
-            else{
-                listenerPreferences.onSharedPreferenceChanged(sharedPref, null);
-            }
         }
     }
 
@@ -350,12 +376,17 @@ public class CameraUiView extends View {
     }
 
     /**
-     * Draws the mountain marker on the canvas depending on the visibility of the POIPoint
+     * Draws the mountain marker on the canvas depending on the visibility of the POIPoint and adds
+     * them to the discovered POIPoints if the user looks at them and they are in the line of sight
      * @param poiPoint POIPoint that gets drawn
      * @param isVisible Boolean that indicates if the POIPoint is visible or not
      * @param actualDegree degree on which the POIPoint is drawn
      */
     private void drawMountainMarker(POIPoint poiPoint, Boolean isVisible, int actualDegree){
+        if(isVisible && (int)poiPoint.getHorizontalBearing()== (int)horizontalDegrees && !discoveredPOIPoints.contains(poiPoint)){
+            discoveredPOIPoints.add(poiPoint);
+        }
+
         //Use both results and substract the actual vertical heading
         float deltaVerticalAngle = (float) (poiPoint.getVerticalBearing() - verticalDegrees);
 
@@ -383,10 +414,18 @@ public class CameraUiView extends View {
     }
 
     /**
+     * Gets the new discovered peaks
+     * @return List of the new discovered peaks
+     */
+    public List<POIPoint> getDiscoveredPOIPoints(){
+        return discoveredPOIPoints;
+    }
+
+    /**
      * Checks if the line of sight has been computed. If not display only one toast informing the user
      */
     private void checkIfLineOfSightAvailable() {
-        if(!ComputePOIPoints.isLineOfSightAvailable() && !displayedToastMode){
+        if(!computePOIPointsInstance.isLineOfSightAvailable() && !displayedToastMode){
             Toast.makeText(getContext(), getResources().getString(R.string.lineOfSightNotDownloaded), Toast.LENGTH_SHORT).show();
             displayedToastMode = true;
         }
@@ -403,5 +442,10 @@ public class CameraUiView extends View {
         Bitmap bitmap = Bitmap.createBitmap(cameraUiView.getDrawingCache());
         cameraUiView.setDrawingCacheEnabled(false);
         return bitmap;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        POISetter(sharedPref);
     }
 }
