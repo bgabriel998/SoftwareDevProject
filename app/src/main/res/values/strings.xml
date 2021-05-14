@@ -170,6 +170,8 @@
         is needed to save and read the saved mountains and pictures so please, allow it!</string>
     <string name="camera_request_title">Camera permission required!</string>
     <string name="camera_request_body">Camera permission is required to be able to use the camera-preview.</string>
+    <string name="offline_mode_button" translatable="false">Download Content</string>
+    <string name="download_running" translatable="false">Download still running</string>
     <string name="setUsername">You need to first set a username to save the discovered peaks!</string>
 
 

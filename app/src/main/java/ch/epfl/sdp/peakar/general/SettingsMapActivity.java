@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.osmdroid.bonuspack.location.POI;
+import org.osmdroid.views.MapView;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -31,6 +33,7 @@ import ch.epfl.sdp.peakar.points.GeonamesHandler;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.points.Point;
 import ch.epfl.sdp.peakar.utils.OfflineContentContainer;
+import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
 /**
  * Activity that allows the user to select a point around which compute and
@@ -39,17 +42,19 @@ import ch.epfl.sdp.peakar.utils.OfflineContentContainer;
  */
 public class SettingsMapActivity extends AppCompatActivity {
 
+    // CONSTANTS
+    private static final String  TOOLBAR_TITLE = "Offline Mode";
     public static final String OFFLINE_CONTENT_FILE =  "offline_content.txt";
 
-    private OSMMap osmMap = null;
-
-    private Button backButton;
-    private Button okButton;
+    private Button downloadButton;
+    private View loadingView;
 
     Activity thisActivity;
     Context thisContext;
 
     private Point selectedPoint;
+
+    private boolean downloadRunning;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,20 +62,32 @@ public class SettingsMapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings_map);
 
-        this.backButton = findViewById(R.id.settingsMapBackButton);
-        this.backButton.setOnClickListener(v -> onBackPresses());
+        // Setup the toolbar
+        ToolbarHandler.SetupToolbar(this, TOOLBAR_TITLE);
 
-        this.okButton = findViewById(R.id.settingsMapOkButton);
-        this.okButton.setOnClickListener(v -> saveToJson());
+        downloadRunning = false;
 
-        this.thisActivity = this;
-        this.thisContext = this;
+        View backButton = findViewById(R.id.toolbarBackButton);
+        backButton.setOnClickListener(v -> onBackPressed());
 
-        this.osmMap = new OSMMap(this, findViewById(R.id.settingsMapView));
+        downloadButton = findViewById(R.id.downloadButton);
+        downloadButton.setOnClickListener(v -> saveToJson());
+
+        loadingView = findViewById(R.id.loadingView);
+
+        thisActivity = this;
+        thisContext = this;
+
+        MapView mapView = findViewById(R.id.settingsMapView);
+        OSMMap osmMap = new OSMMap(this, mapView);
+
+        // Invisible button and loading circle
+        downloadButton.setVisibility(View.GONE);
+        loadingView.setVisibility(View.GONE);
 
         osmMap.displayUserLocation();
 
-        osmMap.enablePinOnClick(() -> this.okButton.setVisibility(View.VISIBLE), (p) -> this.selectedPoint = p);
+        osmMap.enablePinOnClick(() -> downloadButton.setVisibility(View.VISIBLE), (p) -> selectedPoint = p);
 
     }
 
@@ -79,6 +96,18 @@ public class SettingsMapActivity extends AppCompatActivity {
      */
     // TODO handle disconnected from server (discuss with others)
     public void saveToJson() {
+
+        downloadRunning = true;
+
+        // Disable Touch
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+        // Display loading bar
+        downloadButton.setVisibility(View.GONE);
+        loadingView.bringToFront();
+
+        loadingView.setVisibility(View.VISIBLE);
 
         OfflineContentContainer saveObject = new OfflineContentContainer();
 
@@ -165,15 +194,21 @@ public class SettingsMapActivity extends AppCompatActivity {
         }
     }
 
-    private void onBackPresses() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+    @Override
+    public void onBackPressed() {
 
-        // Offline mode not activated, reset shared preference
-        prefs.edit()
-                .putBoolean(this.getResources().getString(R.string.offline_mode_key), false)
-                .apply();
+         if (downloadRunning) {
+             Toast.makeText(this,this.getResources().getString(R.string.download_running), Toast.LENGTH_SHORT).show();
+         } else {
+             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        this.finish();
+             // Offline mode not activated, reset shared preference
+             prefs.edit()
+                     .putBoolean(this.getResources().getString(R.string.offline_mode_key), false)
+                     .apply();
+
+             this.finish();
+         }
 
     }
 
