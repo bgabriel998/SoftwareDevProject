@@ -49,11 +49,13 @@ public class ComputePOIPointsTest {
     private static Context mContext;
 
     @BeforeClass
-    public static void setUserPoint(){
+    public static void setUserPoint() throws InterruptedException {
         //Set userPoint to the mont blanc
         mContext = ApplicationProvider.getApplicationContext();
         userPoint = UserPoint.getInstance(mContext); 
         userPoint.setLocation(45.802537, 6.850328, 4809, 0);
+        //new ComputePOIPoints(mContext);
+        //Thread.sleep(20000);
     }
 
     @Before
@@ -109,7 +111,70 @@ public class ComputePOIPointsTest {
         verticalBearing = samePoint.setVerticalBearing(userPoint);
         assertEquals(NaN, verticalBearing, 1);
     }
-    
+
+    /**
+     * Test if ComputePOIPoints has computed the POIs
+     */
+    // TODO Fix test.
+    //@Test
+    public void getPOIPointsTest() {
+        POIPoint filteredLabeledOutOfSight = new POIPoint("Lobuche", 27.9691317, 86.7816135, 6145);
+        POIPoint LabeledOutOfSight = new POIPoint("Baruntse", 27.8720615, 86.9796489, 7075);
+        POIPoint filteredLabeledInSight = new POIPoint("Khartaphu", 28.0641783, 86.977291, 7283);
+        POIPoint LabeledInLineOfSight = new POIPoint("Hungchi", 28.0346849, 86.7597051, 7036);
+
+        assertNotNull(ComputePOIPoints.getPOIs());
+        assertNotNull(ComputePOIPoints.getPOIsInSight());
+        assertNotNull(ComputePOIPoints.getPOIsOutOfSight());
+        assertNotNull(ComputePOIPoints.getFilteredPOIs());
+        assertNotNull(ComputePOIPoints.getFilteredPOIsInSight());
+        assertNotNull(ComputePOIPoints.getFilteredPOIsOutOfSight());
+
+        assertTrue(ComputePOIPoints.getPOIs().size() > 0);
+        assertEquals(ComputePOIPoints.getPOIs().size(), ComputePOIPoints.getPOIsInSight().size()
+                + ComputePOIPoints.getPOIsOutOfSight().size());
+
+        assertTrue(ComputePOIPoints.getFilteredPOIs().size() > 0);
+        assertEquals(ComputePOIPoints.getFilteredPOIs().size(), ComputePOIPoints.getFilteredPOIsInSight().size()
+                + ComputePOIPoints.getFilteredPOIsOutOfSight().size());
+
+        //Check raw POIs
+        assertTrue(ComputePOIPoints.getPOIs().containsKey(filteredLabeledOutOfSight));
+        assertTrue(ComputePOIPoints.getPOIs().containsKey(LabeledOutOfSight));
+        assertTrue(ComputePOIPoints.getPOIs().containsKey(filteredLabeledInSight));
+        assertTrue(ComputePOIPoints.getPOIs().containsKey(LabeledInLineOfSight));
+
+        //Check raw filtered
+        assertTrue(ComputePOIPoints.getFilteredPOIs().containsKey(filteredLabeledOutOfSight));
+        assertFalse(ComputePOIPoints.getFilteredPOIs().containsKey(LabeledOutOfSight));
+        assertTrue(ComputePOIPoints.getFilteredPOIs().containsKey(filteredLabeledInSight));
+        assertFalse(ComputePOIPoints.getFilteredPOIs().containsKey(LabeledInLineOfSight));
+
+        //Check in line of sight not filtered
+        assertFalse(ComputePOIPoints.getPOIsInSight().containsKey(filteredLabeledOutOfSight));
+        assertFalse(ComputePOIPoints.getPOIsInSight().containsKey(LabeledOutOfSight));
+        assertTrue(ComputePOIPoints.getPOIsInSight().containsKey(filteredLabeledInSight));
+        assertTrue(ComputePOIPoints.getPOIsInSight().containsKey(LabeledInLineOfSight));
+
+        //Check in line of sight filtered
+        assertFalse(ComputePOIPoints.getFilteredPOIsInSight().containsKey(filteredLabeledOutOfSight));
+        assertFalse(ComputePOIPoints.getFilteredPOIsInSight().containsKey(LabeledOutOfSight));
+        assertTrue(ComputePOIPoints.getFilteredPOIsInSight().containsKey(filteredLabeledInSight));
+        assertFalse(ComputePOIPoints.getFilteredPOIsInSight().containsKey(LabeledInLineOfSight));
+
+        //Check out of line of sight not filtered
+        assertTrue(ComputePOIPoints.getPOIsOutOfSight().containsKey(filteredLabeledOutOfSight));
+        assertTrue(ComputePOIPoints.getPOIsOutOfSight().containsKey(LabeledOutOfSight));
+        assertFalse(ComputePOIPoints.getPOIsOutOfSight().containsKey(filteredLabeledInSight));
+        assertFalse(ComputePOIPoints.getPOIsOutOfSight().containsKey(LabeledInLineOfSight));
+
+        //Check out of line of sight filtered
+        assertTrue(ComputePOIPoints.getFilteredPOIsOutOfSight().containsKey(filteredLabeledOutOfSight));
+        assertFalse(ComputePOIPoints.getFilteredPOIsOutOfSight().containsKey(LabeledOutOfSight));
+        assertFalse(ComputePOIPoints.getFilteredPOIsOutOfSight().containsKey(filteredLabeledInSight));
+        assertFalse(ComputePOIPoints.getFilteredPOIsOutOfSight().containsKey(LabeledInLineOfSight));
+    }
+
     /* Test if the offline content is loaded correctly */
     @Test
     public void loadPOIsFromFileTest() {

@@ -27,22 +27,19 @@ public class TopographyAsyncTest {
      * @throws InterruptedException if any thread has interrupted the current thread
      */
     @BeforeClass
-    public static void setup() throws InterruptedException {
+    public static void setup() throws InterruptedException, ExecutionException {
         Context mContext = ApplicationProvider.getApplicationContext();
 
         userPoint = UserPoint.getInstance(mContext);
         userPoint.setLocation(GPSTracker.DEFAULT_LAT, GPSTracker.DEFAULT_LON,GPSTracker.DEFAULT_ALT, GPSTracker.DEFAULT_ACC);
-        try {
-            new DownloadTopographyTask(){
-                @Override
-                public void onResponseReceived(Pair<int[][], Double> topography) {
-                    super.onResponseReceived(topography);
-                    topographyPair = topography;
-                }
-            }.execute(userPoint).get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+
+        new DownloadTopographyTask(){
+            @Override
+            public void onResponseReceived(Pair<int[][], Double> topography) {
+                super.onResponseReceived(topography);
+                topographyPair = topography;
+            }
+        }.execute(userPoint).get();
     }
 
     /**

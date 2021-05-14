@@ -4,6 +4,6 @@ import org.osmdroid.bonuspack.location.POI;
 
 import java.util.ArrayList;
 
-public interface GeonamesHandlerInterface {
+public interface Geonames {
     void onResponseReceived(ArrayList<POI> result);
 }

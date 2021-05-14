@@ -76,9 +76,9 @@ public class SettingsActivityTest{
 
     /* Create intent */
     @Before
-    public void setup(){
+    public void setup() throws InterruptedException {
         Intents.init();
-        activity = getActivity(testRule);
+        Thread.sleep(2000);
     }
 
     /* Release Intent */
@@ -92,7 +92,7 @@ public class SettingsActivityTest{
     @Test
     public void TestDiscoveryDistanceButton() throws InterruptedException {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
+        activity = getActivity(testRule);
         //Open selector window
         onView(withId(androidx.preference.R.id.recycler_view))
                 .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.range_title))),
@@ -162,6 +162,7 @@ public class SettingsActivityTest{
     @Test
     public void TestMeasuringSystemButton() throws InterruptedException {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        activity = getActivity(testRule);
         //Get selected value
         String startString = prefs.getString(activity.getResources().getString(R.string.measSys_key), "");
 
@@ -186,9 +187,9 @@ public class SettingsActivityTest{
     public void TestNightModeButton(){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         //Get selected value
-        Boolean startVal = prefs.getBoolean(activity.getResources().getString(R.string.night_mode_key), false);
-        onView(withText(activity.getResources().getString(R.string.night_mode_title))).perform(click());
-        Boolean endVal = prefs.getBoolean(activity.getResources().getString(R.string.night_mode_key), false);
+        Boolean startVal = prefs.getBoolean(context.getResources().getString(R.string.night_mode_key), false);
+        onView(withText(context.getResources().getString(R.string.night_mode_title))).perform(click());
+        Boolean endVal = prefs.getBoolean(context.getResources().getString(R.string.night_mode_key), false);
         assertThat(startVal, not(is(endVal)));
     }
 
@@ -196,6 +197,7 @@ public class SettingsActivityTest{
     @Test
     public void TestOfflineModeButton() throws InterruptedException {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        activity = getActivity(testRule);
         //Get selected value
         Boolean startVal = prefs.getBoolean(activity.getResources().getString(R.string.offline_mode_key), false);
 
@@ -215,7 +217,7 @@ public class SettingsActivityTest{
     @Test
     public void TestLanguageButton() throws InterruptedException {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
+        activity = getActivity(testRule);
 
         //Open selector window
         onView(withId(androidx.preference.R.id.recycler_view))
@@ -237,6 +239,8 @@ public class SettingsActivityTest{
 
         //Check that the selection happened
         String endString = prefs.getString(activity.getResources().getString(R.string.language_key), "");
+        Intents.release();
+        Intents.init();
         assertThat(startString, not(is(endString)));
 
         startString = endString;
@@ -272,7 +276,7 @@ public class SettingsActivityTest{
         Thread.sleep(1000);
         //select first option
         onView(withText(activity.getResources().getStringArray(R.array.language_entries)[0])).perform(click());
-        //Let activity retrieves stability point
+        //Let context retrieves stability point
     }
 
     public void TestToolbarTitle(){
@@ -284,15 +288,13 @@ public class SettingsActivityTest{
     /*Test preference allow caching button click*/
     @Test
     public void TestAllowCachingButton(){
-
-
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         //Get selected value
-        Boolean startVal = prefs.getBoolean(activity.getResources().getString(R.string.disable_caching_key), false);
+        Boolean startVal = prefs.getBoolean(context.getResources().getString(R.string.disable_caching_key), false);
         onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.caching_title))),
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(context.getResources().getString(R.string.caching_title))),
                         click()));
-        Boolean endVal = prefs.getBoolean(activity.getResources().getString(R.string.disable_caching_key), false);
+        Boolean endVal = prefs.getBoolean(context.getResources().getString(R.string.disable_caching_key), false);
         assertThat(startVal, not(is(endVal)));
     }
 
@@ -305,7 +307,7 @@ public class SettingsActivityTest{
         //Get selected value
         boolean startVal = sharedPreferences.getBoolean(devOptionsKey, false);
         onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.display_dev_options))),
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(context.getResources().getString(R.string.display_dev_options))),
                         click()));
         boolean endVal = sharedPreferences.getBoolean(devOptionsKey, false);
         assertThat(startVal, not(is(endVal)));
@@ -320,7 +322,7 @@ public class SettingsActivityTest{
         //Get selected value
         Boolean startVal = sharedPreferences.getBoolean(fillterPOIsKey, false);
         onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.filter_pois_title))),
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(context.getResources().getString(R.string.filter_pois_title))),
                         click()));
         Boolean endVal = sharedPreferences.getBoolean(fillterPOIsKey, false);
         assertThat(startVal, not(is(endVal)));
@@ -337,12 +339,12 @@ public class SettingsActivityTest{
 
         //Open selector window
         onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.display_pois_title))),
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(context.getResources().getString(R.string.display_pois_title))),
                         click()));
         Thread.sleep(THREAD_SLEEP_1S);
-        String[] entries = activity.getResources().getStringArray(R.array.displayPOIs_entries);
+        String[] entries = context.getResources().getStringArray(R.array.displayPOIs_entries);
         //Select the opposite preference
-        if(startString.equals(activity.getResources().getStringArray(R.array.displayPOIs_values)[1]))
+        if(startString.equals(context.getResources().getStringArray(R.array.displayPOIs_values)[1]))
             onView(withText(entries[0])).perform(click());
         else
             onView(withText(entries[1])).perform(click());
