@@ -38,7 +38,7 @@ public class InitActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_init);
-        
+
         createPermissionListener();
 
         Dexter.withContext(this)
@@ -89,7 +89,7 @@ public class InitActivity extends AppCompatActivity {
         allPermissionsListener = new MultiplePermissionsListener() {
             @Override
             public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
-                new ComputePOIPoints(getApplicationContext());
+                ComputePOIPoints.getInstance(getApplicationContext());
                 launchApp();
             }
 
