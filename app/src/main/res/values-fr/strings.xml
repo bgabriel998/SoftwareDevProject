@@ -64,4 +64,5 @@
     <string name="points_display">Points: %s</string>
     <string name="position_display">"Position: (1%.2f, 2%.2f) "</string>
     <string name="date_display">Date: %s</string>
+    <string name="setUsername">"Vous devez d'abord définir un nom d'utilisateur pour sauvegarder les pics découverts!"</string>
 </resources>

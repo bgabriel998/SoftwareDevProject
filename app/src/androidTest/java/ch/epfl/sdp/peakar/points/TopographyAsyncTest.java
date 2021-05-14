@@ -32,6 +32,7 @@ public class TopographyAsyncTest {
 
         userPoint = UserPoint.getInstance(mContext);
         userPoint.setLocation(GPSTracker.DEFAULT_LAT, GPSTracker.DEFAULT_LON,GPSTracker.DEFAULT_ALT, GPSTracker.DEFAULT_ACC);
+
         new DownloadTopographyTask(){
             @Override
             public void onResponseReceived(Pair<int[][], Double> topography) {
@@ -39,7 +40,6 @@ public class TopographyAsyncTest {
                 topographyPair = topography;
             }
         }.execute(userPoint).get();
-
     }
 
     /**

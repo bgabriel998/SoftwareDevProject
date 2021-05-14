@@ -20,13 +20,16 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.util.BoundingBox;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.general.SettingsMapActivity;

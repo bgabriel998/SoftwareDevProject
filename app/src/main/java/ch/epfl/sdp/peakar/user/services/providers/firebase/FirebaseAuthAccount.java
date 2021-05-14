@@ -261,5 +261,6 @@ public class FirebaseAuthAccount extends AuthAccount implements RemoteResource {
         Database.setChildObjectList(Database.CHILD_USERS + currentID + "/" +
                         Database.CHILD_DISCOVERED_PEAKS,
                 new ArrayList<>(newDiscoveredPeaks));
+        super.setDiscoveredPeaks(newDiscoveredPeaks);
     }
 }

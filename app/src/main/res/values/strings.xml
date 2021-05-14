@@ -172,6 +172,7 @@
     <string name="camera_request_body">Camera permission is required to be able to use the camera-preview.</string>
     <string name="offline_mode_button" translatable="false">Download Content</string>
     <string name="download_running" translatable="false">Download still running</string>
+    <string name="setUsername">You need to first set a username to save the discovered peaks!</string>
 
 
 </resources>
