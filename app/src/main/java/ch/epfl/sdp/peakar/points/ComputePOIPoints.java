@@ -106,7 +106,6 @@ public class ComputePOIPoints implements Observer {
             getPOIsFromCache(userPoint);
         else
             getPOIsFromProvider(userPoint);
-        getLabeledPOIs(userPoint);
     }
 
     /**
@@ -123,7 +122,12 @@ public class ComputePOIPoints implements Observer {
         });
         //Retrieve topography map from cache
         Pair<int[][], Double> cachedTopography = POICache.getInstance().getCachedTopography(ctx.getCacheDir());
-        applyFilteringLabeledPOIs(cachedTopography);
+        if(cachedTopography != null){
+            applyFilteringLabeledPOIs(cachedTopography);
+        }
+        else{
+            getLabeledPOIs(userPoint);
+        }
     }
 
     /**
