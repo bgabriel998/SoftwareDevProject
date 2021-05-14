@@ -154,7 +154,7 @@ public class SettingsMapActivity extends AppCompatActivity {
      */
     @SuppressLint("StaticFieldLeak")
     private void addPOIsToContainer(OfflineContentContainer saveObject, Point selectedPoint) {
-        new GeonamesHandler(selectedPoint){
+        new GeonamesHandler(selectedPoint, thisContext){
             @Override
             public void onResponseReceived(ArrayList<POI> result) {
                 List<POIPoint> POIPoints = new ArrayList<>();

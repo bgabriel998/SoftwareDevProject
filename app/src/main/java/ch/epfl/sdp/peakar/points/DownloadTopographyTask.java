@@ -10,7 +10,7 @@ import androidx.core.util.Pair;
  */
 @SuppressWarnings("deprecation")
 public class DownloadTopographyTask extends AsyncTask<Point, Void, Pair<int[][], Double>>
-        implements DownloadTopographyTaskInterface {
+        implements DownloadTopography {
 
     @Override
     protected Pair<int[][], Double> doInBackground(Point... points) {
