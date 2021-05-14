@@ -54,6 +54,8 @@ public class SettingsMapActivity extends AppCompatActivity {
 
     private Point selectedPoint;
 
+    private boolean downloadRunning;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -62,6 +64,8 @@ public class SettingsMapActivity extends AppCompatActivity {
 
         // Setup the toolbar
         ToolbarHandler.SetupToolbar(this, TOOLBAR_TITLE);
+
+        downloadRunning = false;
 
         View backButton = findViewById(R.id.toolbarBackButton);
         backButton.setOnClickListener(v -> onBackPressed());
@@ -92,6 +96,8 @@ public class SettingsMapActivity extends AppCompatActivity {
      */
     // TODO handle disconnected from server (discuss with others)
     public void saveToJson() {
+
+        downloadRunning = true;
 
         // Disable Touch
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
@@ -190,14 +196,19 @@ public class SettingsMapActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        // Offline mode not activated, reset shared preference
-        prefs.edit()
-                .putBoolean(this.getResources().getString(R.string.offline_mode_key), false)
-                .apply();
+         if (downloadRunning) {
+             Toast.makeText(this,this.getResources().getString(R.string.download_running), Toast.LENGTH_SHORT).show();
+         } else {
+             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        this.finish();
+             // Offline mode not activated, reset shared preference
+             prefs.edit()
+                     .putBoolean(this.getResources().getString(R.string.offline_mode_key), false)
+                     .apply();
+
+             this.finish();
+         }
 
     }
 

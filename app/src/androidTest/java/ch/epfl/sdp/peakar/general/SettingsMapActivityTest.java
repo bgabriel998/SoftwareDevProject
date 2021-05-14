@@ -134,7 +134,7 @@ public class SettingsMapActivityTest {
             assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
         } catch (InterruptedException e) {
             e.printStackTrace();
-            fail("TestOkButton failed");
+            fail("TestDownloadButton failed");
         }
 
     }
