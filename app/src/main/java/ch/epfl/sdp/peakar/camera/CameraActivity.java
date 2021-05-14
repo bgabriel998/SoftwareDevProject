@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
@@ -24,6 +25,7 @@ import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.points.UserPoint;
 import ch.epfl.sdp.peakar.user.profile.ProfileLauncherActivity;
 import ch.epfl.sdp.peakar.user.score.UserScore;
+import ch.epfl.sdp.peakar.user.services.Account;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.CameraUtilities;
@@ -151,7 +153,6 @@ public class CameraActivity extends AppCompatActivity{
         super.onPause();
         // releases the sensor listeners of the compass
         compass.stop();
-        //addDiscoveredPOIsToDatabase();
     }
 
     /**
@@ -184,8 +185,13 @@ public class CameraActivity extends AppCompatActivity{
         AuthService service = AuthService.getInstance();
         AuthAccount acc = service.getAuthAccount();
         if(acc != null && !discoveredPOIPoints.isEmpty()){
-            UserScore userScore = new UserScore(this);
-            userScore.updateUserScoreAndDiscoveredPeaks((ArrayList<POIPoint>) discoveredPOIPoints);
+            if(!acc.getUsername().equals(Account.USERNAME_BEFORE_REGISTRATION)){
+                UserScore userScore = new UserScore(this);
+                userScore.updateUserScoreAndDiscoveredPeaks((ArrayList<POIPoint>) discoveredPOIPoints);
+            }
+            else{
+                Toast.makeText(this, getResources().getString(R.string.setUsername), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
