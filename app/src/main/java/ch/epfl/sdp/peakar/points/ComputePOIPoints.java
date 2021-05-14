@@ -171,7 +171,7 @@ public class ComputePOIPoints extends Observable implements Observer{
      * Check if the user has allowed the caching in the
      * @return true if the caching is allowed in the settings
      */
-    private static boolean isCachingAllowed(){
+    private boolean isCachingAllowed(){
         //Get shared preferences
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ctx);
         return sharedPreferences.getBoolean(ctx.getResources().getString(R.string.disable_caching_key), true);
@@ -269,7 +269,7 @@ public class ComputePOIPoints extends Observable implements Observer{
      * Apply filtering using topography map on POI list.
      * @param topography topography map
      */
-    private static void applyFilteringLabeledPOIs(Pair<int[][], Double> topography){
+    private void applyFilteringLabeledPOIs(Pair<int[][], Double> topography){
         LineOfSight lineOfSight = new LineOfSight(topography, userPoint);
         labeledPOIs = lineOfSight.getVisiblePointsLabeled(new ArrayList<>(POIs.keySet()));
         filteredLabeledPOIPoints = filterHighestPOIs(labeledPOIs);

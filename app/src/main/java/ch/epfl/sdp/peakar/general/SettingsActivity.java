@@ -113,7 +113,7 @@ public class SettingsActivity extends AppCompatActivity {
     private void rangeChanged(){
         POICache.getInstance().deleteCacheFile(this.getCacheDir());
         //recompute the POIs using the new range
-        new ComputePOIPoints(this);
+        ComputePOIPoints.getInstance(this);
     }
 
     /**
