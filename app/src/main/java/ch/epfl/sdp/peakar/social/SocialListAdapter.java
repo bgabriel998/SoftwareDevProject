@@ -14,6 +14,9 @@ import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.ListAdapterInflater;
 import ch.epfl.sdp.peakar.utils.UIUtils;
 
+/**
+ * List adapter to display SocialItems.
+ */
 public class SocialListAdapter extends ArrayAdapter<SocialItem> {
 
     private final int resourceLayout;

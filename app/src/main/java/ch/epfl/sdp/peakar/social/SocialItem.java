@@ -1,5 +1,8 @@
 package ch.epfl.sdp.peakar.social;
 
+/**
+ * Item representing a user, used to show all users on the social view.
+ */
 public class SocialItem {
     private final String uid;
     private String username;
