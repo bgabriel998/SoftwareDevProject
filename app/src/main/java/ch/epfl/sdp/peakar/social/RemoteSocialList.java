@@ -39,14 +39,11 @@ public class RemoteSocialList {
         dbRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                String uid = snapshot.getKey();
                 String childUsername = getUsername(snapshot);
-                Long childScore = getScore(snapshot);
-                String childProfilePictureUrl = getProfilePicture(snapshot);
 
                 if (!childUsername.isEmpty()) {
                     addSorted(socialItems,
-                            new SocialItem(uid, childUsername, childScore, childProfilePictureUrl),
+                            new SocialItem(snapshot.getKey(), childUsername, getScore(snapshot)),
                             listAdapter);
                 }
             }
@@ -54,15 +51,11 @@ public class RemoteSocialList {
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 String uid = snapshot.getKey();
-                String childUsername = getUsername(snapshot);
-                Long childScore = getScore(snapshot);
-                String childProfilePictureUrl = getProfilePicture(snapshot);
 
                 for (SocialItem item : socialItems) {
                     if (item.getUid().equals(uid)) {
-                        item.setUsername(childUsername);
-                        item.setScore(childScore);
-                        item.setProfilePicture(childProfilePictureUrl);
+                        item.setUsername(getUsername(snapshot));
+                        item.setScore(getScore(snapshot));
                         sortList(socialItems, listAdapter);
                         return;
                     }
@@ -106,17 +99,6 @@ public class RemoteSocialList {
     private static Long getScore(@NonNull DataSnapshot snapshot) {
         Long score = snapshot.child(Database.CHILD_SCORE).getValue(Long.class);
         return score == null ? 0L : score;
-    }
-
-    /**
-     * Retrieve the profile picture url from a database snap shot.
-     * @param snapshot the given snapshot
-     * @return the profile picture url
-     */
-    private static String getProfilePicture(@NonNull DataSnapshot snapshot) {
-        return "";
-        // TODO GET URL
-        //return snapshot.child(PROFILE_PICTURE).getValue(String.class);
     }
 
     /**

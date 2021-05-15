@@ -23,7 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:remove="android:appComponentFactory">
-        <activity android:name=".general.InitActivity"/>
+        <activity android:name=".social.SocialActivity"/>
         <activity
             android:name=".user.profile.ProfileLauncherActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
@@ -43,7 +43,7 @@
         <activity android:name=".general.SettingsMapActivity" />
         <activity android:name=".general.MainMenuActivity" />
         <activity
-            android:name=".social.SocialActivity"
+            android:name=".general.InitActivity"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

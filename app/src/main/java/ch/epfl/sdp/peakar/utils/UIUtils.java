@@ -20,23 +20,7 @@ public class UIUtils {
      * @return String representing int.
      */
     public static String IntegerConvert(Integer number) {
-        String numberString = number.toString();
-        int length = numberString.length();
-
-        StringBuilder builder = new StringBuilder();
-        int counter = length % INTEGER_CHUNK;
-
-        if (counter > 0) {
-            builder.append(numberString.substring(0, counter));
-            builder.append(SPACE);
-        }
-
-        while (counter < length) {
-            builder.append(numberString.substring(counter, counter + INTEGER_CHUNK));
-            builder.append(SPACE);
-            counter += INTEGER_CHUNK;
-        }
-        return builder.toString();
+        return IntegerConvert(Long.valueOf(number));
     }
 
     /**

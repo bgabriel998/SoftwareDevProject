@@ -10,9 +10,8 @@ public class SocialItem {
      * @param uid used to find user in database.
      * @param username of user.
      * @param score user has.
-     * @param profilePictureUrl to find the profile picture of user.
      */
-    public SocialItem(String uid, String username, long score, String profilePictureUrl) {
+    public SocialItem(String uid, String username, long score) {
         this.uid = uid;
         this.username = username;
         this.score = score;
@@ -57,13 +56,5 @@ public class SocialItem {
      */
     public void setScore(Long score) {
         this.score = score;
-    }
-
-    /**
-     * Set the social item profile picture
-     * @param url to the new profile picture.
-     */
-    public void setProfilePicture(String url) {
-
     }
 }
