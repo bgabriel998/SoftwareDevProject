@@ -81,4 +81,27 @@ public class NewDatabaseReference {
     public NewDatabaseReference push() {
         return new NewDatabaseReference(firebaseReference.push());
     }
+
+    /**
+     * Removes asynchronously the current child from the database.
+     */
+    public Task<Void> removeValueAsync() {
+        return firebaseReference.removeValue();
+    }
+
+    /**
+     * Removes the current child from the database.
+     * Note that this method is a blocking method, meaning that it cannot be used on the UI thread.
+     * You may want to run this method on a new thread and, after that, do something else on the UI thread.
+     */
+    public void removeValue() {
+        Task<Void> removeTask = firebaseReference.removeValue();
+        try {
+            Tasks.await(removeTask);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

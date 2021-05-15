@@ -1,58 +1,101 @@
 package ch.epfl.sdp.peakar.database;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
-import org.junit.After;
-import org.junit.Assert;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Random;
+import ch.epfl.sdp.peakar.user.services.AuthAccount;
+import ch.epfl.sdp.peakar.user.services.AuthService;
 
+import static ch.epfl.sdp.peakar.user.AuthAccountTest.registerAuthUser;
+import static ch.epfl.sdp.peakar.user.AuthAccountTest.removeAuthUser;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.BASIC_USERNAME;
-import static ch.epfl.sdp.peakar.utils.TestingConstants.SHORT_SLEEP_TIME;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class DatabaseTest {
+    private static String user1;
+    private static String user2;
+    public static final NewDatabaseReference databaseRefRoot = NewDatabase.getInstance().getReference();
 
-    private static final int USER_OFFSET = new Random().nextInt();
-    private static final String user1 = BASIC_USERNAME + USER_OFFSET;
+
+    /* Set up the environment */
+    @BeforeClass
+    public static void init() {
+        /* Make sure no user is signed in before tests */
+        AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+
+
+        /* Create a new one */
+        registerAuthUser();
+
+        user1 = (BASIC_USERNAME + AuthService.getInstance().getID()).substring(0, AuthAccount.NAME_MAX_LENGTH - 1);
+        user2 = (BASIC_USERNAME + AuthService.getInstance().getID()).substring(0, AuthAccount.NAME_MAX_LENGTH - 2);
+    }
+
+    /* Clean environment */
+    @AfterClass
+    public static void end() {
+        removeTestUsers();
+        removeAuthUser();
+    }
+
+    /* Make sure that an account is signed in and as new before each test */
+    @Before
+    public void createTestUser() {
+        registerAuthUser();
+        removeTestUsers();
+    }
 
     /* Make sure that mock users are not on the database after a test */
-    @After
-    public void removeTestUsers() throws InterruptedException {
-        Database.refRoot.child(Database.CHILD_USERS).child(user1).removeValue();
-        Thread.sleep(SHORT_SLEEP_TIME);
+    public static void removeTestUsers() {
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
+        databaseRefRoot.child(Database.CHILD_USERS).child(user2).removeValue();
     }
 
-    /* Test that isPresent method works */
+    /* Test that exists method works */
     @Test
-    public void isPresentTest() throws InterruptedException {
-        Database.setChild(Database.CHILD_USERS + user1, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
-        Thread.sleep(SHORT_SLEEP_TIME);
+    public void existsTest() {
+        NewDatabaseReference usernameReference = databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME);
+        // Set the username
+        usernameReference.setValue(user1);
 
-        Database.isPresent(Database.CHILD_USERS, Database.CHILD_USERNAME, "", Assert::fail, () -> assertTrue("Correct behavior", true));
-        Database.isPresent(Database.CHILD_USERS, Database.CHILD_USERNAME, user1, () -> assertTrue("Correct behavior", true),  Assert::fail);
-        Thread.sleep(SHORT_SLEEP_TIME);
+        // Check that the username exists
+        assertTrue(usernameReference.get().exists());
+
+        // Check that a non existing child does not return true
+        assertFalse(usernameReference.child(user2).get().exists());
     }
 
-    /* Test that setChild method works */
+    /* Test that setValue method works */
     @Test
-    public void setChildTest() throws InterruptedException {
-        Database.isPresent(Database.CHILD_USERS, Database.CHILD_USERNAME, user1, Assert::fail, () -> assertTrue("Correct behavior", true));
-        Thread.sleep(SHORT_SLEEP_TIME);
-        Database.setChild(Database.CHILD_USERS + user1, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
-        Thread.sleep(SHORT_SLEEP_TIME);
-        Database.isPresent(Database.CHILD_USERS, Database.CHILD_USERNAME, user1, () -> assertTrue("Correct behavior", true), Assert::fail);
-        Thread.sleep(SHORT_SLEEP_TIME);
+    public void setValueTest() {
+        NewDatabaseReference usernameReference = databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME);
+
+        assertFalse(usernameReference.get().exists());
+
+        usernameReference.setValue(user1);
+
+        assertTrue(usernameReference.get().exists());
     }
 
-    /* Test that exception is thrown if different list sizes are provided */
-    @Test(expected = RuntimeException.class)
-    public void differentSizes_SetChildTest() throws InterruptedException {
-        Database.setChild(Database.CHILD_USERS + user1, Arrays.asList("string1", "string2"), Collections.singletonList(""));
+    /* Test that removeValue method works */
+    @Test
+    public void removeValueTest() {
+        NewDatabaseReference usernameReference = databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME);
+
+        usernameReference.setValue(user1);
+
+        assertTrue(usernameReference.get().exists());
+
+        usernameReference.removeValue();
+
+        assertFalse(usernameReference.get().exists());
     }
 }

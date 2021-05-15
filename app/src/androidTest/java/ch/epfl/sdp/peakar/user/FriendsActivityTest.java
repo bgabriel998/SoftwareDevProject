@@ -41,6 +41,7 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sdp.peakar.database.DatabaseTest.databaseRefRoot;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.BASIC_USERNAME;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.LONG_SLEEP_TIME;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.SHORT_SLEEP_TIME;
@@ -83,12 +84,11 @@ public class FriendsActivityTest {
 
     /* Make sure that mock users are not on the database after a test */
     @After
-    public void removeTestUsers() throws InterruptedException {
-        Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
+    public void removeTestUsers() {
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
         for(int i=0; i < FRIENDS_SIZE; i++) {
-            Database.refRoot.child(Database.CHILD_USERS).child(username + ((i < 10) ? "0" + i : i)).removeValue();
+            databaseRefRoot.child(Database.CHILD_USERS).child(username + ((i < 10) ? "0" + i : i)).removeValue();
         }
-        Thread.sleep(SHORT_SLEEP_TIME);
     }
 
     @Rule
@@ -121,22 +121,22 @@ public class FriendsActivityTest {
         // Set up the scenario
         // Add mock users
         for(int i=0; i < FRIENDS_SIZE; i++) {
-            Database.setChild(Database.CHILD_USERS + username + ((i < 10) ? "0" + i : i), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(username + i));
+            databaseRefRoot.child(Database.CHILD_USERS).child(username + ((i < 10) ? "0" + i : i)).child(Database.CHILD_USERNAME).setValue(username + i);
         }
-        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(username));
-        Thread.sleep(LONG_SLEEP_TIME);
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(username);
+
 
         // Add mock users to the friends
         for(int i=0; i < FRIENDS_SIZE; i++) {
-            Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID() + Database.CHILD_FRIENDS, Collections.singletonList(username + ((i < 10) ? "0" + i : i)), Collections.singletonList(""));
+            databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_FRIENDS).child(username + ((i < 10) ? "0" + i : i)).setValue("");
         }
-        Thread.sleep(LONG_SLEEP_TIME * 2);
 
         FirebaseAuthService.getInstance().forceRetrieveData();
-        Thread.sleep(LONG_SLEEP_TIME * 2);
 
         assertNotNull(AuthService.getInstance().getAuthAccount().getFriends());
         assertSame(20, AuthService.getInstance().getAuthAccount().getFriends().size());
+
+        Thread.sleep(LONG_SLEEP_TIME * 2);
 
         testRule.getScenario().recreate();
         Thread.sleep(LONG_SLEEP_TIME * 2);
@@ -155,7 +155,8 @@ public class FriendsActivityTest {
         // Change friend username and points
         String newUsername = username + "new";
         int newScore = 20;
-        Database.setChild(Database.CHILD_USERS + username + "00", Arrays.asList(Database.CHILD_USERNAME, Database.CHILD_SCORE), Arrays.asList(newUsername, newScore));
+        databaseRefRoot.child(Database.CHILD_USERS).child(username + "00").child(Database.CHILD_USERNAME).setValue(newUsername);
+        databaseRefRoot.child(Database.CHILD_USERS).child(username + "00").child(Database.CHILD_SCORE).setValue(newScore);
         Thread.sleep(SHORT_SLEEP_TIME * 2);
 
         // Check username has been updated
@@ -171,12 +172,11 @@ public class FriendsActivityTest {
         // Add mock users
         String FRIEND_USER = username + "00";
 
-        Database.setChild(Database.CHILD_USERS + FRIEND_USER, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(FRIEND_USER));
-        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(username));
+        databaseRefRoot.child(Database.CHILD_USERS).child(FRIEND_USER).child(Database.CHILD_USERNAME).setValue(FRIEND_USER);
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(username);
 
         // Add mock user to the friends
-        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID() + Database.CHILD_FRIENDS, Collections.singletonList(FRIEND_USER), Collections.singletonList(""));
-        Thread.sleep(LONG_SLEEP_TIME * 2);
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_FRIENDS).child(FRIEND_USER).setValue("");
 
         FirebaseAuthService.getInstance().forceRetrieveData();
         Thread.sleep(LONG_SLEEP_TIME * 2);

@@ -4,13 +4,13 @@ import android.net.Uri;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static ch.epfl.sdp.peakar.database.DatabaseTest.databaseRefRoot;
 import static org.junit.Assert.*;
 
 import ch.epfl.sdp.peakar.database.Database;
@@ -55,14 +55,8 @@ public class OtherAccountTest {
 
     /* Make sure that mock users are not on the database after a test */
     public static void removeTestUsers() {
-        Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
-        Task<Void> task2 = Database.refRoot.child(Database.CHILD_USERS).child(user2).removeValue();
-        try {
-            Tasks.await(task1);
-            Tasks.await(task2);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
+        databaseRefRoot.child(Database.CHILD_USERS).child(user2).removeValue();
     }
 
     /* Test that if the other user does not exist, an empty account will be returned */
