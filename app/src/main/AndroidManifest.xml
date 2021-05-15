@@ -23,11 +23,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:remove="android:appComponentFactory">
-
-        <activity android:name=".user.profile.ProfileLauncherActivity"
-            android:theme="@style/Theme.AppCompat.Translucent"/>
-        <activity android:name=".user.profile.NewProfileActivity"/>
-        <activity android:name=".TestMenuBarActivity"/>
+        <activity android:name=".general.InitActivity"/>
+        <activity
+            android:name=".user.profile.ProfileLauncherActivity"
+            android:theme="@style/Theme.AppCompat.Translucent" />
+        <activity android:name=".user.profile.NewProfileActivity" />
         <activity android:name=".user.friends.AddFriendActivity" />
         <activity android:name=".user.friends.FriendItemActivity" />
         <activity android:name=".user.friends.FriendsActivity" />
@@ -43,7 +43,7 @@
         <activity android:name=".general.SettingsMapActivity" />
         <activity android:name=".general.MainMenuActivity" />
         <activity
-            android:name=".general.InitActivity"
+            android:name=".social.SocialActivity"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

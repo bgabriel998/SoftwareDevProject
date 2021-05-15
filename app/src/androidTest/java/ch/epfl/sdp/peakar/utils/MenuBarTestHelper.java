@@ -6,11 +6,11 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import java.util.HashMap;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.TestMenuBarActivity;
 import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.gallery.GalleryActivity;
 import ch.epfl.sdp.peakar.general.SettingsActivity;
 import ch.epfl.sdp.peakar.map.MapActivity;
+import ch.epfl.sdp.peakar.social.SocialActivity;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -32,8 +32,7 @@ public class MenuBarTestHelper {
         iconClassMap.put(R.id.menu_bar_gallery, GalleryActivity.class.getName());
         iconClassMap.put(R.id.menu_bar_camera, CameraActivity.class.getName());
         iconClassMap.put(R.id.menu_bar_map, MapActivity.class.getName());
-        // TODO: iconClassMap.put(R.id.menu_bar_social, SocialActivity.class.getName());
-        iconClassMap.put(R.id.menu_bar_social, TestMenuBarActivity.class.getName());
+        iconClassMap.put(R.id.menu_bar_social, SocialActivity.class.getName());
     }
 
     /**

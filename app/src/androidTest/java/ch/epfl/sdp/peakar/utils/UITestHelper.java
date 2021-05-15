@@ -15,9 +15,7 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.matcher.BoundedMatcher;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.gallery.ZoomableImageView;
-import ch.epfl.sdp.peakar.utils.StorageHandler;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -25,9 +23,6 @@ import org.hamcrest.Matcher;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
-import ch.epfl.sdp.peakar.camera.CameraActivity;
-import ch.epfl.sdp.peakar.gallery.ZoomableImageView;
 
 import static org.junit.Assert.fail;
 
