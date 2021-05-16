@@ -31,6 +31,8 @@ import ch.epfl.sdp.peakar.user.services.OtherAccount;
 import ch.epfl.sdp.peakar.utils.StatusBarHandler;
 import ch.epfl.sdp.peakar.utils.UIUtils;
 
+import static ch.epfl.sdp.peakar.utils.UIUtils.setTintColor;
+
 /**
  * TODO Rename to remove new part.
  */
@@ -114,11 +116,7 @@ public class NewProfileActivity extends AppCompatActivity {
         ImageView v = findViewById(R.id.profile_friend);
         v.setVisibility(self ? View.INVISIBLE : View.VISIBLE);
         if (friends) {
-            Drawable d = v.getDrawable();
-            d.setColorFilter(
-                    new PorterDuffColorFilter(getColor(R.color.DarkGreen),
-                            PorterDuff.Mode.SRC_ATOP));
-            v.setImageDrawable(d);
+            setTintColor(v, R.color.DarkGreen);
         }
     }
 

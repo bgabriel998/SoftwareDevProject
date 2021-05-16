@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/top_bar"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <!-- Profile button -->
+    <ImageButton
+        android:id="@+id/top_bar_profile_button"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:src="@drawable/top_bar_user"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@null"
+        android:contentDescription="@string/description_profile_button"/>
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/top_bar_title"
+        style="@style/SmallText.DarkGreen"
+        android:layout_width="300dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <!-- Sort dots -->
+    <ImageButton
+        android:id="@+id/top_bar_dots_button"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/general_icon_dots"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@null"
+        android:contentDescription="@string/description_sort_button"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
