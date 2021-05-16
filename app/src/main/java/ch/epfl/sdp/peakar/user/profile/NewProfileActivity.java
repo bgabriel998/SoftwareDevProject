@@ -206,7 +206,6 @@ public class NewProfileActivity extends AppCompatActivity {
      */
     public void confirmUsernameButton(View view) {
         EditText usernameEdit = ((EditText)findViewById(R.id.profile_username_edit));
-        usernameEdit.setInputType(InputType.TYPE_NULL);
         String newUsername = usernameEdit.getText().toString();
         usernameEdit.getText().clear();
 

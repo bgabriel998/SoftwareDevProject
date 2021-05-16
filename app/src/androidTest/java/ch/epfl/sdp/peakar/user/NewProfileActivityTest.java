@@ -151,6 +151,7 @@ public class NewProfileActivityTest {
             e.printStackTrace();
         }
         onView(withText(R.string.registered_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.profile_change_username)).perform(click());
         onView(withId(R.id.profile_username_edit)).perform(typeText(user2));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.profile_change_username)).perform(click());
