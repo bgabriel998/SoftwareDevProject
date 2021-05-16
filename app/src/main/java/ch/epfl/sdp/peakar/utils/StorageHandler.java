@@ -2,15 +2,23 @@ package ch.epfl.sdp.peakar.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 
+import com.google.gson.Gson;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+
+import ch.epfl.sdp.peakar.general.SettingsMapActivity;
 
 /**
  * Utility class to store and retrieve files
@@ -78,5 +86,33 @@ public final class StorageHandler {
         File[] mediaDirs = context.getExternalMediaDirs();
         mediaDir = mediaDirs != null ? mediaDirs[0] : null;
         return (mediaDir != null && mediaDir.exists()) ? mediaDir : appContext.getFilesDir();
+    }
+
+    /**
+     * Helper method to load the downloaded json.
+     *
+     * @return an OfflineContainer containing the downloaded content.
+     */
+     public static OfflineContentContainer readDownloadedPOIs(Context context) throws IOException {
+
+        Gson gson = new Gson();
+
+        String ret = "";
+
+        InputStream inputStream =  context.openFileInput(SettingsMapActivity.OFFLINE_CONTENT_FILE);
+        if ( inputStream != null ) {
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String receiveString;
+            StringBuilder stringBuilder = new StringBuilder();
+            while ( (receiveString = bufferedReader.readLine()) != null ) {
+                stringBuilder.append(receiveString);
+            }
+            inputStream.close();
+            ret = stringBuilder.toString();
+        }
+
+        Log.d("computePOIPointsInstance", "Offline content downloaded");
+        return gson.fromJson(ret, OfflineContentContainer.class);
     }
 }

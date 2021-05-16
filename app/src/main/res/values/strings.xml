@@ -171,6 +171,7 @@
     <string name="offline_mode_button" translatable="false">Download Content</string>
     <string name="download_running" translatable="false">Download still running</string>
     <string name="setUsername">You need to first set a username to save the discovered peaks!</string>
+    <string name="outsideOfDownloadedBox">You are in offline mode and outside of your downloaded area. Please turn off the offline mode on the settings to use the application.</string>
 
 
 </resources>
