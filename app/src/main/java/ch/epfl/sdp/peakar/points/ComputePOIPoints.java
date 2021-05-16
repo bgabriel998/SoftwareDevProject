@@ -202,16 +202,6 @@ public class ComputePOIPoints extends Observable implements Observer{
     }
 
     /**
-     * Check if the user has allowed the caching in the
-     * @return true if the caching is allowed in the settings
-     */
-    private boolean isCachingAllowed(){
-        //Get shared preferences
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPreferences.getBoolean(context.getResources().getString(R.string.disable_caching_key), true);
-    }
-
-    /**
      * Gets the labeled POIs and filters them.
      *
      * @param userPoint userPoint for which the labeled POIs are computed.
@@ -224,10 +214,10 @@ public class ComputePOIPoints extends Observable implements Observer{
                 super.onResponseReceived(topography);
 
                 applyFilteringLabeledPOIs(topography);
-                
+
                 setChanged();
                 notifyObservers();
-              
+
                 //Save POIs, BB and topography to the cache
                 POICache.getInstance().savePOIDataToCache(new ArrayList<>(POIs.keySet()),
                         userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM),
@@ -235,6 +225,16 @@ public class ComputePOIPoints extends Observable implements Observer{
                         context.getCacheDir());
             }
         }.execute(userPoint);
+    }
+
+    /**
+     * Check if the user has allowed the caching in the
+     * @return true if the caching is allowed in the settings
+     */
+    private boolean isCachingAllowed(){
+        //Get shared preferences
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getBoolean(context.getResources().getString(R.string.disable_caching_key), true);
     }
 
     /**
