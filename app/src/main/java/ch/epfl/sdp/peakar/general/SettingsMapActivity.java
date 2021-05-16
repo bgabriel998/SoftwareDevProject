@@ -28,6 +28,7 @@ import java.util.List;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.map.OSMMap;
+import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.points.DownloadTopographyTask;
 import ch.epfl.sdp.peakar.points.GeonamesHandler;
 import ch.epfl.sdp.peakar.points.POIPoint;
@@ -170,6 +171,10 @@ public class SettingsMapActivity extends AppCompatActivity {
                 saveObject.POIPoints = POIPoints;
                 saveJson(saveObject);
                 Toast.makeText(thisContext,thisContext.getResources().getString(R.string.offline_mode_on_toast), Toast.LENGTH_SHORT).show();
+
+                ComputePOIPoints computePOIPoints = ComputePOIPoints.getInstance(thisContext);
+                computePOIPoints.update(null, null);
+
                 thisActivity.finish();
 
             }
@@ -209,7 +214,5 @@ public class SettingsMapActivity extends AppCompatActivity {
 
              this.finish();
          }
-
     }
-
 }

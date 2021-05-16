@@ -179,11 +179,10 @@ public class SettingsActivity extends AppCompatActivity {
             Intent setIntent = new Intent(this, SettingsMapActivity.class);
             startActivity(setIntent);
         } else {
+            ComputePOIPoints computePOIPoints = ComputePOIPoints.getInstance(this);
+            computePOIPoints.update(null, null);
             Toast.makeText(this,this.getResources().getString(R.string.offline_mode_off_toast), Toast.LENGTH_SHORT).show();
         }
-
-        ComputePOIPoints computePOIPoints = ComputePOIPoints.getInstance(this);
-        computePOIPoints.update(null, null);
     }
 
     @Override
