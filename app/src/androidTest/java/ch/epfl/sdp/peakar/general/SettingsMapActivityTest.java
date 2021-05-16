@@ -19,21 +19,33 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.osmdroid.tileprovider.MapTileProviderBase;
+import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Overlay;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.map.MapActivity;
+import ch.epfl.sdp.peakar.map.OSMMap;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
@@ -60,7 +72,7 @@ public class SettingsMapActivityTest {
     public void TestMapLongPress(){
         // checks that button and loading bar is not visible
         onView((withId((R.id.downloadButton))))
-                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)));
         onView((withId((R.id.downloadButton))))
                 .check(matches(not(isDisplayed())));
         onView((withId((R.id.loadingView))))
@@ -181,4 +193,39 @@ public class SettingsMapActivityTest {
 
     }
 
+    /*Test switch between normal map and satellite view*/
+    @Test
+    public void pressSatelliteNormalMapButton() {
+        OSMMap osmMap = SettingsMapActivity.osmMap;
+        //Originally the map is set to default
+        //A press on the button will change the map tile for satellite
+
+        MapView mapView = osmMap.getMapView();
+        MapTileProviderBase tileProviderBase = mapView.getTileProvider();
+        assertEquals("Mapnik", tileProviderBase.getTileSource().name());
+        //Click on button
+        ViewInteraction button = onView(withId(R.id.changeMapTile));
+        button.perform(click());
+        //Check that the provider has changed
+        tileProviderBase = mapView.getTileProvider();
+        assertEquals("ARCGisOnline", tileProviderBase.getTileSource().name());
+    }
+
+    /* Check that a press on "zoom on user location button effectively zooms on user loc"*/
+    @Test
+    public void pressZoomOnUserLocationButton() throws InterruptedException {
+        OSMMap osmMap = SettingsMapActivity.osmMap;
+        MapView mapView = osmMap.getMapView();
+        //Get map center at start
+        GeoPoint geoPointStart = (GeoPoint) mapView.getMapCenter();
+        //Wait 5 Sec for the provider to get the location
+        Thread.sleep(5000);
+
+        ViewInteraction button = onView(withId(R.id.zoomOnUserLocation));
+        button.perform(click());
+        //Get center of the map after zoom
+        GeoPoint geoPointEnd = (GeoPoint)  mapView.getMapCenter();
+        //Compare two map centers
+        assertThat(geoPointStart, is(not(geoPointEnd)));
+    }
 }

@@ -37,8 +37,6 @@ import ch.epfl.sdp.peakar.points.Point;
 import ch.epfl.sdp.peakar.utils.OfflineContentContainer;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
-import static ch.epfl.sdp.peakar.map.MapActivity.osmMap;
-
 /**
  * Activity that allows the user to select a point around which compute and
  * download POIPoints and an elevation map for offline usage.
@@ -52,6 +50,7 @@ public class SettingsMapActivity extends AppCompatActivity {
 
     private Button downloadButton;
     private View loadingView;
+    public static OSMMap osmMap;
 
     Activity thisActivity;
     Context thisContext;
@@ -83,7 +82,7 @@ public class SettingsMapActivity extends AppCompatActivity {
         thisContext = this;
 
         MapView mapView = findViewById(R.id.settingsMapView);
-        OSMMap osmMap = new OSMMap(this, mapView);
+        osmMap = new OSMMap(this, mapView);
 
         // Invisible button and loading circle
         downloadButton.setVisibility(View.INVISIBLE);
