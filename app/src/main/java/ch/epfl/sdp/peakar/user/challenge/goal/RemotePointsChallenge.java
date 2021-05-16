@@ -64,6 +64,16 @@ public class RemotePointsChallenge extends PointsChallenge {
         return newChallenge;
     }
 
+
+    /**
+     * @return true if the challenge expired, false if not
+     */
+    @SuppressLint("NewApi")
+    public boolean isChallengeFinished(){
+       LocalDateTime finishDateTime = getFinishDateTime();
+        return finishDateTime.compareTo(LocalDateTime.now()) < 0;
+    }
+
     @Override
     public ChallengeOutcome join() {
         // If the authenticated user has already joined this challenge.

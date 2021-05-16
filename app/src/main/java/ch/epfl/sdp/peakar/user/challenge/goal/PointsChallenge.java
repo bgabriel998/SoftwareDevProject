@@ -65,6 +65,7 @@ public abstract class PointsChallenge implements GoalChallenge {
 
     @Override
     public LocalDateTime getStartDateTime() {return startDateTime;}
+
     @Override
     public LocalDateTime getFinishDateTime() {return startDateTime;}
 
