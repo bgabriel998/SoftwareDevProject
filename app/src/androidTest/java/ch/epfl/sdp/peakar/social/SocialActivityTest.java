@@ -1,6 +1,7 @@
-package ch.epfl.sdp.peakar;
+package ch.epfl.sdp.peakar.social;
 
 import androidx.test.espresso.intent.Intents;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -10,12 +11,17 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.utils.MenuBarTestHelper;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static ch.epfl.sdp.peakar.utils.UITestHelper.withBackgroundColor;
+
 @RunWith(AndroidJUnit4.class)
-public class TestMenuBarActivityTest {
+public class SocialActivityTest {
     @Rule
-    public ActivityScenarioRule<TestMenuBarActivity> testRule = new ActivityScenarioRule<>(TestMenuBarActivity.class);
+    public ActivityScenarioRule<SocialActivity> testRule = new ActivityScenarioRule<>(SocialActivity.class);
 
     /* Create Intent */
     @Before
@@ -52,5 +58,10 @@ public class TestMenuBarActivityTest {
     @Test
     public void TestMenuBarSocial(){
         MenuBarTestHelper.TestSelectedIconButton(R.id.menu_bar_social);
+    }
+
+    @Test
+    public void TestTopBarColor() {
+        onView(ViewMatchers.withId(R.id.top_bar)).check(matches(withBackgroundColor(R.color.LightGrey)));
     }
 }

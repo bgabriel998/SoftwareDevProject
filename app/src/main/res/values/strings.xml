@@ -74,6 +74,7 @@
     <string name="description_gallery_fullscreen_image" translatable="false">Gallery fullscreen image</string>
     <string name="description_dark_green_line" translatable="false">Dark green line</string>
     <string name='description_user_avatar' translatable="false">User avatar</string>
+    <string name='description_social_medal' translatable="false">Rank medal</string>
 
     <string name="title_activity_init" translatable="false">initActivity</string>
     <!--
@@ -117,6 +118,10 @@
     <string name="points_display" translatable="true">Points: %s</string>
     <string name="date_display" translatable="true">Date: %s</string>
     <string name="position_display" translatable="true">Position: (1%.2f, 2%.2f) </string>
+
+    <!-- SOCIAL TEXT -->
+    <string name="search_username_hint" translatable="true">Search Username</string>
+    <string name="rank_display" translatable="true">Rank: %s</string>
 
     <!-- Preference Titles -->
     <string name="general_header">General</string>

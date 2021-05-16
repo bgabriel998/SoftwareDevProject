@@ -62,7 +62,11 @@ public class InitActivity extends AppCompatActivity {
      * Init application global stuff before opening the main menu
      */
     private synchronized void initApp(){
-        if(AuthService.getInstance().getAuthAccount() != null) AuthService.getInstance().getAuthAccount().init();
+        new Thread(() -> {
+            if (AuthService.getInstance().getAuthAccount() != null) {
+                AuthService.getInstance().getAuthAccount().init();
+            }
+        }).start();
     }
 
     /**

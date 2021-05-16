@@ -63,4 +63,6 @@
     <string name="permission_rationale_message">"I permessi della fotocamera sono richiesti per aprire la fotocamera,         I permessi della posizione sono richiesti per mostrare le vette che ti circondano, il permesso per scrivere e leggere dall’archiviazione         è richiesto per salvare e caricare le montagne salvate e le foto scattate, per favore abilitalo! "</string>
     <string name="setUsername">Prima di vedere le vette che hai scoperto imposta un nome utente!</string>
     <string name="outsideOfDownloadedBox">You are in offline mode and outside of your downloaded area. Please turn off the offline mode on the settings to use the application.</string>
+    <string name="search_username_hint">Search Username</string>
+    <string name="rank_display">Rank: %s</string>
 </resources>
