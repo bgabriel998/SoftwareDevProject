@@ -10,16 +10,16 @@ import java.util.Iterator;
  * This class represents a Database Snapshot, i.e. a copy of a database child retrieved and available locally.
  * Its implementation makes use of Firebase API, so needs to be modified if database provider is changed.
  */
-public class NewDatabaseSnapshot {
+public class DatabaseSnapshot {
     private final DataSnapshot firebaseDatabaseSnapshot;
 
-    protected NewDatabaseSnapshot(DataSnapshot firebaseDatabaseSnapshot) {
+    protected DatabaseSnapshot(DataSnapshot firebaseDatabaseSnapshot) {
         this.firebaseDatabaseSnapshot = firebaseDatabaseSnapshot;
         //return databaseReference.firebaseReference.get();
     }
 
-    public NewDatabaseSnapshot child(String path) {
-        return new NewDatabaseSnapshot(firebaseDatabaseSnapshot.child(path));
+    public DatabaseSnapshot child(String path) {
+        return new DatabaseSnapshot(firebaseDatabaseSnapshot.child(path));
     }
 
     public String getKey() {
@@ -38,10 +38,10 @@ public class NewDatabaseSnapshot {
         return firebaseDatabaseSnapshot.exists();
     }
 
-    public Iterable<NewDatabaseSnapshot> getChildren() {
+    public Iterable<DatabaseSnapshot> getChildren() {
         final Iterator<DataSnapshot> iter = firebaseDatabaseSnapshot.getChildren().iterator();
 
-        return () -> new Iterator<NewDatabaseSnapshot>() {
+        return () -> new Iterator<DatabaseSnapshot>() {
             @Override
             public boolean hasNext() {
                 return iter.hasNext();
@@ -49,9 +49,9 @@ public class NewDatabaseSnapshot {
 
             @Override
             @NonNull
-            public NewDatabaseSnapshot next() {
+            public DatabaseSnapshot next() {
                 DataSnapshot childNode = iter.next();
-                return new NewDatabaseSnapshot(childNode);
+                return new DatabaseSnapshot(childNode);
             }
 
             @Override

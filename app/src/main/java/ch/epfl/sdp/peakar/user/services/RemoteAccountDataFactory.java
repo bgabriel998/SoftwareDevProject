@@ -1,41 +1,37 @@
-package ch.epfl.sdp.peakar.user.services.providers.firebase;
+package ch.epfl.sdp.peakar.user.services;
 
 import android.net.Uri;
 import android.util.Log;
 
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import ch.epfl.sdp.peakar.database.Database;
+import ch.epfl.sdp.peakar.database.DatabaseReference;
+import ch.epfl.sdp.peakar.database.DatabaseSnapshot;
 import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
 import ch.epfl.sdp.peakar.general.remote.RemoteResource;
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.user.challenge.Challenge;
-import ch.epfl.sdp.peakar.user.services.AccountData;
-import ch.epfl.sdp.peakar.user.services.AuthAccount;
-import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.user.friends.RemoteFriendItem;
+import ch.epfl.sdp.peakar.user.challenge.goal.RemotePointsChallenge;
 
 /**
  * This class implements helper methods that can generate an <code>AccountData</code> retrieving data from the DB.
  */
-public class FirebaseAccountDataFactory implements RemoteResource {
+public class RemoteAccountDataFactory implements RemoteResource {
     private final AccountData accountData;
 
     private final DatabaseReference dbRefUser;
-    private DataSnapshot data;
+    private DatabaseSnapshot data;
 
     /**
      * Constructor.
      */
-    private FirebaseAccountDataFactory(AccountData accountData, DatabaseReference dbRefUser) {
+    private RemoteAccountDataFactory(AccountData accountData, DatabaseReference dbRefUser) {
         this.accountData = accountData;
         this.dbRefUser = dbRefUser;
     }
@@ -46,33 +42,23 @@ public class FirebaseAccountDataFactory implements RemoteResource {
      * @param dbRefUser database reference to the user.
      */
     public static RemoteOutcome retrieveAccountData(AccountData accountData, DatabaseReference dbRefUser) {
-        FirebaseAccountDataFactory newFactory = new FirebaseAccountDataFactory(accountData, dbRefUser);
+        RemoteAccountDataFactory newFactory = new RemoteAccountDataFactory(accountData, dbRefUser);
         return newFactory.retrieveData();
     }
 
     @Override
     public RemoteOutcome retrieveData() {
-        Task<DataSnapshot> retrieveTask = dbRefUser.get();
-
-        try {
-            // Wait for task to finish
-            Tasks.await(retrieveTask);
-            // Get the obtained data
-            DataSnapshot data = retrieveTask.getResult();
-            assert data != null;
-            // If there is no data on DB, return such outcome
-            if(!data.exists()) {
-                return RemoteOutcome.NOT_FOUND;
-            }
-            // Otherwise, update the attributes with retrieve data
-            this.data = data;
-            loadData();
-            return RemoteOutcome.FOUND;
-
-        } catch (Exception e) {
-            Log.d("FirebaseAccountDataFactory", "retrieveData: fail");
-            return RemoteOutcome.FAIL;
+        // Get the obtained data
+        DatabaseSnapshot data = dbRefUser.get();
+        assert data != null;
+        // If there is no data on DB, return such outcome
+        if(!data.exists()) {
+            return RemoteOutcome.NOT_FOUND;
         }
+        // Otherwise, update the attributes with retrieve data
+        this.data = data;
+        loadData();
+        return RemoteOutcome.FOUND;
     }
 
     /**
@@ -89,7 +75,7 @@ public class FirebaseAccountDataFactory implements RemoteResource {
         accountData.setPhotoUrl(Uri.parse(Optional.ofNullable(data.child(Database.CHILD_PHOTO_URL).getValue(String.class)).orElse("")));
         // If this is loading the auth account, check if the photo is updated.
         // If photo has changed from last access, update it.
-        if(dbRefUser.toString().equals(Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).toString()) && !AuthService.getInstance().getPhotoUrl().equals(accountData.getPhotoUrl())) {
+        if(dbRefUser.toString().equals(Database.getInstance().getReference().child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).toString()) && !AuthService.getInstance().getPhotoUrl().equals(accountData.getPhotoUrl())) {
             // Locally
             accountData.setPhotoUrl(AuthService.getInstance().getPhotoUrl());
             // Remotely
@@ -117,8 +103,8 @@ public class FirebaseAccountDataFactory implements RemoteResource {
     /**
      * Load discovered peaks.
      */
-    private void loadPeaks(DataSnapshot data) {
-        for (DataSnapshot peak : data.getChildren()) {
+    private void loadPeaks(DatabaseSnapshot data) {
+        for (DatabaseSnapshot peak : data.getChildren()) {
             POIPoint newPeak = new POIPoint(peak.child(Database.CHILD_ATTRIBUTE_PEAK_NAME).getValue(String.class),
                     Optional.ofNullable(peak.child(Database.CHILD_ATTRIBUTE_PEAK_LATITUDE).getValue(Double.class)).orElse(0.0),
                     Optional.ofNullable(peak.child(Database.CHILD_ATTRIBUTE_PEAK_LONGITUDE).getValue(Double.class)).orElse(0.0),
@@ -132,8 +118,8 @@ public class FirebaseAccountDataFactory implements RemoteResource {
     /**
      * Load discovered country high points.
      */
-    private void loadCountryHighPoints(DataSnapshot data) {
-        for (DataSnapshot countryHighPoint : data.getChildren()) {
+    private void loadCountryHighPoints(DatabaseSnapshot data) {
+        for (DatabaseSnapshot countryHighPoint : data.getChildren()) {
             // Get the country name
             String countryName = Optional.ofNullable(countryHighPoint.child(Database.CHILD_ATTRIBUTE_COUNTRY_NAME).getValue(String.class)).orElse("null");
 
@@ -150,8 +136,8 @@ public class FirebaseAccountDataFactory implements RemoteResource {
     /**
      * Load discovered heights
      */
-    private void loadHeights(DataSnapshot data) {
-        for (DataSnapshot heightEntry : data.getChildren()) {
+    private void loadHeights(DatabaseSnapshot data) {
+        for (DatabaseSnapshot heightEntry : data.getChildren()) {
             // Get the height
             int newHeight = Optional.ofNullable(heightEntry.child("0").getValue(Integer.class)).orElse(0);
 
@@ -163,13 +149,13 @@ public class FirebaseAccountDataFactory implements RemoteResource {
     /**
      * Load added friends
      */
-    private void loadFriends(DataSnapshot data) {
-        for (DataSnapshot friendEntry : data.getChildren()) {
+    private void loadFriends(DatabaseSnapshot data) {
+        for (DatabaseSnapshot friendEntry : data.getChildren()) {
             // Get the friend ID
             String uidFriend = friendEntry.getKey();
 
             // Create a friend item
-            FirebaseFriendItem newFriendItem = new FirebaseFriendItem(uidFriend);
+            RemoteFriendItem newFriendItem = new RemoteFriendItem(uidFriend);
 
             // Add the friend
             accountData.addFriend(newFriendItem);
@@ -179,9 +165,9 @@ public class FirebaseAccountDataFactory implements RemoteResource {
     /**
      * Load added challenges.
      */
-    private void loadChallenges(DataSnapshot data) {
+    private void loadChallenges(DatabaseSnapshot data) {
         Log.d("FirebaseAccountDataFactory", "loadChallenges: entered");
-        for (DataSnapshot challengeEntry : data.getChildren()) {
+        for (DatabaseSnapshot challengeEntry : data.getChildren()) {
             Log.d("FirebaseAccountDataFactory", "loadChallenges: entered for");
             String challengeId = challengeEntry.getKey();
             assert challengeId != null;
@@ -191,13 +177,8 @@ public class FirebaseAccountDataFactory implements RemoteResource {
             Log.d("FirebaseAccountDataFactory", "loadChallenges: before if. Current challenge type = " + challengeType);
             if(challengeType.equals(Database.VALUE_POINTS_CHALLENGE)) {
                 Log.d("FirebaseAccountDataFactory", "loadChallenges: entered if");
-                Task<DataSnapshot> retrieveChallenge = Database.refRoot.child(Database.CHILD_CHALLENGES).child(challengeId).get();
-                try {
-                    Tasks.await(retrieveChallenge);
-                    loadPointsChallenge(Objects.requireNonNull(retrieveChallenge.getResult()));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                DatabaseSnapshot retrieveChallenge = Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(challengeId).get();
+                loadPointsChallenge(retrieveChallenge);
             }
         }
     }
@@ -205,7 +186,7 @@ public class FirebaseAccountDataFactory implements RemoteResource {
     /**
      * Load points challenge.
      */
-    private void loadPointsChallenge(DataSnapshot data) {
+    private void loadPointsChallenge(DatabaseSnapshot data) {
         Log.d("FirebaseAccountDataFactory", "loadPointsChallenge: entered");
 
         // Get ID of new challenge
@@ -215,7 +196,7 @@ public class FirebaseAccountDataFactory implements RemoteResource {
 
         // Get users
         List<String> users = new ArrayList<>();
-        for (DataSnapshot user : data.child(Database.CHILD_USERS).getChildren()) {
+        for (DatabaseSnapshot user : data.child(Database.CHILD_USERS).getChildren()) {
             Log.d("FirebaseAccountDataFactory", "loadPointsChallenge: added user = " + user.getKey());
             users.add(user.getKey());
         }
@@ -229,7 +210,7 @@ public class FirebaseAccountDataFactory implements RemoteResource {
         Log.d("FirebaseAccountDataFactory", "loadPointsChallenge: prize = " + prize);
 
         // Add the challenge
-        accountData.addChallenge(new FirebasePointsChallenge(id, users, prize, goal));
+        accountData.addChallenge(new RemotePointsChallenge(id, users, prize, goal));
         Log.d("FirebaseAccountDataFactory", "loadPointsChallenge: new challenges size = " + accountData.getChallenges().size());
     }
 }

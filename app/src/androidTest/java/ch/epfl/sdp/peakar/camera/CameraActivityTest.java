@@ -72,12 +72,7 @@ public class CameraActivityTest {
     }
 
     private static void removeTestUsers() {
-        Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
-        try {
-            Tasks.await(task1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Database.getInstance().getReference().child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
     }
 
     /* Create Intent */

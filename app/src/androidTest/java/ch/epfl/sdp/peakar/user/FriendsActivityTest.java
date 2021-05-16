@@ -20,9 +20,6 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.user.friends.FriendItem;
@@ -31,7 +28,7 @@ import ch.epfl.sdp.peakar.user.friends.FriendsActivity;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseFriendItem;
+import ch.epfl.sdp.peakar.user.friends.RemoteFriendItem;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -185,7 +182,7 @@ public class FriendsActivityTest {
         Thread.sleep(LONG_SLEEP_TIME * 2);
 
         // Item at pos 0 looks like this
-        FriendItem correctItem = new FirebaseFriendItem(
+        FriendItem correctItem = new RemoteFriendItem(
                 FRIEND_USER);
 
         Intents.init();

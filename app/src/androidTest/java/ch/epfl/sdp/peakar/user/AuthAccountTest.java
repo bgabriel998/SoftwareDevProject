@@ -9,7 +9,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -23,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import ch.epfl.sdp.peakar.database.Database;
-import ch.epfl.sdp.peakar.database.NewDatabaseReference;
+import ch.epfl.sdp.peakar.database.DatabaseReference;
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.score.ScoringConstants;
@@ -32,7 +31,6 @@ import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 
 import static ch.epfl.sdp.peakar.database.DatabaseTest.databaseRefRoot;
-import static ch.epfl.sdp.peakar.utils.TestingConstants.LONG_SLEEP_TIME;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.SHORT_SLEEP_TIME;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.USER_SCORE;
 import static org.junit.Assert.assertEquals;
@@ -221,7 +219,7 @@ public class AuthAccountTest {
         databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
 
         //Set user score to USER_SCORE
-        NewDatabaseReference refAdd = databaseRefRoot.child(Database.CHILD_USERS);
+        DatabaseReference refAdd = databaseRefRoot.child(Database.CHILD_USERS);
         refAdd.child(AuthService.getInstance().getID()).child(Database.CHILD_SCORE).setValue(USER_SCORE);
 
         FirebaseAuthService.getInstance().forceRetrieveData();
@@ -255,7 +253,7 @@ public class AuthAccountTest {
         CountryHighPoint newEntry = new CountryHighPoint("France","Mont Blanc",4810);
 
         //Set value to the database manually
-        NewDatabaseReference refAdd = databaseRefRoot.child(Database.CHILD_USERS);
+        DatabaseReference refAdd = databaseRefRoot.child(Database.CHILD_USERS);
         refAdd.child(AuthService.getInstance().getID()).child(Database.CHILD_COUNTRY_HIGH_POINT).push().setValue(newEntry);
 
         FirebaseAuthService.getInstance().forceRetrieveData();

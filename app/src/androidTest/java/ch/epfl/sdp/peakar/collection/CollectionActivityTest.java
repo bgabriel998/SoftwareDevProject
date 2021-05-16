@@ -104,7 +104,7 @@ public class CollectionActivityTest {
     /* Clean environment */
     @AfterClass
     public static void end() {
-        Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
+        Database.getInstance().getReference().child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
         removeAuthUser();
     }
 

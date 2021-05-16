@@ -2,8 +2,6 @@ package ch.epfl.sdp.peakar.user.services;
 
 import android.net.Uri;
 
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseOtherAccount;
-
 /**
  * This class represents the local account model of an non-authenticated user.
  * For each database provider:
@@ -17,7 +15,7 @@ public abstract class OtherAccount extends Account {
      * @param userID id of the user.
      */
     public static OtherAccount getInstance(String userID) {
-        return FirebaseOtherAccount.getInstance(userID);
+        return RemoteOtherAccount.getInstance(userID);
     }
 
     /**

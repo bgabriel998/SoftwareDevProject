@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
 public class DatabaseTest {
     private static String user1;
     private static String user2;
-    public static final NewDatabaseReference databaseRefRoot = NewDatabase.getInstance().getReference();
+    public static final DatabaseReference databaseRefRoot = Database.getInstance().getReference();
 
 
     /* Set up the environment */
@@ -62,7 +62,7 @@ public class DatabaseTest {
     /* Test that exists method works */
     @Test
     public void existsTest() {
-        NewDatabaseReference usernameReference = databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME);
+        DatabaseReference usernameReference = databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME);
         // Set the username
         usernameReference.setValue(user1);
 
@@ -76,7 +76,7 @@ public class DatabaseTest {
     /* Test that setValue method works */
     @Test
     public void setValueTest() {
-        NewDatabaseReference usernameReference = databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME);
+        DatabaseReference usernameReference = databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME);
 
         assertFalse(usernameReference.get().exists());
 
@@ -88,7 +88,7 @@ public class DatabaseTest {
     /* Test that removeValue method works */
     @Test
     public void removeValueTest() {
-        NewDatabaseReference usernameReference = databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME);
+        DatabaseReference usernameReference = databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME);
 
         usernameReference.setValue(user1);
 
