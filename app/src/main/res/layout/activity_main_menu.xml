@@ -77,6 +77,15 @@
             android:text="@string/map_button"
             android:onClick="mapButton" />
 
+        <Button
+            android:id="@+id/challengeButton"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginTop="15dp"
+            style="@style/ButtonGrey"
+            android:text="Challenge TMP"
+            android:onClick="challengeButton" />
+
     </LinearLayout>
 
     <!-- Profile Icon Button -->
