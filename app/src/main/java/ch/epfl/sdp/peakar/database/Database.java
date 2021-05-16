@@ -9,7 +9,7 @@ import ch.epfl.sdp.peakar.database.providers.firebase.FirebaseDatabaseReference;
 public class Database {
     /* CHILD PATH CONSTANTS */
     public static final String CHILD_USERS = "users/";
-    public static final String CHILD_FRIENDS = "friends";
+    public static final String CHILD_FRIENDS = "friends/";
     public static final String CHILD_PHOTO_URL = "photo";
     public static final String CHILD_DISCOVERED_PEAKS = "DiscoveredPeaks";
     public static final String CHILD_DISCOVERED_PEAKS_HEIGHTS = "DiscoveredHeights";
