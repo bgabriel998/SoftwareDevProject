@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.FirebaseDatabase;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -62,7 +63,9 @@ public class InitActivity extends AppCompatActivity {
      * Init application global stuff before opening the main menu
      */
     private synchronized void initApp(){
-        if(AuthService.getInstance().getAuthAccount() != null) AuthService.getInstance().getAuthAccount().init();
+        new Thread(() -> {
+            if(AuthService.getInstance().getAuthAccount() != null) AuthService.getInstance().getAuthAccount().init();
+        }).start();
     }
 
     /**
