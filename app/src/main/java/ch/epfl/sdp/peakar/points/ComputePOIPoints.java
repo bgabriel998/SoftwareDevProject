@@ -145,8 +145,6 @@ public class ComputePOIPoints extends Observable implements Observer{
                     POIs.put(poiPoint, false);
                 }
                 applyFilteringLabeledPOIs(topography);
-                setChanged();
-                notifyObservers();
             } else {
                 Toast.makeText(context, context.getResources().getString(R.string.outsideOfDownloadedBox), Toast.LENGTH_LONG).show();
                 resetPOIs();
@@ -195,6 +193,8 @@ public class ComputePOIPoints extends Observable implements Observer{
                         POIs.put(poiPoint, false);
                     }
                     filteredPOIPoints = filterHighestPOIs(POIs);
+                    setChanged();
+                    notifyObservers();
                     getLabeledPOIs(userPoint);
                 }
             }
@@ -214,9 +214,6 @@ public class ComputePOIPoints extends Observable implements Observer{
                 super.onResponseReceived(topography);
 
                 applyFilteringLabeledPOIs(topography);
-
-                setChanged();
-                notifyObservers();
 
                 //Save POIs, BB and topography to the cache
                 POICache.getInstance().savePOIDataToCache(new ArrayList<>(POIs.keySet()),
@@ -261,6 +258,9 @@ public class ComputePOIPoints extends Observable implements Observer{
         filteredLabeledPOIsOutOfSight = filterHighestPOIs(labeledPOIsOutOfSight);
 
         isLineOfSightAvailable = true;
+
+        setChanged();
+        notifyObservers();
     }
 
     /**
