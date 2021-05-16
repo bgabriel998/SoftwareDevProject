@@ -1,5 +1,6 @@
 package ch.epfl.sdp.peakar.social;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -14,18 +15,12 @@ import java.util.List;
 
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.database.DatabaseReference;
-import ch.epfl.sdp.peakar.social.SocialItem;
-import ch.epfl.sdp.peakar.social.SocialListAdapter;
 
 /**
  * This class is an helper class designed to provide <code>SocialActivity</code>
  * with a synchronized list.
  */
 public class RemoteSocialList {
-
-    private static final String USERNAME = "username";
-    private static final String SCORE = "score";
-    private static final String PROFILE_PICTURE = "";
 
     /**
      * Synchronize the list given in input so it changes correctly on every DB change
@@ -43,7 +38,8 @@ public class RemoteSocialList {
 
                 if (!childUsername.isEmpty()) {
                     addSorted(socialItems,
-                            new SocialItem(snapshot.getKey(), childUsername, getScore(snapshot)),
+                            new SocialItem(snapshot.getKey(), childUsername,
+                                    getScore(snapshot), getProfileUrl(snapshot)),
                             listAdapter);
                 }
             }
@@ -99,6 +95,16 @@ public class RemoteSocialList {
     private static Long getScore(@NonNull DataSnapshot snapshot) {
         Long score = snapshot.child(Database.CHILD_SCORE).getValue(Long.class);
         return score == null ? 0L : score;
+    }
+
+    /**
+     * Retrieve the url of the profile image from a database snap shot.
+     * @param snapshot the given snapshot
+     * @return the url of the image or <code>Uri.EMPTY</code> if no url found
+     */
+    private static Uri getProfileUrl(@NonNull DataSnapshot snapshot) {
+        Uri url = snapshot.child(Database.CHILD_PHOTO_URL).getValue(Uri.class);
+        return url == null ? Uri.EMPTY : url;
     }
 
     /**

@@ -1,5 +1,7 @@
 package ch.epfl.sdp.peakar.social;
 
+import android.net.Uri;
+
 /**
  * Item representing a user, used to show all users on the social view.
  */
@@ -14,7 +16,7 @@ public class SocialItem {
      * @param username of user.
      * @param score user has.
      */
-    public SocialItem(String uid, String username, long score) {
+    public SocialItem(String uid, String username, long score, Uri profileUrl) {
         this.uid = uid;
         this.username = username;
         this.score = score;

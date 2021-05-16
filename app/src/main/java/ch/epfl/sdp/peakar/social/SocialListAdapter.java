@@ -96,17 +96,19 @@ public class SocialListAdapter extends ArrayAdapter<SocialItem> {
      * @param rank the rank of the social item.
      */
     private void setMedal(ImageView v, int rank) {
-        if (rank == 1) {
-            v.setImageResource(R.drawable.social_medal_gold);
-        }
-        else if (rank == 2) {
-            v.setImageResource(R.drawable.social_medal_silver);
-        }
-        else if (rank == 3) {
-            v.setImageResource(R.drawable.social_medal_bronze);
-        }
-        else {
-            v.setVisibility(View.INVISIBLE);
+        switch (rank) {
+            case 1 :
+                v.setImageResource(R.drawable.social_medal_gold);
+                break;
+            case 2 :
+                v.setImageResource(R.drawable.social_medal_silver);
+                break;
+            case 3 :
+                v.setImageResource(R.drawable.social_medal_bronze);
+                break;
+            default :
+                v.setVisibility(View.INVISIBLE);
+                break;
         }
     }
 }
