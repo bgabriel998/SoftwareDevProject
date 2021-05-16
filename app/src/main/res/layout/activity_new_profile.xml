@@ -72,7 +72,10 @@
             android:layout_height="35dp"
             android:gravity="center"
             android:visibility="gone"
-            android:autofillHints="@string/insert_username_button" />
+            android:autofillHints="@string/insert_username_button"
+            android:inputType="text"
+            android:hint="@string/insert_username_button"
+            tools:ignore="LabelFor" />
 
         <TextView
             android:id="@+id/profile_points"

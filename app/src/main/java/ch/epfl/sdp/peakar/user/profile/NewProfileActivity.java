@@ -208,6 +208,7 @@ public class NewProfileActivity extends AppCompatActivity {
         EditText usernameEdit = ((EditText)findViewById(R.id.profile_username_edit));
         usernameEdit.setInputType(InputType.TYPE_NULL);
         String newUsername = usernameEdit.getText().toString();
+        usernameEdit.getText().clear();
 
         // Start a new thread that will handle the process
         Thread changeThread = new Thread(){
@@ -246,6 +247,7 @@ public class NewProfileActivity extends AppCompatActivity {
      */
     private void updateProfileImage() {
         Uri  profileImageUrl = isAuthProfile ? AuthService.getInstance().getPhotoUrl() : otherAccount.getPhotoUrl();
+        if(profileImageUrl == Uri.EMPTY) return;
         Glide.with(this)
                 .load(profileImageUrl)
                 .circleCrop()
