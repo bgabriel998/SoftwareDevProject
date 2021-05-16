@@ -15,6 +15,7 @@ public class SocialItem {
      * @param uid used to find user in database.
      * @param username of user.
      * @param score user has.
+     * @param profileUrl to the profile picture the user has.
      */
     public SocialItem(String uid, String username, long score, Uri profileUrl) {
         this.uid = uid;

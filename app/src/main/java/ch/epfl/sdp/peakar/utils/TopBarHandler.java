@@ -2,7 +2,6 @@ package ch.epfl.sdp.peakar.utils;
 
 import android.app.Activity;
 import android.view.View;
-import android.widget.ImageView;
 
 import ch.epfl.sdp.peakar.R;
 
