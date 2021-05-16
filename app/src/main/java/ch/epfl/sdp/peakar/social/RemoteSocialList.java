@@ -103,8 +103,8 @@ public class RemoteSocialList {
      * @return the url of the image or <code>Uri.EMPTY</code> if no url found
      */
     private static Uri getProfileUrl(@NonNull DataSnapshot snapshot) {
-        Uri url = snapshot.child(Database.CHILD_PHOTO_URL).getValue(Uri.class);
-        return url == null ? Uri.EMPTY : url;
+        String urlString = snapshot.child(Database.CHILD_PHOTO_URL).getValue(String.class);
+        return urlString == null ? Uri.EMPTY : Uri.parse(urlString);
     }
 
     /**
