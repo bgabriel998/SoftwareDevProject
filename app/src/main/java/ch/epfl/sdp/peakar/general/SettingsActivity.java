@@ -181,6 +181,9 @@ public class SettingsActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this,this.getResources().getString(R.string.offline_mode_off_toast), Toast.LENGTH_SHORT).show();
         }
+
+        ComputePOIPoints computePOIPoints = ComputePOIPoints.getInstance(this);
+        computePOIPoints.update(null, null);
     }
 
     @Override
