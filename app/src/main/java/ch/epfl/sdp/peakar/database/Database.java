@@ -1,14 +1,15 @@
 package ch.epfl.sdp.peakar.database;
 
+import ch.epfl.sdp.peakar.database.providers.firebase.FirebaseDatabaseReference;
+
 /**
  * This class represents a Database.
  * It implements the singleton pattern so only one Database object can exist.
  */
 public class Database {
     /* CHILD PATH CONSTANTS */
-    public static final String DATABASE_ADDRESS = "https://peakar-default-rtdb.europe-west1.firebasedatabase.app/";
     public static final String CHILD_USERS = "users/";
-    public static final String CHILD_FRIENDS = "/friends/";
+    public static final String CHILD_FRIENDS = "friends";
     public static final String CHILD_PHOTO_URL = "photo";
     public static final String CHILD_DISCOVERED_PEAKS = "DiscoveredPeaks";
     public static final String CHILD_DISCOVERED_PEAKS_HEIGHTS = "DiscoveredHeights";
@@ -22,7 +23,7 @@ public class Database {
     public static final String CHILD_ATTRIBUTE_PEAK_LATITUDE = "latitude";
     public static final String CHILD_ATTRIBUTE_PEAK_LONGITUDE = "longitude";
     public static final String CHILD_ATTRIBUTE_PEAK_ALTITUDE = "altitude";
-    public static final String CHILD_CHALLENGES = "challenges";
+    public static final String CHILD_CHALLENGES = "challenges/";
     public static final String CHILD_CHALLENGE_GOAL = "goal";
     public final static String VALUE_POINTS_CHALLENGE = "points_challenge";
 
@@ -31,7 +32,7 @@ public class Database {
     private final DatabaseReference reference;
 
     private Database() {
-        reference = new DatabaseReference();
+        reference = new FirebaseDatabaseReference();
     }
 
     /**

@@ -55,8 +55,6 @@ public class RemoteAuthAccount extends AuthAccount implements RemoteResource {
         return remoteOutcome;
     }
 
-    /* GETTERS */
-
     @Override
     public void init() {
         if(getUsername().equals(USERNAME_BEFORE_REGISTRATION)) {

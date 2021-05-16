@@ -8,136 +8,73 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 /**
- * This class represents a Database Reference.
- * Its implementation makes use of Firebase API, so needs to be modified if database provider is changed.
+ * This interface represents a Database Reference, i.e. a reference to a database child.
  */
-public class DatabaseReference {
-    // FIREBASE CONSTANTS
-    public static final String DATABASE_ADDRESS = "https://peakar-default-rtdb.europe-west1.firebasedatabase.app/";
-
-    // FIREBASE REFERENCE
-    public com.google.firebase.database.DatabaseReference firebaseReference;
-
-    /**
-     * Constructor of a reference pointing to the root of the database.
-     */
-    protected DatabaseReference(){
-        firebaseReference = FirebaseDatabase.getInstance(DATABASE_ADDRESS).getReference();
-    }
-
-    /**
-     * Constructor of a reference given the Firebase Reference.
-     */
-    private DatabaseReference(com.google.firebase.database.DatabaseReference firebaseReference){
-        this.firebaseReference = firebaseReference;
-    }
-
+public interface DatabaseReference {
     /**
      * Get the child with the given path from the current reference.
      */
-    public DatabaseReference child(String pathString) {
-        return new DatabaseReference(firebaseReference.child(pathString));
-    }
+    public DatabaseReference child(String pathString);
 
     /**
      * Get the database snapshot of the current reference.
      * Note that this method is a blocking method, meaning that it cannot be used on the UI thread.
      * You may want to run this method on a new thread and, after that, do something else on the UI thread.
      */
-    public DatabaseSnapshot get() {
-        Task<DataSnapshot> getTask = firebaseReference.get();
-        try {
-            Tasks.await(getTask);
-            return new DatabaseSnapshot(getTask.getResult());
-        } catch(Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("DBReference: error getting data snapshot");
-        }
-    }
+    public DatabaseSnapshot get();
 
     /**
      * Get the key of the current child.
      */
-    public String getKey() {
-        return firebaseReference.getKey();
-    }
+    public String getKey();
 
     /**
      * Set asynchronously a value to the current reference.
      */
-    public Task<Void> setValueAsync(Object value) {
-        return firebaseReference.setValue(value);
-    }
+    public Task<Void> setValueAsync(Object value);
 
     /**
      * Set a value to the current reference.
      * Note that this method is a blocking method, meaning that it cannot be used on the UI thread.
      * You may want to run this method on a new thread and, after that, do something else on the UI thread.
      */
-    public void setValue(Object value) {
-        Task<Void> setTask = firebaseReference.setValue(value);
-        try {
-            Tasks.await(setTask);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
+    public void setValue(Object value);
 
     /**
      * Create a new child in the current path and return its reference.
      */
-    public DatabaseReference push() {
-        return new DatabaseReference(firebaseReference.push());
-    }
+    public DatabaseReference push();
 
     /**
      * Removes asynchronously the current child from the database.
      */
-    public Task<Void> removeValueAsync() {
-        return firebaseReference.removeValue();
-    }
+    public Task<Void> removeValueAsync();
 
     /**
      * Removes the current child from the database.
      * Note that this method is a blocking method, meaning that it cannot be used on the UI thread.
      * You may want to run this method on a new thread and, after that, do something else on the UI thread.
      */
-    public void removeValue() {
-        Task<Void> removeTask = firebaseReference.removeValue();
-        try {
-            Tasks.await(removeTask);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
+    public void removeValue();
 
     /**
      * Create a query in which children are ordered by the values of the specified path.
      */
-    public DatabaseQuery orderByChild(String path) {
-        return new DatabaseQuery(firebaseReference.orderByChild(path));
-    }
-
+    public DatabaseQuery orderByChild(String path);
     /**
      * Add a listener for changes in the data at this location. Each time time the data changes, your
      * listener will be called with an immutable snapshot of the data.
      */
-    public ValueEventListener addValueEventListener(ValueEventListener valueEventListener) {
-        return firebaseReference.addValueEventListener(valueEventListener);
-    }
+    public ValueEventListener addValueEventListener(ValueEventListener valueEventListener);
 
     /**
      * Add a listener for child events occurring at this location. When child locations are added,
      * removed, changed, or moved, the listener will be triggered for the appropriate event.
      */
-    public ChildEventListener addChildEventListener(ChildEventListener childEventListener) {
-        return firebaseReference.addChildEventListener(childEventListener);
-    }
+    public ChildEventListener addChildEventListener(ChildEventListener childEventListener);
 
     /**
      * Remove the given listener from the current reference.
      */
-    public void removeEventListener(ValueEventListener valueEventListener) {
-        firebaseReference.removeEventListener(valueEventListener);
-    }
+    public void removeEventListener(ValueEventListener valueEventListener);
 }

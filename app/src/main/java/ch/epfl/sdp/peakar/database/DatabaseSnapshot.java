@@ -7,57 +7,41 @@ import com.google.firebase.database.DataSnapshot;
 import java.util.Iterator;
 
 /**
- * This class represents a Database Snapshot, i.e. a copy of a database child retrieved and available locally.
- * Its implementation makes use of Firebase API, so needs to be modified if database provider is changed.
+ * This interface represents a Database Snapshot, i.e. a copy of a database child retrieved and available locally.
  */
-public class DatabaseSnapshot {
-    private final DataSnapshot firebaseDatabaseSnapshot;
+public interface DatabaseSnapshot {
+    /**
+     * Get a snapshot of the given child.
+     * @param path path of the new child from the current snapshot.
+     */
+    public DatabaseSnapshot child(String path);
 
-    protected DatabaseSnapshot(DataSnapshot firebaseDatabaseSnapshot) {
-        this.firebaseDatabaseSnapshot = firebaseDatabaseSnapshot;
-        //return databaseReference.firebaseReference.get();
-    }
+    /**
+     * Get the key of the current DB snapshot.
+     */
+    public String getKey();
 
-    public DatabaseSnapshot child(String path) {
-        return new DatabaseSnapshot(firebaseDatabaseSnapshot.child(path));
-    }
+    /**
+     * Get the value of the current DB snapshot.
+     * @param valueType type of the retrieved value.
+     * @param <T> type of the retrieved value.
+     */
+    public <T> T getValue(@NonNull Class<T> valueType);
 
-    public String getKey() {
-        return firebaseDatabaseSnapshot.getKey();
-    }
+    /**
+     * Get the value of the current DB snapshot.
+     * @return value as an object.
+     */
+    public Object getValue();
 
-    public <T> T getValue(@NonNull Class<T> valueType) {
-        return firebaseDatabaseSnapshot.getValue(valueType);
-    }
+    /**
+     * Check if the current DB snapshot exists.
+     * @return true if the snapshot is not empty, false otherwise.
+     */
+    public boolean exists();
 
-    public Object getValue() {
-        return firebaseDatabaseSnapshot.getValue();
-    }
-
-    public boolean exists() {
-        return firebaseDatabaseSnapshot.exists();
-    }
-
-    public Iterable<DatabaseSnapshot> getChildren() {
-        final Iterator<DataSnapshot> iter = firebaseDatabaseSnapshot.getChildren().iterator();
-
-        return () -> new Iterator<DatabaseSnapshot>() {
-            @Override
-            public boolean hasNext() {
-                return iter.hasNext();
-            }
-
-            @Override
-            @NonNull
-            public DatabaseSnapshot next() {
-                DataSnapshot childNode = iter.next();
-                return new DatabaseSnapshot(childNode);
-            }
-
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException("DatabaseSnapshot: remove called on immutable collection");
-            }
-        };
-    }
+    /**
+     * Give access to all of the immediate children of this snapshot.
+     */
+    public Iterable<DatabaseSnapshot> getChildren();
 }
