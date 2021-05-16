@@ -55,14 +55,28 @@ public class InitActivity extends AppCompatActivity {
         ProgressBar progressBar = findViewById(R.id.progressBarInitActivity);
         progressBar.setVisibility(View.VISIBLE);
 
-        //initApp();
+        initApp();
     }
 
     /**
      * Init application global stuff before opening the main menu
      */
+    //private synchronized void initApp(){
+    //    if(AuthService.getInstance().getAuthAccount() != null) AuthService.getInstance().getAuthAccount().init();
+    //}
+
+    /**
+     * Init application global stuff before opening the main menu
+     */
     private synchronized void initApp(){
-        if(AuthService.getInstance().getAuthAccount() != null) AuthService.getInstance().getAuthAccount().init();
+        new Thread(() -> {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(AuthService.getInstance().getAuthAccount() != null) AuthService.getInstance().getAuthAccount().init();
+        }).start();
     }
 
     /**
