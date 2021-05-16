@@ -1,5 +1,8 @@
 package ch.epfl.sdp.peakar.user.challenge.goal;
 
+import android.annotation.SuppressLint;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,16 +26,19 @@ public class RemotePointsChallenge extends PointsChallenge {
      * @param awardPoints points that will be awarded to the winner.
      * @param goalPoints score to be reached to win.
      */
-    public RemotePointsChallenge(String id, List<String> users, long awardPoints, long goalPoints) {
-        super(id, users, awardPoints, goalPoints);
+    public RemotePointsChallenge(String id, List<String> users, long awardPoints, long goalPoints,
+                                 LocalDateTime startDateTime, LocalDateTime finishDateTime) {
+        super(id, users, awardPoints, goalPoints, startDateTime, finishDateTime);
     }
 
     /**
      * Generate a new PointsChallenge.
      * @param founderID ID of the founder of the challenge.
      * @param goalPoints score to be reached to win.
+     * @param durationInDays duration of the challenge in number of days
      */
-    public static Challenge generateNewChallenge(String founderID, long goalPoints) {
+    @SuppressLint("NewApi")
+    public static Challenge generateNewChallenge(String founderID, long goalPoints, int durationInDays) {
         // Create a new challenge remotely
         DatabaseReference challengeRef = Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).push();
         // Get ID of new challenge
@@ -43,9 +49,16 @@ public class RemotePointsChallenge extends PointsChallenge {
         challengeRef.child(Database.CHILD_USERS).child(founderID).setValue(FOUNDER);
         // Add prize
         challengeRef.child(Database.CHILD_CHALLENGE_GOAL).setValue(goalPoints);
+
+        // Add start/finish times
+        LocalDateTime startDateTime = LocalDateTime.now();
+        LocalDateTime finishDateTime = startDateTime.plusDays(durationInDays);
+        challengeRef.child(Database.CHILD_CHALLENGE_START).setValue(startDateTime);
+        challengeRef.child(Database.CHILD_CHALLENGE_FINISH).setValue(finishDateTime);
+
         // Join the new challenge remotely
         Database.getInstance().getReference().child(Database.CHILD_USERS).child(founderID).child(Database.CHILD_CHALLENGES).child(id).setValue(Database.VALUE_POINTS_CHALLENGE);
-        RemotePointsChallenge newChallenge = new RemotePointsChallenge(id, users, 0L, goalPoints);
+        RemotePointsChallenge newChallenge = new RemotePointsChallenge(id, users, 0L, goalPoints,startDateTime,finishDateTime);
         // Add locally if the founder is the authenticated user
         if(founderID.equals(AuthService.getInstance().getID())) AuthService.getInstance().getAuthAccount().getChallenges().add(newChallenge);
         return newChallenge;

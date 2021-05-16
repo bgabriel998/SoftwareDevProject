@@ -25,6 +25,8 @@ public class Database {
     public static final String CHILD_ATTRIBUTE_PEAK_ALTITUDE = "altitude";
     public static final String CHILD_CHALLENGES = "challenges/";
     public static final String CHILD_CHALLENGE_GOAL = "goal";
+    public static final String CHILD_CHALLENGE_START = "startTimeAndDate";
+    public static final String CHILD_CHALLENGE_FINISH = "finishTimeAndDate";
     public final static String VALUE_POINTS_CHALLENGE = "points_challenge";
 
     /* SINGLETON ATTRIBUTES */

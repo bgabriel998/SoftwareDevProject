@@ -1,5 +1,6 @@
 package ch.epfl.sdp.peakar.user.challenge.goal;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import ch.epfl.sdp.peakar.user.challenge.ChallengeOutcome;
@@ -14,6 +15,8 @@ public abstract class PointsChallenge implements GoalChallenge {
     private final List<String> users;
     private long awardPoints;
     private final long goalPoints;
+    private final LocalDateTime startDateTime;
+    private final LocalDateTime finishDateTime;
 
     /**
      * Create a new Points Challenge.
@@ -22,11 +25,14 @@ public abstract class PointsChallenge implements GoalChallenge {
      * @param awardPoints points that will be awarded to the winner.
      * @param goalPoints score to be reached to win.
      */
-    public PointsChallenge(String id, List<String> users, long awardPoints, long goalPoints ) {
+    public PointsChallenge(String id, List<String> users, long awardPoints, long goalPoints,
+                            LocalDateTime startDateTime, LocalDateTime finishDateTime) {
         this.id = id;
         this.users = users;
         this.awardPoints = awardPoints;
         this.goalPoints = goalPoints;
+        this.startDateTime = startDateTime;
+        this.finishDateTime = finishDateTime;
     }
 
     @Override
@@ -56,6 +62,11 @@ public abstract class PointsChallenge implements GoalChallenge {
     public long getGoalPoints() {
         return goalPoints;
     }
+
+    @Override
+    public LocalDateTime getStartDateTime() {return startDateTime;}
+    @Override
+    public LocalDateTime getFinishDateTime() {return startDateTime;}
 
     @Override
     public boolean meetRequirements() {

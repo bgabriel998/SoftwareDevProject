@@ -1,9 +1,14 @@
 package ch.epfl.sdp.peakar.user.services;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
 
 
+import androidx.annotation.RequiresApi;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -165,6 +170,7 @@ public class RemoteAccountDataFactory implements RemoteResource {
     /**
      * Load added challenges.
      */
+    @SuppressLint("NewApi")
     private void loadChallenges(DatabaseSnapshot data) {
         Log.d("FirebaseAccountDataFactory", "loadChallenges: entered");
         for (DatabaseSnapshot challengeEntry : data.getChildren()) {
@@ -186,6 +192,7 @@ public class RemoteAccountDataFactory implements RemoteResource {
     /**
      * Load points challenge.
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadPointsChallenge(DatabaseSnapshot data) {
         Log.d("FirebaseAccountDataFactory", "loadPointsChallenge: entered");
 
@@ -205,12 +212,17 @@ public class RemoteAccountDataFactory implements RemoteResource {
         long goal = Optional.ofNullable(data.child(Database.CHILD_CHALLENGE_GOAL).getValue(Long.class)).orElse(0L);
         Log.d("FirebaseAccountDataFactory", "loadPointsChallenge: goal = " + goal);
 
+        // Get start
+        LocalDateTime startDateTime = Optional.ofNullable(data.child(Database.CHILD_CHALLENGE_START).getValue(LocalDateTime.class)).orElse(LocalDateTime.now());
+        // Get finish
+        LocalDateTime finishDateTime = Optional.ofNullable(data.child(Database.CHILD_CHALLENGE_FINISH).getValue(LocalDateTime.class)).orElse(LocalDateTime.now());
+
         // Compute prize
         long prize = (users.size() - 1) * Challenge.AWARDED_POINTS_PER_USER;
         Log.d("FirebaseAccountDataFactory", "loadPointsChallenge: prize = " + prize);
 
         // Add the challenge
-        accountData.addChallenge(new RemotePointsChallenge(id, users, prize, goal));
+        accountData.addChallenge(new RemotePointsChallenge(id, users, prize, goal,startDateTime, finishDateTime));
         Log.d("FirebaseAccountDataFactory", "loadPointsChallenge: new challenges size = " + accountData.getChallenges().size());
     }
 }

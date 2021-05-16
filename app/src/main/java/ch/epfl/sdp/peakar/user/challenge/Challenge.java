@@ -1,5 +1,6 @@
 package ch.epfl.sdp.peakar.user.challenge;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -20,6 +21,16 @@ public interface Challenge {
      * @return the list of IDs of the users who joined this challenge.
      */
     List<String> getUsers();
+
+    /**
+     * @return the challenge finishing Date
+     */
+    LocalDateTime getFinishDateTime();
+
+    /**
+     * @return the challenge starting Date
+     */
+    LocalDateTime getStartDateTime();
 
     /**
      * Get the points that will be assigned to the winner after the challenge ends.

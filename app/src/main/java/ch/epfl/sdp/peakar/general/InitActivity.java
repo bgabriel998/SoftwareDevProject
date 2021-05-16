@@ -55,7 +55,7 @@ public class InitActivity extends AppCompatActivity {
         ProgressBar progressBar = findViewById(R.id.progressBarInitActivity);
         progressBar.setVisibility(View.VISIBLE);
 
-        initApp();
+        //initApp();
     }
 
     /**
