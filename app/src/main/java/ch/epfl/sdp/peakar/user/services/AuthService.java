@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 
 import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
 
 /**
  * This class represents an auth service.

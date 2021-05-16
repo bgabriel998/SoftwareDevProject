@@ -13,7 +13,7 @@ import ch.epfl.sdp.peakar.user.challenge.ChallengeOutcome;
 import ch.epfl.sdp.peakar.user.challenge.goal.PointsChallenge;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
+import ch.epfl.sdp.peakar.user.services.FirebaseAuthService;
 import ch.epfl.sdp.peakar.user.challenge.goal.RemotePointsChallenge;
 
 import static ch.epfl.sdp.peakar.utils.TestingConstants.BASIC_USERNAME;

@@ -1,4 +1,4 @@
-package ch.epfl.sdp.peakar.user.services.providers.firebase;
+package ch.epfl.sdp.peakar.user.services;
 
 import android.content.Context;
 import android.net.Uri;
@@ -16,10 +16,6 @@ import java.util.Objects;
 
 import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
 import ch.epfl.sdp.peakar.general.remote.RemoteResource;
-import ch.epfl.sdp.peakar.user.services.AuthAccount;
-import ch.epfl.sdp.peakar.user.services.AuthProvider;
-import ch.epfl.sdp.peakar.user.services.AuthService;
-import ch.epfl.sdp.peakar.user.services.RemoteAuthAccount;
 
 /**
  * This class describes the Auth service provided by Firebase.
