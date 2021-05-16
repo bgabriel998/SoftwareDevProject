@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,6 +36,8 @@ import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.points.Point;
 import ch.epfl.sdp.peakar.utils.OfflineContentContainer;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
+
+import static ch.epfl.sdp.peakar.map.MapActivity.osmMap;
 
 /**
  * Activity that allows the user to select a point around which compute and
@@ -83,13 +86,18 @@ public class SettingsMapActivity extends AppCompatActivity {
         OSMMap osmMap = new OSMMap(this, mapView);
 
         // Invisible button and loading circle
-        downloadButton.setVisibility(View.GONE);
+        downloadButton.setVisibility(View.INVISIBLE);
         loadingView.setVisibility(View.GONE);
 
         osmMap.displayUserLocation();
 
         osmMap.enablePinOnClick(() -> downloadButton.setVisibility(View.VISIBLE), (p) -> selectedPoint = p);
 
+        ImageButton zoomOnUserLocationButton = findViewById(R.id.zoomOnUserLocation);
+        zoomOnUserLocationButton.setOnClickListener(v -> osmMap.zoomOnUserLocation());
+
+        ImageButton changeMapTileSourceButton = findViewById(R.id.changeMapTile);
+        changeMapTileSourceButton.setOnClickListener(v -> osmMap.changeMapTileSource(zoomOnUserLocationButton,changeMapTileSourceButton ));
     }
 
     /**
@@ -115,7 +123,6 @@ public class SettingsMapActivity extends AppCompatActivity {
         addBoundingBoxToContainer(saveObject, selectedPoint);
 
         addMapAndPOIsToContainer(saveObject, selectedPoint);
-
     }
 
     /**
