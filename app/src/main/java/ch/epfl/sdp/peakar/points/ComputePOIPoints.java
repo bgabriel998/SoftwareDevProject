@@ -235,7 +235,7 @@ public class ComputePOIPoints extends Observable implements Observer{
     }
 
     /**
-     * Apply filtering using topography map on POI list.
+     * Apply filtering using topography map on POI list and updates the observers.
      * @param topography topography map
      */
     private void applyFilteringLabeledPOIs(Pair<int[][], Double> topography){
