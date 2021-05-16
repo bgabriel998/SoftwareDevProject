@@ -64,7 +64,9 @@ public class InitActivity extends AppCompatActivity {
      */
     private synchronized void initApp(){
         new Thread(() -> {
-            if(AuthService.getInstance().getAuthAccount() != null) AuthService.getInstance().getAuthAccount().init();
+            if (AuthService.getInstance().getAuthAccount() != null) {
+                AuthService.getInstance().getAuthAccount().init();
+            }
         }).start();
     }
 
