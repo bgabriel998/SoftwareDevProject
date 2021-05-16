@@ -19,7 +19,7 @@ import java.util.concurrent.TimeoutException;
 
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.user.services.AuthService;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
+import ch.epfl.sdp.peakar.user.services.FirebaseAuthService;
 
 import static ch.epfl.sdp.peakar.utils.TestingConstants.SHORT_SLEEP_TIME;
 import static ch.epfl.sdp.peakar.user.AuthAccountTest.registerAuthUser;
@@ -61,7 +61,7 @@ public class UserPointTest {
     /* Make sure that mock users are not on the database after a test */
     @After
     public void removeTestUsers() throws InterruptedException {
-        Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
+        Database.getInstance().getReference().child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
         Thread.sleep(SHORT_SLEEP_TIME);
     }
 

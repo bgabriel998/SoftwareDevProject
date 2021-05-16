@@ -9,9 +9,6 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -27,7 +24,7 @@ import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.utils.UITestHelper;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.user.services.AuthService;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
+import ch.epfl.sdp.peakar.user.services.FirebaseAuthService;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -57,14 +54,9 @@ public class RankingsActivityTest {
         Collections.reverse(mockPoints);
         // Add the mock user on the database
         for(int i=0; i < mockPoints.size(); i++) {
-            Task<Void> taskName = Database.refRoot.child(Database.CHILD_USERS).child(BASIC_USERNAME + mockPositions.get(i)).child(Database.CHILD_USERNAME).setValue(TESTING_USERNAME + mockPositions.get(i));
-            Task<Void> taskPoints =Database.refRoot.child(Database.CHILD_USERS).child(BASIC_USERNAME + mockPositions.get(i)).child(Database.CHILD_SCORE).setValue(mockPoints.get(i));
-            try {
-                Tasks.await(taskName);
-                Tasks.await(taskPoints);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            Database.getInstance().getReference().child(Database.CHILD_USERS).child(BASIC_USERNAME + mockPositions.get(i)).child(Database.CHILD_USERNAME).setValue(TESTING_USERNAME + mockPositions.get(i));
+            Database.getInstance().getReference().child(Database.CHILD_USERS).child(BASIC_USERNAME + mockPositions.get(i)).child(Database.CHILD_SCORE).setValue(mockPoints.get(i));
+
         }
 
         /* Make sure no user is signed in before a test */
@@ -73,14 +65,9 @@ public class RankingsActivityTest {
         /* Create a new one */
         registerAuthUser();
 
-        Task<Void> taskName = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(TESTING_USERNAME);
-        Task<Void> taskPoints =Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_SCORE).setValue(MAXIMUM_POINTS);
-        try {
-            Tasks.await(taskName);
-            Tasks.await(taskPoints);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Database.getInstance().getReference().child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(TESTING_USERNAME);
+        Database.getInstance().getReference().child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_SCORE).setValue(MAXIMUM_POINTS);
+
         FirebaseAuthService.getInstance().forceRetrieveData();
     }
 
@@ -88,19 +75,9 @@ public class RankingsActivityTest {
     @AfterClass
     public static void end() {
         for(int i=0; i < mockPoints.size(); i++) {
-            Task<Void> taskRemove = Database.refRoot.child(Database.CHILD_USERS).child(BASIC_USERNAME + mockPositions.get(i)).removeValue();
-            try {
-                Tasks.await(taskRemove);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            Database.getInstance().getReference().child(Database.CHILD_USERS).child(BASIC_USERNAME + mockPositions.get(i)).removeValue();
         }
-        Task<Void> taskRemove = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
-        try {
-            Tasks.await(taskRemove);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Database.getInstance().getReference().child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
         removeAuthUser();
     }
 

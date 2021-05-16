@@ -1,18 +1,18 @@
-package ch.epfl.sdp.peakar.user.services.providers.firebase;
+package ch.epfl.sdp.peakar.user.friends;
 
 import androidx.annotation.NonNull;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import ch.epfl.sdp.peakar.database.Database;
+import ch.epfl.sdp.peakar.database.DatabaseReference;
 import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
 import ch.epfl.sdp.peakar.general.remote.RemoteResource;
 import ch.epfl.sdp.peakar.user.friends.FriendItem;
 
-public class FirebaseFriendItem extends FriendItem implements RemoteResource {
+public class RemoteFriendItem extends FriendItem implements RemoteResource {
     private DatabaseReference dbRef;
     private ValueEventListener itemListener;
 
@@ -21,7 +21,7 @@ public class FirebaseFriendItem extends FriendItem implements RemoteResource {
      *
      * @param uid of user
      */
-    public FirebaseFriendItem(String uid) {
+    public RemoteFriendItem(String uid) {
         super(uid);
         retrieveData();
     }
@@ -35,7 +35,7 @@ public class FirebaseFriendItem extends FriendItem implements RemoteResource {
 
     @Override
     public RemoteOutcome retrieveData() {
-        dbRef = Database.refRoot.child(Database.CHILD_USERS).child(super.getUid());
+        dbRef = Database.getInstance().getReference().child(Database.CHILD_USERS).child(super.getUid());
 
         // Create the listener
         itemListener = new ValueEventListener() {

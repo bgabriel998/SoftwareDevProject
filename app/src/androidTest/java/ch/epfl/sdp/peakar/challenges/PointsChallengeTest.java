@@ -2,9 +2,6 @@ package ch.epfl.sdp.peakar.challenges;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -16,8 +13,8 @@ import ch.epfl.sdp.peakar.user.challenge.ChallengeOutcome;
 import ch.epfl.sdp.peakar.user.challenge.goal.PointsChallenge;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebasePointsChallenge;
+import ch.epfl.sdp.peakar.user.services.FirebaseAuthService;
+import ch.epfl.sdp.peakar.user.challenge.goal.RemotePointsChallenge;
 
 import static ch.epfl.sdp.peakar.utils.TestingConstants.BASIC_USERNAME;
 import static ch.epfl.sdp.peakar.user.AuthAccountTest.registerAuthUser;
@@ -56,21 +53,15 @@ public class PointsChallengeTest {
 
     /* Make sure that mock users are not on the database after a test */
     public static void removeTestUsers() {
-        Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
-        Task<Void> task2 = Database.refRoot.child(Database.CHILD_USERS).child(user2).removeValue();
-        try {
-            Tasks.await(task1);
-            Tasks.await(task2);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Database.getInstance().getReference().child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
+        Database.getInstance().getReference().child(Database.CHILD_USERS).child(user2).removeValue();
     }
 
     /* Test that generating and updating a challenge works */
     @Test
     public void generateNewChallengeTest() {
         long goalPoints = 100;
-        Challenge challenge = FirebasePointsChallenge.generateNewChallenge(user2, goalPoints);
+        Challenge challenge = RemotePointsChallenge.generateNewChallenge(user2, goalPoints);
 
         try {
             // Test initial awarded points are 0 and only user2 has joined it
@@ -93,19 +84,15 @@ public class PointsChallengeTest {
             e.printStackTrace();
         } finally {
             // Be sure to remove the challenge after the test is over.
-            Task<Void> removeChallengeTask = Database.refRoot.child(Database.CHILD_CHALLENGES).child(challenge.getID()).removeValue();
-            try {
-                Tasks.await(removeChallengeTask);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(challenge.getID()).removeValue();
+
         }
     }
 
     @Test
     public void retrieveChallengeTest() {
         long goalPoints = 100;
-        Challenge challenge = FirebasePointsChallenge.generateNewChallenge(AuthService.getInstance().getID(), goalPoints);
+        Challenge challenge = RemotePointsChallenge.generateNewChallenge(AuthService.getInstance().getID(), goalPoints);
         String challengeID = challenge.getID();
 
         // Make sure the challenge has been added correctly locally
@@ -130,12 +117,7 @@ public class PointsChallengeTest {
             e.printStackTrace();
         } finally {
             // Be sure to remove the challenge after the test is over.
-            Task<Void> removeChallengeTask = Database.refRoot.child(Database.CHILD_CHALLENGES).child(challenge.getID()).removeValue();
-            try {
-                Tasks.await(removeChallengeTask);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(challenge.getID()).removeValue();
         }
     }
 
@@ -144,7 +126,7 @@ public class PointsChallengeTest {
     public void successfulClaimVictoryTest() {
         long goalPoints = 0;
         AuthAccount authAccount = AuthService.getInstance().getAuthAccount();
-        Challenge challenge = FirebasePointsChallenge.generateNewChallenge(user2, goalPoints);
+        Challenge challenge = RemotePointsChallenge.generateNewChallenge(user2, goalPoints);
 
         try {
             assertSame(0, authAccount.getChallenges().size());
@@ -165,12 +147,7 @@ public class PointsChallengeTest {
             e.printStackTrace();
         } finally {
             // Be sure to remove the challenge after the test is over.
-            Task<Void> removeChallengeTask = Database.refRoot.child(Database.CHILD_CHALLENGES).child(challenge.getID()).removeValue();
-            try {
-                Tasks.await(removeChallengeTask);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(challenge.getID()).removeValue();
         }
     }
 
@@ -179,7 +156,7 @@ public class PointsChallengeTest {
     public void missingRequirementsClaimVictoryTest() {
         long goalPoints = 100;
         AuthAccount authAccount = AuthService.getInstance().getAuthAccount();
-        Challenge challenge = FirebasePointsChallenge.generateNewChallenge(user2, goalPoints);
+        Challenge challenge = RemotePointsChallenge.generateNewChallenge(user2, goalPoints);
 
         try {
             assertSame(0, authAccount.getChallenges().size());
@@ -200,12 +177,7 @@ public class PointsChallengeTest {
             e.printStackTrace();
         } finally {
             // Be sure to remove the challenge after the test is over.
-            Task<Void> removeChallengeTask = Database.refRoot.child(Database.CHILD_CHALLENGES).child(challenge.getID()).removeValue();
-            try {
-                Tasks.await(removeChallengeTask);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(challenge.getID()).removeValue();
         }
     }
 
@@ -214,7 +186,7 @@ public class PointsChallengeTest {
     public void alreadyAwardedClaimVictoryTest() {
         long goalPoints = 0;
         AuthAccount authAccount = AuthService.getInstance().getAuthAccount();
-        Challenge challenge = FirebasePointsChallenge.generateNewChallenge(user2, goalPoints);
+        Challenge challenge = RemotePointsChallenge.generateNewChallenge(user2, goalPoints);
 
         try {
             assertSame(0, authAccount.getChallenges().size());
@@ -225,12 +197,7 @@ public class PointsChallengeTest {
             assertSame(1, authAccount.getChallenges().size());
 
             // Remove the challenge so it will look as already over
-            Task<Void> removeChallengeTask = Database.refRoot.child(Database.CHILD_CHALLENGES).child(challenge.getID()).removeValue();
-            try {
-                Tasks.await(removeChallengeTask);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(challenge.getID()).removeValue();
 
             // Claim victory
             assertSame(ChallengeOutcome.ALREADY_OVER, challenge.claimVictory());
@@ -242,12 +209,7 @@ public class PointsChallengeTest {
             e.printStackTrace();
         } finally {
             // Be sure to remove the challenge after the test is over.
-            Task<Void> removeChallengeTask = Database.refRoot.child(Database.CHILD_CHALLENGES).child(challenge.getID()).removeValue();
-            try {
-                Tasks.await(removeChallengeTask);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(challenge.getID()).removeValue();
         }
     }
 }

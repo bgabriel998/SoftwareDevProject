@@ -1,4 +1,4 @@
-package ch.epfl.sdp.peakar.user.services.providers.firebase;
+package ch.epfl.sdp.peakar.rankings;
 
 import android.util.Log;
 
@@ -8,19 +8,19 @@ import androidx.annotation.Nullable;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 
 import java.util.Comparator;
 import java.util.List;
 
 import ch.epfl.sdp.peakar.database.Database;
+import ch.epfl.sdp.peakar.database.DatabaseReference;
 import ch.epfl.sdp.peakar.rankings.RankingItem;
 import ch.epfl.sdp.peakar.rankings.RankingListAdapter;
 
 /**
  * This class is an helper class designed to provide <code>RankingsActivity</code> with a synchronized list.
  */
-public class FirebaseRankingsList {
+public class RemoteRankingsList {
 
     /**
      * Synchronize the list given in input so it changes correctly on every DB change and notifies the list adapter.
@@ -29,7 +29,7 @@ public class FirebaseRankingsList {
      */
     public static void synchronizeRankings(List<RankingItem> rankingItems, RankingListAdapter listAdapter) {
         rankingItems.clear();
-        DatabaseReference dbRef = Database.refRoot.child(Database.CHILD_USERS);
+        DatabaseReference dbRef = Database.getInstance().getReference().child(Database.CHILD_USERS);
         dbRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {

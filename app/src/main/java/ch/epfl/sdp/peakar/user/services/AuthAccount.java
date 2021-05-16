@@ -7,7 +7,6 @@ import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.user.friends.FriendItem;
 import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthAccount;
 
 /**
  * This class represents the local account model of an authenticated user.
@@ -23,7 +22,7 @@ public abstract class AuthAccount extends Account {
      */
     protected static AuthAccount getInstance(String userID) {
         // As the account firebase is the only one we use, return an instance of that.
-        return FirebaseAuthAccount.getInstance(userID);
+        return RemoteAuthAccount.getInstance(userID);
     }
 
     /* GETTER TO IMPLEMENT WITH DATABASE INTERACTION */

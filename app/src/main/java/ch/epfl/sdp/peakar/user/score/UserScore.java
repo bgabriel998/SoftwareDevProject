@@ -13,7 +13,7 @@ import java.util.Locale;
 import ch.epfl.sdp.peakar.database.DatabaseHelper;
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.points.POIPoint;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
+import ch.epfl.sdp.peakar.user.services.FirebaseAuthService;
 
 public class UserScore {
 

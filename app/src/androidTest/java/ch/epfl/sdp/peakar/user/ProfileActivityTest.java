@@ -12,9 +12,6 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -29,7 +26,7 @@ import ch.epfl.sdp.peakar.user.friends.FriendsActivity;
 import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
+import ch.epfl.sdp.peakar.user.services.FirebaseAuthService;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -40,6 +37,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibilit
 import static androidx.test.espresso.matcher.ViewMatchers.withHint;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sdp.peakar.database.DatabaseTest.databaseRefRoot;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.BASIC_USERNAME;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.LONG_SLEEP_TIME;
 import static ch.epfl.sdp.peakar.user.AuthAccountTest.registerAuthUser;
@@ -81,14 +79,8 @@ public class ProfileActivityTest {
 
     /* Make sure that mock users are not on the database after a test */
     public static void removeTestUsers() {
-        Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
-        Task<Void> task2 = Database.refRoot.child(Database.CHILD_USERS).child(user2).removeValue();
-        try {
-            Tasks.await(task1);
-            Tasks.await(task2);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
+        databaseRefRoot.child(Database.CHILD_USERS).child(user2).removeValue();
     }
 
     /* Create Intent */
@@ -162,12 +154,7 @@ public class ProfileActivityTest {
     /* Test that if the username is already present the correct message is displayed */
     @Test
     public void usernameAlreadyPresentTest() {
-        Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(user2).child(Database.CHILD_USERNAME).setValue(user2);
-        try {
-            Tasks.await(task1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        databaseRefRoot.child(Database.CHILD_USERS).child(user2).child(Database.CHILD_USERNAME).setValue(user2);
         testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
         onView(withId(R.id.editTextUsername)).perform(typeText(user2));
         Espresso.closeSoftKeyboard();
@@ -185,12 +172,7 @@ public class ProfileActivityTest {
     /* The account created is then removed */
     @Test
     public void registerUserTest() {
-        Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
-        try {
-            Tasks.await(task1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
         FirebaseAuthService.getInstance().forceRetrieveData();
         Log.d("ProfileActivityTest", "registerUserTest: username before " + AuthService.getInstance().getAuthAccount().getUsername());
         testRule.getScenario().onActivity(ProfileActivity::setUsernameChoiceUI);
@@ -255,12 +237,7 @@ public class ProfileActivityTest {
     /* Test that UI is displayed correctly when change username button is pressed. */
     @Test
     public void changeUsernameButtonTest() {
-        Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
-        try {
-            Tasks.await(task1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
         FirebaseAuthService.getInstance().forceRetrieveData();
         testRule.getScenario().recreate();
 
@@ -272,12 +249,7 @@ public class ProfileActivityTest {
     @Test
     public void addFriendTextTest() {
 
-        Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
-        try {
-            Tasks.await(task1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
         FirebaseAuthService.getInstance().forceRetrieveData();
         testRule.getScenario().recreate();
 
@@ -289,16 +261,9 @@ public class ProfileActivityTest {
     /* Test that if the friend is already present the correct message is displayed */
     @Test
     public void friendAlreadyPresentTest() {
-        Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
-        Task<Void> task2 = Database.refRoot.child(Database.CHILD_USERS).child(user2).child(Database.CHILD_USERNAME).setValue(user2);
-        Task<Void> task3 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_FRIENDS).child(user2).setValue("");
-        try {
-            Tasks.await(task1);
-            Tasks.await(task2);
-            Tasks.await(task3);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
+        databaseRefRoot.child(Database.CHILD_USERS).child(user2).child(Database.CHILD_USERNAME).setValue(user2);
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_FRIENDS).child(user2).setValue("");
         FirebaseAuthService.getInstance().forceRetrieveData();
         testRule.getScenario().recreate();
 
@@ -318,14 +283,8 @@ public class ProfileActivityTest {
     @Test
     public void addFriendTest() {
         final String added_message = user2 + " " + ApplicationProvider.getApplicationContext().getResources().getString(R.string.friend_added);
-        Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
-        Task<Void> task2 = Database.refRoot.child(Database.CHILD_USERS).child(user2).child(Database.CHILD_USERNAME).setValue(user2);
-        try {
-            Tasks.await(task1);
-            Tasks.await(task2);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
+        databaseRefRoot.child(Database.CHILD_USERS).child(user2).child(Database.CHILD_USERNAME).setValue(user2);
         FirebaseAuthService.getInstance().forceRetrieveData();
         testRule.getScenario().recreate();
         onView(withId(R.id.addFriendButton)).perform(click());
@@ -343,12 +302,7 @@ public class ProfileActivityTest {
     /* Test that if the friend username is the current username the correct message is displayed */
     @Test
     public void addFriendCurrentUsernameTest() {
-        Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
-        try {
-            Tasks.await(task1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
         FirebaseAuthService.getInstance().forceRetrieveData();
         testRule.getScenario().recreate();
 
@@ -367,12 +321,7 @@ public class ProfileActivityTest {
     /* Test that if the friend username is not present the correct message is displayed */
     @Test
     public void addNoExistingUser() {
-        Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
-        try {
-            Tasks.await(task1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
         FirebaseAuthService.getInstance().forceRetrieveData();
         testRule.getScenario().recreate();
 
@@ -393,12 +342,7 @@ public class ProfileActivityTest {
     public void friendIsNotValidTest() {
         final String username = "";
 
-        Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
-        try {
-            Tasks.await(task1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
         FirebaseAuthService.getInstance().forceRetrieveData();
         testRule.getScenario().recreate();
 
@@ -417,12 +361,7 @@ public class ProfileActivityTest {
     /* Test that UI is displayed correctly when sign out button is pressed. */
     @Test
     public void signOutButtonTest() {
-        Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
-        try {
-            Tasks.await(task1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
         FirebaseAuthService.getInstance().forceRetrieveData();
         testRule.getScenario().recreate();
 
@@ -437,12 +376,7 @@ public class ProfileActivityTest {
     /* Test that FriendsActivity is started on button click */
     @Test
     public void friendsButtonTest() {
-        Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
-        try {
-            Tasks.await(task1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
         FirebaseAuthService.getInstance().forceRetrieveData();
         testRule.getScenario().recreate();
 
@@ -453,12 +387,7 @@ public class ProfileActivityTest {
     /* Test that AddFriendActivity is started on button click */
     @Test
     public void addFriendButtonTest() {
-        Task<Void> task1 = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
-        try {
-            Tasks.await(task1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
         FirebaseAuthService.getInstance().forceRetrieveData();
         testRule.getScenario().recreate();
 

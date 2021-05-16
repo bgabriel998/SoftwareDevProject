@@ -9,11 +9,13 @@ import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
 
+import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.user.score.ScoringConstants;
 import ch.epfl.sdp.peakar.user.score.UserScore;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 
+import static ch.epfl.sdp.peakar.database.DatabaseTest.databaseRefRoot;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.*;
 import static ch.epfl.sdp.peakar.user.AuthAccountTest.registerAuthUser;
 import static ch.epfl.sdp.peakar.user.AuthAccountTest.removeAuthUser;
@@ -32,6 +34,7 @@ public class UserScoreTest {
 
         /* Create a new one */
         registerAuthUser();
+        removeTestUsers();
 
         userScore = new UserScore(InstrumentationRegistry.getInstrumentation().getTargetContext());
     }
@@ -39,7 +42,13 @@ public class UserScoreTest {
     /* Clean environment */
     @AfterClass
     public static void end() {
+        removeTestUsers();
         removeAuthUser();
+    }
+
+    /* Make sure that mock users are not on the database after a test */
+    public static void removeTestUsers() {
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
     }
 
     /**

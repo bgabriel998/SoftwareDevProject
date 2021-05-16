@@ -9,7 +9,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -23,14 +22,15 @@ import java.util.Collections;
 import java.util.List;
 
 import ch.epfl.sdp.peakar.database.Database;
+import ch.epfl.sdp.peakar.database.DatabaseReference;
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.score.ScoringConstants;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseAuthService;
+import ch.epfl.sdp.peakar.user.services.FirebaseAuthService;
 
-import static ch.epfl.sdp.peakar.utils.TestingConstants.LONG_SLEEP_TIME;
+import static ch.epfl.sdp.peakar.database.DatabaseTest.databaseRefRoot;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.SHORT_SLEEP_TIME;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.USER_SCORE;
 import static org.junit.Assert.assertEquals;
@@ -58,15 +58,12 @@ public class AuthAccountTest {
 
     // Helper method, delete the current user
     public static void removeAuthUser() {
-        Task<Void> dbTask = Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
         Task<Void> fbTask = null;
-
         FirebaseUser oldUser = FirebaseAuth.getInstance().getCurrentUser();
         AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
         if(oldUser != null) fbTask = oldUser.delete();
-
         try {
-            Tasks.await(dbTask);
             if(oldUser!=null) {
                 Tasks.await(fbTask);
             }
@@ -108,8 +105,8 @@ public class AuthAccountTest {
     /* Make sure that mock users are not on the database after a test */
     @After
     public void removeTestUsers() throws InterruptedException {
-        Database.refRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
-        Database.refRoot.child(Database.CHILD_USERS).child(user2).removeValue();
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
+        databaseRefRoot.child(Database.CHILD_USERS).child(user2).removeValue();
         Thread.sleep(SHORT_SLEEP_TIME);
     }
 
@@ -156,16 +153,14 @@ public class AuthAccountTest {
 
     /**
      * Testing that addFriend works fine
-     * @throws InterruptedException
      */
     @Test
-    public void addFriendTest() throws InterruptedException {
+    public void addFriendTest() {
         /* Get account */
         AuthAccount account = AuthService.getInstance().getAuthAccount();
 
         /* Add friend remotely */
-        Database.setChild(Database.CHILD_USERS + user2, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user2));
-        Thread.sleep(LONG_SLEEP_TIME);
+        databaseRefRoot.child(Database.CHILD_USERS).child(user2).child(Database.CHILD_USERNAME).setValue(user2);
 
         // Test if no friend is present
         assertTrue(account.getFriends().isEmpty());
@@ -195,22 +190,20 @@ public class AuthAccountTest {
 
     /**
      * Testing that retrieve data works fine
-     * @throws InterruptedException
      */
     @Test
-    public void synchronizeFriendsTest() throws InterruptedException {
+    public void synchronizeFriendsTest() {
         /* Get account */
         AuthAccount account = AuthService.getInstance().getAuthAccount();
 
-        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
-        Database.setChild(Database.CHILD_USERS + user2, Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user2));
-        Thread.sleep(SHORT_SLEEP_TIME);
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
+        databaseRefRoot.child(Database.CHILD_USERS).child(user2).child(Database.CHILD_USERNAME).setValue(user2);
 
         // Test if no friend is present
         assertTrue(account.getFriends().isEmpty());
 
         // Test if a friend is present
-        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID() + Database.CHILD_FRIENDS, Collections.singletonList(user2), Collections.singletonList(""));
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_FRIENDS).child(user2).setValue("");
         FirebaseAuthService.getInstance().forceRetrieveData();
         assertEquals(user2, account.getFriends().get(0).getUid());
     }
@@ -219,16 +212,15 @@ public class AuthAccountTest {
      * Testing that retrieve data works fine
      */
     @Test
-    public void synchronizeUserScoreTest()throws InterruptedException{
+    public void synchronizeUserScoreTest() {
         /* Get account */
         AuthAccount account = AuthService.getInstance().getAuthAccount();
 
-        Database.setChild(Database.CHILD_USERS + AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
 
         //Set user score to USER_SCORE
-        DatabaseReference refAdd = Database.refRoot.child(Database.CHILD_USERS);
+        DatabaseReference refAdd = databaseRefRoot.child(Database.CHILD_USERS);
         refAdd.child(AuthService.getInstance().getID()).child(Database.CHILD_SCORE).setValue(USER_SCORE);
-        Thread.sleep(SHORT_SLEEP_TIME);
 
         FirebaseAuthService.getInstance().forceRetrieveData();
         assertEquals(USER_SCORE, account.getScore());
@@ -251,20 +243,18 @@ public class AuthAccountTest {
 
     /**
      * Tests the synchronization of discovered country high points
-     * @throws InterruptedException
      */
     @Test
-    public void synchronizeDiscoveredCountryHighPointsTest() throws InterruptedException{
+    public void synchronizeDiscoveredCountryHighPointsTest() {
         /* Get account */
         AuthAccount account = AuthService.getInstance().getAuthAccount();
 
-        Database.setChild(Database.CHILD_USERS +  AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
         CountryHighPoint newEntry = new CountryHighPoint("France","Mont Blanc",4810);
 
         //Set value to the database manually
-        DatabaseReference refAdd = Database.refRoot.child(Database.CHILD_USERS);
+        DatabaseReference refAdd = databaseRefRoot.child(Database.CHILD_USERS);
         refAdd.child(AuthService.getInstance().getID()).child(Database.CHILD_COUNTRY_HIGH_POINT).push().setValue(newEntry);
-        Thread.sleep(SHORT_SLEEP_TIME);
 
         FirebaseAuthService.getInstance().forceRetrieveData();
         String s1 = account.getDiscoveredCountryHighPoint().get("France").toString();
@@ -274,25 +264,21 @@ public class AuthAccountTest {
 
     /**
      * Test the synchronization of discovered heights
-     * @throws InterruptedException
      */
     @Test
-    public void synchronizeDiscoveredHeights() throws InterruptedException {
+    public void synchronizeDiscoveredHeights() {
         /* Get account */
         AuthAccount account = AuthService.getInstance().getAuthAccount();
 
-        Database.setChild(Database.CHILD_USERS +  AuthService.getInstance().getID(), Collections.singletonList(Database.CHILD_USERNAME), Collections.singletonList(user1));
-        Thread.sleep(SHORT_SLEEP_TIME);
+
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
 
         //Set value to the database manually
         Integer entry1 = ScoringConstants.BADGE_1st_4000_M_PEAK;
         Integer entry2 = ScoringConstants.BADGE_1st_3000_M_PEAK;
 
-        Database.setChildObject(Database.CHILD_USERS +   AuthService.getInstance().getID() + "/" +
-                Database.CHILD_DISCOVERED_PEAKS_HEIGHTS,Collections.singletonList(entry1));
-        Database.setChildObject(Database.CHILD_USERS +   AuthService.getInstance().getID() + "/" +
-                Database.CHILD_DISCOVERED_PEAKS_HEIGHTS,Collections.singletonList(entry2));
-        Thread.sleep(SHORT_SLEEP_TIME);
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_DISCOVERED_PEAKS_HEIGHTS).push().setValue(Collections.singletonList(entry1));
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_DISCOVERED_PEAKS_HEIGHTS).push().setValue(Collections.singletonList(entry2));
 
         FirebaseAuthService.getInstance().forceRetrieveData();
         assertTrue(account.getDiscoveredPeakHeights().contains(entry1) && account.getDiscoveredPeakHeights().contains(entry2));

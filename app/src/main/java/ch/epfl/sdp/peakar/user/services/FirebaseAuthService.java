@@ -1,4 +1,4 @@
-package ch.epfl.sdp.peakar.user.services.providers.firebase;
+package ch.epfl.sdp.peakar.user.services;
 
 import android.content.Context;
 import android.net.Uri;
@@ -16,9 +16,6 @@ import java.util.Objects;
 
 import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
 import ch.epfl.sdp.peakar.general.remote.RemoteResource;
-import ch.epfl.sdp.peakar.user.services.AuthAccount;
-import ch.epfl.sdp.peakar.user.services.AuthProvider;
-import ch.epfl.sdp.peakar.user.services.AuthService;
 
 /**
  * This class describes the Auth service provided by Firebase.
@@ -28,7 +25,7 @@ public class FirebaseAuthService implements AuthService {
     private static FirebaseAuthService instance;
 
     // The account reference will be null if no account is authenticated, or != null if an account is authenticated
-    private static FirebaseAuthAccount authAccount;
+    private static RemoteAuthAccount authAccount;
 
     private FirebaseAuthService() {}
 
@@ -36,7 +33,7 @@ public class FirebaseAuthService implements AuthService {
         if(instance == null) {
             instance = new FirebaseAuthService();
             // On class initialization, retrieve any previously logged account and, if necessary, the account data
-            authAccount = FirebaseAuth.getInstance().getCurrentUser() != null ? FirebaseAuthAccount.getInstance(FirebaseAuth.getInstance().getCurrentUser().getUid()) : null;
+            authAccount = FirebaseAuth.getInstance().getCurrentUser() != null ? RemoteAuthAccount.getInstance(FirebaseAuth.getInstance().getCurrentUser().getUid()) : null;
             if(authAccount != null) new Thread (() -> authAccount.retrieveData()).start();
         }
         return instance;
@@ -59,7 +56,7 @@ public class FirebaseAuthService implements AuthService {
             Tasks.await(authTask);
 
             // Update the account reference
-            authAccount = FirebaseAuthAccount.getInstance(getID());
+            authAccount = RemoteAuthAccount.getInstance(getID());
 
             // Retrieve account data
             outcome = authAccount.retrieveData();
@@ -87,7 +84,7 @@ public class FirebaseAuthService implements AuthService {
             Tasks.await(authTask);
 
             // Update the account reference
-            authAccount = FirebaseAuthAccount.getInstance(getID());
+            authAccount = RemoteAuthAccount.getInstance(getID());
 
             // Retrieve account data
             RemoteResource remoteAccount = authAccount;

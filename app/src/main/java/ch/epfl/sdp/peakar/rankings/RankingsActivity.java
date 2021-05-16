@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.List;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.user.services.providers.firebase.FirebaseRankingsList;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
 public class RankingsActivity extends AppCompatActivity {
@@ -42,7 +41,7 @@ public class RankingsActivity extends AppCompatActivity {
         listAdapter.setNotifyOnChange(true);
 
         // Start rankings synchronization
-        FirebaseRankingsList.synchronizeRankings(rankingItems, listAdapter);
+        RemoteRankingsList.synchronizeRankings(rankingItems, listAdapter);
 
         rankingsListView.setAdapter(listAdapter);
     }
