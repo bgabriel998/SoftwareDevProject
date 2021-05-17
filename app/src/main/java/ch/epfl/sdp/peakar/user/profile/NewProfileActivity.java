@@ -8,7 +8,6 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
