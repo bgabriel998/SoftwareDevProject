@@ -159,14 +159,12 @@ public class SettingsMapActivityTest {
         view.perform(ViewActions.click());
         // Check if the file exists
         Thread.sleep(15000);
-        readFromFile();
-        Assert.assertTrue(true);
+        String savedData = readFromFile();
+        Assert.assertNotNull(savedData);
     }
 
     /* Helper method to read .txt file */
-    private void readFromFile() {
-
-        String ret = "";
+    private String readFromFile() {
 
         try {
             InputStream inputStream =  ApplicationProvider.getApplicationContext().openFileInput(SettingsMapActivity.OFFLINE_CONTENT_FILE);
@@ -182,12 +180,12 @@ public class SettingsMapActivityTest {
                 }
 
                 inputStream.close();
-                ret = stringBuilder.toString();
+                return stringBuilder.toString();
             }
         } catch (IOException e) {
             fail();
         }
-
+        return null;
     }
 
     /*Test switch between normal map and satellite view*/
