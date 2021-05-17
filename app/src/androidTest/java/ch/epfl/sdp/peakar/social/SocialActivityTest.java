@@ -1,7 +1,5 @@
 package ch.epfl.sdp.peakar.social;
 
-import android.view.View;
-
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
