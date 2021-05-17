@@ -79,6 +79,8 @@ public class NewProfileActivityTest {
     public void createTestUser() {
         registerAuthUser();
         removeTestUsers();
+        FirebaseAuthService.getInstance().forceRetrieveData();
+        testRule.getScenario().recreate();
     }
 
     /* Make sure that mock users are not on the database after a test */
@@ -212,8 +214,6 @@ public class NewProfileActivityTest {
     /* Test that when you are not registered and you try to press on the screen, the focus does not disappear */
     @Test
     public void pressOnScreenButNotRegistered() {
-        FirebaseAuthService.getInstance().forceRetrieveData();
-        testRule.getScenario().recreate();
         onView(withId(R.id.profile_picture)).perform(click());
         Espresso.onView(withId(R.id.profile_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
         Espresso.onView(withId(R.id.profile_username_edit)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
