@@ -41,6 +41,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.THREAD_SLEEP_5S;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -219,7 +220,7 @@ public class SettingsMapActivityTest {
         //Get map center at start
         GeoPoint geoPointStart = (GeoPoint) mapView.getMapCenter();
         //Wait 5 Sec for the provider to get the location
-        Thread.sleep(5000);
+        Thread.sleep(THREAD_SLEEP_5S);
 
         ViewInteraction button = onView(withId(R.id.zoomOnUserLocation));
         button.perform(click());
