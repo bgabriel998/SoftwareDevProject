@@ -1,7 +1,6 @@
 package ch.epfl.sdp.peakar.utils;
 
 import android.app.Activity;
-import android.content.res.ColorStateList;
 import android.view.View;
 import android.widget.CompoundButton;
 
