@@ -122,10 +122,10 @@ public class NewProfileActivity extends AppCompatActivity {
 
     /**
      * Fill list view.
-     * TODO show correct points and correct date
+     * TODO show correct points, correct date and correct country
      */
     private void fillListView() {
-        ArrayList<NewCollectedItem> newItems = new ArrayList<>();
+        ArrayList<NewCollectedItem> items = new ArrayList<>();
         for(POIPoint discoveredPeak: AuthService.getInstance().getAuthAccount().getDiscoveredPeaks()) {
             NewCollectedItem newCollectedItem = new NewCollectedItem(
                     discoveredPeak.getName(),
@@ -135,17 +135,17 @@ public class NewProfileActivity extends AppCompatActivity {
                     (float)discoveredPeak.getLongitude(),
                     (float)discoveredPeak.getLatitude(),
                     "2000-01-01");
-            newItems.add(newCollectedItem);
+            items.add(newCollectedItem);
         }
 
         ListView collectionListView = findViewById(R.id.profile_collection);
         NewCollectionListAdapter listAdapter = new NewCollectionListAdapter(this,
                 R.layout.profile_collected_item,
-                newItems);
+                items);
 
         collectionListView.setAdapter(listAdapter);
 
-        if (newItems.size() > 0) {
+        if (items.size() > 0) {
             findViewById(R.id.profile_empty_text).setVisibility(View.INVISIBLE);
         }
         collectionListView.setOnItemClickListener(collectionClicked);
