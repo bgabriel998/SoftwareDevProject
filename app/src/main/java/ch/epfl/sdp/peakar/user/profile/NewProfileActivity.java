@@ -86,7 +86,7 @@ public class NewProfileActivity extends AppCompatActivity {
             if(AuthService.getInstance().getAuthAccount().getUsername().equals(Account.USERNAME_BEFORE_REGISTRATION)) {
                 changeUsernameButton(null);
                 // Set text view
-                ((TextView)findViewById(R.id.profile_empty_text)).setText(R.string.empty_collection);
+                ((TextView)findViewById(R.id.profile_empty_text)).setText(R.string.empty_collection_not_registered);
             } else {
                 fillListView();
             }
