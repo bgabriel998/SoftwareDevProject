@@ -1,9 +1,5 @@
 package ch.epfl.sdp.peakar.user.friends;
 
-import java.util.List;
-
-import ch.epfl.sdp.peakar.user.challenge.Challenge;
-
 /**
  * Item holding user attributes
  * used to fill friends list.
@@ -43,12 +39,7 @@ public class FriendItem {
     public int getPoints() {
         return points;
     }
-
-    /**
-     * @return list of the challenges that the friend is enrolled in
-     */
-    public List<Challenge> getChallenges(){return getChallenges();};
-
+    
     /**
      * Setter of the friend item points
      */
