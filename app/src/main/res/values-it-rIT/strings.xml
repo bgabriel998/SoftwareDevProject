@@ -64,4 +64,7 @@
     <string name="setUsername">Prima di vedere le vette che hai scoperto imposta un nome utente!</string>
     <string name="search_username_hint">Search Username</string>
     <string name="rank_display">Rank: %s</string>
+    <string name="switch_all">All</string>
+    <string name="switch_friends">Friends</string>
+    <string name="empty_friends">No Friends</string>
 </resources>
