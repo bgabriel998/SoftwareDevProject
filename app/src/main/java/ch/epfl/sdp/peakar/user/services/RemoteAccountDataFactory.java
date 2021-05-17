@@ -178,14 +178,14 @@ public class RemoteAccountDataFactory implements RemoteResource {
             String challengeId = challengeEntry.getKey();
             assert challengeId != null;
             Log.d("FirebaseAccountDataFactory", "loadChallenges: challenge id = " + challengeId);
-            String challengeType = challengeEntry.getValue(String.class);
-            assert challengeType != null;
-            Log.d("FirebaseAccountDataFactory", "loadChallenges: before if. Current challenge type = " + challengeType);
-            if(challengeType.equals(Database.VALUE_POINTS_CHALLENGE)) {
-                Log.d("FirebaseAccountDataFactory", "loadChallenges: entered if");
-                DatabaseSnapshot retrieveChallenge = Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(challengeId).get();
-                loadPointsChallenge(retrieveChallenge);
-            }
+            //String challengeType = challengeEntry.getValue(String.class);
+            //assert challengeType != null;
+            //Log.d("FirebaseAccountDataFactory", "loadChallenges: before if. Current challenge type = " + challengeType);
+            //if(challengeType.equals(Database.VALUE_POINTS_CHALLENGE)) {
+            Log.d("FirebaseAccountDataFactory", "loadChallenges: entered if");
+            DatabaseSnapshot retrieveChallenge = Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(challengeId).get();
+            loadPointsChallenge(retrieveChallenge);
+            //}
         }
     }
 
@@ -213,16 +213,31 @@ public class RemoteAccountDataFactory implements RemoteResource {
         Log.d("FirebaseAccountDataFactory", "loadPointsChallenge: goal = " + goal);
 
         // Get start
-        LocalDateTime startDateTime = Optional.ofNullable(data.child(Database.CHILD_CHALLENGE_START).getValue(LocalDateTime.class)).orElse(LocalDateTime.now());
+        LocalDateTime startDateTime = null;
+        String startDateTimeStr = Optional.ofNullable(data.child(Database.CHILD_CHALLENGE_START).getValue(String.class)).orElse("");
+        if(!startDateTimeStr.equals(""))
+            startDateTime = LocalDateTime.parse(startDateTimeStr);
         // Get finish
-        LocalDateTime finishDateTime = Optional.ofNullable(data.child(Database.CHILD_CHALLENGE_FINISH).getValue(LocalDateTime.class)).orElse(LocalDateTime.now());
+        LocalDateTime finishDateTime = null;
+        String finishDateTimeStr = Optional.ofNullable(data.child(Database.CHILD_CHALLENGE_FINISH).getValue(String.class)).orElse("");
+        if(!finishDateTimeStr.equals(""))
+            finishDateTime = LocalDateTime.parse(finishDateTimeStr);
+        // Get creation Date
+        String creationDateTimeStr = Optional.ofNullable(data.child(Database.CHILD_CHALLENGE_CREATION).getValue(String.class)).orElse("");
+        LocalDateTime creationDateTime = LocalDateTime.parse(creationDateTimeStr);
+
+        // Get challenge duration
+        int durationInDays = Optional.ofNullable(data.child(Database.CHILD_CHALLENGE_DURATION).getValue(Integer.class)).orElse(0);
+
+        // Get challenge status
+        int challengeStatus = Optional.ofNullable(data.child(Database.CHILD_CHALLENGE_STATUS).getValue(Integer.class)).orElse(0);
 
         // Compute prize
         long prize = (users.size() - 1) * Challenge.AWARDED_POINTS_PER_USER;
         Log.d("FirebaseAccountDataFactory", "loadPointsChallenge: prize = " + prize);
 
         // Add the challenge
-        accountData.addChallenge(new RemotePointsChallenge(id, users, prize, goal,startDateTime, finishDateTime));
+        accountData.addChallenge(new RemotePointsChallenge(id, users, prize, goal,challengeStatus,creationDateTime,durationInDays,startDateTime, finishDateTime));
         Log.d("FirebaseAccountDataFactory", "loadPointsChallenge: new challenges size = " + accountData.getChallenges().size());
     }
 }

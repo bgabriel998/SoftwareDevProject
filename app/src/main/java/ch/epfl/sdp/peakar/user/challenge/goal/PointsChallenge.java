@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import ch.epfl.sdp.peakar.user.challenge.ChallengeOutcome;
+import ch.epfl.sdp.peakar.user.challenge.ChallengeStatus;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 
@@ -15,8 +16,11 @@ public abstract class PointsChallenge implements GoalChallenge {
     private final List<String> users;
     private long awardPoints;
     private final long goalPoints;
-    private final LocalDateTime startDateTime;
-    private final LocalDateTime finishDateTime;
+    private final int durationInDays;
+    private int status;
+    private final LocalDateTime creationDateTime;
+    private LocalDateTime startDateTime;
+    private LocalDateTime finishDateTime;
 
     /**
      * Create a new Points Challenge.
@@ -25,7 +29,8 @@ public abstract class PointsChallenge implements GoalChallenge {
      * @param awardPoints points that will be awarded to the winner.
      * @param goalPoints score to be reached to win.
      */
-    public PointsChallenge(String id, List<String> users, long awardPoints, long goalPoints,
+    public PointsChallenge(String id, List<String> users, long awardPoints, long goalPoints, int status,
+                           LocalDateTime creationDateTime, int durationInDays,
                             LocalDateTime startDateTime, LocalDateTime finishDateTime) {
         this.id = id;
         this.users = users;
@@ -33,6 +38,9 @@ public abstract class PointsChallenge implements GoalChallenge {
         this.goalPoints = goalPoints;
         this.startDateTime = startDateTime;
         this.finishDateTime = finishDateTime;
+        this.status = status;
+        this.creationDateTime = creationDateTime;
+        this.durationInDays = durationInDays;
     }
 
     @Override
@@ -67,7 +75,32 @@ public abstract class PointsChallenge implements GoalChallenge {
     public LocalDateTime getStartDateTime() {return startDateTime;}
 
     @Override
-    public LocalDateTime getFinishDateTime() {return startDateTime;}
+    public void setStartDateTime(LocalDateTime startDateTime){
+        this.startDateTime = startDateTime;
+    }
+
+    @Override
+    public LocalDateTime getFinishDateTime() {return finishDateTime;}
+
+    @Override
+    public void setFinishDateTime(LocalDateTime finishDateTime){
+        this.finishDateTime = finishDateTime;
+    }
+
+    @Override
+    public LocalDateTime getCreationDateTime() {return creationDateTime;}
+
+    @Override
+    public int getDurationInDays() {return durationInDays;}
+
+    @Override
+    public int getStatus() {return status;}
+
+
+    @Override
+    public void setStatus(ChallengeStatus challengeStatus){
+        status = challengeStatus.getValue();
+    }
 
     @Override
     public boolean meetRequirements() {

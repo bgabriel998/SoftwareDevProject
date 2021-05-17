@@ -12,6 +12,7 @@ import ch.epfl.sdp.peakar.database.DatabaseReference;
 import ch.epfl.sdp.peakar.database.DatabaseSnapshot;
 import ch.epfl.sdp.peakar.user.challenge.Challenge;
 import ch.epfl.sdp.peakar.user.challenge.ChallengeOutcome;
+import ch.epfl.sdp.peakar.user.challenge.ChallengeStatus;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 
 /**
@@ -26,9 +27,10 @@ public class RemotePointsChallenge extends PointsChallenge {
      * @param awardPoints points that will be awarded to the winner.
      * @param goalPoints score to be reached to win.
      */
-    public RemotePointsChallenge(String id, List<String> users, long awardPoints, long goalPoints,
+    public RemotePointsChallenge(String id, List<String> users, long awardPoints, long goalPoints, int status,
+                                 LocalDateTime creationDateTime, int durationInDays,
                                  LocalDateTime startDateTime, LocalDateTime finishDateTime) {
-        super(id, users, awardPoints, goalPoints, startDateTime, finishDateTime);
+        super(id, users, awardPoints, goalPoints, status, creationDateTime, durationInDays, startDateTime, finishDateTime);
     }
 
     /**
@@ -51,14 +53,17 @@ public class RemotePointsChallenge extends PointsChallenge {
         challengeRef.child(Database.CHILD_CHALLENGE_GOAL).setValue(goalPoints);
 
         // Add start/finish times
-        LocalDateTime startDateTime = LocalDateTime.now();
-        LocalDateTime finishDateTime = startDateTime.plusDays(durationInDays);
-        challengeRef.child(Database.CHILD_CHALLENGE_START).setValue(startDateTime);
-        challengeRef.child(Database.CHILD_CHALLENGE_FINISH).setValue(finishDateTime);
+        LocalDateTime creationTime = LocalDateTime.now();
+        challengeRef.child(Database.CHILD_CHALLENGE_CREATION).setValue(creationTime.toString());
+        challengeRef.child(Database.CHILD_CHALLENGE_DURATION).setValue(durationInDays);
 
-        // Join the new challenge remotely
-        Database.getInstance().getReference().child(Database.CHILD_USERS).child(founderID).child(Database.CHILD_CHALLENGES).child(id).setValue(Database.VALUE_POINTS_CHALLENGE);
-        RemotePointsChallenge newChallenge = new RemotePointsChallenge(id, users, 0L, goalPoints,startDateTime,finishDateTime);
+        //Add challenge status
+        challengeRef.child(Database.CHILD_CHALLENGE_STATUS).setValue(ChallengeStatus.PENDING.getValue());
+
+        // Join the new challenge remotely + set value to current amount of points that the user has
+        Database.getInstance().getReference().child(Database.CHILD_USERS).child(founderID).child(Database.CHILD_CHALLENGES).child(id).setValue(0);
+        RemotePointsChallenge newChallenge = new RemotePointsChallenge(id, users, 0L, goalPoints, ChallengeStatus.PENDING.getValue(),
+                            creationTime, durationInDays,null,null);
         // Add locally if the founder is the authenticated user
         if(founderID.equals(AuthService.getInstance().getID())) AuthService.getInstance().getAuthAccount().getChallenges().add(newChallenge);
         return newChallenge;
@@ -74,14 +79,35 @@ public class RemotePointsChallenge extends PointsChallenge {
         return finishDateTime.compareTo(LocalDateTime.now()) < 0;
     }
 
+    @SuppressLint("NewApi")
     @Override
     public ChallengeOutcome join() {
         // If the authenticated user has already joined this challenge.
         if(getUsers().contains(AuthService.getInstance().getID())) return ChallengeOutcome.NOT_POSSIBLE;
+
         // Join remotely
         Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(getID()).child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).setValue(JOINED);
         // Add locally
         AuthService.getInstance().getAuthAccount().getChallenges().add(this);
+
+        //Check if challenge has started
+        if(getStatus() == ChallengeStatus.PENDING.getValue()){
+            //Start challenge
+            setStatus(ChallengeStatus.ONGOING);
+            setStartDateTime(LocalDateTime.now());
+            setFinishDateTime(LocalDateTime.now().plusDays(getDurationInDays()));
+
+            Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(getID()).child(Database.CHILD_CHALLENGE_START).setValue(getStartDateTime().toString());
+            Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(getID()).child(Database.CHILD_CHALLENGE_FINISH).setValue(getFinishDateTime().toString());
+
+            //Initialize initial amount of points for the two challengers (owner + joiner)
+            List<String> users = getUsers();
+            for(String user : users){
+                Database.getInstance().getReference().child(Database.CHILD_USERS)
+                        .child(user).child(Database.CHILD_CHALLENGES)
+                        .child(id).setValue(AuthService.getInstance().getAuthAccount().getScore());
+            }
+        }
         return super.join();
     }
 
@@ -111,5 +137,11 @@ public class RemotePointsChallenge extends PointsChallenge {
         }
 
         return localOutcome;
+    }
+
+    public void endChallenge(){
+        //Check that the current dateTime is after the finishing time
+
+        //
     }
 }

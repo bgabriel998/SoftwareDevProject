@@ -27,10 +27,46 @@ public interface Challenge {
      */
     LocalDateTime getFinishDateTime();
 
+
     /**
-     * @return the challenge starting Date
+     * Set challenge finish date time
+     * @param finishDateTime challenge finish date time
+     */
+    void setFinishDateTime(LocalDateTime finishDateTime);
+
+    /**
+     * @return the challenge start Date
      */
     LocalDateTime getStartDateTime();
+
+    /**
+     * Set challenge start time
+     * @param startDateTime challenge start time
+     */
+    void setStartDateTime(LocalDateTime startDateTime);
+
+
+    /**
+     * @return the challenge creation Date
+     */
+    LocalDateTime getCreationDateTime();
+
+
+    /**
+     * @return the challenge finishing Date
+     */
+    int getDurationInDays();
+
+    /**
+     * @return the challenge status
+     */
+    int getStatus();
+
+    /**
+     * Change challenge status
+     */
+    void setStatus(ChallengeStatus challengeStatus);
+
 
     /**
      * Get the points that will be assigned to the winner after the challenge ends.

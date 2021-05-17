@@ -1,10 +1,12 @@
 package ch.epfl.sdp.peakar.user.services;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.points.POIPoint;
+import ch.epfl.sdp.peakar.user.challenge.Challenge;
 import ch.epfl.sdp.peakar.user.friends.FriendItem;
 import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 
@@ -124,5 +126,13 @@ public abstract class AuthAccount extends Account {
         // Update the list of discovered peaks (local HashSet)
         resultList.forEach(x -> accountData.addPeak(x));
         return resultList;
+    }
+
+    /**
+     * @return true if the user is enrolled in a challenge
+     */
+    public boolean isEnrolledInAChallenge(){
+        List<Challenge> challengeList  = getChallenges();
+        return challengeList.size() != 0;
     }
 }
