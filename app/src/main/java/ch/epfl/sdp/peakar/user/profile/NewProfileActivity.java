@@ -191,7 +191,7 @@ public class NewProfileActivity extends AppCompatActivity {
         // Show edit text
         findViewById(R.id.profile_username_edit).setVisibility(View.VISIBLE);
 
-        // Change listener so next click will result in a username chance
+        // Change listener so next click will result in a username change
         findViewById(R.id.profile_change_username).setOnClickListener(this::confirmUsernameButton);
     }
 
