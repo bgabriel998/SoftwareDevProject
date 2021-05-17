@@ -248,6 +248,7 @@ public class NewProfileActivity extends AppCompatActivity {
 
                     // If username has changed, update the username text view
                     if(result == ProfileOutcome.USERNAME_CHANGED || result == ProfileOutcome.USERNAME_REGISTERED) ((TextView)findViewById(R.id.profile_username)).setText(AuthService.getInstance().getAuthAccount().getUsername());
+                    if(result == ProfileOutcome.USERNAME_REGISTERED) fillListView();
 
                     // Display the message
                     Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), result.getMessage(), Snackbar.LENGTH_LONG);
