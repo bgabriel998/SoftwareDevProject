@@ -200,6 +200,7 @@ public class NewProfileActivity extends AppCompatActivity {
      */
     public void confirmUsernameButton(View view) {
         EditText usernameEdit = ((EditText)findViewById(R.id.profile_username_edit));
+        hideKeyboard();
         String newUsername = usernameEdit.getText().toString();
         usernameEdit.getText().clear();
 
