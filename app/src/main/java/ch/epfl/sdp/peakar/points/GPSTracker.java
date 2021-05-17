@@ -131,7 +131,7 @@ public class GPSTracker extends Service implements LocationListener {
     private void setLocationProvider(String locationManagerProvider, String logMessage) {
         this.canGetLocation = true;
         setLocation(locationManagerProvider);
-        Log.d("Provider", logMessage);
+        //Log.d("Provider", logMessage);
     }
 
     /**

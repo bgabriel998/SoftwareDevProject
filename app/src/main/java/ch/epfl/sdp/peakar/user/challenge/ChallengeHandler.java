@@ -65,9 +65,16 @@ public class ChallengeHandler {
     }
 
 
+    /**
+     * Class used to link a timed callback to each challenge.
+     * The run method gets called when the challenge finishes
+     */
     static class ChallengeExpirationTimeTask extends TimerTask{
+
+        /* Reference to the challenge used in callback */
         private final Challenge challenge;
 
+        /*Constructor*/
         public ChallengeExpirationTimeTask(Challenge challenge){
             this.challenge = challenge;
         }
