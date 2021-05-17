@@ -189,7 +189,12 @@ public class NewProfileActivity extends AppCompatActivity {
         findViewById(R.id.profile_username).setVisibility(View.GONE);
 
         // Show edit text
-        findViewById(R.id.profile_username_edit).setVisibility(View.VISIBLE);
+        EditText changeUsername = findViewById(R.id.profile_username_edit);
+        changeUsername.setVisibility(View.VISIBLE);
+        changeUsername.requestFocus();
+
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(changeUsername, InputMethodManager.SHOW_IMPLICIT);
 
         // Change listener so next click will result in a username change
         findViewById(R.id.profile_change_username).setOnClickListener(this::confirmUsernameButton);
