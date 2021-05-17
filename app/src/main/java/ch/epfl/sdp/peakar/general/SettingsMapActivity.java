@@ -50,7 +50,7 @@ public class SettingsMapActivity extends AppCompatActivity {
 
     private Button downloadButton;
     private View loadingView;
-    public static OSMMap osmMap;
+    private OSMMap osmMap;
 
     Activity thisActivity;
     Context thisContext;
