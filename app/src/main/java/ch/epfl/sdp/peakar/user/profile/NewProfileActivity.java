@@ -249,6 +249,14 @@ public class NewProfileActivity extends AppCompatActivity {
         changeThread.start();
     }
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (getCurrentFocus() != null) {
+            hideKeyboard();
+            //TODO convert username to old username
+        }
+        return super.dispatchTouchEvent(ev);
+    }
     /**
      * Update the image of the profile.
      */
