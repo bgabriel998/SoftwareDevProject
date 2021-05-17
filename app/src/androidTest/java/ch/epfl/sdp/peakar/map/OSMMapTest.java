@@ -51,8 +51,11 @@ import static org.junit.Assert.fail;
 
 public class OSMMapTest {
 
+    private MapView mapView;
+    private OSMMap osmMap;
+
     @Rule
-    public ActivityScenarioRule<MapActivity> activityActivityScenarioRule = new ActivityScenarioRule<>(MapActivity.class);
+    public ActivityScenarioRule<MapActivity> testRule = new ActivityScenarioRule<>(MapActivity.class);
 
     /* Set up the environment */
     @BeforeClass
@@ -106,8 +109,7 @@ public class OSMMapTest {
     public void osmMapConstructorTest() {
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
-        OSMMap osmMap = MapActivity.osmMap;
-        MapView mapView = osmMap.getMapView();
+        testRule.getScenario().onActivity(activity -> mapView = activity.findViewById(R.id.map));
         //Check map initialization
         assertEquals(TILE_SCALING_FACTOR, mapView.getTilesScaleFactor(),0.0f);
     }
@@ -117,8 +119,9 @@ public class OSMMapTest {
     public void displayUserLocationTest() throws InterruptedException {
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
-        OSMMap osmMap = MapActivity.osmMap;
-        List<Overlay> overlayList = osmMap.getMapView().getOverlays();
+        testRule.getScenario().onActivity(activity -> mapView = activity.findViewById(R.id.map));
+
+        List<Overlay> overlayList = mapView.getOverlays();
         for(Overlay overlay : overlayList){
             if(overlay instanceof MyLocationNewOverlay){
                 Thread.sleep(6000);
@@ -161,7 +164,7 @@ public class OSMMapTest {
         //Init map
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
-        OSMMap osmMap = MapActivity.osmMap;
+        testRule.getScenario().onActivity(activity -> osmMap = activity.getOsmMap());
 
 
         //The following lines initializes a handler and a looper
@@ -213,11 +216,10 @@ public class OSMMapTest {
     /*Test switch between normal map and satellite view*/
     @Test
     public void pressSatelliteNormalMapButton() {
-        OSMMap osmMap = MapActivity.osmMap;
+        testRule.getScenario().onActivity(activity -> mapView = activity.findViewById(R.id.map));
         //Originally the map is set to default
         //A press on the button will change the map tile for satellite
 
-        MapView mapView = osmMap.getMapView();
         MapTileProviderBase tileProviderBase = mapView.getTileProvider();
         assertEquals("Mapnik", tileProviderBase.getTileSource().name());
         //Click on button
@@ -231,8 +233,7 @@ public class OSMMapTest {
     /* Check that a press on "zoom on user location button effectively zooms on user loc"*/
     @Test
     public void pressZoomOnUserLocationButton() throws InterruptedException {
-        OSMMap osmMap = MapActivity.osmMap;
-        MapView mapView = osmMap.getMapView();
+        testRule.getScenario().onActivity(activity -> mapView = activity.findViewById(R.id.map));
         //Get map center at start
         GeoPoint geoPointStart = (GeoPoint) mapView.getMapCenter();
         //Wait 5 Sec for the provider to get the location
