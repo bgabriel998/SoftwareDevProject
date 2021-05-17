@@ -29,6 +29,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.utils.OfflineContentContainer;
+import ch.epfl.sdp.peakar.utils.StorageHandler;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -150,7 +152,7 @@ public class SettingsMapActivityTest {
 
     /* checks if the offline content is saved after the ok button is pressed */
     @Test
-    public void saveJsonTest() throws InterruptedException {
+    public void saveJsonTest() throws InterruptedException, IOException {
         // performs long press
         ViewInteraction mapView = onView(withId(R.id.settingsMapView));
         mapView.perform(ViewActions.longClick());
@@ -159,33 +161,11 @@ public class SettingsMapActivityTest {
         view.perform(ViewActions.click());
         // Check if the file exists
         Thread.sleep(15000);
-        String savedData = readFromFile();
+        OfflineContentContainer savedData = StorageHandler.readOfflineContentContainer(ApplicationProvider.getApplicationContext());
         Assert.assertNotNull(savedData);
-    }
-
-    /* Helper method to read .txt file */
-    private String readFromFile() {
-
-        try {
-            InputStream inputStream =  ApplicationProvider.getApplicationContext().openFileInput(SettingsMapActivity.OFFLINE_CONTENT_FILE);
-
-            if ( inputStream != null ) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString;
-                StringBuilder stringBuilder = new StringBuilder();
-
-                while ( (receiveString = bufferedReader.readLine()) != null ) {
-                    stringBuilder.append(receiveString);
-                }
-
-                inputStream.close();
-                return stringBuilder.toString();
-            }
-        } catch (IOException e) {
-            fail();
-        }
-        return null;
+        Assert.assertNotNull(savedData.boundingBox);
+        Assert.assertNotNull(savedData.POIPoints);
+        Assert.assertNotNull(savedData.topography);
     }
 
     /*Test switch between normal map and satellite view*/

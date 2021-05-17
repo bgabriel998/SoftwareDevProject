@@ -130,7 +130,7 @@ public class ComputePOIPoints extends Observable implements Observer{
      */
     private void getPOIsOffline(UserPoint userPoint) {
         try {
-            OfflineContentContainer offlineContent = StorageHandler.readDownloadedPOIs(context);
+            OfflineContentContainer offlineContent = StorageHandler.readOfflineContentContainer(context);
             BoundingBox boundingBox = offlineContent.boundingBox;
 
             double distance = userPoint.computeFlatDistance(new POIPoint(boundingBox.getCenterWithDateLine()));

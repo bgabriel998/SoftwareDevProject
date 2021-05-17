@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,13 +13,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-
-import ch.epfl.sdp.peakar.general.SettingsMapActivity;
 
 /**
  * Utility class to store and retrieve files
@@ -27,6 +27,7 @@ public final class StorageHandler {
 
     private static final String FILENAME_PHOTO = "yyyy-MM-dd-HH-mm-ss-SSS";
     private static final String PHOTO_EXTENSION = ".jpg";
+    public static final String OFFLINE_CONTENT_FILE =  "offline_content.txt";
 
     private static final int NO_COMPRESSION = 100;
 
@@ -89,17 +90,17 @@ public final class StorageHandler {
     }
 
     /**
-     * Helper method to load the downloaded json.
+     * Helper method to load the downloaded json of the OfflineContentContainer.
      *
      * @return an OfflineContainer containing the downloaded content.
      */
-     public static OfflineContentContainer readDownloadedPOIs(Context context) throws IOException {
+     public static OfflineContentContainer readOfflineContentContainer(Context context) throws IOException {
 
         Gson gson = new Gson();
 
         String ret = "";
 
-        InputStream inputStream =  context.openFileInput(SettingsMapActivity.OFFLINE_CONTENT_FILE);
+        InputStream inputStream =  context.openFileInput(OFFLINE_CONTENT_FILE);
         if ( inputStream != null ) {
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -114,5 +115,23 @@ public final class StorageHandler {
 
         Log.d("computePOIPointsInstance", "Offline content downloaded");
         return gson.fromJson(ret, OfflineContentContainer.class);
+    }
+
+    /**
+     * Saves the OfflineContentContainer as a .txt file.
+     *
+     * @param saveObject  json to save.
+     */
+    public static void saveOfflineContentContainer(OfflineContentContainer saveObject, Context context) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String jsonString = gson.toJson(saveObject);
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(OFFLINE_CONTENT_FILE, Context.MODE_PRIVATE));
+            outputStreamWriter.write(jsonString);
+            outputStreamWriter.close();
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
     }
 }
