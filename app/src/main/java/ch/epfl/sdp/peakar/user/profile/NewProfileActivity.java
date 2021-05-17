@@ -198,6 +198,14 @@ public class NewProfileActivity extends AppCompatActivity {
 
         // Change listener so next click will result in a username change
         findViewById(R.id.profile_change_username).setOnClickListener(this::confirmUsernameButton);
+        changeUsername.setOnKeyListener((v, keyCode, event) -> {
+            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                confirmUsernameButton(null);
+                return true;
+            }
+            return false;
+        });
     }
 
     /**
