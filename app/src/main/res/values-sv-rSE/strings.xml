@@ -64,6 +64,7 @@
     <string name="date_display">Datum: %s</string>
     <string name="position_display">"Position: (1%.2f, 2%.2f) "</string>
     <string name="setUsername">Du måste först ange ett användarnamn för att spara de upptäckta topparna!</string>
+    <string name="outsideOfDownloadedBox">You are in offline mode and outside of your downloaded area. Please turn off the offline mode on the settings to use the application.</string>
     <string name="search_username_hint">Sök Användarnamn</string>
     <string name="rank_display">Rank: %s</string>
 </resources>
