@@ -3,12 +3,8 @@ package ch.epfl.sdp.peakar.user.profile;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -195,7 +191,7 @@ public class NewProfileActivity extends AppCompatActivity {
         // Show edit text
         findViewById(R.id.profile_username_edit).setVisibility(View.VISIBLE);
 
-        // Change listener so next click will result in a username chance
+        // Change listener so next click will result in a username change
         findViewById(R.id.profile_change_username).setOnClickListener(this::confirmUsernameButton);
     }
 
