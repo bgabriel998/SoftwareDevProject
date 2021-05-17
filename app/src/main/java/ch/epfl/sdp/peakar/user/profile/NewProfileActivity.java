@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.collection.NewCollectedItem;
@@ -151,6 +152,8 @@ public class NewProfileActivity extends AppCompatActivity {
             items.add(newCollectedItem);
         }
 
+        // Sort the items by the peak points
+        items.sort(Comparator.comparing(NewCollectedItem::getPoints).reversed());
         ListView collectionListView = findViewById(R.id.profile_collection);
         NewCollectionListAdapter listAdapter = new NewCollectionListAdapter(this,
                 R.layout.profile_collected_item,
