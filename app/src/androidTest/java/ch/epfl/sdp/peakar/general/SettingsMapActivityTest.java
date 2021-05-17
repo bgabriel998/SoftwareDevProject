@@ -23,10 +23,7 @@ import org.osmdroid.tileprovider.MapTileProviderBase;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.utils.OfflineContentContainer;
