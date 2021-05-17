@@ -26,6 +26,7 @@ import ch.epfl.sdp.peakar.collection.NewCollectedItem;
 import ch.epfl.sdp.peakar.collection.NewCollectionListAdapter;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
+import ch.epfl.sdp.peakar.user.services.Account;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.services.OtherAccount;
 import ch.epfl.sdp.peakar.utils.StatusBarHandler;
@@ -80,6 +81,11 @@ public class NewProfileActivity extends AppCompatActivity {
             setupProfile(AuthService.getInstance().getAuthAccount().getUsername(), (int)AuthService.getInstance().getAuthAccount().getScore());
 
             fillListView();
+
+            // If the user is not registered, force a username change
+            if(AuthService.getInstance().getAuthAccount().getUsername().equals(Account.USERNAME_BEFORE_REGISTRATION)) {
+                changeUsernameButton(null);
+            }
         }
 
     }
@@ -192,6 +198,9 @@ public class NewProfileActivity extends AppCompatActivity {
         // Hide username
         findViewById(R.id.profile_username).setVisibility(View.GONE);
 
+        // Hide change button
+        findViewById(R.id.profile_change_username).setVisibility(View.GONE);
+
         // Show edit text
         EditText changeUsername = findViewById(R.id.profile_username_edit);
         changeUsername.setVisibility(View.VISIBLE);
@@ -200,12 +209,10 @@ public class NewProfileActivity extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(changeUsername, InputMethodManager.SHOW_IMPLICIT);
 
-        // Change listener so next click will result in a username change
-        findViewById(R.id.profile_change_username).setOnClickListener(this::confirmUsernameButton);
         changeUsername.setOnKeyListener((v, keyCode, event) -> {
             if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                     (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                confirmUsernameButton(null);
+                confirmUsernameButton();
                 return true;
             }
             return false;
@@ -213,9 +220,9 @@ public class NewProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * On confirm username change button click
+     * On confirm username change
      */
-    public void confirmUsernameButton(View view) {
+    public void confirmUsernameButton() {
         EditText usernameEdit = ((EditText)findViewById(R.id.profile_username_edit));
         hideKeyboard();
         String newUsername = usernameEdit.getText().toString();
@@ -239,14 +246,14 @@ public class NewProfileActivity extends AppCompatActivity {
                     Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), result.getMessage(), Snackbar.LENGTH_LONG);
                     snackbar.show();
 
-                    // Hide username
+                    // Hide username edit
                     findViewById(R.id.profile_username_edit).setVisibility(View.GONE);
 
-                    // Show edit text
+                    // Show username
                     findViewById(R.id.profile_username).setVisibility(View.VISIBLE);
 
-                    // Change listener so next click will result in a username chance
-                    findViewById(R.id.profile_change_username).setOnClickListener(v -> changeUsernameButton(v));
+                    // Show change button
+                    findViewById(R.id.profile_change_username).setVisibility(View.VISIBLE);
                 });
             }
         };
@@ -260,14 +267,21 @@ public class NewProfileActivity extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
     }
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (getCurrentFocus() != null) {
+        if (getCurrentFocus() != null && !AuthService.getInstance().getAuthAccount().getUsername().equals(Account.USERNAME_BEFORE_REGISTRATION)) {
             hideKeyboard();
-            //TODO convert username to old username
+
+            // Hide username edit
+            findViewById(R.id.profile_username_edit).setVisibility(View.GONE);
+
+            // Show username
+            findViewById(R.id.profile_username).setVisibility(View.VISIBLE);
         }
         return super.dispatchTouchEvent(ev);
     }
+
     /**
      * Update the image of the profile.
      */
