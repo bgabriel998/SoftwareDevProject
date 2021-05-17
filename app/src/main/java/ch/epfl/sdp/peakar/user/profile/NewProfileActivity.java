@@ -249,6 +249,13 @@ public class NewProfileActivity extends AppCompatActivity {
         changeThread.start();
     }
 
+    /**
+     * Method to hide the keyboard
+     */
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+    }
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (getCurrentFocus() != null) {
