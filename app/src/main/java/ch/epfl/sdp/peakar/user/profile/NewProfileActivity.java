@@ -81,11 +81,14 @@ public class NewProfileActivity extends AppCompatActivity {
             hideUI(true, false);
             setupProfile(AuthService.getInstance().getAuthAccount().getUsername(), (int)AuthService.getInstance().getAuthAccount().getScore());
 
-            fillListView();
 
             // If the user is not registered, force a username change
             if(AuthService.getInstance().getAuthAccount().getUsername().equals(Account.USERNAME_BEFORE_REGISTRATION)) {
                 changeUsernameButton(null);
+                // Set text view
+                ((TextView)findViewById(R.id.profile_empty_text)).setText(R.string.empty_collection);
+            } else {
+                fillListView();
             }
         }
 
@@ -132,6 +135,9 @@ public class NewProfileActivity extends AppCompatActivity {
      * TODO show correct date and correct country
      */
     private void fillListView() {
+        // Show correct text if empty
+        ((TextView)findViewById(R.id.profile_empty_text)).setText(R.string.empty_collection);
+
         ArrayList<NewCollectedItem> items = new ArrayList<>();
         for(POIPoint discoveredPeak: AuthService.getInstance().getAuthAccount().getDiscoveredPeaks()) {
             NewCollectedItem newCollectedItem = new NewCollectedItem(
