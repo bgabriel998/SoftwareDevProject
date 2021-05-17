@@ -112,7 +112,7 @@
     <!-- PROFILE TEXT -->
     <string name="score_display" translatable="true">Score: %s</string>
     <string name="empty_collection" translatable="false">Empty Collection</string>
-    <string name="empty_collection_not_registered" translatable="false">Please, set a username.</string>
+    <string name="empty_collection_not_registered" translatable="false">Please, set your username</string>
 
     <!-- COLLECTED TEXT -->
     <string name="height_display" translatable="false">%s m</string>
