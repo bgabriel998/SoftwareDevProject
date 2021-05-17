@@ -2,6 +2,7 @@ package ch.epfl.sdp.peakar.user;
 
 import android.content.Intent;
 import android.util.Log;
+import android.view.KeyEvent;
 
 import androidx.lifecycle.Lifecycle;
 import androidx.test.espresso.Espresso;
@@ -27,7 +28,8 @@ import ch.epfl.sdp.peakar.user.services.FirebaseAuthService;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withHint;
@@ -104,7 +106,6 @@ public class NewProfileActivityTest {
     /* Test that the message inviting the user to write the username in the correct box is correct */
     @Test
     public void changeUsernameTextTest() {
-        onView(withId(R.id.profile_change_username)).perform(click());
         ViewInteraction changeUsernameText = Espresso.onView(withId(R.id.profile_username_edit));
         changeUsernameText.check(matches(withHint(R.string.insert_username_button)));
     }
@@ -113,10 +114,8 @@ public class NewProfileActivityTest {
     @Test
     public void usernameAlreadyPresentTest() {
         databaseRefRoot.child(Database.CHILD_USERS).child(user2).child(Database.CHILD_USERNAME).setValue(user2);
-        onView(withId(R.id.profile_change_username)).perform(click());
-        onView(withId(R.id.profile_username_edit)).perform(typeText(user2));
-        onView(withId(R.id.profile_change_username)).perform(click());
-        Espresso.closeSoftKeyboard();
+        onView(withId(R.id.profile_username_edit)).perform(replaceText(user2));
+        InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_ENTER);
         try {
             Thread.sleep(LONG_SLEEP_TIME);
         } catch (InterruptedException e) {
@@ -132,10 +131,8 @@ public class NewProfileActivityTest {
         databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
         FirebaseAuthService.getInstance().forceRetrieveData();
         Log.d("ProfileActivityTest", "registerUserTest: username before " + AuthService.getInstance().getAuthAccount().getUsername());
-        onView(withId(R.id.profile_change_username)).perform(click());
-        onView(withId(R.id.profile_username_edit)).perform(typeText(user1));
-        Espresso.closeSoftKeyboard();
-        onView(withId(R.id.profile_change_username)).perform(click());
+        onView(withId(R.id.profile_username_edit)).perform(replaceText(user1));
+        InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_ENTER);
         try {
             Thread.sleep(LONG_SLEEP_TIME);
         } catch (InterruptedException e) {
@@ -143,9 +140,8 @@ public class NewProfileActivityTest {
         }
         onView(withText(R.string.registered_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.profile_change_username)).perform(click());
-        onView(withId(R.id.profile_username_edit)).perform(typeText(user2));
-        Espresso.closeSoftKeyboard();
-        onView(withId(R.id.profile_change_username)).perform(click());
+        onView(withId(R.id.profile_username_edit)).perform(replaceText(user2));
+        InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_ENTER);
         try {
             Thread.sleep(LONG_SLEEP_TIME);
         } catch (InterruptedException e) {
@@ -157,14 +153,16 @@ public class NewProfileActivityTest {
     /* Test that if the username chooses his current username the correct message is displayed */
     @Test
     public void chosenCurrentUsernameTest() {
+        onView(withId(R.id.profile_username_edit)).perform(replaceText(user1));
+        InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_ENTER);
+        try {
+            Thread.sleep(LONG_SLEEP_TIME);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         onView(withId(R.id.profile_change_username)).perform(click());
-        onView(withId(R.id.profile_username_edit)).perform(typeText("null"));
-        Espresso.closeSoftKeyboard();
-        onView(withId(R.id.profile_change_username)).perform(click());
-        onView(withId(R.id.profile_change_username)).perform(click());
-        onView(withId(R.id.profile_username_edit)).perform(typeText("null"));
-        Espresso.closeSoftKeyboard();
-        onView(withId(R.id.profile_change_username)).perform(click());
+        onView(withId(R.id.profile_username_edit)).perform(replaceText(user1));
+        InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_ENTER);
         try {
             Thread.sleep(LONG_SLEEP_TIME);
         } catch (InterruptedException e) {
@@ -178,10 +176,8 @@ public class NewProfileActivityTest {
     public void isNotValidTest() {
         final String usernameTest = "";
 
-        onView(withId(R.id.profile_change_username)).perform(click());
-        onView(withId(R.id.profile_username_edit)).perform(typeText(usernameTest));
-        Espresso.closeSoftKeyboard();
-        onView(withId(R.id.profile_change_username)).perform(click());
+        onView(withId(R.id.profile_username_edit)).perform(replaceText(usernameTest));
+        InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_ENTER);
         try {
             Thread.sleep(LONG_SLEEP_TIME);
         } catch (InterruptedException e) {
@@ -195,6 +191,7 @@ public class NewProfileActivityTest {
     public void changeUsernameButtonTest() {
         databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
         FirebaseAuthService.getInstance().forceRetrieveData();
+        testRule.getScenario().recreate();
         onView(withId(R.id.profile_change_username)).perform(click());
         Espresso.onView(withId(R.id.profile_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
         Espresso.onView(withId(R.id.profile_username_edit)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
@@ -210,5 +207,13 @@ public class NewProfileActivityTest {
         removeAuthUser();
         onView(withId(R.id.profile_sign_out)).perform(click());
         assertNotSame(Lifecycle.State.RESUMED, testRule.getScenario().getState());
+    }
+
+    /* Test that when you are not registered and you try to press on the screen, the focus does not disappear */
+    @Test
+    public void pressOnScreenButNotRegistered() {
+        onView(withId(R.id.profile_picture)).perform(click());
+        Espresso.onView(withId(R.id.profile_username)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+        Espresso.onView(withId(R.id.profile_username_edit)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 }

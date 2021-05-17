@@ -26,6 +26,7 @@ import ch.epfl.sdp.peakar.collection.NewCollectedItem;
 import ch.epfl.sdp.peakar.collection.NewCollectionListAdapter;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
+import ch.epfl.sdp.peakar.user.score.ScoringConstants;
 import ch.epfl.sdp.peakar.user.services.Account;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.services.OtherAccount;
@@ -128,14 +129,14 @@ public class NewProfileActivity extends AppCompatActivity {
 
     /**
      * Fill list view.
-     * TODO show correct points, correct date and correct country
+     * TODO show correct date and correct country
      */
     private void fillListView() {
         ArrayList<NewCollectedItem> items = new ArrayList<>();
         for(POIPoint discoveredPeak: AuthService.getInstance().getAuthAccount().getDiscoveredPeaks()) {
             NewCollectedItem newCollectedItem = new NewCollectedItem(
                     discoveredPeak.getName(),
-                    0,
+                    (int)(discoveredPeak.getAltitude() * ScoringConstants.PEAK_FACTOR),
                     (int)discoveredPeak.getAltitude(),
                     AuthService.getInstance().getAuthAccount().getDiscoveredCountryHighPoint().containsValue(discoveredPeak.getName()),
                     (float)discoveredPeak.getLongitude(),
