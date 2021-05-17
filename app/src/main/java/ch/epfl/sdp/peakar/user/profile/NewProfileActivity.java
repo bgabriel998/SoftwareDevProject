@@ -279,6 +279,9 @@ public class NewProfileActivity extends AppCompatActivity {
 
             // Show username
             findViewById(R.id.profile_username).setVisibility(View.VISIBLE);
+
+            // Show change button
+            findViewById(R.id.profile_change_username).setVisibility(View.VISIBLE);
         }
         return super.dispatchTouchEvent(ev);
     }
