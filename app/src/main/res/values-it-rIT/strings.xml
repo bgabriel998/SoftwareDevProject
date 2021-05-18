@@ -69,4 +69,7 @@
     <string name="toolbar_collections">Collections</string>
     <string name="toolbar_rankings">Rankings</string>
     <string name="toolbar_gallery">Gallery</string>
+    <string name="switch_all">All</string>
+    <string name="switch_friends">Friends</string>
+    <string name="empty_friends">No Friends</string>
 </resources>

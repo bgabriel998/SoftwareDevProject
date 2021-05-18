@@ -71,4 +71,7 @@
     <string name="toolbar_collections">Collections</string>
     <string name="toolbar_rankings">Rankings</string>
     <string name="toolbar_gallery">Gallery</string>
+    <string name="switch_all">Alla</string>
+    <string name="switch_friends">Vänner</string>
+    <string name="empty_friends">Inga Vänner</string>
 </resources>
