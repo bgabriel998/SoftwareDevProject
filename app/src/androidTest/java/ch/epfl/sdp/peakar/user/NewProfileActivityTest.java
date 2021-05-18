@@ -298,9 +298,9 @@ public class NewProfileActivityTest {
             e.printStackTrace();
         }
 
-        interaction.atPosition(0).onChildView(withId(R.id.collected_name)).check(matches((withText(MONT_BLANC_NAME))));
-        interaction.atPosition(1).onChildView(withId(R.id.collected_name)).check(matches((withText(DENT_DU_GEANT_NAME))));
-        interaction.atPosition(2).onChildView(withId(R.id.collected_name)).check(matches((withText(AIGUILLE_DU_PLAN_NAME))));
-        interaction.atPosition(3).onChildView(withId(R.id.collected_name)).check(matches((withText(POINTE_DE_LAPAZ_NAME))));
+        interaction.atPosition(0).onChildView(withId(R.id.collected_name)).check(matches(withText(MONT_BLANC_NAME)));
+        interaction.atPosition(1).onChildView(withId(R.id.collected_name)).check(matches(withText(DENT_DU_GEANT_NAME)));
+        interaction.atPosition(2).onChildView(withId(R.id.collected_name)).check(matches(withText(AIGUILLE_DU_PLAN_NAME)));
+        interaction.atPosition(3).onChildView(withId(R.id.collected_name)).check(matches(withText(POINTE_DE_LAPAZ_NAME)));
     }
 }
