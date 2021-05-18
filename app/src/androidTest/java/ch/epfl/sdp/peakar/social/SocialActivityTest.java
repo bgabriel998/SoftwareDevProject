@@ -1,6 +1,5 @@
 package ch.epfl.sdp.peakar.social;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -21,7 +20,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -38,7 +36,6 @@ import static ch.epfl.sdp.peakar.user.AuthAccountTest.registerAuthUser;
 import static ch.epfl.sdp.peakar.user.AuthAccountTest.removeAuthUser;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.BASIC_USERNAME;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.LONG_SLEEP_TIME;
-import static ch.epfl.sdp.peakar.utils.TestingConstants.THREAD_SLEEP_5S;
 import static ch.epfl.sdp.peakar.utils.UITestHelper.withBackgroundColor;
 
 @RunWith(AndroidJUnit4.class)
