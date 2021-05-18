@@ -277,7 +277,22 @@ public class NewProfileActivity extends AppCompatActivity {
         if (getCurrentFocus() != null && !AuthService.getInstance().getAuthAccount().getUsername().equals(Account.USERNAME_BEFORE_REGISTRATION)) {
             // Hide username edit
             findViewById(R.id.profile_username_edit).setVisibility(View.GONE);
+    /**
+     * Hides the keyboard and updates the UI after the username was changed or cancelled only if the
+     * user is already registered
+     */
+    private void setUiUsernameChanged() {
+        if (getCurrentFocus() != null && !AuthService.getInstance().getAuthAccount().getUsername().equals(Account.USERNAME_BEFORE_REGISTRATION)) {
+            // Hide username edit
+            findViewById(R.id.profile_username_edit).setVisibility(View.GONE);
 
+            // Show username
+            findViewById(R.id.profile_username).setVisibility(View.VISIBLE);
+
+            // Show change button
+            findViewById(R.id.profile_change_username).setVisibility(View.VISIBLE);
+        }
+    }
             // Show username
             findViewById(R.id.profile_username).setVisibility(View.VISIBLE);
 
