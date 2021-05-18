@@ -106,6 +106,7 @@
     <!-- PROFILE TEXT -->
     <string name="score_display" translatable="true">Score: %s</string>
     <string name="empty_collection" translatable="false">Empty Collection</string>
+    <string name="empty_collection_not_registered" translatable="false">Please, set your username</string>
 
     <!-- COLLECTED TEXT -->
     <string name="height_display" translatable="false">%s m</string>
@@ -116,6 +117,10 @@
     <!-- SOCIAL TEXT -->
     <string name="search_username_hint" translatable="true">Search Username</string>
     <string name="rank_display" translatable="true">Rank: %s</string>
+    <string name="switch_all" translatable="true">All</string>
+    <string name="switch_friends" translatable="true">Friends</string>
+    <string name="empty_friends" translatable="true">No Friends</string>
+
 
     <!-- Preference Titles -->
     <string name="general_header">General</string>
