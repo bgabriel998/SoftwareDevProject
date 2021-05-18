@@ -2,7 +2,6 @@ package ch.epfl.sdp.peakar.utils;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -12,6 +11,9 @@ import java.util.Locale;
 
 import ch.epfl.sdp.peakar.R;
 
+/**
+ *  Utility class for the Settings Activity, contains utility methods for the settings like the language
+ */
 public final class SettingsUtilities {
 
     private static final String DEFAULT_LANGUAGE = "en";
@@ -58,6 +60,7 @@ public final class SettingsUtilities {
      */
     private static void setLocale(Context context, String lang) {
         Locale myLocale = new Locale(lang);
+        Locale.setDefault(myLocale);
         Resources res = context.getResources();
         DisplayMetrics dm = res.getDisplayMetrics();
         Configuration conf = res.getConfiguration();
@@ -71,6 +74,4 @@ public final class SettingsUtilities {
         activity.startActivity(activity.getIntent());
         activity.overridePendingTransition(0, 0);
     }
-
-
 }

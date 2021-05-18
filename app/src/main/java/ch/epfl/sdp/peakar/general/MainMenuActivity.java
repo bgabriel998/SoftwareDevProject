@@ -1,11 +1,7 @@
 package ch.epfl.sdp.peakar.general;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
@@ -15,9 +11,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.preference.PreferenceManager;
-
-import java.util.Set;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.camera.CameraActivity;
@@ -26,27 +19,15 @@ import ch.epfl.sdp.peakar.gallery.GalleryActivity;
 import ch.epfl.sdp.peakar.map.MapActivity;
 import ch.epfl.sdp.peakar.rankings.RankingsActivity;
 import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
-import ch.epfl.sdp.peakar.utils.SettingsUtilities;
 
-public class MainMenuActivity extends AppCompatActivity{
+public class MainMenuActivity extends AppCompatActivity {
     private static final int CAMERA_REQUEST_CODE = 100;
     private static final String[] CAMERA_PERMISSION = new String[]{Manifest.permission.CAMERA};
-
-    private BroadcastReceiver languageChangedReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-
-        languageChangedReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                SettingsUtilities.updateLanguage(context, PreferenceManager.getDefaultSharedPreferences(context));
-            }
-        };
-
-        registerReceiver(languageChangedReceiver, new IntentFilter("Language.changed"));
     }
 
     /** Changes view to SettingsActivity */
@@ -152,25 +133,6 @@ public class MainMenuActivity extends AppCompatActivity{
                 Intent intent = new Intent(this, CameraActivity.class);
                 startActivity(intent);
             }
-        }
-    }
-
-    /**
-     * Override back button to go to home screen when the back button is pressed
-     * instead of going to the initActivity
-     */
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if(languageChangedReceiver!=null){
-            unregisterReceiver(languageChangedReceiver);
-            languageChangedReceiver = null;
         }
     }
 }
