@@ -228,9 +228,8 @@ public class NewProfileActivity extends AppCompatActivity {
             if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                     (keyCode == KeyEvent.KEYCODE_ENTER)) {
                 confirmUsernameButton();
-                return true;
             }
-            return false;
+            return true;
         });
     }
 
