@@ -2,6 +2,7 @@ package ch.epfl.sdp.peakar.general;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ProgressBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import com.google.firebase.FirebaseApp;
 import com.karumi.dexter.Dexter;
@@ -23,6 +25,7 @@ import java.util.List;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.utils.SettingsUtilities;
 
 /**
  * Initialises the application:
@@ -32,6 +35,7 @@ import ch.epfl.sdp.peakar.user.services.AuthService;
  */
 public class InitActivity extends AppCompatActivity {
 
+    private static final String DEFAULT_LANGUAGE = "en";
     private MultiplePermissionsListener allPermissionsListener;
 
     @Override
@@ -67,6 +71,10 @@ public class InitActivity extends AppCompatActivity {
                 AuthService.getInstance().getAuthAccount().init();
             }
         }).start();
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String language =  sharedPreferences.getString(getString(R.string.language_key), DEFAULT_LANGUAGE);
+        SettingsUtilities.setLocale(this, SettingsUtilities.getLanguageCode(language));
     }
 
     /**
