@@ -47,4 +47,43 @@
         android:background="@null"
         android:contentDescription="@string/description_sort_button"/>
 
+    <!-- Switch Container -->
+    <LinearLayout
+        android:id="@+id/top_bar_switch"
+        android:layout_width="180dp"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- Switch Left Text -->
+        <TextView
+            android:id="@+id/top_bar_switch_text_left"
+            style="@style/SmallText"
+            android:layout_width="55dp"
+            android:layout_height="21dp"
+            android:gravity="end"
+            android:text="All" />
+
+        <!-- Switch Button -->
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/top_bar_switch_button"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            app:trackTint="@color/DarkGreen"
+            app:thumbTint="@color/LightGrey"
+            app:switchMinWidth="15dp"/>
+
+        <!-- Switch Right Text -->
+        <TextView
+            android:id="@+id/top_bar_switch_text_right"
+            style="@style/SmallText"
+            android:layout_width="55dp"
+            android:layout_height="21dp"
+            android:text="Friends" />
+    </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
