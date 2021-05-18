@@ -2,7 +2,6 @@ package ch.epfl.sdp.peakar.general;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
@@ -35,7 +34,6 @@ import ch.epfl.sdp.peakar.utils.SettingsUtilities;
  */
 public class InitActivity extends AppCompatActivity {
 
-    private static final String DEFAULT_LANGUAGE = "en";
     private MultiplePermissionsListener allPermissionsListener;
 
     @Override
@@ -72,9 +70,7 @@ public class InitActivity extends AppCompatActivity {
             }
         }).start();
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String language =  sharedPreferences.getString(getString(R.string.language_key), DEFAULT_LANGUAGE);
-        SettingsUtilities.setLocale(this, SettingsUtilities.getLanguageCode(language));
+        SettingsUtilities.updateLanguage(this, PreferenceManager.getDefaultSharedPreferences(this));
     }
 
     /**

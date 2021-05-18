@@ -47,7 +47,8 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
                 rangeChanged();
                 break;
             case "language_preference":
-                languageChanged((String) sharedPreferences.getAll().get("language_preference"));
+                updateLanguage(this, sharedPreferences);
+                sendBroadcast(new Intent("Language.changed"));
                 break;
             case "offline_mode_preference":
                 offlineModeChanged();
@@ -94,14 +95,6 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         POICache.getInstance().deleteCacheFile(this.getCacheDir());
         //recompute the POIs using the new range
         ComputePOIPoints.getInstance(this);
-    }
-
-    /**
-     * Change language
-     * @param value language code (2 letters)
-     */
-    private void languageChanged(String value){
-        setLocale(this, getLanguageCode(value));
     }
 
     /**

@@ -2,13 +2,30 @@ package ch.epfl.sdp.peakar.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
 
 import java.util.Locale;
 
+import ch.epfl.sdp.peakar.R;
+
 public final class SettingsUtilities {
+
+    private static final String DEFAULT_LANGUAGE = "en";
+
+    /**
+     * Updates the language depending on the preferences
+     *
+     * @param context context of the application
+     * @param sharedPreferences shared preferences
+     */
+    public static void updateLanguage(Context context, SharedPreferences sharedPreferences){
+        String language =  sharedPreferences.getString(context.getResources().getString(R.string.language_key), DEFAULT_LANGUAGE);
+        SettingsUtilities.setLocale(context, SettingsUtilities.getLanguageCode(language));
+    }
 
     /**
      * Get language code from language
@@ -16,7 +33,7 @@ public final class SettingsUtilities {
      * @param language language
      * @return language code (2 letters)
      */
-    public static String getLanguageCode(String language){
+    private static String getLanguageCode(String language){
         switch (language){
             case "german":
                 return "de";
@@ -39,7 +56,7 @@ public final class SettingsUtilities {
      * overrides the transition
      * @param lang language code
      */
-    public static void setLocale(Context context, String lang) {
+    private static void setLocale(Context context, String lang) {
         Locale myLocale = new Locale(lang);
         Resources res = context.getResources();
         DisplayMetrics dm = res.getDisplayMetrics();
@@ -54,4 +71,6 @@ public final class SettingsUtilities {
         activity.startActivity(activity.getIntent());
         activity.overridePendingTransition(0, 0);
     }
+
+
 }
