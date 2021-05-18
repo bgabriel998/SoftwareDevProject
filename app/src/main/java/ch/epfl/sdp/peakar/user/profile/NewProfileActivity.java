@@ -297,15 +297,6 @@ public class NewProfileActivity extends AppCompatActivity {
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (getCurrentFocus() != null && !AuthService.getInstance().getAuthAccount().getUsername().equals(Account.USERNAME_BEFORE_REGISTRATION)) {
             hideKeyboard();
-
-            // Hide username edit
-            findViewById(R.id.profile_username_edit).setVisibility(View.GONE);
-
-            // Show username
-            findViewById(R.id.profile_username).setVisibility(View.VISIBLE);
-
-            // Show change button
-            findViewById(R.id.profile_change_username).setVisibility(View.VISIBLE);
         }
         return super.dispatchTouchEvent(ev);
     }
