@@ -32,10 +32,11 @@ public class InitActivityTest {
 
     /* Test that the MainMenuActivity gets called */
     @Test
-    public void TestMainMenuActivityIsCalled() {
+    public void TestMainMenuActivityIsCalled() throws InterruptedException {
         //Launch InitActivity
         Intent intent = new Intent(ApplicationProvider.getApplicationContext(), InitActivity.class);
         ActivityScenario.launch(intent);
+        Thread.sleep(10);
         //Check that MainMenuActivity gets called
         intended(IntentMatchers.hasComponent(MainMenuActivity.class.getName()));
     }

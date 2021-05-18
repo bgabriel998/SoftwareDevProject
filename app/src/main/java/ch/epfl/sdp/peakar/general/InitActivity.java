@@ -68,9 +68,9 @@ public class InitActivity extends AppCompatActivity {
             if (AuthService.getInstance().getAuthAccount() != null) {
                 AuthService.getInstance().getAuthAccount().init();
             }
+            SettingsUtilities.updateLanguage(this, PreferenceManager.getDefaultSharedPreferences(this));
         }).start();
 
-        SettingsUtilities.updateLanguage(this, PreferenceManager.getDefaultSharedPreferences(this));
     }
 
     /**
