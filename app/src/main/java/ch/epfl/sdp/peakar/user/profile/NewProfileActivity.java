@@ -253,7 +253,11 @@ public class NewProfileActivity extends AppCompatActivity {
                     ((EditText)findViewById(R.id.profile_username_edit)).getText().clear();
 
                     // If username has changed, update the username text view
-                    if(result == ProfileOutcome.USERNAME_CHANGED || result == ProfileOutcome.USERNAME_REGISTERED) ((TextView)findViewById(R.id.profile_username)).setText(AuthService.getInstance().getAuthAccount().getUsername());
+                    // If username has changed, hide the keyboard and update the username text view
+                    if(result == ProfileOutcome.USERNAME_CHANGED || result == ProfileOutcome.USERNAME_REGISTERED) {
+                        hideKeyboard();
+                        ((TextView)findViewById(R.id.profile_username)).setText(AuthService.getInstance().getAuthAccount().getUsername());
+                    }
                     if(result == ProfileOutcome.USERNAME_REGISTERED) fillListView();
 
                     // Display the message
