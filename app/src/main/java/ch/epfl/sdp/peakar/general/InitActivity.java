@@ -10,7 +10,6 @@ import android.widget.ProgressBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.preference.PreferenceManager;
 
 import com.google.firebase.FirebaseApp;
 import com.karumi.dexter.Dexter;
@@ -24,7 +23,6 @@ import java.util.List;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.user.services.AuthService;
-import ch.epfl.sdp.peakar.utils.SettingsUtilities;
 
 /**
  * Initialises the application:
@@ -68,7 +66,6 @@ public class InitActivity extends AppCompatActivity {
             if (AuthService.getInstance().getAuthAccount() != null) {
                 AuthService.getInstance().getAuthAccount().init();
             }
-            SettingsUtilities.updateLanguage(this, PreferenceManager.getDefaultSharedPreferences(this));
         }).start();
 
     }
