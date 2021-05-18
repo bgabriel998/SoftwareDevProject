@@ -79,7 +79,7 @@ public class SocialActivityTest {
         onView(ViewMatchers.withId(R.id.top_bar_switch_text_right)).check(matches(withText("Friends")));
     }
 
-    /* Test that the switch is changes when clicking. */
+    /* Test that the switch is changed when clicking. */
     @Test
     public void TestSwitchToFriends() {
         onView(ViewMatchers.withId(R.id.top_bar_switch_button)).check(matches(isNotChecked()));
