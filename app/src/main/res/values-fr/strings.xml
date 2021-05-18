@@ -65,6 +65,8 @@
     <string name="position_display">"Position: (1%.2f, 2%.2f) "</string>
     <string name="date_display">Date: %s</string>
     <string name="setUsername">"Vous devez d'abord définir un nom d'utilisateur pour sauvegarder les pics découverts!"</string>
+    <string name="outsideOfDownloadedBox">"Vous êtes en mode hors connexion et en-dehors de la région
+        téléchargée. Veuillez quitter le mode hors connexion dans les réglages pour utiliser l'application."</string>
     <string name="search_username_hint">Search Username</string>
     <string name="rank_display">Rank: %s</string>
     <string name="switch_all">All</string>

@@ -5,34 +5,31 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 import androidx.preference.PreferenceManager;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.views.MapView;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.map.OSMMap;
+import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.points.DownloadTopographyTask;
 import ch.epfl.sdp.peakar.points.GeonamesHandler;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.points.Point;
 import ch.epfl.sdp.peakar.utils.OfflineContentContainer;
+import ch.epfl.sdp.peakar.utils.StorageHandler;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
 /**
@@ -44,10 +41,10 @@ public class SettingsMapActivity extends AppCompatActivity {
 
     // CONSTANTS
     private static final String  TOOLBAR_TITLE = "Offline Mode";
-    public static final String OFFLINE_CONTENT_FILE =  "offline_content.txt";
 
     private Button downloadButton;
     private View loadingView;
+    private OSMMap osmMap;
 
     Activity thisActivity;
     Context thisContext;
@@ -79,16 +76,21 @@ public class SettingsMapActivity extends AppCompatActivity {
         thisContext = this;
 
         MapView mapView = findViewById(R.id.settingsMapView);
-        OSMMap osmMap = new OSMMap(this, mapView);
+        osmMap = new OSMMap(this, mapView);
 
         // Invisible button and loading circle
-        downloadButton.setVisibility(View.GONE);
+        downloadButton.setVisibility(View.INVISIBLE);
         loadingView.setVisibility(View.GONE);
 
         osmMap.displayUserLocation();
 
         osmMap.enablePinOnClick(() -> downloadButton.setVisibility(View.VISIBLE), (p) -> selectedPoint = p);
 
+        ImageButton zoomOnUserLocationButton = findViewById(R.id.zoomOnUserLocation);
+        zoomOnUserLocationButton.setOnClickListener(v -> osmMap.zoomOnUserLocation());
+
+        ImageButton changeMapTileSourceButton = findViewById(R.id.changeMapTile);
+        changeMapTileSourceButton.setOnClickListener(v -> osmMap.changeMapTileSource(zoomOnUserLocationButton,changeMapTileSourceButton ));
     }
 
     /**
@@ -114,7 +116,6 @@ public class SettingsMapActivity extends AppCompatActivity {
         addBoundingBoxToContainer(saveObject, selectedPoint);
 
         addMapAndPOIsToContainer(saveObject, selectedPoint);
-
     }
 
     /**
@@ -168,30 +169,16 @@ public class SettingsMapActivity extends AppCompatActivity {
                 }
 
                 saveObject.POIPoints = POIPoints;
-                saveJson(saveObject);
+                StorageHandler.saveOfflineContentContainer(saveObject, thisContext);
                 Toast.makeText(thisContext,thisContext.getResources().getString(R.string.offline_mode_on_toast), Toast.LENGTH_SHORT).show();
+
+                ComputePOIPoints computePOIPoints = ComputePOIPoints.getInstance(thisContext);
+                computePOIPoints.update(null, null);
+
                 thisActivity.finish();
 
             }
         }.execute();
-    }
-
-    /**
-     * Saves the json file as a .txt.
-     *
-     * @param saveObject  json to save.
-     */
-    private void saveJson(OfflineContentContainer saveObject) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String jsonString = gson.toJson(saveObject);
-        try {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput(OFFLINE_CONTENT_FILE, Context.MODE_PRIVATE));
-            outputStreamWriter.write(jsonString);
-            outputStreamWriter.close();
-        }
-        catch (IOException e) {
-            Log.e("Exception", "File write failed: " + e.toString());
-        }
     }
 
     @Override
@@ -209,7 +196,5 @@ public class SettingsMapActivity extends AppCompatActivity {
 
              this.finish();
          }
-
     }
-
 }

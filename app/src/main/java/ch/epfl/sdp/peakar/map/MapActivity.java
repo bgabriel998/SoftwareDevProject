@@ -10,7 +10,7 @@ import ch.epfl.sdp.peakar.user.services.AuthService;
 
 public class MapActivity extends AppCompatActivity {
 
-    public static OSMMap osmMap = null;
+    private OSMMap osmMap = null;
     private ImageButton zoomOnUserLocationButton = null;
     private ImageButton changeMapTileSourceButton = null;
 
@@ -39,6 +39,8 @@ public class MapActivity extends AppCompatActivity {
 
     }
 
-
+    public OSMMap getOsmMap() {
+        return osmMap;
+    }
 }
 

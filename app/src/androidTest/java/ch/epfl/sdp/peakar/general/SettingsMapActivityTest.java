@@ -19,26 +19,34 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.osmdroid.tileprovider.MapTileProviderBase;
+import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.utils.OfflineContentContainer;
+import ch.epfl.sdp.peakar.utils.StorageHandler;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.THREAD_SLEEP_5S;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
 @RunWith(AndroidJUnit4.class)
 public class SettingsMapActivityTest {
+
+    private MapView mapView;
 
     @Rule
     public ActivityScenarioRule<SettingsMapActivity> testRule = new ActivityScenarioRule<>(SettingsMapActivity.class);
@@ -60,7 +68,7 @@ public class SettingsMapActivityTest {
     public void TestMapLongPress(){
         // checks that button and loading bar is not visible
         onView((withId((R.id.downloadButton))))
-                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)));
         onView((withId((R.id.downloadButton))))
                 .check(matches(not(isDisplayed())));
         onView((withId((R.id.loadingView))))
@@ -141,7 +149,7 @@ public class SettingsMapActivityTest {
 
     /* checks if the offline content is saved after the ok button is pressed */
     @Test
-    public void saveJsonTest() throws InterruptedException {
+    public void saveJsonTest() throws InterruptedException, IOException {
         // performs long press
         ViewInteraction mapView = onView(withId(R.id.settingsMapView));
         mapView.perform(ViewActions.longClick());
@@ -150,35 +158,46 @@ public class SettingsMapActivityTest {
         view.perform(ViewActions.click());
         // Check if the file exists
         Thread.sleep(15000);
-        readFromFile();
-        Assert.assertTrue(true);
+        OfflineContentContainer savedData = StorageHandler.readOfflineContentContainer(ApplicationProvider.getApplicationContext());
+        Assert.assertNotNull(savedData);
+        Assert.assertNotNull(savedData.boundingBox);
+        Assert.assertNotNull(savedData.POIPoints);
+        Assert.assertNotNull(savedData.topography);
     }
 
-    /* Helper method to read .txt file */
-    private void readFromFile() {
+    /*Test switch between normal map and satellite view*/
+    @Test
+    public void pressSatelliteNormalMapButton() {
+        testRule.getScenario().onActivity(activity -> mapView = activity.findViewById(R.id.settingsMapView));
 
-        String ret = "";
+        //Originally the map is set to default
+        //A press on the button will change the map tile for satellite
 
-        try {
-            InputStream inputStream =  ApplicationProvider.getApplicationContext().openFileInput(SettingsMapActivity.OFFLINE_CONTENT_FILE);
-
-            if ( inputStream != null ) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString;
-                StringBuilder stringBuilder = new StringBuilder();
-
-                while ( (receiveString = bufferedReader.readLine()) != null ) {
-                    stringBuilder.append(receiveString);
-                }
-
-                inputStream.close();
-                ret = stringBuilder.toString();
-            }
-        } catch (IOException e) {
-            fail();
-        }
-
+        //MapView mapView = osmMap.getMapView();
+        MapTileProviderBase tileProviderBase = mapView.getTileProvider();
+        assertEquals("Mapnik", tileProviderBase.getTileSource().name());
+        //Click on button
+        ViewInteraction button = onView(withId(R.id.changeMapTile));
+        button.perform(click());
+        //Check that the provider has changed
+        tileProviderBase = mapView.getTileProvider();
+        assertEquals("ARCGisOnline", tileProviderBase.getTileSource().name());
     }
 
+    /* Check that a press on "zoom on user location button effectively zooms on user loc"*/
+    @Test
+    public void pressZoomOnUserLocationButton() throws InterruptedException {
+        testRule.getScenario().onActivity(activity -> mapView = activity.findViewById(R.id.settingsMapView));
+        //Get map center at start
+        GeoPoint geoPointStart = (GeoPoint) mapView.getMapCenter();
+        //Wait 5 Sec for the provider to get the location
+        Thread.sleep(THREAD_SLEEP_5S);
+
+        ViewInteraction button = onView(withId(R.id.zoomOnUserLocation));
+        button.perform(click());
+        //Get center of the map after zoom
+        GeoPoint geoPointEnd = (GeoPoint)  mapView.getMapCenter();
+        //Compare two map centers
+        assertThat(geoPointStart, is(not(geoPointEnd)));
+    }
 }
