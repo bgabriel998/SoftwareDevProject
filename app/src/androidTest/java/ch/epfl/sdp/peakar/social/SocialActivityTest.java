@@ -75,8 +75,8 @@ public class SocialActivityTest {
     @Test
     public void TestSwitchNames() {
         onView(ViewMatchers.withId(R.id.top_bar_switch)).check(matches(isDisplayed()));
-        onView(ViewMatchers.withId(R.id.top_bar_switch_text_left)).check(matches(withText("All")));
-        onView(ViewMatchers.withId(R.id.top_bar_switch_text_right)).check(matches(withText("Friends")));
+        onView(ViewMatchers.withId(R.id.top_bar_switch_text_left)).check(matches(withText(R.string.switch_all)));
+        onView(ViewMatchers.withId(R.id.top_bar_switch_text_right)).check(matches(withText(R.string.switch_friends)));
     }
 
     /* Test that the switch is changed when clicking. */
