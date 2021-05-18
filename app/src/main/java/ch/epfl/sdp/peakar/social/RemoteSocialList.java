@@ -52,6 +52,7 @@ public class RemoteSocialList {
                     if (item.getUid().equals(uid)) {
                         item.setUsername(getUsername(snapshot));
                         item.setScore(getScore(snapshot));
+                        item.setProfileUrl(getProfileUrl(snapshot));
                         sortList(socialItems, listAdapter);
                         return;
                     }
