@@ -20,7 +20,6 @@ import ch.epfl.sdp.peakar.gallery.GalleryActivity;
 import ch.epfl.sdp.peakar.map.MapActivity;
 import ch.epfl.sdp.peakar.rankings.RankingsActivity;
 import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
-import ch.epfl.sdp.peakar.utils.SettingsUtilities;
 
 public class MainMenuActivity extends AppCompatActivity {
     private static final int CAMERA_REQUEST_CODE = 100;
@@ -29,7 +28,6 @@ public class MainMenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SettingsUtilities.updateLanguage(this, PreferenceManager.getDefaultSharedPreferences(this));
         setContentView(R.layout.activity_main_menu);
     }
 
