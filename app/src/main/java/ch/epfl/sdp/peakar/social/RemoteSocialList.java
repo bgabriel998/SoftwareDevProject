@@ -35,7 +35,6 @@ public class RemoteSocialList {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 String childUsername = getUsername(snapshot);
-
                 if (!childUsername.isEmpty()) {
                     addSorted(socialItems,
                             new SocialItem(snapshot.getKey(), childUsername,
@@ -47,7 +46,6 @@ public class RemoteSocialList {
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 String uid = snapshot.getKey();
-
                 for (SocialItem item : socialItems) {
                     if (item.getUid().equals(uid)) {
                         item.setUsername(getUsername(snapshot));
