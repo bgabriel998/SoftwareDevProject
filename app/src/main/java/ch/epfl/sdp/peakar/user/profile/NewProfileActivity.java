@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -224,7 +225,7 @@ public class NewProfileActivity extends AppCompatActivity {
                     (keyCode == KeyEvent.KEYCODE_ENTER)) {
                 confirmUsernameButton();
             }
-            return false;
+            return true;
         });
     }
 
@@ -289,6 +290,7 @@ public class NewProfileActivity extends AppCompatActivity {
      * Method to hide the keyboard
      */
     private void hideKeyboard() {
+        Log.d("NewProfileActivity", "hideKeyboard: triggered");
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
     }
