@@ -292,7 +292,19 @@ public class NewProfileActivity extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
     }
-
+    /**
+     * Checks if the keyboard is opened or not by calculating the difference between the actual
+     * height of the profile_collection ListView and the visible height of the View
+     *
+     * @return true if the keyboard is opened
+     */
+    private boolean isKeyboardOpened(){
+        Rect visibleBounds = new Rect();
+        ListView collectionView = findViewById(R.id.profile_collection);
+        collectionView.getWindowVisibleDisplayFrame(visibleBounds);
+        double heightDiff = collectionView.getHeight() - visibleBounds.height();
+        return heightDiff > 0;
+    }
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (getCurrentFocus() != null && !AuthService.getInstance().getAuthAccount().getUsername().equals(Account.USERNAME_BEFORE_REGISTRATION)) {
