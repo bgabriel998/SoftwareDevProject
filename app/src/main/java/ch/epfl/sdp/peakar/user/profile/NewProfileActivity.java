@@ -264,14 +264,6 @@ public class NewProfileActivity extends AppCompatActivity {
                     Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), result.getMessage(), Snackbar.LENGTH_LONG);
                     snackbar.show();
 
-                    // Hide username edit
-                    findViewById(R.id.profile_username_edit).setVisibility(View.GONE);
-
-                    // Show username
-                    findViewById(R.id.profile_username).setVisibility(View.VISIBLE);
-
-                    // Show change button
-                    findViewById(R.id.profile_change_username).setVisibility(View.VISIBLE);
                 });
             }
         };
