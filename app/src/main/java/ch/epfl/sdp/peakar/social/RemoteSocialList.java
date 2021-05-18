@@ -35,6 +35,7 @@ public class RemoteSocialList {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 String childUsername = getUsername(snapshot);
+
                 if (!childUsername.isEmpty()) {
                     addSorted(socialItems,
                             new SocialItem(snapshot.getKey(), childUsername,
@@ -46,11 +47,10 @@ public class RemoteSocialList {
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 String uid = snapshot.getKey();
+
                 for (SocialItem item : socialItems) {
                     if (item.getUid().equals(uid)) {
-                        item.setUsername(getUsername(snapshot));
-                        item.setScore(getScore(snapshot));
-                        item.setProfileUrl(getProfileUrl(snapshot));
+                        modifyItem(item, snapshot);
                         sortList(socialItems, listAdapter);
                         return;
                     }
@@ -124,5 +124,16 @@ public class RemoteSocialList {
     private static void sortList(List<SocialItem> socialItems,SocialListAdapter listAdapter) {
         socialItems.sort(Comparator.comparing(SocialItem::getScore).reversed());
         listAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Modify an existing social item with the data from the database snapshot.
+     * @param socialItem item to modify.
+     * @param dataSnapshot the given snapshot.
+     */
+    private static void modifyItem(SocialItem socialItem, DataSnapshot dataSnapshot) {
+        socialItem.setUsername(getUsername(dataSnapshot));
+        socialItem.setScore(getScore(dataSnapshot));
+        socialItem.setProfileUrl(getProfileUrl(dataSnapshot));
     }
 }
