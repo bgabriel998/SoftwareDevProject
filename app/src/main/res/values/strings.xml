@@ -178,5 +178,9 @@
     <string name="setUsername">You need to first set a username to save the discovered peaks!</string>
     <string name="outsideOfDownloadedBox">You are in offline mode and outside of your downloaded area. Please turn off the offline mode on the settings to use the application.</string>
 
-
+    <!-- Toolbar titles -->
+    <string name="toolbar_settings">Settings</string>
+    <string name="toolbar_collections">Collections</string>
+    <string name="toolbar_rankings">Rankings</string>
+    <string name="toolbar_gallery">Gallery</string>
 </resources>

@@ -69,4 +69,8 @@
         téléchargée. Veuillez quitter le mode hors connexion dans les réglages pour utiliser l'application."</string>
     <string name="search_username_hint">Search Username</string>
     <string name="rank_display">Rank: %s</string>
+    <string name="toolbar_settings">Réglages</string>
+    <string name="toolbar_collections">Collections</string>
+    <string name="toolbar_rankings">Classements</string>
+    <string name="toolbar_gallery">Galerie</string>
 </resources>

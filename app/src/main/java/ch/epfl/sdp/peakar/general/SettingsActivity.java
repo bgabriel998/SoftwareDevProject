@@ -22,7 +22,6 @@ import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private static final String  TOOLBAR_TITLE = "Settings";
     private SharedPreferences sharedPref;
 
     /**
@@ -52,7 +51,7 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
-        ToolbarHandler.SetupToolbarCustom(this, this,TOOLBAR_TITLE);
+        ToolbarHandler.SetupToolbarCustom(this, this, getString(R.string.toolbar_settings));
 
         if (savedInstanceState == null) {
             getSupportFragmentManager()
@@ -138,7 +137,6 @@ public class SettingsActivity extends AppCompatActivity {
                 setLocale("sv");
                 break;
         }
-
     }
 
     /**
