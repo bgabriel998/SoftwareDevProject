@@ -92,7 +92,12 @@ public class NewProfileActivity extends AppCompatActivity {
                 fillListView();
             }
         }
-
+        findViewById(R.id.profile_collection).setOnApplyWindowInsetsListener((v, insets) -> {
+            if(!isKeyboardOpened()){
+                setUiUsernameChanged();
+            }
+            return insets;
+        });
     }
 
     /**
