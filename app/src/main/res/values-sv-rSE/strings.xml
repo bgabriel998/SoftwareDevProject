@@ -67,4 +67,7 @@
     <string name="outsideOfDownloadedBox">You are in offline mode and outside of your downloaded area. Please turn off the offline mode on the settings to use the application.</string>
     <string name="search_username_hint">Sök Användarnamn</string>
     <string name="rank_display">Rank: %s</string>
+    <string name="switch_all">Alla</string>
+    <string name="switch_friends">Vänner</string>
+    <string name="empty_friends">Inga Vänner</string>
 </resources>
