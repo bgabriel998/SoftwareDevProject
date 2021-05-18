@@ -39,7 +39,7 @@ public class FriendItem {
     public int getPoints() {
         return points;
     }
-    
+
     /**
      * Setter of the friend item points
      */

@@ -78,11 +78,4 @@ public interface Challenge {
      */
     ChallengeOutcome join();
 
-    /**
-     * Claim the victory of the challenge.
-     * The victory points will be assigned to the current authenticated user if the user meets the requirements.
-     * If the reward has already been claimed, an exception will be thrown.
-     * The remote challenge has to be removed after this method is performed.
-     */
-    ChallengeOutcome claimVictory();
 }

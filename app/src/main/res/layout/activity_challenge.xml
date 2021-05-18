@@ -6,4 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".ChallengeActivity">
 
+    <TextView
+        android:id="@+id/testTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        tools:layout_editor_absoluteX="131dp"
+        tools:layout_editor_absoluteY="240dp"
+        tools:ignore="MissingConstraints" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import ch.epfl.sdp.peakar.user.challenge.goal.RemotePointsChallenge;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 
@@ -23,24 +24,24 @@ import ch.epfl.sdp.peakar.user.services.AuthService;
 public class ChallengeHandler {
 
     private static final ChallengeHandler challengeHandler = null;
-    private static final AuthAccount userAccount = null;
-    private static List<Timer> challengeExpirationList = null;
+    private static AuthAccount userAccount = null;
+    private static ArrayList<Timer> challengeExpirationList = null;
     /**
      * Challenge Handler constructor
      */
     @SuppressLint("NewApi")
     public ChallengeHandler(){
-        AuthAccount account = AuthService.getInstance().getAuthAccount();
-        if(account != null){
-            initChallengeFinishTimeListener();
+        userAccount = AuthService.getInstance().getAuthAccount();
+        if(userAccount != null){
             challengeExpirationList = new ArrayList<Timer>();
+            initChallengeFinishTimeListener();
         }
     }
 
     /**
      * @return challenge handler singleton
      */
-    public ChallengeHandler getInstance(){
+    public static ChallengeHandler getInstance(){
         if(challengeHandler == null){
             new ChallengeHandler();
         }
@@ -58,7 +59,7 @@ public class ChallengeHandler {
         for(Challenge challenge : challengeList){
             Timer expirationTimer = new Timer();
             Date finishDate = Date.from(challenge.getFinishDateTime().atZone(ZoneId.systemDefault()).toInstant());
-            expirationTimer.schedule(new ChallengeExpirationTimeTask(challenge),finishDate);
+            expirationTimer.schedule(new ChallengeExpirationTimerTask((RemotePointsChallenge)challenge,expirationTimer),finishDate);
             //Add timer to list of all timers
             challengeExpirationList.add(expirationTimer);
         }
@@ -69,22 +70,30 @@ public class ChallengeHandler {
      * Class used to link a timed callback to each challenge.
      * The run method gets called when the challenge finishes
      */
-    static class ChallengeExpirationTimeTask extends TimerTask{
+    static class ChallengeExpirationTimerTask extends TimerTask{
 
         /* Reference to the challenge used in callback */
-        private final Challenge challenge;
+        private final RemotePointsChallenge challenge;
+        private final Timer timer;
 
         /*Constructor*/
-        public ChallengeExpirationTimeTask(Challenge challenge){
+        public ChallengeExpirationTimerTask(RemotePointsChallenge challenge, Timer timer){
             this.challenge = challenge;
+            this.timer = timer;
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void run() {
             Log.d("CHALLENGE", "Timer expired on challenge:"+ challenge.getID());
             //TODO --> Trigger notification to user
 
+            challenge.endChallenge();
 
+            //Clean up ChallengeTimerTask
+            challengeExpirationList.remove(timer);
+            timer.cancel();
+            timer.purge();
         }
     }
 

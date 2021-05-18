@@ -7,7 +7,7 @@ public enum ChallengeStatus {
 
     private final int value;
 
-    private ChallengeStatus(int value) {
+    ChallengeStatus(int value) {
         this.value = value;
     }
 
