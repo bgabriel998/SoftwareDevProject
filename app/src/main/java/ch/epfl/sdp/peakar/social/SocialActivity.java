@@ -66,9 +66,9 @@ public class SocialActivity extends AppCompatActivity {
     }
 
     /**
-     * Sets up the global list adapter, by syncing the database with a static list
+     * Sets up the friends list adapter, by syncing the database with a static list
      * TODO Create SYNC.
-     * @return a list adapter synced with the database displaying all users.
+     * @return a list adapter synced with the database displaying all friends.
      */
     private SocialListAdapter setupFriendsListAdapter() {
         List<SocialItem> friendsList = new ArrayList<>();
