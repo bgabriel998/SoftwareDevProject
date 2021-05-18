@@ -93,12 +93,6 @@ public class NewProfileActivity extends AppCompatActivity {
                 fillListView();
             }
         }
-        findViewById(R.id.profile_collection).setOnApplyWindowInsetsListener((v, insets) -> {
-            if(!isKeyboardOpened()){
-                setUiUsernameChanged();
-            }
-            return insets;
-        });
     }
 
     /**
@@ -230,7 +224,7 @@ public class NewProfileActivity extends AppCompatActivity {
                     (keyCode == KeyEvent.KEYCODE_ENTER)) {
                 confirmUsernameButton();
             }
-            return true;
+            return false;
         });
     }
 
@@ -240,7 +234,6 @@ public class NewProfileActivity extends AppCompatActivity {
     public void confirmUsernameButton() {
         EditText usernameEdit = ((EditText)findViewById(R.id.profile_username_edit));
         String newUsername = usernameEdit.getText().toString();
-        usernameEdit.getText().clear();
 
         // Start a new thread that will handle the process
         Thread changeThread = new Thread(){
@@ -251,12 +244,11 @@ public class NewProfileActivity extends AppCompatActivity {
 
                 // Update the view on the UI thread
                 runOnUiThread(() -> {
-                    ((EditText)findViewById(R.id.profile_username_edit)).getText().clear();
 
                     // If username has changed, update the username text view
                     // If username has changed, hide the keyboard and update the username text view
                     if(result == ProfileOutcome.USERNAME_CHANGED || result == ProfileOutcome.USERNAME_REGISTERED) {
-                        hideKeyboard();
+                        removeUsernameChangeUI();
                         ((TextView)findViewById(R.id.profile_username)).setText(AuthService.getInstance().getAuthAccount().getUsername());
                     }
                     if(result == ProfileOutcome.USERNAME_REGISTERED) fillListView();
@@ -274,8 +266,11 @@ public class NewProfileActivity extends AppCompatActivity {
      * Hides the keyboard and updates the UI after the username was changed or cancelled only if the
      * user is already registered
      */
-    private void setUiUsernameChanged() {
+    private void removeUsernameChangeUI() {
         if (getCurrentFocus() != null && !AuthService.getInstance().getAuthAccount().getUsername().equals(Account.USERNAME_BEFORE_REGISTRATION)) {
+            // Hide keyboard
+            hideKeyboard();
+
             // Hide username edit
             findViewById(R.id.profile_username_edit).setVisibility(View.GONE);
 
@@ -284,6 +279,9 @@ public class NewProfileActivity extends AppCompatActivity {
 
             // Show change button
             findViewById(R.id.profile_change_username).setVisibility(View.VISIBLE);
+
+            // Clear edit text
+            ((EditText)findViewById(R.id.profile_username_edit)).getText().clear();
         }
     }
 
@@ -294,24 +292,10 @@ public class NewProfileActivity extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
     }
-    /**
-     * Checks if the keyboard is opened or not by calculating the difference between the actual
-     * height of the profile_collection ListView and the visible height of the View
-     *
-     * @return true if the keyboard is opened
-     */
-    private boolean isKeyboardOpened(){
-        Rect visibleBounds = new Rect();
-        ListView collectionView = findViewById(R.id.profile_collection);
-        collectionView.getWindowVisibleDisplayFrame(visibleBounds);
-        double heightDiff = collectionView.getHeight() - visibleBounds.height();
-        return heightDiff > 0;
-    }
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (getCurrentFocus() != null && !AuthService.getInstance().getAuthAccount().getUsername().equals(Account.USERNAME_BEFORE_REGISTRATION)) {
-            hideKeyboard();
-        }
+        removeUsernameChangeUI();
         return super.dispatchTouchEvent(ev);
     }
 
