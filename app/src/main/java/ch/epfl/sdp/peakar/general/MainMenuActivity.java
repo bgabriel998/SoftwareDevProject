@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import ch.epfl.sdp.peakar.ChallengeActivity;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.collection.CollectionActivity;
@@ -29,13 +28,6 @@ public class MainMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-    }
-
-
-    /** Changes view to challengeActivity TEMPORARY !!  */
-    public void challengeButton(View view) {
-        Intent intent = new Intent(this, ChallengeActivity.class);
-        startActivity(intent);
     }
 
     /** Changes view to SettingsActivity */
