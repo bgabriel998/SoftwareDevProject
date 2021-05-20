@@ -12,7 +12,7 @@ import ch.epfl.sdp.peakar.user.services.AuthService;
  * Challenge in which the goal is to reach a specified amount of points.
  */
 public abstract class PointsChallenge implements Challenge {
-    String id;
+    private final String id;
     private final List<String> users;
     private long awardPoints;
     private final int durationInDays;
