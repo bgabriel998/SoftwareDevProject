@@ -108,7 +108,8 @@ public class ProfileLauncherActivity extends AppCompatActivity {
      * Launches the Profile Activity
      */
     private void launchProfileActivity(){
-        Intent intent = new Intent(this, ProfileActivity.class);
+        Intent intent = new Intent(this, NewProfileActivity.class);
+        intent.putExtra(NewProfileActivity.AUTH_INTENT, true);
         startActivity(intent);
         finish();
     }

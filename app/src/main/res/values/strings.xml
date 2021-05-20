@@ -74,6 +74,7 @@
     <string name="description_gallery_fullscreen_image" translatable="false">Gallery fullscreen image</string>
     <string name="description_dark_green_line" translatable="false">Dark green line</string>
     <string name='description_user_avatar' translatable="false">User avatar</string>
+    <string name='description_social_medal' translatable="false">Rank medal</string>
 
     <string name="title_activity_init" translatable="false">initActivity</string>
     <!--
@@ -111,12 +112,21 @@
     <!-- PROFILE TEXT -->
     <string name="score_display" translatable="true">Score: %s</string>
     <string name="empty_collection" translatable="false">Empty Collection</string>
+    <string name="empty_collection_not_registered" translatable="false">Please, set your username</string>
 
     <!-- COLLECTED TEXT -->
     <string name="height_display" translatable="false">%s m</string>
     <string name="points_display" translatable="true">Points: %s</string>
     <string name="date_display" translatable="true">Date: %s</string>
     <string name="position_display" translatable="true">Position: (1%.2f, 2%.2f) </string>
+
+    <!-- SOCIAL TEXT -->
+    <string name="search_username_hint" translatable="true">Search Username</string>
+    <string name="rank_display" translatable="true">Rank: %s</string>
+    <string name="switch_all" translatable="true">All</string>
+    <string name="switch_friends" translatable="true">Friends</string>
+    <string name="empty_friends" translatable="true">No Friends</string>
+
 
     <!-- Preference Titles -->
     <string name="general_header">General</string>
@@ -171,6 +181,7 @@
     <string name="offline_mode_button" translatable="false">Download Content</string>
     <string name="download_running" translatable="false">Download still running</string>
     <string name="setUsername">You need to first set a username to save the discovered peaks!</string>
+    <string name="outsideOfDownloadedBox">You are in offline mode and outside of your downloaded area. Please turn off the offline mode on the settings to use the application.</string>
 
 
 </resources>

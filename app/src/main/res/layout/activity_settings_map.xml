@@ -48,7 +48,7 @@
         android:id="@+id/downloadButton"
         style="@style/ButtonDarkGreen"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="55dp"
         android:layout_marginEnd="55dp"
         android:layout_marginBottom="20dp"
@@ -56,6 +56,27 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/zoomOnUserLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/buttonGetUserLoc"
+        android:background="@drawable/button_bg_round"
+        android:layout_marginEnd="1dp"
+        app:layout_constraintBottom_toBottomOf="@+id/downloadButton"
+        app:layout_constraintTop_toTopOf="@+id/downloadButton"
+        app:layout_constraintRight_toLeftOf="@+id/downloadButton"
+        app:srcCompat="@drawable/ic_baseline_my_location_24" />
+    <ImageButton
+        android:id="@+id/changeMapTile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/buttonGetUserLoc"
+        app:layout_constraintBottom_toBottomOf="@+id/downloadButton"
+        app:layout_constraintTop_toTopOf="@+id/downloadButton"
+        app:layout_constraintLeft_toRightOf="@+id/downloadButton"
+        app:srcCompat="@drawable/ic_baseline_map_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
