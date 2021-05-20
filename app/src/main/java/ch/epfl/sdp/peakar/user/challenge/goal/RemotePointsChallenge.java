@@ -158,7 +158,7 @@ public class RemotePointsChallenge extends PointsChallenge {
                 .child(getID())
                 .child(Database.CHILD_USERS).child(AuthService.getInstance()
                 .getID()).get().getValue(String.class);
-        if(authUser.equals("winner")){
+        if(authUser.equals(WINNER)){
             pointsGained = ScoringConstants.REWARD_FINISH_CHALLENGE;
         }
 
@@ -251,10 +251,10 @@ public class RemotePointsChallenge extends PointsChallenge {
      */
     private void modifyUserStatusInDB(String winnerUID, List<String> losersUIDs){
         Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(getID())
-                .child(Database.CHILD_USERS).child(winnerUID).setValue("winner");
+                .child(Database.CHILD_USERS).child(winnerUID).setValue(WINNER);
         for(String userID : losersUIDs){
             Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(getID())
-                    .child(Database.CHILD_USERS).child(userID).setValue("loser");
+                    .child(Database.CHILD_USERS).child(userID).setValue(LOSER);
         }
     }
 }

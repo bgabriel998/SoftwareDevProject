@@ -23,8 +23,8 @@ import ch.epfl.sdp.peakar.user.services.AuthService;
 public class ChallengeHandler {
 
     private static final ChallengeHandler challengeHandler = null;
-    private AuthAccount userAccount = null;
-    private ArrayList<Timer> challengeExpirationList = null;
+    private static AuthAccount userAccount = null;
+    private static ArrayList<Timer> challengeExpirationList = null;
     /**
      * Challenge Handler constructor
      */
@@ -38,7 +38,7 @@ public class ChallengeHandler {
     }
 
     /**
-     * @return challenge handler singleton
+     * challenge handler singleton
      */
     @SuppressLint("NewApi")
     public static void init(){
@@ -47,12 +47,12 @@ public class ChallengeHandler {
         } else {
             if(AuthService.getInstance().getAuthAccount() != userAccount) {
                 // Replace the account and stop the old timers
-                challengeHandler.userAccount = AuthService.getInstance().getAuthAccount();
-                challengeHandler.challengeExpirationList.forEach(x -> {
+                userAccount = AuthService.getInstance().getAuthAccount();
+                challengeExpirationList.forEach(x -> {
                     x.cancel();
                     x.purge();
                 });
-                challengeHandler.challengeExpirationList.clear();
+                challengeExpirationList.clear();
                 
                 // Set up a new listener
                 challengeHandler.initChallengeFinishTimeListener();

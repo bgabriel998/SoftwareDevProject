@@ -11,6 +11,9 @@ public interface Challenge {
     String FOUNDER = "founder";
     String JOINED = "joined";
 
+    String WINNER = "winner";
+    String LOSER = "loser";
+
     /**
      * Get the unique identifier of the challenge.
      */
