@@ -70,12 +70,9 @@ public class InitActivity extends AppCompatActivity {
      */
     private synchronized void initApp(){
         new Thread(() -> {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if (AuthService.getInstance().getAuthAccount() != null) {
+                AuthService.getInstance().getAuthAccount().init();
             }
-            if(AuthService.getInstance().getAuthAccount() != null) AuthService.getInstance().getAuthAccount().init();
         }).start();
     }
 

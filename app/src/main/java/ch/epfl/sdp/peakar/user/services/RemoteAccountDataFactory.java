@@ -78,6 +78,8 @@ public class RemoteAccountDataFactory implements RemoteResource {
 
         // Load photo url
         accountData.setPhotoUrl(Uri.parse(Optional.ofNullable(data.child(Database.CHILD_PHOTO_URL).getValue(String.class)).orElse("")));
+        Log.d("RemoteAccountDataFactory", "loadData: current photo = " + Uri.parse(Optional.ofNullable(data.child(Database.CHILD_PHOTO_URL).getValue(String.class)).orElse("")));
+        Log.d("RemoteAccountDataFactory", "loadData: new photo = " + AuthService.getInstance().getPhotoUrl().toString());
         // If this is loading the auth account, check if the photo is updated.
         // If photo has changed from last access, update it.
         if(dbRefUser.toString().equals(Database.getInstance().getReference().child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).toString()) && !AuthService.getInstance().getPhotoUrl().equals(accountData.getPhotoUrl())) {

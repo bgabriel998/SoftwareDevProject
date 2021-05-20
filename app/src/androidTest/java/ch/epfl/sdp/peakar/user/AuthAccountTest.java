@@ -50,6 +50,7 @@ public class AuthAccountTest {
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
             AuthService.getInstance().authAnonymously();
+
         }
         else {
             FirebaseAuthService.getInstance().forceRetrieveData();
