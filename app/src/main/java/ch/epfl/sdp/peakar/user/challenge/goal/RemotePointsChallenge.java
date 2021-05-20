@@ -54,8 +54,6 @@ public class RemotePointsChallenge extends PointsChallenge {
         // Add users
         List<String> users = new ArrayList<>(Collections.singleton(founderID));
         challengeRef.child(Database.CHILD_USERS).child(founderID).setValue(FOUNDER);
-        // Add prize
-        //challengeRef.child(Database.CHILD_CHALLENGE_GOAL).setValue(goalPoints);
 
         // Add start/finish times
         LocalDateTime creationTime = LocalDateTime.now();
