@@ -2,6 +2,7 @@ package ch.epfl.sdp.peakar.challenges;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -55,6 +56,12 @@ public class PointsChallengeTest {
     public void createTestUser() {
         registerAuthUser();
         removeTestUsers();
+
+    }
+
+    /*Remove test challenges after each test*/
+    @After
+    public void cleanup(){
         removeTestChallenges();
     }
 
@@ -98,9 +105,6 @@ public class PointsChallengeTest {
             assertEquals(challengeID, AuthService.getInstance().getAuthAccount().getChallenges().get(0).getID());
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            // Be sure to remove the challenge after the test is over.
-            removeTestChallenges();
         }
     }
 
@@ -128,9 +132,6 @@ public class PointsChallengeTest {
 
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            // Be sure to remove the challenge after the test is over.
-            removeTestChallenges();
         }
     }
 
@@ -163,9 +164,6 @@ public class PointsChallengeTest {
 
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            // Be sure to remove the challenge after the test is over.
-            removeTestChallenges();
         }
     }
 

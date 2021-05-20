@@ -9,7 +9,8 @@ import ch.epfl.sdp.peakar.user.challenge.ChallengeStatus;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 
 /**
- * Challenge in which the goal is to reach a specified amount of points.
+ * Challenge in which the goal is to have the maximum amount of points
+ * before the end of the challenge
  */
 public abstract class PointsChallenge implements Challenge {
     private final String id;
