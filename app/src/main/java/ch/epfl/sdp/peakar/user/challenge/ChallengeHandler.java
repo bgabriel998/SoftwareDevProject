@@ -32,18 +32,17 @@ public class ChallengeHandler {
     public static void init(){
         userAccount = AuthService.getInstance().getAuthAccount();
         challengeExpirationList = new ArrayList<Timer>();
-        if(AuthService.getInstance().getAuthAccount() != userAccount) {
-            // Replace the account and stop the old timers
-            userAccount = AuthService.getInstance().getAuthAccount();
-            challengeExpirationList.forEach(x -> {
-                x.cancel();
-                x.purge();
-            });
-            challengeExpirationList.clear();
 
-            // Set up a new listener
-            initChallengeFinishTimeListener();
-        }
+        // Replace the account and stop the old timers
+        userAccount = AuthService.getInstance().getAuthAccount();
+        challengeExpirationList.forEach(x -> {
+            x.cancel();
+            x.purge();
+        });
+        challengeExpirationList.clear();
+
+        // Set up a new listener
+        initChallengeFinishTimeListener();
 
     }
 
