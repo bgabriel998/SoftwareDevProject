@@ -1,11 +1,14 @@
 package ch.epfl.sdp.peakar.social;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -63,6 +66,7 @@ public class SocialListAdapter extends ArrayAdapter<SocialItem> {
             TextView scoreText = v.findViewById(R.id.social_item_score);
             TextView rankText = v.findViewById(R.id.social_item_rank);
             ImageView medalView = v.findViewById(R.id.social_item_medal);
+            ImageView avatarView = v.findViewById(R.id.social_item_avatar);
 
             setBackgroundColor(v, item.getUid());
             usernameText.setText(item.getUsername());
@@ -71,7 +75,7 @@ public class SocialListAdapter extends ArrayAdapter<SocialItem> {
             rankText.setText(mContext.getResources().getString(R.string.rank_display,
                     UIUtils.IntegerConvert(rank)));
             setMedal(medalView, rank);
-            // TODO Set profile picture, bitmap?
+            setAvatar(avatarView, item.getProfileUrl());
         }
     }
 
@@ -110,5 +114,18 @@ public class SocialListAdapter extends ArrayAdapter<SocialItem> {
                 v.setVisibility(View.INVISIBLE);
                 break;
         }
+    }
+
+    /**
+     * Set correct profile avatar
+     * @param v avatar view.
+     * @param avatarUrl avatar url of the social item.
+     */
+    private void setAvatar(ImageView v, Uri avatarUrl) {
+        if(avatarUrl == Uri.EMPTY) return;
+        Glide.with(mContext)
+                .load(avatarUrl)
+                .circleCrop()
+                .into(v);
     }
 }
