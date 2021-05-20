@@ -27,7 +27,6 @@
             android:name=".user.profile.ProfileLauncherActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity android:name=".user.profile.NewProfileActivity" />
-
         <activity android:name=".user.friends.AddFriendActivity" />
         <activity android:name=".user.friends.FriendItemActivity" />
         <activity android:name=".user.friends.FriendsActivity" />
