@@ -40,11 +40,23 @@ public class ChallengeHandler {
     /**
      * @return challenge handler singleton
      */
-    public static ChallengeHandler getInstance(){
+    public static void init(){
         if(challengeHandler == null){
             new ChallengeHandler();
+        } else {
+            if(AuthService.getInstance().getAuthAccount() != userAccount) {
+                // Replace the account and stop the old timers
+                challengeHandler.userAccount = AuthService.getInstance().getAuthAccount();
+                challengeHandler.challengeExpirationList.forEach(x -> {
+                    x.cancel();
+                    x.purge();
+                });
+                challengeHandler.challengeExpirationList.clear();
+                
+                // Set up a new listener
+                challengeHandler.initChallengeFinishTimeListener();
+            }
         }
-        return challengeHandler;
     }
 
     /**
