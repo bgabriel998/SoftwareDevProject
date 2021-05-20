@@ -22,49 +22,36 @@ import ch.epfl.sdp.peakar.user.services.AuthService;
  */
 public class ChallengeHandler {
 
-    private static final ChallengeHandler challengeHandler = null;
     private static AuthAccount userAccount = null;
     private static ArrayList<Timer> challengeExpirationList = null;
-    /**
-     * Challenge Handler constructor
-     */
-    @SuppressLint("NewApi")
-    public ChallengeHandler(){
-        userAccount = AuthService.getInstance().getAuthAccount();
-        if(userAccount != null){
-            challengeExpirationList = new ArrayList<Timer>();
-            initChallengeFinishTimeListener();
-        }
-    }
 
     /**
      * challenge handler singleton
      */
     @SuppressLint("NewApi")
     public static void init(){
-        if(challengeHandler == null){
-            new ChallengeHandler();
-        } else {
-            if(AuthService.getInstance().getAuthAccount() != userAccount) {
-                // Replace the account and stop the old timers
-                userAccount = AuthService.getInstance().getAuthAccount();
-                challengeExpirationList.forEach(x -> {
-                    x.cancel();
-                    x.purge();
-                });
-                challengeExpirationList.clear();
-                
-                // Set up a new listener
-                challengeHandler.initChallengeFinishTimeListener();
-            }
+        userAccount = AuthService.getInstance().getAuthAccount();
+        challengeExpirationList = new ArrayList<Timer>();
+        if(AuthService.getInstance().getAuthAccount() != userAccount) {
+            // Replace the account and stop the old timers
+            userAccount = AuthService.getInstance().getAuthAccount();
+            challengeExpirationList.forEach(x -> {
+                x.cancel();
+                x.purge();
+            });
+            challengeExpirationList.clear();
+
+            // Set up a new listener
+            initChallengeFinishTimeListener();
         }
+
     }
 
     /**
      * Creates a listener for each event
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void initChallengeFinishTimeListener(){
+    private static void initChallengeFinishTimeListener(){
         //retrieve challenges
         List<Challenge> challengeList = userAccount.getChallenges();
         //add listener for enrolled challenges
@@ -82,7 +69,7 @@ public class ChallengeHandler {
      * Class used to link a timed callback to each challenge.
      * The run method gets called when the challenge finishes
      */
-    static class ChallengeExpirationTimerTask extends TimerTask{
+    private static class ChallengeExpirationTimerTask extends TimerTask{
 
         /* Reference to the challenge used in callback */
         private final RemotePointsChallenge challenge;
