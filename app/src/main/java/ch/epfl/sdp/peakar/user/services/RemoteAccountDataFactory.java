@@ -187,7 +187,6 @@ public class RemoteAccountDataFactory implements RemoteResource {
             Log.d("FirebaseAccountDataFactory", "loadChallenges: entered if");
             DatabaseSnapshot retrieveChallenge = Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(challengeId).get();
             loadPointsChallenge(retrieveChallenge);
-            //}
         }
     }
 
