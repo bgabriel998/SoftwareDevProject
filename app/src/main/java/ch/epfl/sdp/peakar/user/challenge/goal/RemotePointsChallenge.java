@@ -116,7 +116,7 @@ public class RemotePointsChallenge extends PointsChallenge {
             for(String user : users){
                 if(!user.equals(AuthService.getInstance().getID()))
                     Database.getInstance().getReference().child(Database.CHILD_USERS)
-                        .child(user).child(Database.CHILD_CHALLENGES).child(id).setValue(OtherAccount.getInstance(user).getScore());
+                        .child(user).child(Database.CHILD_CHALLENGES).child(getID()).setValue(OtherAccount.getInstance(user).getScore());
 
             }
         }
