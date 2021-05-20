@@ -22,7 +22,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:remove="android:appComponentFactory">
-
         <activity android:name=".social.SocialActivity"/>
         <activity
             android:name=".user.profile.ProfileLauncherActivity"
