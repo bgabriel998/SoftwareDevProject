@@ -23,8 +23,8 @@ import ch.epfl.sdp.peakar.user.services.AuthService;
 public class ChallengeHandler {
 
     private static final ChallengeHandler challengeHandler = null;
-    private static AuthAccount userAccount = null;
-    private static ArrayList<Timer> challengeExpirationList = null;
+    private AuthAccount userAccount = null;
+    private ArrayList<Timer> challengeExpirationList = null;
     /**
      * Challenge Handler constructor
      */

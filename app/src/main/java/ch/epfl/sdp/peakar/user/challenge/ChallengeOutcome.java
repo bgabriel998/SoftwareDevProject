@@ -11,4 +11,3 @@ public enum ChallengeOutcome {
     NOT_POSSIBLE,
     MISSING_REQUIREMENTS
 }
-
