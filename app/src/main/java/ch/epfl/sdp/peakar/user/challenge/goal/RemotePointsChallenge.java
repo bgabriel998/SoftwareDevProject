@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.database.DatabaseReference;
@@ -227,16 +228,16 @@ public class RemotePointsChallenge extends PointsChallenge {
         HashMap<String, Integer> retScoreMap = new HashMap<>();
         for(String user : enrolledUsers){
             //Get user score at beginning of challenge
-            int initialScore =  Database.getInstance().getReference()
+            int initialScore =  Optional.ofNullable(Database.getInstance().getReference()
                     .child(Database.CHILD_USERS).child(user)
                     .child(Database.CHILD_CHALLENGES).child(getID())
-                    .get().getValue(Integer.class);
+                    .get().getValue(Integer.class)).orElse(0);
 
             //Get current user score
-            int currentScore = Database.getInstance().getReference()
+            int currentScore = Optional.ofNullable(Database.getInstance().getReference()
                     .child(Database.CHILD_USERS).child(user)
                     .child(Database.CHILD_SCORE)
-                    .get().getValue(Integer.class);
+                    .get().getValue(Integer.class)).orElse(0);
 
             //Compute the number of points gained during the challenge
             int pointsGainedInChallenge = currentScore - initialScore;
