@@ -1,185 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">PeakAR</string>
-
-    <!-- Google -->
-    <!-- Sign-in status messages -->
-    <string name="mountain_info" translatable="false">Mont Blanc - Monte Bianco lat: 45.8325 lon: 6.8641666666667 alt: 4810 <br /><br />
-                                 Dent du Geant lat:45.86355980599387 lon:6.951348205683087 alt: 4013<br /><br />
-                                 Aiguille du plan lat:45.891667 lon:6.907222 alt: 3673<br /><br />
-                                 Pointe de Lapaz lat:45.920774986207014 lon:6.812914656881065 alt: 3660</string>
-    <!-- Sign-in button labels and other strings -->
-
-    <string name="title_activity_main_menu" translatable="false">MainMenuActivity</string>
-
-    <!-- BUTTON TITLES -->
-    <string name="start_button">Start Peak AR</string>
+    <string name="start_button">Démarrer Peak AR</string>
     <string name="collection_button">Collection</string>
-    <string name="ranking_button">Ranking</string>
-    <string name="gallery_button">Gallery</string>
-    <string name="map_button">Map</string>
-    <string name="sign_in_button">Sign In</string>
-    <string name="sign_out_button">Sign Out</string>
-    <string name="sign_up_button">Sign Up</string>
-
-    <!-- USERNAME CHOICE -->
-    <string name='already_existing_username'>The username is already used by another user. Choose a new one.</string>
-    <string name='invalid_username'>The username is not valid. It must contain between 3 and 15 alphanumeric characters.</string>
-    <string name='current_username'>You can\'t choose the username you already have!</string>
-    <string name='available_username'>Your username has changed!</string>
-    <string name='insert_username_button'>Insert your username here</string>
-    <string name='change_username_button'>Change username</string>
-    <string name='submit_username_button'>Change</string>
-    <string name='registered_username' translatable="false">Welcome to PeakAR community!</string>
-
-    <!-- FRIENDS SYSTEM -->
-    <string name='add_friend_button'>Add a friend</string>
-    <string name='friends_button'>Friends</string>
-    <string name='insert_friend_button' translatable="false">Insert here</string>
-    <string name='submit_friend_button'>Add</string>
-    <string name='add_current_username'>You can\'t add yourself to your friends!</string>
-    <string name='friend_already_added'>The user is already your friend.</string>
-    <string name='friend_not_present_db'>The user does not exists.</string>
-    <string name='friend_added'>is now your friend!</string>
-    <string name="friend_removed">is no longer your friend.</string>
-
-
-    <!-- RANKINGS HEADER -->
-    <string name="header_position" translatable="false">Pos</string>
-    <string name="header_username">Username</string>
+    <string name="ranking_button">Classement</string>
+    <string name="gallery_button">Galerie</string>
+    <string name="map_button">Carte</string>
+    <string name="sign_in_button">Connexion</string>
+    <string name="sign_out_button">Déconnexion</string>
+    <string name="sign_up_button">Inscription</string>
+    <string name="already_existing_username">Le nom d\'utilisateur est déjà utilisé. Veuillez en choisir un autre.</string>
+    <string name="invalid_username">Le nom d\'utilisateur est invalide. Il doit contenir entre 3 et 15 caractères alphanumériques</string>
+    <string name="current_username">Vous ne pouvez pas changer votre nom d\'utilisateur pour le nom d\'utilisateur actuel!</string>
+    <string name="available_username">Votre nom d\'utilisateur a été modifié!</string>
+    <string name="insert_username_button">Veuillez inserer votre nom d\'utilisateur</string>
+    <string name="change_username_button">Changer le nom d\'utilisateur</string>
+    <string name="submit_username_button">Changer</string>
+    <string name="add_friend_button">Ajouter un ami</string>
+    <string name="friends_button">Amis</string>
+    <string name="submit_friend_button">Ajouter</string>
+    <string name="add_current_username">Vous ne pouvez pas vous ajoutez vous même à votre liste d\'amis!</string>
+    <string name="friend_already_added">L\'utilisateur est déjà votre ami.</string>
+    <string name="friend_not_present_db">L\'utilisateur n\'existe pas.</string>
+    <string name="friend_added">Ami ajouté!</string>
+    <string name="friend_removed">n\'est plus votre ami.</string>
+    <string name="header_username">Utilisateur</string>
     <string name="header_points">Points</string>
-
-    <!-- COLLECTION SEPARATOR -->
-    <string name="separator" translatable="false">Uncollected</string>
-
-    <!-- Image Descriptions -->
-    <string name="description_back_button" translatable="false">Back Button</string>
-    <string name="description_profile_button" translatable="false">Profile Button</string>
-    <string name="description_settings_button" translatable="false">Settings Button</string>
-    <string name="description_gallery_button" translatable="false">Gallery Button</string>
-    <string name="description_camera_button" translatable="false">Camera Button</string>
-    <string name="description_map_button" translatable="false">Map Button</string>
-    <string name="description_social_button" translatable="false">Social Button</string>
-    <string name="description_menu_pointer" translatable="false">Menu Pointer</string>
-    <string name='description_sign_out_button' translatable="false">Sign out button</string>
-    <string name='description_change_user_button' translatable="false">Change username button</string>
-    <string name='description_add_friend_button' translatable="false">Add friend button</string>
-    <string name='description_remove_friend_button' translatable="false">Remove friend button</string>
-    <string name='description_sort_button' translatable="false">Sort button</string>
-    <string name="description_icon" translatable="false">Peak AR Icon</string>
-    <string name='description_icon_country' translatable="false">Country icon</string>
-    <string name='description_icon_trophy' translatable="false">Trophy icon</string>
-    <string name='description_icon_collection' translatable="false">Collection icon</string>
-    <string name="description_collected_image" translatable="false">Photo over collected mountain</string>
-    <string name="description_gallery_image" translatable="false">Gallery image</string>
-    <string name="description_gallery_fullscreen_image" translatable="false">Gallery fullscreen image</string>
-    <string name="description_dark_green_line" translatable="false">Dark green line</string>
-    <string name='description_user_avatar' translatable="false">User avatar</string>
-    <string name='description_social_medal' translatable="false">Rank medal</string>
-
-    <string name="title_activity_init" translatable="false">initActivity</string>
-
-    <!-- MOUNTAIN CATEGORIES -->
     <string name="points__mountain_category">Points:</string>
-    <string name="height_mountain_category">Height:</string>
+    <string name="height_mountain_category">Altitude:</string>
     <string name="position_mountain_category">Position:</string>
-
-    <!-- TAKE PICTURE TOASTS -->
-    <string name="pictureTakenToast">Picture saved at: file:///storage/emulated/0/Android/media/ch.epfl.sdp.peakar/</string>
-    <string name="pictureSavedFailed">Failed to take picture:</string>
-    <string name="pictureSavedSuccessfully">Picture saved at:</string>
-
-    <!-- CAMERA BUTTONS STRINGS -->
-    <string name="buttonChangeDisplayModePOI" translatable="false">Change displaying of POIs in sight</string>
-    <string name="lineOfSightNotDownloaded">Line of sight downlaod is not yet finished, please wait.</string>
-    <string name="button_used_to_take_a_picture" translatable="false">Button used to take a picture</string>
-
-    <!-- MAP MARKERS STRINGS -->
+    <string name="pictureTakenToast">Image sauvegardée sous: file:///storage/emulated/0/Android/media/ch.epfl.sdp.peakar/</string>
+    <string name="pictureSavedFailed">Echec de la savegarde de l\'image:</string>
+    <string name="pictureSavedSuccessfully">Image sauvegardée sous:</string>
     <string name="marker_altitude">Altitude: %s m</string>
-    <string name="buttonGetUserLoc" translatable="false">Get user location</string>
-    <!-- MAP TOAST STRINGS -->
-    <string name="toast_no_account">You are not logged in: no markers can be displayed</string>
-
-    <!-- GALLERY TEXT -->
-    <string name="empty_gallery" translatable="false">Empty Gallery</string>
-    <string name="title_activity_settings" translatable="false">SettingsActivity</string>
-
-    <!-- PROFILE TEXT -->
-    <string name="score_display" translatable="true">Score: %s</string>
-    <string name="empty_collection" translatable="false">Empty Collection</string>
-    <string name="empty_collection_not_registered" translatable="false">Please, set your username</string>
-
-    <!-- COLLECTED TEXT -->
-    <string name="height_display" translatable="false">%s m</string>
-    <string name="points_display" translatable="true">Points: %s</string>
-    <string name="date_display" translatable="true">Date: %s</string>
-    <string name="position_display" translatable="true">Position: (1%.2f, 2%.2f) </string>
-
-    <!-- SOCIAL TEXT -->
-    <string name="search_username_hint" translatable="true">Search Username</string>
-    <string name="rank_display" translatable="true">Rank: %s</string>
-    <string name="switch_all" translatable="true">All</string>
-    <string name="switch_friends" translatable="true">Friends</string>
-    <string name="empty_friends" translatable="true">No Friends</string>
-
-
-    <!-- Preference Titles -->
-    <string name="general_header">General</string>
-    <string name="language_header">Language preference</string>
-    <string name="storage_header">Storage</string>
-    <string name="camera_header">Camera</string>
-
-    <!-- Camera Preferences -->
-    <string name="display_pois_title">Select displayed mountains</string>
-    <string name="filter_pois_title">Filter mountains</string>
-    <string name="display_dev_options">Display developer options</string>
-    <string name="displayPOIs_key" translatable="false">display_pois_preference</string>
-    <string name="filterPOIs_key" translatable="false">filter_pois</string>
-    <string name="devOptions_key" translatable="false">developer_options</string>
-    <string name="displayCompass_key" translatable="false">display_compass_preference</string>
-    <string name="displayCompass_title">Display compass</string>
-
-    <!-- Language Preferences -->
-    <string name="language_title">Language</string>
-
-    <!-- Range Preferences -->
-    <string name="range_title">Discovery distance</string>
-    <string name="range_summary">Maximum distance used for peak detection</string>
-
-    <!-- Measuring system Preferences -->
-    <string name="measSys_title">Measuring system</string>
-
-    <!-- Night mode Preferences -->
-    <string name="night_mode_title">Night mode</string>
-
-    <!-- Offline mode Preferences -->
-    <string name="offline_mode_title">Offline mode</string>
-    <string name="offline_mode_on_toast">You are now in offline mode!</string>
-    <string name="offline_mode_off_toast">Back online!</string>
-
-    <!-- Caching Preferences -->
-    <string name="caching_title">Allow caching</string>
-    <string name="caching_summary">Use device storage to cache application data. Enabling this options increase the speed of the application.</string>
-    <string name="measSys_key" translatable="false">measSys_preference</string>
-    <string name="night_mode_key" translatable="false">night_mode_preference</string>
-    <string name="offline_mode_key" translatable="false">offline_mode_preference</string>
-    <string name="range_key" translatable="false">range_preference</string>
-    <string name="language_key" translatable="false">language_preference</string>
-    <string name="disable_caching_key" translatable="false">disable_caching</string>
-    <string name="offline_mode_summary">Opens the editor to select an area to download. This allows the application to work without internet connection</string>
-
-    <!-- Permissions -->
-    <string name="permission_rationale_title">Permissions are needed!</string>
-    <string name="permission_rationale_message">Camera permission is needed to open the camera-preview,         location permission is needed to display the surrounding peaks, write and read external storage         is needed to save and read the saved mountains and pictures so please, allow it!</string>
-    <string name="camera_request_title">Camera permission required!</string>
-    <string name="camera_request_body">Camera permission is required to be able to use the camera-preview.</string>
-    <string name="offline_mode_button" translatable="false">Download Content</string>
-    <string name="download_running" translatable="false">Download still running</string>
-    <string name="setUsername">You need to first set a username to save the discovered peaks!</string>
-    <string name="outsideOfDownloadedBox">You are in offline mode and outside of your downloaded area. Please turn off the offline mode on the settings to use the application.</string>
-
-    <!-- Toolbar titles -->
-    <string name="toolbar_settings">Settings</string>
+    <string name="toast_no_account">Vous n\'êtes pas connecté: aucun marqueur ne peut être affiché</string>
+    <string name="general_header">Général</string>
+    <string name="language_header">Préférences linguistiques</string>
+    <string name="storage_header">Stockage</string>
+    <string name="camera_header">Caméra</string>
+    <string name="language_title">Langue</string>
+    <string name="range_title">Distance de découverte</string>
+    <string name="range_summary">Distance maximale pour la détection de sommet</string>
+    <string name="measSys_title">Système de mesure</string>
+    <string name="night_mode_title">Mode nuit</string>
+    <string name="caching_title">Autoriser le caching</string>
+    <string name="caching_summary">Utiliser la mémoire pour sauvegarder les données cache de l\'application. Activer cette option augmente la vitesse de l\'application.</string>
+    <string name="offline_mode_title">Mode hors-ligne</string>
+    <string name="offline_mode_on_toast">Vous êtes désormais en mode hors ligne!</string>
+    <string name="offline_mode_off_toast">En ligne!</string>
+    <string name="offline_mode_summary">Ouvre l\'éditeur pour selectionner une zone à télécharger. Ceci permet à l\'application de fonctionner sans connexion internet</string>
+    <string name="display_pois_title">Selectionner les montagnes à afficher</string>
+    <string name="filter_pois_title">Filtrer les montagnes</string>
+    <string name="display_dev_options">Afficher les options développeur</string>
+    <string name="lineOfSightNotDownloaded">Le téléchargement de la carte pour les montagnes dans la ligne de mire.</string>
+    <string name="permission_rationale_title">Des permissions sont nécessaires!</string>
+    <string name="permission_rationale_message">"L'autorisation de la caméra est nécessaire pour ouvrir l'aperçu de la caméra,
+        l'autorisation de localisation est nécessaire pour afficher les sommets environnants,
+        l'écriture et la lecture du stockage externe est nécessaire pour sauvegarder et lire les montagnes et les images sauvegardées.
+        est nécessaire pour sauvegarder et lire les montagnes et les images sauvegardées, alors s'il vous plaît, permettez-le!"</string>
+    <string name="camera_request_title">"L'autorisation de la caméra est nécessaire!"</string>
+    <string name="camera_request_body">"L'autorisation de la caméra est nécessaire pour pouvoir utiliser l'aperçu de la caméra."</string>
+    <string name="displayCompass_title">Afficher la boussole</string>
+    <string name="score_display">Score: %s</string>
+    <string name="points_display">Points: %s</string>
+    <string name="position_display">"Position: (1%.2f, 2%.2f) "</string>
+    <string name="date_display">Date: %s</string>
+    <string name="setUsername">"Vous devez d'abord définir un nom d'utilisateur pour sauvegarder les pics découverts!"</string>
+    <string name="outsideOfDownloadedBox">"Vous êtes en mode hors connexion et en-dehors de la région
+        téléchargée. Veuillez quitter le mode hors connexion dans les réglages pour utiliser l'application."</string>
+    <string name="search_username_hint">Search Username</string>
+    <string name="rank_display">Rank: %s</string>
+    <string name="toolbar_settings">Réglages</string>
     <string name="toolbar_collections">Collections</string>
-    <string name="toolbar_rankings">Rankings</string>
-    <string name="toolbar_gallery">Gallery</string>
+    <string name="toolbar_rankings">Classements</string>
+    <string name="toolbar_gallery">Galerie</string>
+    <string name="switch_all">All</string>
+    <string name="switch_friends">Friends</string>
+    <string name="empty_friends">No Friends</string>
 </resources>
