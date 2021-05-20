@@ -151,7 +151,7 @@ public class LineOfSight {
             slope_error_new += m_new;
 
             // Slope error reached limit, time to
-            // increment y and update slope error.
+            // increment or decrement y and update slope error.
             if (slope_error_new >= 0) {
                 y = y2 > y1 ? y + 1 : y - 1;
                 slope_error_new -= 2 * Math.abs(x2 - x1);
