@@ -139,8 +139,6 @@ public class RemotePointsChallenge extends PointsChallenge {
             setStatus(ChallengeStatus.ENDED);
             Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(getID()).child(Database.CHILD_CHALLENGE_STATUS)
                     .setValue(ChallengeStatus.ENDED.getValue());
-
-
             //Search the winner among enrolled users
             List<String> enrolledUsers = getUsers();
             //Map <UID,Score>

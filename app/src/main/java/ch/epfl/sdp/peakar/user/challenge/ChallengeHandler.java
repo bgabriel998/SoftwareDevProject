@@ -2,7 +2,6 @@ package ch.epfl.sdp.peakar.user.challenge;
 
 import android.annotation.SuppressLint;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
@@ -76,7 +75,11 @@ public class ChallengeHandler {
         private final RemotePointsChallenge challenge;
         private final Timer timer;
 
-        /*Constructor*/
+        /**
+         * Class constructor
+         * @param challenge reference to the current challenge
+         * @param timer timer that issues when challenge is over
+         */
         public ChallengeExpirationTimerTask(RemotePointsChallenge challenge, Timer timer){
             this.challenge = challenge;
             this.timer = timer;
@@ -85,10 +88,13 @@ public class ChallengeHandler {
         @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void run() {
-            Log.d("CHALLENGE", "Timer expired on challenge:"+ challenge.getID());
-            //TODO --> Trigger notification to user
+            //Get the reward that currently logged user has retrieved
+            int reward = challenge.endChallenge();
 
-            challenge.endChallenge();
+            //TODO --> DISPLAY POP UP TO SHOW
+            // THAT CHALLENGE IS FINISHED ->
+            // use reward to show to the user how many points he gained
+            // if the user loses the challenge reward = 0
 
             //Clean up ChallengeTimerTask
             challengeExpirationList.remove(timer);
@@ -96,7 +102,4 @@ public class ChallengeHandler {
             timer.purge();
         }
     }
-
-
-
 }
