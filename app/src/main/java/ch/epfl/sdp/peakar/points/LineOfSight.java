@@ -158,8 +158,6 @@ public class LineOfSight {
             }
         }
 
-
-
         return line;
 
     }
