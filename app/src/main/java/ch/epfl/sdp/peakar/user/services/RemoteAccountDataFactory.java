@@ -180,10 +180,6 @@ public class RemoteAccountDataFactory implements RemoteResource {
             String challengeId = challengeEntry.getKey();
             assert challengeId != null;
             Log.d("FirebaseAccountDataFactory", "loadChallenges: challenge id = " + challengeId);
-            //String challengeType = challengeEntry.getValue(String.class);
-            //assert challengeType != null;
-            //Log.d("FirebaseAccountDataFactory", "loadChallenges: before if. Current challenge type = " + challengeType);
-            //if(challengeType.equals(Database.VALUE_POINTS_CHALLENGE)) {
             Log.d("FirebaseAccountDataFactory", "loadChallenges: entered if");
             DatabaseSnapshot retrieveChallenge = Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(challengeId).get();
             loadPointsChallenge(retrieveChallenge);
