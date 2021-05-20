@@ -153,7 +153,7 @@ public class PointsChallengeTest {
 
             Thread.sleep(TestingConstants.THREAD_SLEEP_6S);
             //instantiate the challenge handler
-            ChallengeHandler.getInstance();
+            ChallengeHandler.init();
 
             Thread.sleep(TestingConstants.THREAD_SLEEP_6S);
             int score = Database.getInstance().getReference().child(Database.CHILD_USERS).child(AuthService.getInstance().getID())
