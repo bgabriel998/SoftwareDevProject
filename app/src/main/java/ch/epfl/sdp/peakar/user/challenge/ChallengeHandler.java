@@ -40,6 +40,7 @@ public class ChallengeHandler {
     /**
      * @return challenge handler singleton
      */
+    @SuppressLint("NewApi")
     public static void init(){
         if(challengeHandler == null){
             new ChallengeHandler();
