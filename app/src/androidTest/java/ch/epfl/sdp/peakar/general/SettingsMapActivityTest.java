@@ -106,27 +106,6 @@ public class SettingsMapActivityTest {
         });
     }
 
-    /* Test that pressing the back button finish the activity and resets the offline mode value */
-    @Test
-    public void testBackButton() {
-        ViewInteraction button = onView(withId(R.id.toolbarBackButton));
-        button.perform(ViewActions.click());
-        try {
-            Thread.sleep(1000);
-            assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            fail("TestBackButton failed");
-        }
-
-        Context ctx = ApplicationProvider.getApplicationContext();
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        // check that the offline mode value has been reset
-        Assert.assertFalse(prefs.getBoolean(ctx.getResources().getString(R.string.offline_mode_key), false));
-
-    }
-
     /* Tests that the activity is terminated after download button is pressed. */
     @Test
     public void downloadButtonPressed() {

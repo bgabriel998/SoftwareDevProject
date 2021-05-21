@@ -32,6 +32,9 @@ import ch.epfl.sdp.peakar.utils.OfflineContentContainer;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
+import static ch.epfl.sdp.peakar.utils.StatusBarHandler.StatusBarLightGrey;
+import static ch.epfl.sdp.peakar.utils.StatusBarHandler.StatusBarTransparentBlack;
+
 /**
  * Activity that allows the user to select a point around which compute and
  * download POIPoints and an elevation map for offline usage.
@@ -59,13 +62,9 @@ public class SettingsMapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings_map);
 
-        // Setup the toolbar
-        ToolbarHandler.SetupToolbar(this, TOOLBAR_TITLE);
+        StatusBarTransparentBlack(this);
 
         downloadRunning = false;
-
-        View backButton = findViewById(R.id.toolbarBackButton);
-        backButton.setOnClickListener(v -> onBackPressed());
 
         downloadButton = findViewById(R.id.downloadButton);
         downloadButton.setOnClickListener(v -> saveToJson());
