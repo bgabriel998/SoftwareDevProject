@@ -24,6 +24,25 @@ import static ch.epfl.sdp.peakar.utils.UIUtils.setTintColor;
 public class TopBarHandler {
 
     /**
+     * Sets up the top bar in it's transparent form.
+     * By coloring top bar transparent and setting all icons to a given color
+     * @param activity activity that displays bar.
+     * @param iconColorId color to set icons to.
+     */
+    public static void setupTransparentBar(Activity activity, int iconColorId){
+        activity.findViewById(R.id.top_bar).setBackgroundColor(activity.getColor(R.color.Transparent));
+        setTintColor(activity.findViewById(R.id.top_bar_profile_button), iconColorId);
+        setTintColor(activity.findViewById(R.id.top_bar_dots_button), iconColorId);
+
+        setTextStyle(activity.findViewById(R.id.top_bar_switch_text_left), iconColorId);
+        setTextStyle(activity.findViewById(R.id.top_bar_switch_text_right), iconColorId);
+        setSwitchColor(activity.findViewById(R.id.top_bar_switch_button), iconColorId, iconColorId);
+
+        hideAll(activity);
+        setupProfileButton(activity);
+    }
+
+    /**
      * Sets up the top bar in it's grey form.
      * By coloring top bar grey and setting all icons to DarkGreen
      * @param activity activity that displays bar.

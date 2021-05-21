@@ -7,6 +7,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.utils.MenuBarHandler;
+
+import static ch.epfl.sdp.peakar.utils.StatusBarHandler.StatusBarTransparentBlack;
+import static ch.epfl.sdp.peakar.utils.TopBarHandler.setupTransparentBar;
 
 public class MapActivity extends AppCompatActivity {
 
@@ -20,7 +24,9 @@ public class MapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-
+        StatusBarTransparentBlack(this);
+        //setupTransparentBar(this, R.color.Black);
+        //MenuBarHandler.setup(this);
 
         //Instantiate Map
         osmMap = new OSMMap(this, findViewById(R.id.map));
