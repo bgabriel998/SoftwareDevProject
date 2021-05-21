@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.camera.CameraActivity;
@@ -134,15 +135,5 @@ public class MainMenuActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         }
-    }
-
-    /**
-     * Override back button to go to home screen when the back button is pressed
-     * instead of going to the initActivity
-     */
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
     }
 }

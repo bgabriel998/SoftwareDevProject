@@ -19,13 +19,11 @@ import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
 public class CollectionActivity extends AppCompatActivity {
 
-    private static final String  TOOLBAR_TITLE = "Collections";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collection);
-        ToolbarHandler.SetupToolbar(this, TOOLBAR_TITLE);
+        ToolbarHandler.SetupToolbar(this, getString(R.string.toolbar_collections));
 
         // Load the list only if there is a logged user
         if(FirebaseAuthService.getInstance().getAuthAccount() != null) fillCollectionList();

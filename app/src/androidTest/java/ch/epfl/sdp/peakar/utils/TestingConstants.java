@@ -4,6 +4,7 @@ public class TestingConstants {
     //User constants
     public final static String BASIC_USERNAME = "test";
 
+    public final static int THREAD_SLEEP_10MS = 10;
     public final static int SHORT_SLEEP_TIME = 500;
     public final static int THREAD_SLEEP_1S = 1000;
     public final static int LONG_SLEEP_TIME = 1500;

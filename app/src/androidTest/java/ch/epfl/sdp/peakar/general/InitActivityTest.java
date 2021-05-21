@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.intent.Intents.intended;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.THREAD_SLEEP_10MS;
 
 @RunWith(AndroidJUnit4.class)
 public class InitActivityTest {
@@ -32,10 +33,11 @@ public class InitActivityTest {
 
     /* Test that the MainMenuActivity gets called */
     @Test
-    public void TestMainMenuActivityIsCalled() {
+    public void TestMainMenuActivityIsCalled() throws InterruptedException {
         //Launch InitActivity
         Intent intent = new Intent(ApplicationProvider.getApplicationContext(), InitActivity.class);
         ActivityScenario.launch(intent);
+        Thread.sleep(THREAD_SLEEP_10MS);
         //Check that MainMenuActivity gets called
         intended(IntentMatchers.hasComponent(MainMenuActivity.class.getName()));
     }
