@@ -19,9 +19,6 @@ import androidx.core.util.Pair;
 import java.util.Arrays;
 import java.util.Optional;
 
-import ch.epfl.sdp.peakar.camera.CameraActivity;
-import ch.epfl.sdp.peakar.camera.CameraUiView;
-
 /**
  * Utility class for the Camera Activity, contains utility methods for the camera-preview and compass
  */
@@ -81,13 +78,16 @@ public final class CameraUtilities {
 
                 // get camera size with highest aspect value
                 Optional<Size> previewSize = Arrays.stream(resolutions).max((size1, size2) -> Double.compare((double)size1.getWidth() / size1.getHeight(), (double)size2.getWidth() / size2.getHeight()));
-                double width = previewSize.get().getWidth();
-                double height = previewSize.get().getHeight();
-                double aspect = width / height;
-                double factorHeight4to3 = (4.0/3.0) / aspect;
-                double height4to3 = factorHeight4to3 * height;
-                double fovDivider = height/height4to3;
-                verticalAngle = verticalAngle/fovDivider;
+                if(previewSize.isPresent()){
+                    double width = previewSize.get().getWidth();
+                    double height = previewSize.get().getHeight();
+                    double aspect = width / height;
+                    double factorHeight4to3 = (4.0/3.0) / aspect;
+                    double height4to3 = factorHeight4to3 * height;
+                    double fovDivider = height/height4to3;
+                    // Horizontal fov is always fixed. Only vertical changes if the aspect ratio changes
+                    verticalAngle = verticalAngle/fovDivider;
+                }
             }
         }
         return new Pair<>((float) Math.toDegrees(horizontalAngle), (float) Math.toDegrees(verticalAngle));
