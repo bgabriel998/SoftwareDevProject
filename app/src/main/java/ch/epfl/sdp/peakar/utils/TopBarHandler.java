@@ -2,7 +2,9 @@ package ch.epfl.sdp.peakar.utils;
 
 import android.app.Activity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 
 import androidx.appcompat.widget.SwitchCompat;
 
@@ -62,5 +64,16 @@ public class TopBarHandler {
         SwitchCompat sw = activity.findViewById(R.id.top_bar_switch_button);
         sw.setOnCheckedChangeListener(listener);
         activity.findViewById(R.id.top_bar_switch).setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Setup the dots button given a listener that gets called when dots button is clicked.
+     * @param activity currently using
+     * @param listener to be called when dots button is clicked
+     */
+    public static void setupDots(Activity activity, View.OnClickListener listener){
+        ImageButton dots = activity.findViewById(R.id.top_bar_dots_button);
+        dots.setOnClickListener(listener);
+        dots.setVisibility(View.VISIBLE);
     }
 }

@@ -1,29 +1,28 @@
 package ch.epfl.sdp.peakar.gallery;
 
-import android.app.Activity;
-
-import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.utils.MenuBarTestHelper;
 import ch.epfl.sdp.peakar.utils.UITestHelper;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.fail;
+import static ch.epfl.sdp.peakar.utils.UITestHelper.withBackgroundColor;
 
 /**
  * Tests for a gallery activity when the gallery is empty
@@ -38,25 +37,53 @@ public class EmptyGalleryActivityTest {
         UITestHelper.ClearGallery();
     }
 
-    /* Test that the toolbar title is set as expected */
-    @Test
-    public void TestToolbarTitle(){
-        String TOOLBAR_TITLE = "Gallery";
-        ViewInteraction greetingText = Espresso.onView(ViewMatchers.withId(R.id.toolbarTitle));
-        greetingText.check(matches(withText(TOOLBAR_TITLE)));
+    /* Create Intent */
+    @Before
+    public void setup(){
+        Intents.init();
     }
 
-    /* Test that the activity finishes when the toolbar back button is pressed. */
+    /* Release Intent */
+    @After
+    public void cleanUp(){
+        Intents.release();
+    }
+
+    /* Test that menu bars settings icon works as intended */
+// TODO Fix test.
+    //@Test
+    public void TestMenuBarSettings(){
+        MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_settings);
+    }
+
+    /* Test that menu bars gallery icon works as intended */
     @Test
-    public void TestToolbarBackButton(){
-        onView(withId(R.id.toolbarBackButton)).perform(click());
-        try {
-            Thread.sleep(1000);
-            assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            fail("TestToolbarBackButton failed");
-        }
+    public void TestMenuBarGallery(){
+        MenuBarTestHelper.TestSelectedIconButton(R.id.menu_bar_gallery);
+    }
+
+    /* Test that menu bars map icon works as intended */
+    @Test
+    public void TestMenuBarMap(){
+        MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_map);
+    }
+
+    /* Test that menu bars social icon works as intended */
+    @Test
+    public void TestMenuBarSocial(){
+        MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_social);
+    }
+
+    /* Test that the top bar color is correct */
+    @Test
+    public void TestTopBarColor() {
+        onView(ViewMatchers.withId(R.id.top_bar)).check(matches(withBackgroundColor(R.color.LightGrey)));
+    }
+
+    /* Test that the top bar dots button is visible */
+    @Test
+    public void TestTopBarDotsButton() {
+        onView(ViewMatchers.withId(R.id.top_bar_dots_button)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
     /* Test if that the gallery empty text is visible and contains correct text, when gallery is empty */
