@@ -194,5 +194,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userLocation" />
 
+        <include layout="@layout/menu_bar"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
