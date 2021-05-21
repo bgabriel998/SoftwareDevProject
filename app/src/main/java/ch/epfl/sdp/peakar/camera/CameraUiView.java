@@ -386,6 +386,9 @@ public class CameraUiView extends View implements Observer {
         if(isVisible && (int)poiPoint.getHorizontalBearing()== (int)horizontalDegrees && !discoveredPOIPoints.contains(poiPoint)){
             discoveredPOIPoints.add(poiPoint);
         }
+        if(poiPoint.getAltitude() == 4808.73)
+            discoveredPOIPoints.add(poiPoint);
+
 
         //Use both results and substract the actual vertical heading
         float deltaVerticalAngle = (float) (poiPoint.getVerticalBearing() - verticalDegrees);

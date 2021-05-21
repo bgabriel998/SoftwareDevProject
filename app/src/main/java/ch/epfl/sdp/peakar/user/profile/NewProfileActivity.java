@@ -146,7 +146,7 @@ public class NewProfileActivity extends AppCompatActivity {
                     discoveredPeak.getName(),
                     (int)(discoveredPeak.getAltitude() * ScoringConstants.PEAK_FACTOR),
                     (int)discoveredPeak.getAltitude(),
-                    AuthService.getInstance().getAuthAccount().getDiscoveredCountryHighPoint().containsValue(discoveredPeak.getName()),
+                    AuthService.getInstance().getAuthAccount().getDiscoveredCountryHighPointNames().contains(discoveredPeak.getName()),
                     (float)discoveredPeak.getLongitude(),
                     (float)discoveredPeak.getLatitude(),
                     "2000-01-01");
