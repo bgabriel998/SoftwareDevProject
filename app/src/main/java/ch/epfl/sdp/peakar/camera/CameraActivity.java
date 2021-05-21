@@ -43,8 +43,7 @@ public class CameraActivity extends AppCompatActivity{
     private CameraUiView cameraUiView;
     private TextView headingHorizontal;
     private TextView headingVertical;
-    private TextView fovHorizontal;
-    private TextView fovVertical;
+    private TextView fovHorVer;
     private TextView userLocation;
     private TextView userAltitude;
     private Compass compass;
@@ -106,8 +105,7 @@ public class CameraActivity extends AppCompatActivity{
 
         if (showDevOptions && cameraFieldOfView!=null) {
             //Set text for demo/debug
-            fovHorizontal.setText(String.format(Locale.ENGLISH, "%.1f °", cameraFieldOfView.first));
-            fovVertical.setText(String.format(Locale.ENGLISH, "%.1f °", cameraFieldOfView.second));
+            fovHorVer.setText(String.format(Locale.ENGLISH, "%.1f°, %.1f°", cameraFieldOfView.first, cameraFieldOfView.second));
             UserPoint userPoint = UserPoint.getInstance(this);
             userLocation.setText(String.format(Locale.ENGLISH, "%.4f °, %.4f °", userPoint.getLatitude(), userPoint.getLongitude()));
             userAltitude.setText(String.format(Locale.ENGLISH, "%.1f m", userPoint.getAltitude()));
@@ -225,15 +223,13 @@ public class CameraActivity extends AppCompatActivity{
     private void displayDeveloperOptions(boolean devOption) {
         headingHorizontal = findViewById(R.id.headingHorizontal);
         headingVertical = findViewById(R.id.headingVertical);
-        fovHorizontal = findViewById(R.id.fovHorizontal);
-        fovVertical = findViewById(R.id.fovVertical);
+        fovHorVer = findViewById(R.id.fovHorVer);
         userLocation = findViewById(R.id.userLocation);
         userAltitude = findViewById(R.id.userAltitude);
 
         headingHorizontal.setVisibility(devOption ? View.VISIBLE : View.GONE);
         headingVertical.setVisibility(devOption ? View.VISIBLE : View.GONE);
-        fovHorizontal.setVisibility(devOption ? View.VISIBLE : View.GONE);
-        fovVertical.setVisibility(devOption ? View.VISIBLE : View.GONE);
+        fovHorVer.setVisibility(devOption ? View.VISIBLE : View.GONE);
         userLocation.setVisibility(devOption ? View.VISIBLE : View.GONE);
         userAltitude.setVisibility(devOption ? View.VISIBLE : View.GONE);
     }

@@ -147,9 +147,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/headingHorizontal" />
 
-    <!--TextView indicates the horizontal fov in degrees-->
+    <!--TextView indicates the horizontal and vertical fov in degrees-->
     <TextView
-        android:id="@+id/fovHorizontal"
+        android:id="@+id/fovHorVer"
         android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -163,37 +163,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/headingVertical" />
 
-    <!--TextView indicates the horizontal fov in degrees-->
-    <TextView
-        android:id="@+id/fovVertical"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/fovHorizontal"
-        android:layout_below="@+id/fovHorizontal"
-        android:gravity="top"
-        android:textColor="@color/White"
-        android:background="@drawable/rectangle"
-        android:text=""
-        android:layout_marginStart="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fovHorizontal" />
-
     <!--TextView indicates the user location-->
     <TextView
         android:id="@+id/userLocation"
         android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/fovHorizontal"
-        android:layout_below="@+id/fovHorizontal"
+        android:layout_alignStart="@+id/fovHorVer"
+        android:layout_below="@+id/fovHorVer"
         android:gravity="top"
         android:textColor="@color/White"
         android:background="@drawable/rectangle"
         android:text=""
         android:layout_marginStart="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fovVertical" />
+        app:layout_constraintTop_toBottomOf="@+id/fovHorVer" />
 
     <!--TextView indicates the altitude of the user-->
     <TextView
@@ -201,8 +185,8 @@
         android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/fovHorizontal"
-        android:layout_below="@+id/fovHorizontal"
+        android:layout_alignStart="@+id/fovHorVer"
+        android:layout_below="@+id/fovHorVer"
         android:gravity="top"
         android:textColor="@color/White"
         android:background="@drawable/rectangle"
