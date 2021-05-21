@@ -29,8 +29,8 @@ public class TopBarHandler {
      * @param activity activity that displays bar.
      * @param iconColorId color to set icons to.
      */
-    public static void setupTransparentBar(Activity activity, int iconColorId){
-        activity.findViewById(R.id.top_bar).setBackgroundColor(activity.getColor(R.color.Transparent));
+    public static void setupTransparentTopBar(Activity activity, int iconColorId){
+        activity.findViewById(R.id.top_bar).setBackground(null);
         setTintColor(activity.findViewById(R.id.top_bar_profile_button), iconColorId);
         setTintColor(activity.findViewById(R.id.top_bar_dots_button), iconColorId);
 
