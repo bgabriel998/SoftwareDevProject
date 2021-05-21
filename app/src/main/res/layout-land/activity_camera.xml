@@ -44,19 +44,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:contentDescription="@string/button_used_to_take_a_picture" />
 
-    <!-- Profile Icon button -->
-    <ImageButton
-        android:id="@+id/profileButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:onClick="profileButton"
-        android:background="@drawable/ic_circle_background"
-        app:layout_constraintStart_toStartOf="parent"
+    <!-- Top bar container for transparent status bar -->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/top_bar_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_user"
-        android:contentDescription="@string/description_profile_button" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:fitsSystemWindows="true">
+        <!-- Top bar -->
+        <include layout="@layout/top_bar"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <!-- Image button to switch between the different possibilities to display the POIs -->
     <ImageButton
@@ -194,5 +193,6 @@
         android:layout_marginStart="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userLocation" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

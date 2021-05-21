@@ -32,6 +32,7 @@ import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
 import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
 import ch.epfl.sdp.peakar.user.profile.ProfileLauncherActivity;
 import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.utils.MenuBarTestHelper;
 
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -88,6 +89,37 @@ public class CameraActivityTest {
         Intents.release();
     }
 
+    /* Test that menu bars settings icon works as intended */
+// TODO Fix test.
+    //@Test
+    public void TestMenuBarSettings(){
+        MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_settings);
+    }
+
+    /* Test that menu bars gallery icon works as intended */
+    @Test
+    public void TestMenuBarGallery(){
+        MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_gallery);
+    }
+
+    /* Test that menu bars gallery icon works as intended */
+    @Test
+    public void TestMenuBarCamera(){
+        MenuBarTestHelper.TestSelectedIconButton(R.id.menu_bar_camera);
+    }
+
+    /* Test that menu bars map icon works as intended */
+    @Test
+    public void TestMenuBarMap(){
+        MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_map);
+    }
+
+    /* Test that menu bars social icon works as intended */
+    @Test
+    public void TestMenuBarSocial(){
+        MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_social);
+    }
+
     /* Test that the compass is changed when clicking on the compass button */
     @Test
     public void TestChangeCompassButton() throws InterruptedException {
@@ -107,7 +139,7 @@ public class CameraActivityTest {
     @Test
     public void TestProfileButtonNotSignedIn(){
         removeAuthUser();
-        ViewInteraction button = Espresso.onView(withId(R.id.profileButton));
+        ViewInteraction button = Espresso.onView(withId(R.id.top_bar_profile_button));
         button.perform(ViewActions.click());
         intended(IntentMatchers.hasComponent(ProfileLauncherActivity.class.getName()));
     }
@@ -117,7 +149,7 @@ public class CameraActivityTest {
     public void TestProfileButtonSignedIn(){
         createTestUser();
 
-        ViewInteraction button = Espresso.onView(withId(R.id.profileButton));
+        ViewInteraction button = Espresso.onView(withId(R.id.top_bar_profile_button));
         button.perform(ViewActions.click());
 
         intended(IntentMatchers.hasComponent(NewProfileActivity.class.getName()));
