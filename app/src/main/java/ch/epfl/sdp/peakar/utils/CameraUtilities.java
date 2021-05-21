@@ -5,13 +5,19 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
+import android.hardware.camera2.params.StreamConfigurationMap;
+import android.util.Size;
 import android.util.SizeF;
 
 import androidx.camera.core.AspectRatio;
 import androidx.core.util.Pair;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * Utility class for the Camera Activity, contains utility methods for the camera-preview and compass
@@ -63,12 +69,25 @@ public final class CameraUtilities {
                 //Get sizes of the lenses
                 float focalLength = characteristics.get(CameraCharacteristics.LENS_INFO_AVAILABLE_FOCAL_LENGTHS)[0];
                 SizeF physicalSize = characteristics.get(CameraCharacteristics.SENSOR_INFO_PHYSICAL_SIZE);
-                float width = physicalSize.getWidth();
-                float height = physicalSize.getHeight();
-                //Calculate the fovs
-                horizontalAngle = 2 * Math.atan(width / (2 * focalLength));
-                verticalAngle = 2 * Math.atan(height / (2 * focalLength));
+                //Calculate the fovs for 4:3
+                horizontalAngle = 2 * Math.atan(physicalSize.getWidth() / (2 * focalLength));
+                verticalAngle = 2 * Math.atan(physicalSize.getHeight() / (2 * focalLength));
+                //Calculate for real aspect ratio
+                StreamConfigurationMap streamConfigurationMap = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+                Size[] resolutions = streamConfigurationMap.getOutputSizes(SurfaceTexture.class);
 
+                // get camera size with highest aspect value
+                Optional<Size> previewSize = Arrays.stream(resolutions).max((size1, size2) -> Double.compare((double)size1.getWidth() / size1.getHeight(), (double)size2.getWidth() / size2.getHeight()));
+                if(previewSize.isPresent()){
+                    double width = previewSize.get().getWidth();
+                    double height = previewSize.get().getHeight();
+                    double aspect = width / height;
+                    double factorHeight4to3 = (4.0/3.0) / aspect;
+                    double height4to3 = factorHeight4to3 * height;
+                    double fovDivider = height/height4to3;
+                    // Horizontal fov is always fixed. Only vertical changes if the aspect ratio changes
+                    verticalAngle = verticalAngle/fovDivider;
+                }
             }
         }
         return new Pair<>((float) Math.toDegrees(horizontalAngle), (float) Math.toDegrees(verticalAngle));

@@ -205,8 +205,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         Thread.sleep(SHORT_SLEEP_TIME);
         onView(ViewMatchers.withId(R.id.headingHorizontal)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
         onView(ViewMatchers.withId(R.id.headingVertical)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
-        onView(ViewMatchers.withId(R.id.fovHorizontal)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
-        onView(ViewMatchers.withId(R.id.fovVertical)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+        onView(ViewMatchers.withId(R.id.fovHorVer)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
         onView(ViewMatchers.withId(R.id.userLocation)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
         onView(ViewMatchers.withId(R.id.userAltitude)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
 
@@ -220,8 +219,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         Thread.sleep(SHORT_SLEEP_TIME);
         onView(ViewMatchers.withId(R.id.headingHorizontal)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(ViewMatchers.withId(R.id.headingVertical)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(ViewMatchers.withId(R.id.fovHorizontal)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(ViewMatchers.withId(R.id.fovVertical)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(ViewMatchers.withId(R.id.fovHorVer)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(ViewMatchers.withId(R.id.userLocation)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(ViewMatchers.withId(R.id.userAltitude)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
