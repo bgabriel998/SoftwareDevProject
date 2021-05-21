@@ -59,4 +59,8 @@ public class TestingConstants {
     public static final String DISPLAY_ALL_POIS = "0";
     public static final String DISPLAY_POIS_IN_SIGHT = "1";
     public static final String DISPLAY_POIS_OUT_OF_SIGHT = "2";
+
+    //Challenge constants
+    public static final int CHALLENGE_DURATION_DAYS = 7;
+
 }

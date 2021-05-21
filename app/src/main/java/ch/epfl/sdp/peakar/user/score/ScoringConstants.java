@@ -25,4 +25,7 @@ public final class ScoringConstants {
 
     /*Bonus for discovering country tallest peak*/
     public static final long BONUS_COUNTRY_TALLEST_PEAK = 80000;
+
+    /*Challenge scoring constants */
+    public static final int REWARD_FINISH_CHALLENGE = 50000;
 }
