@@ -67,6 +67,7 @@ public class InitActivity extends AppCompatActivity {
                 AuthService.getInstance().getAuthAccount().init();
             }
         }).start();
+
     }
 
     /**

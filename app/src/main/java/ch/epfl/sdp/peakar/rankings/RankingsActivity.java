@@ -14,7 +14,6 @@ import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
 public class RankingsActivity extends AppCompatActivity {
 
-    private static final String  TOOLBAR_TITLE = "Rankings";
     private final static List<RankingItem> rankingItems = Collections.synchronizedList(new ArrayList<>());
 
     @Override
@@ -23,7 +22,7 @@ public class RankingsActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_rankings);
 
-        ToolbarHandler.SetupToolbar(this, TOOLBAR_TITLE);
+        ToolbarHandler.SetupToolbar(this, getString(R.string.toolbar_rankings));
 
         fillRankingsList();
     }
