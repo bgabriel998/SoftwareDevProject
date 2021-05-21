@@ -173,5 +173,4 @@ public class SocialActivityTest {
         onView(ViewMatchers.withId(R.id.top_bar_switch_button)).perform(click());
         onView(ViewMatchers.withId(R.id.top_bar_switch_button)).check(matches(isChecked()));
     }
-
 }

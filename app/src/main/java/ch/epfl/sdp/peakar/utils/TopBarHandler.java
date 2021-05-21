@@ -1,6 +1,7 @@
 package ch.epfl.sdp.peakar.utils;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -9,6 +10,7 @@ import android.widget.ImageButton;
 import androidx.appcompat.widget.SwitchCompat;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.user.profile.ProfileLauncherActivity;
 
 import static ch.epfl.sdp.peakar.utils.UIUtils.setSwitchColor;
 import static ch.epfl.sdp.peakar.utils.UIUtils.setText;
@@ -36,6 +38,7 @@ public class TopBarHandler {
         setSwitchColor(activity.findViewById(R.id.top_bar_switch_button), R.color.DarkGreen, R.color.LightGrey);
 
         hideAll(activity);
+        setupProfileButton(activity);
     }
 
     /**
@@ -47,6 +50,18 @@ public class TopBarHandler {
         activity.findViewById(R.id.top_bar_title).setVisibility(View.INVISIBLE);
         activity.findViewById(R.id.top_bar_dots_button).setVisibility(View.INVISIBLE);
         activity.findViewById(R.id.top_bar_switch).setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * Set listener to profile button for starting the profile view.
+     * @param activity currently using
+     */
+    private static void setupProfileButton(Activity activity) {
+        ImageButton profileButton = activity.findViewById(R.id.top_bar_profile_button);
+        profileButton.setOnClickListener(v -> {
+            Intent intent = new Intent(activity, ProfileLauncherActivity.class);
+            activity.startActivity(intent);
+        });
     }
 
     /**
