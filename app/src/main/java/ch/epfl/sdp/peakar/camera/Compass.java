@@ -135,9 +135,6 @@ public class Compass implements SensorEventListener {
                 axisX = SensorManager.AXIS_MINUS_Z;
                 axisZ = SensorManager.AXIS_X;
                 break;
-
-            default:
-                break;
         }
     }
 
