@@ -1,10 +1,12 @@
 package ch.epfl.sdp.peakar.camera;
 
+import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.view.Surface;
 
 import ch.epfl.sdp.peakar.utils.AngleLowpassFilter;
 import ch.epfl.sdp.peakar.utils.CameraUtilities;
@@ -27,6 +29,10 @@ public class Compass implements SensorEventListener {
     private final AngleLowpassFilter horizontalFilter = new AngleLowpassFilter();
     private final AngleLowpassFilter verticalFilter = new AngleLowpassFilter();
 
+    private final Activity activity;
+    private int axisX;
+    private int axisZ;
+
     /**
      * Compass constructor, initializes the device sensors and registers the listener
      * @param context Context of the activity
@@ -40,6 +46,8 @@ public class Compass implements SensorEventListener {
 
         //Register the listener for the rotation type vector
         sensorManager.registerListener(this, rotation, SensorManager.SENSOR_DELAY_GAME);
+
+        activity = (Activity) context;
     }
 
     /**
@@ -73,9 +81,11 @@ public class Compass implements SensorEventListener {
             // Convert the rotation-vector to a 4x4 matrix.
             SensorManager.getRotationMatrixFromVector(rotMatFromVector, event.values);
 
+            setAxisSensorManager();
+
             //Rotates the rotation matrix to be expressed in a different coordinate system
-            SensorManager.remapCoordinateSystem(rotMatFromVector, SensorManager.AXIS_X,
-                    SensorManager.AXIS_Z, rotMat);
+            SensorManager.remapCoordinateSystem(rotMatFromVector, axisX,
+                    axisZ, rotMat);
 
             //Compute the device orientation with the rotation matrix
             SensorManager.getOrientation(rotMat, orientationMat);
@@ -97,6 +107,37 @@ public class Compass implements SensorEventListener {
             if (compassListener != null) {
                 compassListener.onNewHeading(headingHorizontal, headingVertical);
             }
+        }
+    }
+
+    /**
+     * Sets the correct X and Z axis to remap the coordinates system
+     */
+    private void setAxisSensorManager(){
+        int screenRotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+        switch (screenRotation){
+            case Surface.ROTATION_0:
+                axisX = SensorManager.AXIS_X;
+                axisZ = SensorManager.AXIS_Z;
+                break;
+
+            case Surface.ROTATION_90:
+                axisX = SensorManager.AXIS_Z;
+                axisZ = SensorManager.AXIS_MINUS_X;
+                break;
+
+            case Surface.ROTATION_180:
+                axisX = SensorManager.AXIS_MINUS_X;
+                axisZ = SensorManager.AXIS_MINUS_Z;
+                break;
+
+            case Surface.ROTATION_270:
+                axisX = SensorManager.AXIS_MINUS_Z;
+                axisZ = SensorManager.AXIS_X;
+                break;
+
+            default:
+                break;
         }
     }
 
