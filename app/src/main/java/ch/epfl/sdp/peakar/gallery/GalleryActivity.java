@@ -24,7 +24,6 @@ import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
 public class GalleryActivity extends AppCompatActivity {
 
-    private static final String  TOOLBAR_TITLE = "Gallery";
     private static final int COLUMNS = 3;
 
     @Override
@@ -32,7 +31,7 @@ public class GalleryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
-        ToolbarHandler.SetupToolbar(this, TOOLBAR_TITLE);
+        ToolbarHandler.SetupToolbar(this, getString(R.string.toolbar_gallery));
 
         setupGallery();
     }

@@ -3,7 +3,7 @@
     <string name="start_button">Démarrer Peak AR</string>
     <string name="collection_button">Collection</string>
     <string name="ranking_button">Classement</string>
-    <string name="gallery_button">Gallerie</string>
+    <string name="gallery_button">Galerie</string>
     <string name="map_button">Carte</string>
     <string name="sign_in_button">Connexion</string>
     <string name="sign_out_button">Déconnexion</string>
@@ -69,6 +69,10 @@
         téléchargée. Veuillez quitter le mode hors connexion dans les réglages pour utiliser l'application."</string>
     <string name="search_username_hint">Search Username</string>
     <string name="rank_display">Rank: %s</string>
+    <string name="toolbar_settings">Réglages</string>
+    <string name="toolbar_collections">Collections</string>
+    <string name="toolbar_rankings">Classements</string>
+    <string name="toolbar_gallery">Galerie</string>
     <string name="switch_all">All</string>
     <string name="switch_friends">Friends</string>
     <string name="empty_friends">No Friends</string>

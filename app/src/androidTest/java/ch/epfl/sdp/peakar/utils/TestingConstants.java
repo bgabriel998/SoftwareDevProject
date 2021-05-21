@@ -4,6 +4,7 @@ public class TestingConstants {
     //User constants
     public final static String BASIC_USERNAME = "test";
 
+    public final static int THREAD_SLEEP_10MS = 10;
     public final static int SHORT_SLEEP_TIME = 500;
     public final static int THREAD_SLEEP_1S = 1000;
     public final static int LONG_SLEEP_TIME = 1500;
@@ -59,4 +60,8 @@ public class TestingConstants {
     public static final String DISPLAY_ALL_POIS = "0";
     public static final String DISPLAY_POIS_IN_SIGHT = "1";
     public static final String DISPLAY_POIS_OUT_OF_SIGHT = "2";
+
+    //Challenge constants
+    public static final int CHALLENGE_DURATION_DAYS = 7;
+
 }

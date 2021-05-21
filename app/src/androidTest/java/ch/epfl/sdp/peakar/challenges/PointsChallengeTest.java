@@ -2,24 +2,31 @@ package ch.epfl.sdp.peakar.challenges;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.List;
+
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.user.challenge.Challenge;
-import ch.epfl.sdp.peakar.user.challenge.ChallengeOutcome;
+import ch.epfl.sdp.peakar.user.challenge.ChallengeHandler;
 import ch.epfl.sdp.peakar.user.challenge.goal.PointsChallenge;
+import ch.epfl.sdp.peakar.user.challenge.goal.RemotePointsChallenge;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.services.FirebaseAuthService;
-import ch.epfl.sdp.peakar.user.challenge.goal.RemotePointsChallenge;
+import ch.epfl.sdp.peakar.utils.TestingConstants;
 
-import static ch.epfl.sdp.peakar.utils.TestingConstants.BASIC_USERNAME;
 import static ch.epfl.sdp.peakar.user.AuthAccountTest.registerAuthUser;
 import static ch.epfl.sdp.peakar.user.AuthAccountTest.removeAuthUser;
-import static org.junit.Assert.*;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.BASIC_USERNAME;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.CHALLENGE_DURATION_DAYS;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 public class PointsChallengeTest {
     private static String user2;
@@ -39,7 +46,7 @@ public class PointsChallengeTest {
 
     /* Clean environment */
     @AfterClass
-    public static void end() {
+    public static void end() throws InterruptedException {
         removeTestUsers();
         removeAuthUser();
     }
@@ -49,6 +56,13 @@ public class PointsChallengeTest {
     public void createTestUser() {
         registerAuthUser();
         removeTestUsers();
+
+    }
+
+    /*Remove test challenges after each test*/
+    @After
+    public void cleanup(){
+        removeTestChallenges();
     }
 
     /* Make sure that mock users are not on the database after a test */
@@ -57,17 +71,27 @@ public class PointsChallengeTest {
         Database.getInstance().getReference().child(Database.CHILD_USERS).child(user2).removeValue();
     }
 
+    /* Remove test challenges */
+    public static void removeTestChallenges(){
+        List<Challenge> challengeList = AuthService.getInstance().getAuthAccount().getChallenges();
+        for(Challenge challenge : challengeList){
+            Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(challenge.getID()).removeValue();
+            Database.getInstance().getReference().child(Database.CHILD_USERS)
+                    .child(AuthService.getInstance().getID()).child(Database.CHILD_CHALLENGES)
+                    .child(challenge.getID()).removeValue();
+        }
+    }
+
+
     /* Test that generating and updating a challenge works */
     @Test
     public void generateNewChallengeTest() {
-        long goalPoints = 100;
-        Challenge challenge = RemotePointsChallenge.generateNewChallenge(user2, goalPoints);
+        Challenge challenge = RemotePointsChallenge.generateNewChallenge(user2, CHALLENGE_DURATION_DAYS);
 
         try {
             // Test initial awarded points are 0 and only user2 has joined it
             assertSame(0L, challenge.getPoints());
             assertSame(1, challenge.getUsers().size());
-            assertSame(goalPoints, ((PointsChallenge)challenge).getGoalPoints());
             assertEquals(user2, challenge.getUsers().get(0));
 
             String challengeID = challenge.getID();
@@ -76,23 +100,17 @@ public class PointsChallengeTest {
             challenge.join();
 
             // Check if the user has been put in correctly
-            assertSame(Challenge.AWARDED_POINTS_PER_USER, challenge.getPoints());
             assertSame(2, challenge.getUsers().size());
             assertTrue(challenge.getUsers().contains(AuthService.getInstance().getID()));
             assertEquals(challengeID, AuthService.getInstance().getAuthAccount().getChallenges().get(0).getID());
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            // Be sure to remove the challenge after the test is over.
-            Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(challenge.getID()).removeValue();
-
         }
     }
 
     @Test
     public void retrieveChallengeTest() {
-        long goalPoints = 100;
-        Challenge challenge = RemotePointsChallenge.generateNewChallenge(AuthService.getInstance().getID(), goalPoints);
+        Challenge challenge = RemotePointsChallenge.generateNewChallenge(AuthService.getInstance().getID(), CHALLENGE_DURATION_DAYS);
         String challengeID = challenge.getID();
 
         // Make sure the challenge has been added correctly locally
@@ -109,107 +127,44 @@ public class PointsChallengeTest {
             // Test that the challenge retrieved after a retrieveData is the same as the one generated
             assertSame(challenge.getPoints(), retrievedChallenge.getPoints());
             assertSame(challenge.getUsers().size(), retrievedChallenge.getUsers().size());
-            assertSame(((PointsChallenge)challenge).getGoalPoints(), retrievedChallenge.getGoalPoints());
             assertEquals(challenge.getUsers().get(0), retrievedChallenge.getUsers().get(0));
             assertEquals(challengeID,retrievedChallenge.getID());
 
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            // Be sure to remove the challenge after the test is over.
-            Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(challenge.getID()).removeValue();
         }
     }
 
-    /* Test that a successful claimVictory() works */
+    /* Test that a challenge is ended successfuly */
     @Test
-    public void successfulClaimVictoryTest() {
-        long goalPoints = 0;
+    public void checkFinishedTest() {
         AuthAccount authAccount = AuthService.getInstance().getAuthAccount();
-        Challenge challenge = RemotePointsChallenge.generateNewChallenge(user2, goalPoints);
+        Challenge challenge = RemotePointsChallenge.generateNewChallenge(user2, 0);
 
         try {
-            assertSame(0, authAccount.getChallenges().size());
 
             // Make the mock user join the challenge
             challenge.join();
 
-            assertSame(1, authAccount.getChallenges().size());
 
-            // Claim victory
-            assertSame(ChallengeOutcome.AWARDED, challenge.claimVictory());
+            //Mock user score (set as winner)
+            Database.getInstance().getReference().child(Database.CHILD_USERS).child(AuthService.getInstance().getID())
+                    .child(Database.CHILD_SCORE).setValue(authAccount.getScore()+200);
 
 
-            // Check effects
-            assertSame(Challenge.AWARDED_POINTS_PER_USER, authAccount.getScore());
-            assertSame(0, authAccount.getChallenges().size());
+            Thread.sleep(TestingConstants.THREAD_SLEEP_6S);
+            //instantiate the challenge handler
+            ChallengeHandler.init();
+
+            Thread.sleep(TestingConstants.THREAD_SLEEP_6S);
+            int score = Database.getInstance().getReference().child(Database.CHILD_USERS).child(AuthService.getInstance().getID())
+                    .child(Database.CHILD_SCORE).get().getValue(Integer.class);
+            //Check that user score is previous user score +  Bonus of 50k
+            assertEquals(50200,score);
+
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            // Be sure to remove the challenge after the test is over.
-            Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(challenge.getID()).removeValue();
         }
     }
 
-    /* Test that if the requirements for a claim are not met, claimVictory() works properly */
-    @Test
-    public void missingRequirementsClaimVictoryTest() {
-        long goalPoints = 100;
-        AuthAccount authAccount = AuthService.getInstance().getAuthAccount();
-        Challenge challenge = RemotePointsChallenge.generateNewChallenge(user2, goalPoints);
-
-        try {
-            assertSame(0, authAccount.getChallenges().size());
-
-            // Make the mock user join the challenge
-            challenge.join();
-
-            assertSame(1, authAccount.getChallenges().size());
-
-            // Claim victory
-            assertSame(ChallengeOutcome.MISSING_REQUIREMENTS, challenge.claimVictory());
-
-
-            // Check effects
-            assertSame(0L, authAccount.getScore());
-            assertSame(1, authAccount.getChallenges().size());
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            // Be sure to remove the challenge after the test is over.
-            Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(challenge.getID()).removeValue();
-        }
-    }
-
-    /* Test that if the challenge was already claimed, claimVictory() works properly */
-    @Test
-    public void alreadyAwardedClaimVictoryTest() {
-        long goalPoints = 0;
-        AuthAccount authAccount = AuthService.getInstance().getAuthAccount();
-        Challenge challenge = RemotePointsChallenge.generateNewChallenge(user2, goalPoints);
-
-        try {
-            assertSame(0, authAccount.getChallenges().size());
-
-            // Make the mock user join the challenge
-            challenge.join();
-
-            assertSame(1, authAccount.getChallenges().size());
-
-            // Remove the challenge so it will look as already over
-            Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(challenge.getID()).removeValue();
-
-            // Claim victory
-            assertSame(ChallengeOutcome.ALREADY_OVER, challenge.claimVictory());
-
-            // Check effects
-            assertSame(0L, authAccount.getScore());
-            assertSame(0, authAccount.getChallenges().size());
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            // Be sure to remove the challenge after the test is over.
-            Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(challenge.getID()).removeValue();
-        }
-    }
 }
