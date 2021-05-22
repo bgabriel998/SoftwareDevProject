@@ -11,15 +11,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.preference.PreferenceManager;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.collection.CollectionActivity;
 import ch.epfl.sdp.peakar.gallery.GalleryActivity;
 import ch.epfl.sdp.peakar.map.MapActivity;
-import ch.epfl.sdp.peakar.rankings.RankingsActivity;
-import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
+import ch.epfl.sdp.peakar.social.SocialActivity;
+import ch.epfl.sdp.peakar.user.profile.ProfileLauncherActivity;
 
 public class MainMenuActivity extends AppCompatActivity {
     private static final int CAMERA_REQUEST_CODE = 100;
@@ -39,7 +38,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
     /** Changes view to ProfileActivity */
     public void profileButton(View view) {
-        Intent intent = new Intent(this, ProfileActivity.class);
+        Intent intent = new Intent(this, ProfileLauncherActivity.class);
         startActivity(intent);
     }
 
@@ -62,7 +61,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
     /** Changes view to RankingsActivity */
     public void rankingsButton(View view) {
-        Intent intent = new Intent(this, RankingsActivity.class);
+        Intent intent = new Intent(this, SocialActivity.class);
         startActivity(intent);
     }
 

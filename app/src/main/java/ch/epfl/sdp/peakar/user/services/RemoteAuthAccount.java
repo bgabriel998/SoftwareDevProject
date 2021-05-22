@@ -12,8 +12,9 @@ import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
 import ch.epfl.sdp.peakar.general.remote.RemoteResource;
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.points.POIPoint;
+import ch.epfl.sdp.peakar.social.SocialItem;
 import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
-import ch.epfl.sdp.peakar.user.friends.RemoteFriendItem;
+import ch.epfl.sdp.peakar.social.RemoteFriendItem;
 
 /**
  * This class extends AuthAccount to handle operations on a Database
@@ -110,48 +111,12 @@ public class RemoteAuthAccount extends AuthAccount implements RemoteResource {
     }
 
     @Override
-    public ProfileOutcome addFriend(String friendUsername) {
-        String username = getUsername();
-
-        Log.d("ACCOUNT", "addFriend: current username: " + getUsername());
-        Log.d("ACCOUNT", "addFriend: friend username: " + friendUsername);
-
-        // If the friend username is not valid
-        if(!AuthAccount.checkUsernameValidity(friendUsername)) return ProfileOutcome.INVALID;
-
-        // If the friend username is the current one
-        if(friendUsername.equals(username)) return ProfileOutcome.FRIEND_CURRENT;
-
-        // Finally, check if the user exists
-        DatabaseSnapshot data = Database.getInstance().getReference().child(Database.CHILD_USERS).orderByChild(Database.CHILD_USERNAME).equalTo(friendUsername).get();
-        assert data != null;
-
-        // Check if the friend exists
-        if(!data.exists()) return ProfileOutcome.FRIEND_NOT_PRESENT;
-
-        Log.d("ACCOUNT", "addFriend: friend is on DB");
-
-        // Get the friend ID
-        String tempID = null;
-        for(DatabaseSnapshot searchedUser : data.getChildren()) {
-            tempID = searchedUser.getKey();
-        }
-        assert tempID != null;
-        Log.d("ACCOUNT", "addFriend: FRIEND ID: " + tempID);
-
-        final String friendID = tempID;
-
-        // Check if the friend is already a user's friend
-        if(getFriends().stream().anyMatch(x -> x.hasID(friendID))) return ProfileOutcome.FRIEND_ALREADY_ADDED;
-
-        Log.d("ACCOUNT", "addFriend: adding friend");
-        Log.d("ACCOUNT", "addFriend: adding friend - current username: " + username);
-
-        // Otherwise, add the friend remotely
-        dbRefUser.child(Database.CHILD_FRIENDS).child(friendID).setValue("");
+    public ProfileOutcome addFriend(String friendId) {
+        // Add the friend remotely
+        dbRefUser.child(Database.CHILD_FRIENDS).child(friendId).setValue("");
 
         // Create a friend item
-        RemoteFriendItem newFriendItem = new RemoteFriendItem(friendID);
+        SocialItem newFriendItem = new RemoteFriendItem(friendId);
 
         // Add the friend locally
         addFriend(newFriendItem);
@@ -162,10 +127,10 @@ public class RemoteAuthAccount extends AuthAccount implements RemoteResource {
     @Override
     public void removeFriend(String friendID) {
         // Remove listener
-        getFriends().stream().filter(x -> x.hasID(friendID)).map(x -> (RemoteFriendItem)x).forEach(RemoteFriendItem::removeListener);
+        getFriends().stream().filter(x -> x.getUid().equals(friendID)).map(x -> (RemoteFriendItem)x).forEach(RemoteFriendItem::removeListener);
 
-        // Remove remotely, in an asynchronous way as there is no need to retrieve the information for now
-        new Thread(() -> dbRefUser.child(Database.CHILD_FRIENDS).child(friendID).removeValue()).start();
+        // Remove friend
+        dbRefUser.child(Database.CHILD_FRIENDS).child(friendID).removeValue();
 
         // Remove locally
         super.removeFriend(friendID);

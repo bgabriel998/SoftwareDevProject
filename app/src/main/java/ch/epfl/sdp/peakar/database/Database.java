@@ -1,6 +1,10 @@
 package ch.epfl.sdp.peakar.database;
 
+import com.google.firebase.database.FirebaseDatabase;
+
 import ch.epfl.sdp.peakar.database.providers.firebase.FirebaseDatabaseReference;
+
+import static ch.epfl.sdp.peakar.database.providers.firebase.FirebaseDatabaseReference.DATABASE_ADDRESS;
 
 /**
  * This class represents a Database.
@@ -44,7 +48,10 @@ public class Database {
      * Get a database instance.
      */
     public static Database getInstance() {
-        if(instance == null) instance = new Database();
+        if(instance == null) {
+            instance = new Database();
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        }
         return instance;
     }
 
@@ -53,5 +60,21 @@ public class Database {
      */
     public DatabaseReference getReference() {
         return reference;
+    }
+
+    /**
+     * Enable the DB offline mode.
+     * Requests for which data is cached can still be answered.
+     * Other requests will be enqueued until online mode is set.
+     */
+    public void setOfflineMode() {
+        FirebaseDatabase.getInstance(DATABASE_ADDRESS).goOffline();
+    }
+
+    /**
+     * Enable the DB online mode.
+     */
+    public void setOnlineMode() {
+        FirebaseDatabase.getInstance(DATABASE_ADDRESS).goOnline();
     }
 }

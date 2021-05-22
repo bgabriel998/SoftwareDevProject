@@ -4,9 +4,11 @@ import android.view.View;
 import android.widget.ListView;
 
 import androidx.test.espresso.intent.Intents;
+import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -26,13 +28,22 @@ import java.util.List;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.database.DatabaseReference;
+import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.user.services.FirebaseAuthService;
 import ch.epfl.sdp.peakar.utils.MenuBarTestHelper;
+import ch.epfl.sdp.peakar.utils.UIUtils;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static ch.epfl.sdp.peakar.database.DatabaseTest.databaseRefRoot;
 import static ch.epfl.sdp.peakar.user.AuthAccountTest.registerAuthUser;
 import static ch.epfl.sdp.peakar.user.AuthAccountTest.removeAuthUser;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.BASIC_USERNAME;
@@ -42,9 +53,14 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.peakar.utils.UITestHelper.withBackgroundColor;
+import static org.hamcrest.Matchers.any;
+import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 public class SocialActivityTest {
+    private static String user1;
+    private static String user2;
+    private static final int user2score = 100;
 
     /* Helper method that checks if the list of social items under a social list adapter is sorted by user score */
     private static Matcher<View> isSortedByUserScore() {
@@ -80,18 +96,47 @@ public class SocialActivityTest {
     /* Create test user */
     @BeforeClass
     public static void init() {
+        /* Make sure no user is signed in before tests */
+        AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
+
         registerAuthUser();
-        String user1 = (BASIC_USERNAME + AuthService.getInstance().getID()).substring(0, AuthAccount.NAME_MAX_LENGTH - 1);
-        DatabaseReference dbRef = Database.getInstance().getReference().child(Database.CHILD_USERS).child(AuthService.getInstance().getID());
-        dbRef.child(Database.CHILD_USERNAME).setValue(user1);
-        dbRef.child(Database.CHILD_SCORE).setValue(0);
+
+        user2 = (BASIC_USERNAME + AuthService.getInstance().getID()).substring(0, AuthAccount.NAME_MAX_LENGTH - 2);
     }
 
     /* Remove test user */
     @AfterClass
     public static void end() {
+        Database.getInstance().getReference().child(Database.CHILD_USERS).child(user2).removeValue();
         Database.getInstance().getReference().child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
         removeAuthUser();
+    }
+
+    /* Make sure that an account is signed in and as new before each test */
+    @Before
+    public void createTestUser() {
+        registerAuthUser();
+        removeTestUsers();
+        addMockUsers();
+    }
+
+    /* Make sure that mock users are not on the database after a test */
+    public void removeTestUsers() {
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
+        databaseRefRoot.child(Database.CHILD_USERS).child(user2).removeValue();
+    }
+
+    /* Add two mock users to the rankings */
+    public void addMockUsers() {
+        user1 = (BASIC_USERNAME + AuthService.getInstance().getID()).substring(0, AuthAccount.NAME_MAX_LENGTH - 1);
+        DatabaseReference dbRef = Database.getInstance().getReference().child(Database.CHILD_USERS).child(AuthService.getInstance().getID());
+        dbRef.child(Database.CHILD_USERNAME).setValue(user1);
+        dbRef.child(Database.CHILD_SCORE).setValue(0);
+
+        user2 = (BASIC_USERNAME + AuthService.getInstance().getID()).substring(0, AuthAccount.NAME_MAX_LENGTH - 2);
+        DatabaseReference dbRef2 = Database.getInstance().getReference().child(Database.CHILD_USERS).child(user2);
+        dbRef2.child(Database.CHILD_USERNAME).setValue(user2);
+        dbRef2.child(Database.CHILD_SCORE).setValue(user2score);
     }
 
     /* Create Intent */
@@ -174,4 +219,63 @@ public class SocialActivityTest {
         onView(ViewMatchers.withId(R.id.top_bar_switch_button)).check(matches(isChecked()));
     }
 
+    /* Test that friends are correctly displayed */
+    @Test
+    public void friendsDisplayedTest() {
+        onView(ViewMatchers.withId(R.id.top_bar_switch_button)).perform(click());
+        AuthService.getInstance().getAuthAccount().addFriend(user2);
+        try {
+            Thread.sleep(LONG_SLEEP_TIME);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        // Check that the list is still sorted
+        onView(ViewMatchers.withId(R.id.social_list)).check(matches(isSortedByUserScore()));
+
+        // Check that the friend is present
+        onView(ViewMatchers.withId(R.id.social_item_username)).check(matches(withText(user2)));
+    }
+
+
+    /* Test that if a item is clicked, an intent to its profile is started */
+    @Test
+    public void clickOtherUserTest() {
+        try {
+            Thread.sleep(LONG_SLEEP_TIME);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        onView(ViewMatchers.withText(user2)).perform(click());
+        try {
+            Thread.sleep(LONG_SLEEP_TIME);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        // Capture the intent
+        intended(IntentMatchers.hasComponent(NewProfileActivity.class.getName()));
+    }
+
+    /* Test the search bar works */
+    @Test
+    public void searchBarTest() {
+        onView(withId(R.id.social_search_bar)).perform(replaceText(user1));
+        try {
+            Thread.sleep(LONG_SLEEP_TIME);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        // Check that the user is present
+        onView(ViewMatchers.withId(R.id.social_item_username)).check(matches(withText(user1)));
+
+        // Now, type a user that cannot be in the list
+        onView(withId(R.id.social_search_bar)).perform(replaceText("@"));
+        try {
+            Thread.sleep(LONG_SLEEP_TIME);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        onView(withId(R.id.social_list))
+                .check(matches(isDisplayed()))
+                .check(matches(not(hasDescendant(any(View.class)))));
+    }
 }
