@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/menu_bar"
+    android:layout_width="50dp"
+    android:layout_height="match_parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    android:background="@color/Black">
+
+    <!-- Icons container -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="end"
+        android:orientation="vertical"
+        android:baselineAligned="false">
+
+        <!-- Settings button -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:rotation="-90">
+            <ImageButton
+                android:id="@+id/menu_bar_settings"
+                style="@style/MenuBarButton"
+                android:contentDescription="@string/description_settings_button"
+                app:srcCompat="@drawable/menu_icons_settings" />
+
+            <ImageView
+                android:id="@+id/menu_bar_settings_pointer"
+                app:srcCompat="@drawable/menu_pointer"
+                android:contentDescription="@string/description_menu_pointer"
+                android:layout_width="15dp"
+                android:layout_height="10dp" />
+        </LinearLayout>
+
+        <!-- Gallery button -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:rotation="-90">
+            <ImageButton
+                android:id="@+id/menu_bar_gallery"
+                style="@style/MenuBarButton"
+                android:contentDescription="@string/description_gallery_button"
+                app:srcCompat="@drawable/menu_icons_gallery" />
+
+            <ImageView
+                android:id="@+id/menu_bar_gallery_pointer"
+                app:srcCompat="@drawable/menu_pointer"
+                android:contentDescription="@string/description_menu_pointer"
+                android:layout_width="15dp"
+                android:layout_height="10dp" />
+        </LinearLayout>
+
+        <!-- Camera button -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:rotation="-90">
+            <ImageButton
+                android:id="@+id/menu_bar_camera"
+                style="@style/MenuBarButton"
+                android:contentDescription="@string/description_camera_button"
+                app:srcCompat="@drawable/menu_icons_camera" />
+
+            <ImageView
+                android:id="@+id/menu_bar_camera_pointer"
+                app:srcCompat="@drawable/menu_pointer"
+                android:contentDescription="@string/description_menu_pointer"
+                android:layout_width="15dp"
+                android:layout_height="10dp" />
+        </LinearLayout>
+
+        <!-- Map button -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:rotation="-90">
+            <ImageButton
+                android:id="@+id/menu_bar_map"
+                style="@style/MenuBarButton"
+                android:contentDescription="@string/description_map_button"
+                app:srcCompat="@drawable/menu_icons_map" />
+
+            <ImageView
+                android:id="@+id/menu_bar_map_pointer"
+                app:srcCompat="@drawable/menu_pointer"
+                android:contentDescription="@string/description_menu_pointer"
+                android:layout_width="15dp"
+                android:layout_height="10dp" />
+        </LinearLayout>
+
+        <!-- Social button -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:rotation="-90">
+            <ImageButton
+                android:id="@+id/menu_bar_social"
+                style="@style/MenuBarButton"
+                android:contentDescription="@string/description_social_button"
+                app:srcCompat="@drawable/menu_icons_social" />
+
+            <ImageView
+                android:id="@+id/menu_bar_social_pointer"
+                app:srcCompat="@drawable/menu_pointer"
+                android:contentDescription="@string/description_menu_pointer"
+                android:layout_width="15dp"
+                android:layout_height="10dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
