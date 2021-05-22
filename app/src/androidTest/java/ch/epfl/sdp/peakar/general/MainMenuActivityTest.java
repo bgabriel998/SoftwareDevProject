@@ -36,6 +36,7 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sdp.peakar.user.AuthAccountTest.removeAuthUser;
 
 @RunWith(AndroidJUnit4.class)
 public class MainMenuActivityTest {
@@ -70,6 +71,7 @@ public class MainMenuActivityTest {
     /* Test that pressing the profile button changes view to ProfileActivity */
     @Test
     public void TestProfileButton(){
+        removeAuthUser();
         ViewInteraction button = onView(ViewMatchers.withId(R.id.profileButton));
         button.perform(click());
         // Catch intent

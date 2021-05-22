@@ -90,6 +90,31 @@ public class SocialActivityTest {
         };
     }
 
+    /* Helper method that checks if the list of social items under a social list adapter contains a user with a certain nickname */
+    private static Matcher<View> containsUserWithNickname(String username) {
+        return new TypeSafeMatcher<View>() {
+
+            @Override
+            protected boolean matchesSafely(View item) {
+                // Retrieve the items
+                ListView listView = (ListView)item;
+                SocialListAdapter socialListAdapter = (SocialListAdapter)listView.getAdapter();
+                int count = socialListAdapter.getCount();
+                for(int i = 0; i < count; i++) {
+                    if(socialListAdapter.getItem(i).getUsername().equals(username)) return true;
+
+                }
+                // If no more items, return false
+                return false;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("User is in the list.");
+            }
+        };
+    }
+
     @Rule
     public ActivityScenarioRule<SocialActivity> testRule = new ActivityScenarioRule<>(SocialActivity.class);
 
@@ -229,11 +254,9 @@ public class SocialActivityTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        // Check that the list is still sorted
-        onView(ViewMatchers.withId(R.id.social_list)).check(matches(isSortedByUserScore()));
 
         // Check that the friend is present
-        onView(ViewMatchers.withId(R.id.social_item_username)).check(matches(withText(user2)));
+        onView(ViewMatchers.withId(R.id.social_list)).check(matches(containsUserWithNickname(user2)));
     }
 
 
@@ -264,8 +287,9 @@ public class SocialActivityTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         // Check that the user is present
-        onView(ViewMatchers.withId(R.id.social_item_username)).check(matches(withText(user1)));
+        onView(ViewMatchers.withId(R.id.social_list)).check(matches(containsUserWithNickname(user1)));
 
         // Now, type a user that cannot be in the list
         onView(withId(R.id.social_search_bar)).perform(replaceText("@"));
