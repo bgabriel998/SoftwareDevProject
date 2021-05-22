@@ -111,7 +111,7 @@ public class CameraUiView extends View implements Observer {
 
     private final List<POIPoint> discoveredPOIPoints;
     @SuppressLint("SimpleDateFormat")
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss");
 
 
     private final SharedPreferences.OnSharedPreferenceChangeListener listenerPreferences =
