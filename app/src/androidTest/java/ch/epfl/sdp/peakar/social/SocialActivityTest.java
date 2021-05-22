@@ -3,6 +3,7 @@ package ch.epfl.sdp.peakar.social;
 import android.view.View;
 import android.widget.ListView;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
@@ -136,8 +137,7 @@ public class SocialActivityTest {
     /* Remove test user */
     @AfterClass
     public static void end() {
-        Database.getInstance().getReference().child(Database.CHILD_USERS).child(user2).removeValue();
-        Database.getInstance().getReference().child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
+        removeTestUsers();
         removeAuthUser();
     }
 
@@ -147,10 +147,11 @@ public class SocialActivityTest {
         registerAuthUser();
         removeTestUsers();
         addMockUsers();
+        FirebaseAuthService.getInstance().forceRetrieveData();
     }
 
     /* Make sure that mock users are not on the database after a test */
-    public void removeTestUsers() {
+    public static void removeTestUsers() {
         databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
         databaseRefRoot.child(Database.CHILD_USERS).child(user2).removeValue();
     }
@@ -251,6 +252,10 @@ public class SocialActivityTest {
     /* Test that friends are correctly displayed */
     @Test
     public void friendsDisplayedTest() {
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
+        removeAuthUser();
+        registerAuthUser();
+        testRule.getScenario().recreate();
         onView(ViewMatchers.withId(R.id.top_bar_switch_button)).perform(click());
         AuthService.getInstance().getAuthAccount().addFriend(user2);
         try {
@@ -264,7 +269,7 @@ public class SocialActivityTest {
     }
 
 
-    /* Test that if a item is clicked, an intent to its profile is started */
+    /* Test that if another user item is clicked, an intent to its profile is started */
     @Test
     public void clickOtherUserTest() {
         onView(withId(R.id.social_search_bar)).perform(replaceText(user2));
@@ -285,7 +290,28 @@ public class SocialActivityTest {
         intended(allOf(IntentMatchers.hasComponent(NewProfileActivity.class.getName()),
                 IntentMatchers.hasExtra(NewProfileActivity.AUTH_INTENT, false),
                 IntentMatchers.hasExtra(NewProfileActivity.OTHER_INTENT, user2)));
-        onView(withId(R.id.social_search_bar)).perform(replaceText(""));
+    }
+
+    /* Test that if a auth user item is clicked, an intent to its profile is started */
+    @Test
+    public void clickAuthUserTest() {
+        onView(withId(R.id.social_search_bar)).perform(replaceText(user1));
+        try {
+            Thread.sleep(LONG_SLEEP_TIME);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        onData(anything())
+                .inAdapterView(allOf(withId(R.id.social_list), isCompletelyDisplayed()))
+                .atPosition(0).perform(click());
+        try {
+            Thread.sleep(LONG_SLEEP_TIME);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        // Capture the intent
+        intended(allOf(IntentMatchers.hasComponent(NewProfileActivity.class.getName()),
+                IntentMatchers.hasExtra(NewProfileActivity.AUTH_INTENT, true)));
     }
 
     /* Test the search bar works */
