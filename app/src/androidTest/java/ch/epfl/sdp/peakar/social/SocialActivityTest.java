@@ -35,12 +35,14 @@ import ch.epfl.sdp.peakar.user.services.FirebaseAuthService;
 import ch.epfl.sdp.peakar.utils.MenuBarTestHelper;
 import ch.epfl.sdp.peakar.utils.UIUtils;
 
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sdp.peakar.database.DatabaseTest.databaseRefRoot;
@@ -53,7 +55,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.peakar.utils.UITestHelper.withBackgroundColor;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.any;
+import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
@@ -268,7 +272,9 @@ public class SocialActivityTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        onView(ViewMatchers.withText(user2)).perform(click());
+        onData(anything())
+                .inAdapterView(allOf(withId(R.id.social_list), isCompletelyDisplayed()))
+                .atPosition(0).perform(click());
         try {
             Thread.sleep(LONG_SLEEP_TIME);
         } catch (InterruptedException e) {
