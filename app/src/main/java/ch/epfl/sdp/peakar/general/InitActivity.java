@@ -23,6 +23,7 @@ import java.util.List;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.utils.SettingsUtilities;
 
 /**
  * Initialises the application:
@@ -67,7 +68,7 @@ public class InitActivity extends AppCompatActivity {
                 AuthService.getInstance().getAuthAccount().init();
             }
         }).start();
-
+        SettingsUtilities.checkForLanguage(this);
     }
 
     /**
