@@ -56,6 +56,7 @@ public class MenuBarHandler {
      * @param activity current active activity.
      */
     public static void setup(AppCompatActivity activity) {
+        activity.getWindow().setNavigationBarColor(activity.getColor(R.color.Black));
         for (Entry<Integer, Class<?>> pair : iconClassMap.entrySet()) {
             if (pair.getValue() == activity.getClass()) {
                 selectIcon(activity, pair.getKey());
