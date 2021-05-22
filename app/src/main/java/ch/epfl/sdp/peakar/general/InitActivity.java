@@ -3,6 +3,7 @@ package ch.epfl.sdp.peakar.general;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -68,7 +69,9 @@ public class InitActivity extends AppCompatActivity {
                 AuthService.getInstance().getAuthAccount().init();
             }
         }).start();
-        SettingsUtilities.checkForLanguage(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            SettingsUtilities.checkForLanguage(this);
+        }
     }
 
     /**

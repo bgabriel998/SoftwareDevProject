@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Build;
 import android.util.DisplayMetrics;
 
+import androidx.annotation.RequiresApi;
 import androidx.preference.PreferenceManager;
 
 import java.util.Locale;
@@ -82,7 +84,7 @@ public final class SettingsUtilities {
      * @param context context of the application
      * @return Locale that is set in the settings
      */
-    private static Locale getLocale(Context context){
+    private static Locale getSetLocale(Context context){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         String language =  sharedPreferences.getString(context.getResources().getString(R.string.language_key), DEFAULT_LANGUAGE);
@@ -95,9 +97,11 @@ public final class SettingsUtilities {
      *
      * @param context context of application
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public static void checkForLanguage(Context context){
-        Locale localeSettings = getLocale(context);
-        Locale currentLocale = context.getResources().getConfiguration().getLocales().get(0);
+        //Only check the first two letters to only check for the language
+        String localeSettings = getSetLocale(context).stripExtensions().toString().substring(0, 2);
+        String currentLocale = context.getResources().getConfiguration().getLocales().get(0).toString().substring(0, 2);
         if(!localeSettings.equals(currentLocale)){
             updateLanguage(context);
         }
