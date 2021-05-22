@@ -102,7 +102,6 @@ public class CameraActivityTest {
     /* Test that pressing the profile button when signed-out launches the ProfileLaunchActivity */
     @Test
     public void TestProfileButtonNotSignedIn(){
-        removeAuthUser();
         ViewInteraction button = Espresso.onView(withId(R.id.profileButton));
         button.perform(ViewActions.click());
         intended(IntentMatchers.hasComponent(ProfileLauncherActivity.class.getName()));

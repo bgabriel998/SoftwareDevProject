@@ -27,6 +27,7 @@ import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.collection.CollectionActivity;
 import ch.epfl.sdp.peakar.gallery.GalleryActivity;
 import ch.epfl.sdp.peakar.rankings.RankingsActivity;
+import ch.epfl.sdp.peakar.social.SocialActivity;
 import ch.epfl.sdp.peakar.user.profile.ProfileLauncherActivity;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -65,7 +66,7 @@ public class MainMenuActivityTest {
         ViewInteraction button = onView(withId(R.id.rankingsButton));
         button.perform(click());
         // Catch intent
-        intended(IntentMatchers.hasComponent(RankingsActivity.class.getName()));
+        intended(IntentMatchers.hasComponent(SocialActivity.class.getName()));
     }
 
     /* Test that pressing the profile button changes view to ProfileActivity */
