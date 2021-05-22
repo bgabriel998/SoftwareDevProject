@@ -267,6 +267,7 @@ public class SocialActivityTest {
     /* Test that if a item is clicked, an intent to its profile is started */
     @Test
     public void clickOtherUserTest() {
+        onView(withId(R.id.social_search_bar)).perform(replaceText(user2));
         try {
             Thread.sleep(LONG_SLEEP_TIME);
         } catch (InterruptedException e) {
@@ -281,7 +282,10 @@ public class SocialActivityTest {
             e.printStackTrace();
         }
         // Capture the intent
-        intended(IntentMatchers.hasComponent(NewProfileActivity.class.getName()));
+        intended(allOf(IntentMatchers.hasComponent(NewProfileActivity.class.getName()),
+                IntentMatchers.hasExtra(NewProfileActivity.AUTH_INTENT, false),
+                IntentMatchers.hasExtra(NewProfileActivity.OTHER_INTENT, user2)));
+        onView(withId(R.id.social_search_bar)).perform(replaceText(""));
     }
 
     /* Test the search bar works */
