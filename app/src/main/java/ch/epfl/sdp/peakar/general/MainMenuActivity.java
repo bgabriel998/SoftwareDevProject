@@ -135,4 +135,11 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         }
     }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        //Set content view to updates the strings depending on the locale
+        setContentView(R.layout.activity_main_menu);
+    }
 }
