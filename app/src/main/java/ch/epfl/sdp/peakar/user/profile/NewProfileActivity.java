@@ -1,6 +1,7 @@
 package ch.epfl.sdp.peakar.user.profile;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.content.Intent;
@@ -65,6 +66,20 @@ public class NewProfileActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     setContentView(R.layout.activity_new_profile);
 
+                    // Enable swipe gesture
+                    SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_refresh);
+                    swipeRefreshLayout.setEnabled(true);
+                    swipeRefreshLayout.setOnRefreshListener(() -> {
+                        new Thread(() -> {
+                            displayedAccount = OtherAccount.getNewInstance(otherId);
+                            runOnUiThread(() -> {
+                                setupProfile(displayedAccount.getUsername(), (int)displayedAccount.getScore());
+                                fillListView();
+                                swipeRefreshLayout.setRefreshing(false);
+                            });
+                        }).start();
+                    });
+
                     StatusBarHandler.StatusBarTransparent(this);
 
                     if(AuthService.getInstance().getAuthAccount() != null) hideUI(false, isFriend());
@@ -74,13 +89,16 @@ public class NewProfileActivity extends AppCompatActivity {
                     }
 
                     setupProfile(displayedAccount.getUsername(), (int)displayedAccount.getScore());
-
                     fillListView();
                 });
 
             }).start();
         } else {
             setContentView(R.layout.activity_new_profile);
+
+            // Disable swipe gesture
+            SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_refresh);
+            swipeRefreshLayout.setEnabled(false);
 
             StatusBarHandler.StatusBarTransparent(this);
 
