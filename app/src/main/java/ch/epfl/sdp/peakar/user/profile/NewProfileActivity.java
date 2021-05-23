@@ -73,23 +73,19 @@ public class NewProfileActivity extends AppCompatActivity {
                         new Thread(() -> {
                             displayedAccount = OtherAccount.getNewInstance(otherId);
                             runOnUiThread(() -> {
-                                setupProfile(displayedAccount.getUsername(), (int)displayedAccount.getScore());
-                                fillListView();
+                                setupProfile();
                                 swipeRefreshLayout.setRefreshing(false);
                             });
                         }).start();
                     });
 
                     StatusBarHandler.StatusBarTransparent(this);
-
                     if(AuthService.getInstance().getAuthAccount() != null) hideUI(false, isFriend());
                     else {
                         hideUI(false, false);
                         hideFriendButtons();
                     }
-
-                    setupProfile(displayedAccount.getUsername(), (int)displayedAccount.getScore());
-                    fillListView();
+                    setupProfile();
                 });
 
             }).start();
@@ -105,35 +101,32 @@ public class NewProfileActivity extends AppCompatActivity {
             hideUI(true, false);
 
             displayedAccount = AuthService.getInstance().getAuthAccount();
-            setupProfile(displayedAccount.getUsername(), (int)displayedAccount.getScore());
-
-
-            // If the user is not registered, force a username change
-            if(AuthService.getInstance().getAuthAccount().getUsername().equals(Account.USERNAME_BEFORE_REGISTRATION)) {
-                changeUsernameButton(null);
-                // Set text view
-                ((TextView)findViewById(R.id.profile_empty_text)).setText(R.string.empty_collection_not_registered);
-            } else {
-                fillListView();
-            }
+            setupProfile();
         }
     }
 
     /**
-     * Setup profile text
-     * @param username  of profile
-     * @param points of profile
+     * Setup profile view
      */
-    private void setupProfile(String username, int points){
+    private void setupProfile(){
         TextView usernameText = findViewById(R.id.profile_username);
         TextView pointsText = findViewById(R.id.profile_points);
 
         String profileText = getResources().getString(R.string.score_display,
-                                             UIUtils.IntegerConvert(points));
-        usernameText.setText(username);
+                                             UIUtils.IntegerConvert(displayedAccount.getScore()));
+        usernameText.setText(displayedAccount.getUsername());
         pointsText.setText(profileText);
 
         updateProfileImage();
+
+        // Handle the list view
+        if(isAuthProfile && AuthService.getInstance().getAuthAccount().getUsername().equals(Account.USERNAME_BEFORE_REGISTRATION)) {
+            changeUsernameButton(null);
+            // Set text view
+            ((TextView)findViewById(R.id.profile_empty_text)).setText(R.string.empty_collection_not_registered);
+        } else {
+            fillListView();
+        }
     }
 
     /**
