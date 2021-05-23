@@ -7,7 +7,12 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import ch.epfl.sdp.peakar.R;
@@ -24,6 +29,13 @@ import static ch.epfl.sdp.peakar.utils.UIUtils.setTintColor;
  * With the function setup to be called from activities that show the menu bar.
  */
 public class MenuBarHandler {
+
+    /**
+     * Map for pairing the icon with class to send intent
+     */
+    private static final ArrayList<Class<?>> iconClassesIndex = new ArrayList<>(Arrays.asList(
+            SettingsActivity.class, GalleryActivity.class, CameraActivity.class,
+            MapActivity.class, SocialActivity.class));
 
     /**
      * Map for pairing the icon with class to send intent
@@ -68,8 +80,28 @@ public class MenuBarHandler {
                     Context context = v.getContext();
                     Intent setIntent = new Intent(context, classToStart);
                     context.startActivity(setIntent);
+                    setAnimationTransition(activity, classToStart);
                 });
             }
+        }
+    }
+
+    /**
+     * Set the correct transition
+     * if the activity should slide left or right based on the activity to start.
+     * @param activity current activity
+     * @param toClass class of next activity.
+     */
+    private static void setAnimationTransition(AppCompatActivity activity, Class<?> toClass) {
+        int fromIndex = iconClassesIndex.indexOf(activity.getClass());
+        int toIndex = iconClassesIndex.indexOf(toClass);
+
+        if (fromIndex < toIndex) {
+            activity.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+        }
+
+        if (fromIndex > toIndex) {
+            activity.overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
         }
     }
 
