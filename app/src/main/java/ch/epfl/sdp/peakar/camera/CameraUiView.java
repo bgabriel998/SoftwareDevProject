@@ -1,5 +1,6 @@
 package ch.epfl.sdp.peakar.camera;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -15,7 +16,9 @@ import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import androidx.preference.PreferenceManager;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
@@ -32,7 +35,7 @@ import ch.epfl.sdp.peakar.utils.CameraUtilities;
 public class CameraUiView extends View implements Observer {
 
     // computePOIPointsInstance instance
-    ComputePOIPoints computePOIPointsInstance;
+    private final ComputePOIPoints computePOIPointsInstance;
 
     //Paints used to draw the lines and heading of the compass on the camera-preview
     private Paint mainLinePaint;
@@ -105,6 +108,9 @@ public class CameraUiView extends View implements Observer {
     private static final String DISPLAY_POIS_OUT_OF_SIGHT = "2";
 
     private final List<POIPoint> discoveredPOIPoints;
+    @SuppressLint("SimpleDateFormat")
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss");
+
 
     private final SharedPreferences.OnSharedPreferenceChangeListener listenerPreferences =
             (prefs, key) -> {
@@ -384,6 +390,8 @@ public class CameraUiView extends View implements Observer {
      */
     private void drawMountainMarker(POIPoint poiPoint, Boolean isVisible, int actualDegree){
         if(isVisible && (int)poiPoint.getHorizontalBearing()== (int)horizontalDegrees && !discoveredPOIPoints.contains(poiPoint)){
+            Date discoveredDate = new Date();
+            poiPoint.setDiscoveredDate(DATE_FORMAT.format(discoveredDate));
             discoveredPOIPoints.add(poiPoint);
         }
 

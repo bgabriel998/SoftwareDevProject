@@ -3,6 +3,7 @@ package ch.epfl.sdp.peakar.general;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -23,6 +24,7 @@ import java.util.List;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.utils.SettingsUtilities;
 
 /**
  * Initialises the application:
@@ -67,7 +69,9 @@ public class InitActivity extends AppCompatActivity {
                 AuthService.getInstance().getAuthAccount().init();
             }
         }).start();
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            SettingsUtilities.checkForLanguage(this);
+        }
     }
 
     /**
