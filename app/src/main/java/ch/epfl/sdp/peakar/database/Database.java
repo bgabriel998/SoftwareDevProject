@@ -126,7 +126,7 @@ public class Database {
 
     /**
      * Check if the DB connection is up.
-     * 
+     *
      * @return true if DB connection is up, false otherwise.
      */
     public boolean isOnline() {
