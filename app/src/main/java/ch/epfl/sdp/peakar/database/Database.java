@@ -3,10 +3,16 @@ package ch.epfl.sdp.peakar.database;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import androidx.preference.PreferenceManager;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.providers.firebase.FirebaseDatabaseReference;
@@ -18,8 +24,6 @@ import static ch.epfl.sdp.peakar.database.providers.firebase.FirebaseDatabaseRef
  * It implements the singleton pattern so only one Database object can exist.
  */
 public class Database {
-    public static final int TIMEOUT_TIME = 5000;
-
     /* CHILD PATH CONSTANTS */
     public static final String CHILD_USERS = "users/";
     public static final String CHILD_FRIENDS = "friends/";
@@ -48,6 +52,7 @@ public class Database {
     /* SINGLETON ATTRIBUTES */
     private static Database instance;
     private final DatabaseReference reference;
+    private static final AtomicBoolean online = new AtomicBoolean(true);
 
     private Database() {
         reference = new FirebaseDatabaseReference();
@@ -70,13 +75,30 @@ public class Database {
      */
     public static void init(Context context) {
         // Enable persistence
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        FirebaseDatabase.getInstance(DATABASE_ADDRESS).setPersistenceEnabled(true);
         // Check that if offline mode is active, and in this case call the right method
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         boolean offlineModeValue = prefs.getBoolean(context.getResources().getString(R.string.offline_mode_key), false);
+
+        Database instance = getInstance();
         if (offlineModeValue) {
-            getInstance().setOfflineMode();
+            instance.setOfflineMode();
         }
+
+        // Start connection listener, that will automatically set the online var to false whenever the db is not connected and viceversa
+        FirebaseDatabase.getInstance(DATABASE_ADDRESS).getReference(".info/connected").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                boolean connected = snapshot.getValue(Boolean.class);
+                online.set(connected);
+                Log.d("Database", "connected = " + connected);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Log.d("Database", "onCancelled: error");
+            }
+        });
     }
 
     /**
@@ -100,5 +122,9 @@ public class Database {
      */
     public void setOnlineMode() {
         FirebaseDatabase.getInstance(DATABASE_ADDRESS).goOnline();
+    }
+
+    public boolean isOnline() {
+        return online.get();
     }
 }

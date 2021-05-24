@@ -109,8 +109,6 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         boolean offlineModeValue = prefs.getBoolean(this.getResources().getString(R.string.offline_mode_key), false);
 
         if (offlineModeValue) {
-            // Disconnect DB
-            Database.getInstance().setOfflineMode();
             Intent setIntent = new Intent(this, SettingsMapActivity.class);
             startActivity(setIntent);
         } else {

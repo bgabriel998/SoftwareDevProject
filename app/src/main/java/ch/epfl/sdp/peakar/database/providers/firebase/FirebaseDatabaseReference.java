@@ -54,7 +54,7 @@ public class FirebaseDatabaseReference implements DatabaseReference {
         } catch(Exception e) {
             e.printStackTrace();
             e.getCause();
-            throw new RuntimeException("DBReference: error getting data snapshot");
+            return new FirebaseDatabaseSnapshot(null);
         }
     }
 
@@ -76,7 +76,6 @@ public class FirebaseDatabaseReference implements DatabaseReference {
         } catch(Exception e) {
             e.printStackTrace();
             e.getCause();
-            throw new RuntimeException("DBReference: error setting value");
         }
     }
 
