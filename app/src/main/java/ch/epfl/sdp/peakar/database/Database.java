@@ -52,12 +52,26 @@ public class Database {
     /* SINGLETON ATTRIBUTES */
     private static Database instance;
     private final DatabaseReference reference;
-    private static final AtomicBoolean online = new AtomicBoolean(true);
+    private final AtomicBoolean online = new AtomicBoolean(true);
 
     private Database() {
         // Enable persistence
         FirebaseDatabase.getInstance(DATABASE_ADDRESS).setPersistenceEnabled(true);
         reference = new FirebaseDatabaseReference();
+        // Start connection listener, that will automatically set the online var to false whenever the db is not connected and viceversa
+        FirebaseDatabase.getInstance(DATABASE_ADDRESS).getReference(".info/connected").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                boolean connected = snapshot.getValue(Boolean.class);
+                online.set(connected);
+                Log.d("Database", "connected = " + connected);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Log.d("Database", "onCancelled: error");
+            }
+        });
     }
 
     /**
@@ -81,24 +95,10 @@ public class Database {
         boolean offlineModeValue = prefs.getBoolean(context.getResources().getString(R.string.offline_mode_key), false);
 
         Database instance = getInstance();
+
         if (offlineModeValue) {
             instance.setOfflineMode();
         }
-
-        // Start connection listener, that will automatically set the online var to false whenever the db is not connected and viceversa
-        FirebaseDatabase.getInstance(DATABASE_ADDRESS).getReference(".info/connected").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                boolean connected = snapshot.getValue(Boolean.class);
-                online.set(connected);
-                Log.d("Database", "connected = " + connected);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                Log.d("Database", "onCancelled: error");
-            }
-        });
     }
 
     /**

@@ -96,7 +96,6 @@ public class FirebaseDatabaseReference implements DatabaseReference {
             Tasks.await(removeTask);
         } catch(Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("DBReference: error removing value");
         }
     }
 
