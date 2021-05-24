@@ -52,7 +52,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
                 rangeChanged();
                 break;
             case "language_preference":
-                updateLanguage(this, sharedPreferences);
+                updateLanguage(this);
                 sendBroadcast(new Intent("Language.changed"));
                 break;
             case "offline_mode_preference":
