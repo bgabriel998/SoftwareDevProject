@@ -54,7 +54,7 @@ public class FirebaseDatabaseReference implements DatabaseReference {
         } catch(Exception e) {
             e.printStackTrace();
             e.getCause();
-            return new FirebaseDatabaseSnapshot(null);
+            throw new RuntimeException("DBReference: error getting data snapshot");
         }
     }
 

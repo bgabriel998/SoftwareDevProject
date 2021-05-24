@@ -36,7 +36,7 @@ public class FirebaseDatabaseQuery implements DatabaseQuery {
             return new FirebaseDatabaseSnapshot(getTask.getResult());
         } catch(Exception e) {
             e.printStackTrace();
-            return new FirebaseDatabaseSnapshot(null);
+            throw new RuntimeException("DBReference: error getting data snapshot");
         }
     }
 }
