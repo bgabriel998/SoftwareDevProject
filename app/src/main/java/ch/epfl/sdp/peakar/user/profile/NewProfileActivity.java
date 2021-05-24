@@ -48,7 +48,6 @@ import static ch.epfl.sdp.peakar.utils.UIUtils.setTintColor;
 public class NewProfileActivity extends AppCompatActivity {
     public final static String AUTH_INTENT = "isAuth";
     public final static String OTHER_INTENT = "otherId";
-    public final static String ERROR_LOADING = "errorLoading";
 
     private boolean isAuthProfile;
     private Account displayedAccount = null;
@@ -63,7 +62,6 @@ public class NewProfileActivity extends AppCompatActivity {
         Intent startingIntent = getIntent();
         isAuthProfile = startingIntent.getBooleanExtra(AUTH_INTENT, false);
         if(!isAuthProfile) {
-            if(!Database.getInstance().isOnline()) goBackToSocialActivity();
             String otherId = startingIntent.getStringExtra(OTHER_INTENT);
             new Thread(() -> {
                 displayedAccount = OtherAccount.getInstance(otherId);
@@ -106,16 +104,6 @@ public class NewProfileActivity extends AppCompatActivity {
             displayedAccount = AuthService.getInstance().getAuthAccount();
             setupProfile();
         }
-    }
-
-    /**
-     * Method that will force this activity to end if loading was not possible
-     */
-    private void goBackToSocialActivity() {
-        Intent intent = new Intent(this, SocialActivity.class);
-        intent.putExtra(ERROR_LOADING, ProfileOutcome.FAIL.getMessage());
-        startActivity(intent);
-        finish();
     }
 
     /**
@@ -243,6 +231,11 @@ public class NewProfileActivity extends AppCompatActivity {
      * On change username button click
      */
     public void changeUsernameButton(View view) {
+        if(!Database.getInstance().isOnline()) {
+            showErrorMessage();
+            return;
+        }
+
         // Hide username
         findViewById(R.id.profile_username).setVisibility(View.GONE);
 
@@ -272,11 +265,6 @@ public class NewProfileActivity extends AppCompatActivity {
     public void confirmUsernameButton() {
         EditText usernameEdit = findViewById(R.id.profile_username_edit);
         String newUsername = usernameEdit.getText().toString();
-
-        if(!Database.getInstance().isOnline()) {
-            removeUsernameChangeUI();
-            return;
-        }
 
         // Start a new thread that will handle the process
         Thread changeThread = new Thread(){
@@ -369,6 +357,7 @@ public class NewProfileActivity extends AppCompatActivity {
         hideFriendButtons();
 
         if(!Database.getInstance().isOnline()) {
+            showErrorMessage();
             hideUI(false, false);
             return;
         }
@@ -408,6 +397,7 @@ public class NewProfileActivity extends AppCompatActivity {
         hideFriendButtons();
 
         if(!Database.getInstance().isOnline()) {
+            showErrorMessage();
             hideUI(false, true);
             return;
         }
@@ -440,5 +430,13 @@ public class NewProfileActivity extends AppCompatActivity {
     public void socialActivityButton(View view) {
         Intent intent = new Intent(this, SocialActivity.class);
         startActivity(intent);
+    }
+
+    /**
+     * Show an error message when the DB is not online.
+     */
+    private void showErrorMessage() {
+        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), ProfileOutcome.FAIL.getMessage(), Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 }

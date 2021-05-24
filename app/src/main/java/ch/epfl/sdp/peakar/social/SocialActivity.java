@@ -19,6 +19,7 @@ import java.util.Locale;
 import java.util.Optional;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
 import ch.epfl.sdp.peakar.user.services.AuthService;
@@ -81,14 +82,6 @@ public class SocialActivity extends AppCompatActivity {
                                       int arg3) {
             }
         });
-
-        // If this class was started after an error, display the error
-        Intent intent = getIntent();
-        int errorMessage = intent.getIntExtra(NewProfileActivity.ERROR_LOADING, 0);
-        if(errorMessage != 0) {
-            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), errorMessage, Snackbar.LENGTH_LONG);
-            snackbar.show();
-        }
     }
 
     /**
@@ -152,6 +145,11 @@ public class SocialActivity extends AppCompatActivity {
      * @param item the given item.
      */
     public void switchToProfileActivity(SocialItem item) {
+        if(!Database.getInstance().isOnline()) {
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), ProfileOutcome.FAIL.getMessage(), Snackbar.LENGTH_LONG);
+            snackbar.show();
+            return;
+        }
         Intent intent = new Intent(this, NewProfileActivity.class);
         fillIntent(intent, item);
         startActivity(intent);
