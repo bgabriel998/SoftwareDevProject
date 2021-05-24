@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.Locale;
 import java.util.Optional;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.MenuBarHandler;
@@ -79,6 +82,13 @@ public class SocialActivity extends AppCompatActivity {
             }
         });
 
+        // If this class was started after an error, display the error
+        Intent intent = getIntent();
+        int errorMessage = intent.getIntExtra(NewProfileActivity.ERROR_LOADING, 0);
+        if(errorMessage != 0) {
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), errorMessage, Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
     }
 
     /**

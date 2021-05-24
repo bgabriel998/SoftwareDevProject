@@ -11,6 +11,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.points.POICache;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
@@ -108,9 +109,13 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         boolean offlineModeValue = prefs.getBoolean(this.getResources().getString(R.string.offline_mode_key), false);
 
         if (offlineModeValue) {
+            // Disconnect DB
+            Database.getInstance().setOfflineMode();
             Intent setIntent = new Intent(this, SettingsMapActivity.class);
             startActivity(setIntent);
         } else {
+            // Connect to the DB again
+            Database.getInstance().setOnlineMode();
             ComputePOIPoints computePOIPoints = ComputePOIPoints.getInstance(this);
             computePOIPoints.update(null, null);
             Toast.makeText(this,this.getResources().getString(R.string.offline_mode_off_toast), Toast.LENGTH_SHORT).show();

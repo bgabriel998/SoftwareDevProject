@@ -1,7 +1,14 @@
 package ch.epfl.sdp.peakar.database;
 
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import androidx.preference.PreferenceManager;
+
 import com.google.firebase.database.FirebaseDatabase;
 
+import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.providers.firebase.FirebaseDatabaseReference;
 
 import static ch.epfl.sdp.peakar.database.providers.firebase.FirebaseDatabaseReference.DATABASE_ADDRESS;
@@ -11,6 +18,8 @@ import static ch.epfl.sdp.peakar.database.providers.firebase.FirebaseDatabaseRef
  * It implements the singleton pattern so only one Database object can exist.
  */
 public class Database {
+    public static final int TIMEOUT_TIME = 5000;
+
     /* CHILD PATH CONSTANTS */
     public static final String CHILD_USERS = "users/";
     public static final String CHILD_FRIENDS = "friends/";
@@ -48,11 +57,26 @@ public class Database {
      * Get a database instance.
      */
     public static Database getInstance() {
-        if(instance == null) {
-            instance = new Database();
-            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        }
+        if(instance == null) instance = new Database();
         return instance;
+    }
+
+    /**
+     * Init method for the database. Handle the offline mode settings and enables persistence.
+     *
+     * IMPORTANT: this method <b>MUST</b> be called in the <code>InitActivity</code> before other calls to the <code>Database</code> class are performed.
+     *
+     * @param context context of the application.
+     */
+    public static void init(Context context) {
+        // Enable persistence
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        // Check that if offline mode is active, and in this case call the right method
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean offlineModeValue = prefs.getBoolean(context.getResources().getString(R.string.offline_mode_key), false);
+        if (offlineModeValue) {
+            getInstance().setOfflineMode();
+        }
     }
 
     /**

@@ -16,7 +16,7 @@ public enum ProfileOutcome {
     USERNAME_USED(R.string.already_existing_username),
     USERNAME_CHANGED(R.string.available_username),
     USERNAME_REGISTERED(R.string.registered_username),
-    FAIL(0);
+    FAIL(R.string.database_fail);
 
     private final int message;
 

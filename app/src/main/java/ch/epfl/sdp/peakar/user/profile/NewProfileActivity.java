@@ -1,10 +1,12 @@
 package ch.epfl.sdp.peakar.user.profile;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -45,6 +47,7 @@ import static ch.epfl.sdp.peakar.utils.UIUtils.setTintColor;
 public class NewProfileActivity extends AppCompatActivity {
     public final static String AUTH_INTENT = "isAuth";
     public final static String OTHER_INTENT = "otherId";
+    public final static String ERROR_LOADING = "errorLoading";
 
     private boolean isAuthProfile;
     private Account displayedAccount = null;
@@ -60,33 +63,52 @@ public class NewProfileActivity extends AppCompatActivity {
         isAuthProfile = startingIntent.getBooleanExtra(AUTH_INTENT, false);
 
         if(!isAuthProfile) {
+            if(!checkIfDatabaseOnline()) {
+                Intent intent = new Intent(this, SocialActivity.class);
+                intent.putExtra(ERROR_LOADING, ProfileOutcome.FAIL.getMessage());
+                startActivity(intent);
+                finish();
+            }
             String otherId = startingIntent.getStringExtra(OTHER_INTENT);
             new Thread(() -> {
-                displayedAccount = OtherAccount.getInstance(otherId);
-                runOnUiThread(() -> {
-                    setContentView(R.layout.activity_new_profile);
+                try {
+                    displayedAccount = OtherAccount.getInstance(otherId);
+                    runOnUiThread(() -> {
+                        setContentView(R.layout.activity_new_profile);
 
-                    // Enable swipe gesture
-                    SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_refresh);
-                    swipeRefreshLayout.setEnabled(true);
-                    swipeRefreshLayout.setOnRefreshListener(() -> {
-                        new Thread(() -> {
-                            displayedAccount = OtherAccount.getNewInstance(otherId);
-                            runOnUiThread(() -> {
-                                setupProfile();
-                                swipeRefreshLayout.setRefreshing(false);
-                            });
-                        }).start();
+                        // Enable swipe gesture
+                        SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_refresh);
+                        swipeRefreshLayout.setEnabled(true);
+                        swipeRefreshLayout.setOnRefreshListener(() -> {
+                            new Thread(() -> {
+                                displayedAccount = OtherAccount.getNewInstance(otherId);
+                                runOnUiThread(() -> {
+                                    setupProfile();
+                                    swipeRefreshLayout.setRefreshing(false);
+                                });
+                            }).start();
+                        });
+
+                        StatusBarHandler.StatusBarTransparent(this);
+                        if(AuthService.getInstance().getAuthAccount() != null) hideUI(false, isFriend());
+                        else {
+                            hideUI(false, false);
+                            hideFriendButtons();
+                        }
+                        setupProfile();
                     });
+                } catch(Exception e) {
+                    runOnUiThread(() -> {
+                        Log.d("NewProfileActivity", "load other user: caught exception ");
+                        runOnUiThread(() -> {
+                            Intent intent = new Intent(this, SocialActivity.class);
+                            intent.putExtra(ERROR_LOADING, ProfileOutcome.FAIL.getMessage());
+                            startActivity(intent);
+                            finish();
+                        });
+                    });
+                }
 
-                    StatusBarHandler.StatusBarTransparent(this);
-                    if(AuthService.getInstance().getAuthAccount() != null) hideUI(false, isFriend());
-                    else {
-                        hideUI(false, false);
-                        hideFriendButtons();
-                    }
-                    setupProfile();
-                });
 
             }).start();
         } else {
@@ -257,32 +279,45 @@ public class NewProfileActivity extends AppCompatActivity {
      * On confirm username change
      */
     public void confirmUsernameButton() {
-        EditText usernameEdit = ((EditText)findViewById(R.id.profile_username_edit));
+        EditText usernameEdit = findViewById(R.id.profile_username_edit);
         String newUsername = usernameEdit.getText().toString();
+
+        if(!checkIfDatabaseOnline()) {
+            removeUsernameChangeUI();
+            return;
+        }
 
         // Start a new thread that will handle the process
         Thread changeThread = new Thread(){
             @Override
             public void run() {
                 // Change the username and wait for the task to end
-                ProfileOutcome result = AuthService.getInstance().getAuthAccount().changeUsername(newUsername);
+                try {
+                    ProfileOutcome result = AuthService.getInstance().getAuthAccount().changeUsername(newUsername);
 
-                // Update the view on the UI thread
-                runOnUiThread(() -> {
+                    // Update the view on the UI thread
+                    runOnUiThread(() -> {
 
-                    // If username has changed, update the username text view
-                    // If username has changed, hide the keyboard and update the username text view
-                    if(result == ProfileOutcome.USERNAME_CHANGED || result == ProfileOutcome.USERNAME_REGISTERED) {
+                        // If username has changed, update the username text view
+                        // If username has changed, hide the keyboard and update the username text view
+                        if(result == ProfileOutcome.USERNAME_CHANGED || result == ProfileOutcome.USERNAME_REGISTERED) {
+                            removeUsernameChangeUI();
+                            ((TextView)findViewById(R.id.profile_username)).setText(AuthService.getInstance().getAuthAccount().getUsername());
+                        }
+                        if(result == ProfileOutcome.USERNAME_REGISTERED) fillListView();
+
+                        // Display the message
+                        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), result.getMessage(), Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                    });
+                } catch(Exception e) {
+                    Log.d("NewProfileActivity", "confirmUsernameButton: caught exception ");
+                    runOnUiThread(() -> {
                         removeUsernameChangeUI();
-                        ((TextView)findViewById(R.id.profile_username)).setText(AuthService.getInstance().getAuthAccount().getUsername());
-                    }
-                    if(result == ProfileOutcome.USERNAME_REGISTERED) fillListView();
-
-                    // Display the message
-                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), result.getMessage(), Snackbar.LENGTH_LONG);
-                    snackbar.show();
-
-                });
+                        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), ProfileOutcome.FAIL.getMessage(), Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                    });
+                }
             }
         };
         changeThread.start();
@@ -351,29 +386,43 @@ public class NewProfileActivity extends AppCompatActivity {
     public void addFriendButton(View view) {
         hideFriendButtons();
 
+        if(!checkIfDatabaseOnline()) {
+            hideUI(false, false);
+            return;
+        }
+
         // Start a new thread that will handle the process
         Thread addThread = new Thread(){
             @Override
             public void run() {
                 // Add the friend and wait for the task to end
-                ProfileOutcome addFriendOutcome = AuthService.getInstance().getAuthAccount().addFriend(((OtherAccount)displayedAccount).getUserID());
+                try {
+                    ProfileOutcome addFriendOutcome = AuthService.getInstance().getAuthAccount().addFriend(((OtherAccount)displayedAccount).getUserID());
 
-                // Update the view on the UI thread
-                runOnUiThread(() -> {
+                    // Update the view on the UI thread
+                    runOnUiThread(() -> {
 
-                    String outcomeMessage = getResources().getString(addFriendOutcome.getMessage());
+                        String outcomeMessage = getResources().getString(addFriendOutcome.getMessage());
 
-                    if(addFriendOutcome == ProfileOutcome.FRIEND_ADDED) {
-                        // Update UI
-                        hideUI(false, true);
+                        if(addFriendOutcome == ProfileOutcome.FRIEND_ADDED) {
+                            // Update UI
+                            hideUI(false, true);
 
-                        outcomeMessage = displayedAccount.getUsername() + " " + outcomeMessage;
-                    }
+                            outcomeMessage = displayedAccount.getUsername() + " " + outcomeMessage;
+                        }
 
-                    // Display the message
-                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), outcomeMessage, Snackbar.LENGTH_LONG);
-                    snackbar.show();
-                });
+                        // Display the message
+                        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), outcomeMessage, Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                    });
+                } catch(Exception e) {
+                    Log.d("NewProfileActivity", "addFriendButton: caught exception ");
+                    runOnUiThread(() -> {
+                        hideUI(false, false);
+                        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), ProfileOutcome.FAIL.getMessage(), Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                    });
+                }
             }
         };
         addThread.start();
@@ -385,23 +434,36 @@ public class NewProfileActivity extends AppCompatActivity {
     public void removeFriendButton(View view) {
         hideFriendButtons();
 
+        if(!checkIfDatabaseOnline()) {
+            hideUI(false, true);
+            return;
+        }
+
         // Start a new thread that will handle the process
         Thread removeThread = new Thread(){
             @Override
             public void run() {
-                // Remove the friend and wait for the task to end
-                AuthService.getInstance().getAuthAccount().removeFriend(((OtherAccount)displayedAccount).getUserID());
+                try {
+                    // Remove the friend and wait for the task to end
+                    AuthService.getInstance().getAuthAccount().removeFriend(((OtherAccount)displayedAccount).getUserID());
 
-                // Update the view on the UI thread
-                runOnUiThread(() -> {
-                    // Update UI
-                    hideUI(false, false);
+                    // Update the view on the UI thread
+                    runOnUiThread(() -> {
+                        // Update UI
+                        hideUI(false, false);
 
-                    String removedMessage = displayedAccount.getUsername() + " " + getResources().getString(R.string.friend_removed);
-                    // Display the message
-                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), removedMessage, Snackbar.LENGTH_LONG);
-                    snackbar.show();
-                });
+                        String removedMessage = displayedAccount.getUsername() + " " + getResources().getString(R.string.friend_removed);
+                        // Display the message
+                        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), removedMessage, Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                    });
+                } catch(Exception e) {
+                    runOnUiThread(() -> {
+                        hideUI(false, true);
+                        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), ProfileOutcome.FAIL.getMessage(), Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                    });
+                }
             }
         };
         removeThread.start();
@@ -413,5 +475,22 @@ public class NewProfileActivity extends AppCompatActivity {
     public void socialActivityButton(View view) {
         Intent intent = new Intent(this, SocialActivity.class);
         startActivity(intent);
+    }
+
+    /**
+     * Check if the database is online, to perform an operation.
+     * If the DB is offline, an error message is shown.
+     * @return true if the DB is online, false otherwise.
+     */
+    private boolean checkIfDatabaseOnline() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean offlineModeValue = prefs.getBoolean(this.getResources().getString(R.string.offline_mode_key), false);
+        if (offlineModeValue) {
+            Log.d("NewProfileActivity", "checkIfDatabaseOnline: OFFLINE");
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), ProfileOutcome.FAIL.getMessage(), Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
+        Log.d("NewProfileActivity", "checkIfDatabaseOnline: ONLINE");
+        return !offlineModeValue;
     }
 }

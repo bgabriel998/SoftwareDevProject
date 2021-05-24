@@ -75,6 +75,8 @@ public class FirebaseDatabaseReference implements DatabaseReference {
             Tasks.await(setTask);
         } catch(Exception e) {
             e.printStackTrace();
+            e.getCause();
+            throw new RuntimeException("DBReference: error setting value");
         }
     }
 
@@ -95,6 +97,7 @@ public class FirebaseDatabaseReference implements DatabaseReference {
             Tasks.await(removeTask);
         } catch(Exception e) {
             e.printStackTrace();
+            throw new RuntimeException("DBReference: error removing value");
         }
     }
 
