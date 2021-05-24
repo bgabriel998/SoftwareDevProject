@@ -21,7 +21,7 @@ import ch.epfl.sdp.peakar.general.remote.RemoteResource;
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.user.challenge.Challenge;
-import ch.epfl.sdp.peakar.user.friends.RemoteFriendItem;
+import ch.epfl.sdp.peakar.social.RemoteFriendItem;
 import ch.epfl.sdp.peakar.user.challenge.goal.RemotePointsChallenge;
 
 /**
@@ -77,7 +77,8 @@ public class RemoteAccountDataFactory implements RemoteResource {
         accountData.setScore(Optional.ofNullable(data.child(Database.CHILD_SCORE).getValue(long.class)).orElse(0L));
 
         // Load photo url
-        accountData.setPhotoUrl(Uri.parse(Optional.ofNullable(data.child(Database.CHILD_PHOTO_URL).getValue(String.class)).orElse("")));
+        String stringUri = Optional.ofNullable(data.child(Database.CHILD_PHOTO_URL).getValue(String.class)).orElse("");
+        accountData.setPhotoUrl(stringUri.equals("") ? Uri.EMPTY : Uri.parse(stringUri));
         Log.d("RemoteAccountDataFactory", "loadData: current photo = " + Uri.parse(Optional.ofNullable(data.child(Database.CHILD_PHOTO_URL).getValue(String.class)).orElse("")));
         Log.d("RemoteAccountDataFactory", "loadData: new photo = " + AuthService.getInstance().getPhotoUrl().toString());
         // If this is loading the auth account, check if the photo is updated.

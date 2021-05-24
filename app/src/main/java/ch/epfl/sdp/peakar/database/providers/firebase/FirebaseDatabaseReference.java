@@ -75,6 +75,7 @@ public class FirebaseDatabaseReference implements DatabaseReference {
             Tasks.await(setTask);
         } catch(Exception e) {
             e.printStackTrace();
+            e.getCause();
         }
     }
 

@@ -27,7 +27,8 @@ import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.collection.CollectionActivity;
 import ch.epfl.sdp.peakar.gallery.GalleryActivity;
 import ch.epfl.sdp.peakar.rankings.RankingsActivity;
-import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
+import ch.epfl.sdp.peakar.social.SocialActivity;
+import ch.epfl.sdp.peakar.user.profile.ProfileLauncherActivity;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -36,6 +37,7 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sdp.peakar.user.AuthAccountTest.removeAuthUser;
 
 @RunWith(AndroidJUnit4.class)
 public class MainMenuActivityTest {
@@ -64,16 +66,17 @@ public class MainMenuActivityTest {
         ViewInteraction button = onView(withId(R.id.rankingsButton));
         button.perform(click());
         // Catch intent
-        intended(IntentMatchers.hasComponent(RankingsActivity.class.getName()));
+        intended(IntentMatchers.hasComponent(SocialActivity.class.getName()));
     }
 
     /* Test that pressing the profile button changes view to ProfileActivity */
     @Test
     public void TestProfileButton(){
+        removeAuthUser();
         ViewInteraction button = onView(ViewMatchers.withId(R.id.profileButton));
         button.perform(click());
         // Catch intent
-        intended(IntentMatchers.hasComponent(ProfileActivity.class.getName()));
+        intended(IntentMatchers.hasComponent(ProfileLauncherActivity.class.getName()));
     }
 
     /* Test that pressing the settings button changes view to SettingsActivity */

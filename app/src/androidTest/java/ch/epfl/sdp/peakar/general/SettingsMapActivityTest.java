@@ -26,6 +26,7 @@ import org.osmdroid.views.MapView;
 import java.io.IOException;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.utils.OfflineContentContainer;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
 
@@ -60,6 +61,7 @@ public class SettingsMapActivityTest {
     /* Release Intent */
     @After
     public void cleanUp(){
+        Database.getInstance().setOnlineMode();
         Intents.release();
     }
 

@@ -2,17 +2,26 @@ package ch.epfl.sdp.peakar.social;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.user.friends.FriendItem;
+import ch.epfl.sdp.peakar.database.Database;
+import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
+import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.MenuBarHandler;
 
@@ -23,6 +32,7 @@ import static ch.epfl.sdp.peakar.utils.TopBarHandler.setupSwitch;
 public class SocialActivity extends AppCompatActivity {
 
     private final static List<SocialItem> globalSocialItems = Collections.synchronizedList(new ArrayList<>());
+    private final static List<SocialItem> friendSocialItems = Collections.synchronizedList(new ArrayList<>());
     private ListView listView;
     private SocialListAdapter globalAdapter;
     private SocialListAdapter friendsAdapter;
@@ -50,6 +60,28 @@ public class SocialActivity extends AppCompatActivity {
                 });
 
         setGlobalView();
+
+        // Add listener for the filter to the search bar
+        EditText searchBar = findViewById(R.id.social_search_bar);
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                // After some text is typed, filter the lists
+                String text = searchBar.getText().toString().toLowerCase(Locale.getDefault());
+                globalAdapter.filter(text);
+                friendsAdapter.filter(text);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1,
+                                          int arg2, int arg3) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+                                      int arg3) {
+            }
+        });
     }
 
     /**
@@ -59,7 +91,8 @@ public class SocialActivity extends AppCompatActivity {
     private SocialListAdapter setupGlobalListAdapter() {
         SocialListAdapter globalAdapter = new SocialListAdapter(this,
                 R.layout.social_profile_item,
-                globalSocialItems);
+                globalSocialItems,
+                Collections.synchronizedList(new ArrayList<>()));
         globalAdapter.setNotifyOnChange(false);
         RemoteSocialList.synchronizeGlobal(globalSocialItems, globalAdapter);
         return globalAdapter;
@@ -67,21 +100,16 @@ public class SocialActivity extends AppCompatActivity {
 
     /**
      * Sets up the friends list adapter, by syncing the database with a static list
-     * TODO Create SYNC.
      * @return a list adapter synced with the database displaying all friends.
      */
     private SocialListAdapter setupFriendsListAdapter() {
-        List<SocialItem> friendsList = new ArrayList<>();
-        if (AuthService.getInstance().getAuthAccount() != null) {
-            for (FriendItem friendItem : AuthService.getInstance().getAuthAccount().getFriends()) {
-                friendsList.add(new SocialItem(friendItem.getUid(), friendItem.getUsername(),
-                        friendItem.getPoints(), Uri.EMPTY));
-            }
-        }
-
-        return new SocialListAdapter(this,
+        SocialListAdapter friendsAdapter = new SocialListAdapter(this,
                 R.layout.social_profile_item,
-                friendsList);
+                friendSocialItems,
+                Collections.synchronizedList(new ArrayList<>()));
+        friendsAdapter.setNotifyOnChange(false);
+        if(AuthService.getInstance().getAuthAccount() != null) RemoteSocialList.synchronizeFriends(friendSocialItems, friendsAdapter);
+        return friendsAdapter;
     }
 
     /**
@@ -90,6 +118,9 @@ public class SocialActivity extends AppCompatActivity {
     private void setGlobalView() {
         listView.setAdapter(globalAdapter);
         emptyFriendsView.setVisibility(View.GONE);
+        // Add listener for clicking on item
+        listView.setOnItemClickListener((parent, view, position, id) ->
+                switchToProfileActivity((SocialItem) listView.getItemAtPosition(position)));
     }
 
     /**
@@ -103,5 +134,49 @@ public class SocialActivity extends AppCompatActivity {
         else {
             emptyFriendsView.setVisibility(View.GONE);
         }
+        // Add listener for clicking on item
+        listView.setOnItemClickListener((parent, view, position, id) ->
+                switchToProfileActivity((SocialItem) listView.getItemAtPosition(position)));
+    }
+
+    /**
+     * Changes to ProfileActivity of the selected user and providing intent with information
+     * from the item that was clicked.
+     * @param item the given item.
+     */
+    public void switchToProfileActivity(SocialItem item) {
+        if(!Database.getInstance().isOnline()) {
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), ProfileOutcome.FAIL.getMessage(), Snackbar.LENGTH_LONG);
+            snackbar.show();
+            return;
+        }
+        Intent intent = new Intent(this, NewProfileActivity.class);
+        fillIntent(intent, item);
+        startActivity(intent);
+    }
+
+    /**
+     * Fills intent with information from item
+     * @param intent to fill
+     * @param item the given item
+     */
+    private void fillIntent(Intent intent, SocialItem item) {
+        if(AuthService.getInstance().getAuthAccount() != null && AuthService.getInstance().getID().equals(item.getUid())) {
+            intent.putExtra(NewProfileActivity.AUTH_INTENT, true);
+        } else {
+            intent.putExtra(NewProfileActivity.AUTH_INTENT, false);
+            intent.putExtra(NewProfileActivity.OTHER_INTENT, item.getUid());
+        }
+    }
+
+    /**
+     * Get the global rank of a social item.
+     * @param item item to look for in the global rankings.
+     * @return rank of the social item or zero if social items was not found.
+     */
+    public static int getGlobalRank(SocialItem item) {
+        Optional<SocialItem> socialItem = globalSocialItems.stream().filter(x -> x.getUid().equals(item.getUid())).findFirst();
+        int index = socialItem.map(globalSocialItems::indexOf).orElse(-1);
+        return index + 1;
     }
 }

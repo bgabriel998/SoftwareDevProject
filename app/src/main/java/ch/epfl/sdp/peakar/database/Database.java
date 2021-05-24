@@ -1,6 +1,23 @@
 package ch.epfl.sdp.peakar.database;
 
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
+
+import androidx.preference.PreferenceManager;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.providers.firebase.FirebaseDatabaseReference;
+
+import static ch.epfl.sdp.peakar.database.providers.firebase.FirebaseDatabaseReference.DATABASE_ADDRESS;
 
 /**
  * This class represents a Database.
@@ -35,9 +52,27 @@ public class Database {
     /* SINGLETON ATTRIBUTES */
     private static Database instance;
     private final DatabaseReference reference;
+    private final AtomicBoolean online = new AtomicBoolean(false);
 
     private Database() {
+        // Enable persistence
+        FirebaseDatabase.getInstance(DATABASE_ADDRESS).setPersistenceEnabled(true);
         reference = new FirebaseDatabaseReference();
+        // Start connection listener, that will automatically set the online var to false whenever the db is not connected and viceversa
+        FirebaseDatabase.getInstance(DATABASE_ADDRESS).getReference(".info/connected").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                boolean connected = snapshot.getValue(Boolean.class);
+                online.set(connected);
+                Log.d("Database", "connected = " + connected);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                online.set(false);
+                Log.d("Database", "onCancelled: error");
+            }
+        });
     }
 
     /**
@@ -49,9 +84,53 @@ public class Database {
     }
 
     /**
+     * Init method for the database. Handle the offline mode settings and enables persistence.
+     *
+     * IMPORTANT: this method <b>MUST</b> be called in the <code>InitActivity</code> before other calls to the <code>Database</code> class are performed.
+     *
+     * @param context context of the application.
+     */
+    public static void init(Context context) {
+        // Check that if offline mode is active, and in this case call the right method
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean offlineModeValue = prefs.getBoolean(context.getResources().getString(R.string.offline_mode_key), false);
+
+        Database instance = getInstance();
+
+        if (offlineModeValue) {
+            instance.setOfflineMode();
+        }
+    }
+
+    /**
      * Get a reference to the root of the database.
      */
     public DatabaseReference getReference() {
         return reference;
+    }
+
+    /**
+     * Enable the DB offline mode.
+     * Requests for which data is cached can still be answered.
+     * Other requests will be enqueued until online mode is set.
+     */
+    public void setOfflineMode() {
+        FirebaseDatabase.getInstance(DATABASE_ADDRESS).goOffline();
+    }
+
+    /**
+     * Enable the DB online mode.
+     */
+    public void setOnlineMode() {
+        FirebaseDatabase.getInstance(DATABASE_ADDRESS).goOnline();
+    }
+
+    /**
+     * Check if the DB connection is up.
+     *
+     * @return true if DB connection is up, false otherwise.
+     */
+    public boolean isOnline() {
+        return online.get();
     }
 }
