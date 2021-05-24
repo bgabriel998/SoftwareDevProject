@@ -62,7 +62,11 @@ public class Database {
      * Get a database instance.
      */
     public static Database getInstance() {
-        if(instance == null) instance = new Database();
+        if(instance == null) {
+            // Enable persistence
+            FirebaseDatabase.getInstance(DATABASE_ADDRESS).setPersistenceEnabled(true);
+            instance = new Database();
+        }
         return instance;
     }
 
@@ -74,8 +78,6 @@ public class Database {
      * @param context context of the application.
      */
     public static void init(Context context) {
-        // Enable persistence
-        FirebaseDatabase.getInstance(DATABASE_ADDRESS).setPersistenceEnabled(true);
         // Check that if offline mode is active, and in this case call the right method
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         boolean offlineModeValue = prefs.getBoolean(context.getResources().getString(R.string.offline_mode_key), false);

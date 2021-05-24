@@ -63,12 +63,7 @@ public class NewProfileActivity extends AppCompatActivity {
         Intent startingIntent = getIntent();
         isAuthProfile = startingIntent.getBooleanExtra(AUTH_INTENT, false);
         if(!isAuthProfile) {
-            if(!Database.getInstance().isOnline()) {
-                Intent intent = new Intent(this, SocialActivity.class);
-                intent.putExtra(ERROR_LOADING, ProfileOutcome.FAIL.getMessage());
-                startActivity(intent);
-                finish();
-            }
+            if(!Database.getInstance().isOnline()) goBackToSocialActivity();
             String otherId = startingIntent.getStringExtra(OTHER_INTENT);
             new Thread(() -> {
                 displayedAccount = OtherAccount.getInstance(otherId);
@@ -111,6 +106,16 @@ public class NewProfileActivity extends AppCompatActivity {
             displayedAccount = AuthService.getInstance().getAuthAccount();
             setupProfile();
         }
+    }
+
+    /**
+     * Method that will force this activity to end if loading was not possible
+     */
+    private void goBackToSocialActivity() {
+        Intent intent = new Intent(this, SocialActivity.class);
+        intent.putExtra(ERROR_LOADING, ProfileOutcome.FAIL.getMessage());
+        startActivity(intent);
+        finish();
     }
 
     /**
