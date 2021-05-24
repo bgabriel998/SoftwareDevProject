@@ -1,7 +1,5 @@
 package ch.epfl.sdp.peakar.database;
 
-import android.provider.ContactsContract;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
