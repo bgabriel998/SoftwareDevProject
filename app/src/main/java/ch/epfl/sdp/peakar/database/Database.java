@@ -52,7 +52,7 @@ public class Database {
     /* SINGLETON ATTRIBUTES */
     private static Database instance;
     private final DatabaseReference reference;
-    private final AtomicBoolean online = new AtomicBoolean(true);
+    private final AtomicBoolean online = new AtomicBoolean(false);
 
     private Database() {
         // Enable persistence
@@ -69,6 +69,7 @@ public class Database {
 
             @Override
             public void onCancelled(DatabaseError error) {
+                online.set(false);
                 Log.d("Database", "onCancelled: error");
             }
         });
