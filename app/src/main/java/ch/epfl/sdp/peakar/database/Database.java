@@ -124,6 +124,11 @@ public class Database {
         FirebaseDatabase.getInstance(DATABASE_ADDRESS).goOnline();
     }
 
+    /**
+     * Check if the DB connection is up.
+     * 
+     * @return true if DB connection is up, false otherwise.
+     */
     public boolean isOnline() {
         return online.get();
     }
