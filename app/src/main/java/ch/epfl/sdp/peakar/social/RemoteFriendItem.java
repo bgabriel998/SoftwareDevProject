@@ -4,7 +4,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.database.DatabaseReference;
-import ch.epfl.sdp.peakar.social.SocialItem;
 
 public class RemoteFriendItem extends SocialItem {
     private final DatabaseReference dbRef;
