@@ -55,6 +55,8 @@ public class Database {
     private static final AtomicBoolean online = new AtomicBoolean(true);
 
     private Database() {
+        // Enable persistence
+        FirebaseDatabase.getInstance(DATABASE_ADDRESS).setPersistenceEnabled(true);
         reference = new FirebaseDatabaseReference();
     }
 
@@ -62,11 +64,7 @@ public class Database {
      * Get a database instance.
      */
     public static Database getInstance() {
-        if(instance == null) {
-            // Enable persistence
-            FirebaseDatabase.getInstance(DATABASE_ADDRESS).setPersistenceEnabled(true);
-            instance = new Database();
-        }
+        if(instance == null) instance = new Database();
         return instance;
     }
 
