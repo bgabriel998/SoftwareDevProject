@@ -5,6 +5,9 @@ import com.google.firebase.database.ValueEventListener;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.database.DatabaseReference;
 
+/**
+ * Item representing a friend, used to show all friends on the social view.
+ */
 public class RemoteFriendItem extends SocialItem {
     private final DatabaseReference dbRef;
     private ValueEventListener itemListener;
