@@ -86,11 +86,10 @@ public class PointsChallengeTest {
     /* Test that generating and updating a challenge works */
     @Test
     public void generateNewChallengeTest() {
-        Challenge challenge = RemotePointsChallenge.generateNewChallenge(user2, CHALLENGE_DURATION_DAYS);
+        Challenge challenge = RemotePointsChallenge.generateNewChallenge(user2,"Test_challenge_generateNewChallengeTest", CHALLENGE_DURATION_DAYS);
 
         try {
             // Test initial awarded points are 0 and only user2 has joined it
-            assertSame(0L, challenge.getPoints());
             assertSame(1, challenge.getUsers().size());
             assertEquals(user2, challenge.getUsers().get(0));
 
@@ -110,7 +109,7 @@ public class PointsChallengeTest {
 
     @Test
     public void retrieveChallengeTest() {
-        Challenge challenge = RemotePointsChallenge.generateNewChallenge(AuthService.getInstance().getID(), CHALLENGE_DURATION_DAYS);
+        Challenge challenge = RemotePointsChallenge.generateNewChallenge(AuthService.getInstance().getID(),"Test_challenge_retrieveChallengeTest", CHALLENGE_DURATION_DAYS);
         String challengeID = challenge.getID();
 
         // Make sure the challenge has been added correctly locally
@@ -125,7 +124,6 @@ public class PointsChallengeTest {
             PointsChallenge retrievedChallenge = (PointsChallenge)AuthService.getInstance().getAuthAccount().getChallenges().get(0);
 
             // Test that the challenge retrieved after a retrieveData is the same as the one generated
-            assertSame(challenge.getPoints(), retrievedChallenge.getPoints());
             assertSame(challenge.getUsers().size(), retrievedChallenge.getUsers().size());
             assertEquals(challenge.getUsers().get(0), retrievedChallenge.getUsers().get(0));
             assertEquals(challengeID,retrievedChallenge.getID());
@@ -139,7 +137,7 @@ public class PointsChallengeTest {
     @Test
     public void checkFinishedTest() {
         AuthAccount authAccount = AuthService.getInstance().getAuthAccount();
-        Challenge challenge = RemotePointsChallenge.generateNewChallenge(user2, 0);
+        Challenge challenge = RemotePointsChallenge.generateNewChallenge(user2,"checkFinishedTest", 0);
 
         try {
 
