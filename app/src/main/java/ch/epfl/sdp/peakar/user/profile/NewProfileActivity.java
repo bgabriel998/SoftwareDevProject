@@ -205,6 +205,10 @@ public class NewProfileActivity extends AppCompatActivity {
         collectionListView.setOnItemClickListener(collectionClicked);
     }
 
+    /**
+     * Setup the challenge list view.
+     * Fill list with challenges the user is enrolled in
+     */
     private void fillChallengeListView() {
         // Show correct text if empty
         findViewById(R.id.add_challenge).setVisibility(View.VISIBLE);

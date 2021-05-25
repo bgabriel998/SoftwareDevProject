@@ -1,18 +1,14 @@
 package ch.epfl.sdp.peakar.user.services;
-
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
-
 import androidx.annotation.RequiresApi;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.database.DatabaseReference;
 import ch.epfl.sdp.peakar.database.DatabaseSnapshot;
