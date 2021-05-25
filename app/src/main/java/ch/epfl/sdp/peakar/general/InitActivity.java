@@ -23,6 +23,7 @@ import java.util.List;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.camera.CameraActivity;
+import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.social.SocialActivity;
 import ch.epfl.sdp.peakar.user.services.AuthService;
@@ -55,6 +56,8 @@ public class InitActivity extends AppCompatActivity {
                 .check();
 
         FirebaseApp.initializeApp(this);
+
+        Database.init(this);
 
         ProgressBar progressBar = findViewById(R.id.progressBarInitActivity);
         progressBar.setVisibility(View.VISIBLE);

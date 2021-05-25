@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.utils.MenuBarTestHelper;
+import ch.epfl.sdp.peakar.database.Database;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -86,6 +87,7 @@ public class SettingsActivityTest{
     @After
     public void cleanUp(){
         Intents.release();
+        Database.getInstance().setOnlineMode();
     }
 
     /* Test that menu bars settings icon works as intended */

@@ -1,10 +1,12 @@
 package ch.epfl.sdp.peakar.user.profile;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Rect;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,7 +29,9 @@ import java.util.Comparator;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.collection.NewCollectedItem;
 import ch.epfl.sdp.peakar.collection.NewCollectionListAdapter;
+import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.POIPoint;
+import ch.epfl.sdp.peakar.social.SocialActivity;
 import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.score.ScoringConstants;
 import ch.epfl.sdp.peakar.user.services.Account;
@@ -46,9 +50,7 @@ public class NewProfileActivity extends AppCompatActivity {
     public final static String OTHER_INTENT = "otherId";
 
     private boolean isAuthProfile;
-
-    private OtherAccount otherAccount = null;
-
+    private Account displayedAccount = null;
 
     private View selectedCollected = null;
 
@@ -59,58 +61,73 @@ public class NewProfileActivity extends AppCompatActivity {
         // Get the starting intent
         Intent startingIntent = getIntent();
         isAuthProfile = startingIntent.getBooleanExtra(AUTH_INTENT, false);
-
         if(!isAuthProfile) {
             String otherId = startingIntent.getStringExtra(OTHER_INTENT);
             new Thread(() -> {
-                otherAccount = OtherAccount.getInstance(otherId);
+                displayedAccount = OtherAccount.getInstance(otherId);
                 runOnUiThread(() -> {
                     setContentView(R.layout.activity_new_profile);
 
+                    // Enable swipe gesture
+                    SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_refresh);
+                    swipeRefreshLayout.setEnabled(true);
+                    swipeRefreshLayout.setOnRefreshListener(() -> {
+                        new Thread(() -> {
+                            displayedAccount = OtherAccount.getNewInstance(otherId);
+                            runOnUiThread(() -> {
+                                setupProfile();
+                                swipeRefreshLayout.setRefreshing(false);
+                            });
+                        }).start();
+                    });
+
                     StatusBarHandler.StatusBarTransparent(this);
-
-                    hideUI(false, true);
-                    setupProfile(otherAccount.getUsername(), (int)otherAccount.getScore());
-
-                    fillListView();
+                    if(AuthService.getInstance().getAuthAccount() != null) hideUI(false, isFriend());
+                    else {
+                        hideUI(false, false);
+                        hideFriendButtons();
+                    }
+                    setupProfile();
                 });
-
             }).start();
         } else {
             setContentView(R.layout.activity_new_profile);
 
+            // Disable swipe gesture
+            SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_refresh);
+            swipeRefreshLayout.setEnabled(false);
+
             StatusBarHandler.StatusBarTransparent(this);
 
             hideUI(true, false);
-            setupProfile(AuthService.getInstance().getAuthAccount().getUsername(), (int)AuthService.getInstance().getAuthAccount().getScore());
 
-
-            // If the user is not registered, force a username change
-            if(AuthService.getInstance().getAuthAccount().getUsername().equals(Account.USERNAME_BEFORE_REGISTRATION)) {
-                changeUsernameButton(null);
-                // Set text view
-                ((TextView)findViewById(R.id.profile_empty_text)).setText(R.string.empty_collection_not_registered);
-            } else {
-                fillListView();
-            }
+            displayedAccount = AuthService.getInstance().getAuthAccount();
+            setupProfile();
         }
     }
 
     /**
-     * Setup profile text
-     * @param username  of profile
-     * @param points of profile
+     * Setup profile view
      */
-    private void setupProfile(String username, int points){
+    private void setupProfile(){
         TextView usernameText = findViewById(R.id.profile_username);
         TextView pointsText = findViewById(R.id.profile_points);
 
         String profileText = getResources().getString(R.string.score_display,
-                                             UIUtils.IntegerConvert(points));
-        usernameText.setText(username);
+                                             UIUtils.IntegerConvert(displayedAccount.getScore()));
+        usernameText.setText(displayedAccount.getUsername());
         pointsText.setText(profileText);
 
         updateProfileImage();
+
+        // Handle the list view
+        if(isAuthProfile && AuthService.getInstance().getAuthAccount().getUsername().equals(Account.USERNAME_BEFORE_REGISTRATION)) {
+            changeUsernameButton(null);
+            // Set text view
+            ((TextView)findViewById(R.id.profile_empty_text)).setText(R.string.empty_collection_not_registered);
+        } else {
+            fillListView();
+        }
     }
 
     /**
@@ -120,16 +137,24 @@ public class NewProfileActivity extends AppCompatActivity {
      * @param friends true if the profile is friend with the user
      */
     private void hideUI(boolean self, boolean friends) {
-        findViewById(R.id.profile_add_friend).setVisibility(self || friends ? View.INVISIBLE : View.VISIBLE);
-        findViewById(R.id.profile_remove_friend).setVisibility(self || !friends ? View.INVISIBLE : View.VISIBLE);
-        findViewById(R.id.profile_sign_out).setVisibility(self ? View.VISIBLE : View.INVISIBLE);
-        findViewById(R.id.profile_change_username).setVisibility(self ? View.VISIBLE : View.INVISIBLE);
+        findViewById(R.id.profile_add_friend).setVisibility(self || friends ? View.GONE : View.VISIBLE);
+        findViewById(R.id.profile_remove_friend).setVisibility(self || !friends ? View.GONE : View.VISIBLE);
+        findViewById(R.id.profile_sign_out).setVisibility(self ? View.VISIBLE : View.GONE);
+        findViewById(R.id.profile_change_username).setVisibility(self ? View.VISIBLE : View.GONE);
 
         ImageView v = findViewById(R.id.profile_friend);
         v.setVisibility(self ? View.INVISIBLE : View.VISIBLE);
         if (friends) {
             setTintColor(v, R.color.DarkGreen);
         }
+    }
+
+    /**
+     * Hide the friends buttons
+     */
+    private void hideFriendButtons() {
+        findViewById(R.id.profile_add_friend).setVisibility(View.GONE);
+        findViewById(R.id.profile_remove_friend).setVisibility(View.GONE);
     }
 
     /**
@@ -141,12 +166,12 @@ public class NewProfileActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.profile_empty_text)).setText(R.string.empty_collection);
 
         ArrayList<NewCollectedItem> items = new ArrayList<>();
-        for(POIPoint discoveredPeak: AuthService.getInstance().getAuthAccount().getDiscoveredPeaks()) {
+        for(POIPoint discoveredPeak: displayedAccount.getDiscoveredPeaks()) {
             NewCollectedItem newCollectedItem = new NewCollectedItem(
                     discoveredPeak.getName(),
                     (int)(discoveredPeak.getAltitude() * ScoringConstants.PEAK_FACTOR),
                     (int)discoveredPeak.getAltitude(),
-                    AuthService.getInstance().getAuthAccount().getDiscoveredCountryHighPointNames().contains(discoveredPeak.getName()),
+                    displayedAccount.getDiscoveredCountryHighPointNames().contains(discoveredPeak.getName()),
                     (float)discoveredPeak.getLongitude(),
                     (float)discoveredPeak.getLatitude(),
                     discoveredPeak.getDiscoveredDate());
@@ -206,6 +231,11 @@ public class NewProfileActivity extends AppCompatActivity {
      * On change username button click
      */
     public void changeUsernameButton(View view) {
+        if(!Database.getInstance().isOnline()) {
+            showErrorMessage();
+            return;
+        }
+
         // Hide username
         findViewById(R.id.profile_username).setVisibility(View.GONE);
 
@@ -233,7 +263,7 @@ public class NewProfileActivity extends AppCompatActivity {
      * On confirm username change
      */
     public void confirmUsernameButton() {
-        EditText usernameEdit = ((EditText)findViewById(R.id.profile_username_edit));
+        EditText usernameEdit = findViewById(R.id.profile_username_edit);
         String newUsername = usernameEdit.getText().toString();
 
         // Start a new thread that will handle the process
@@ -257,7 +287,6 @@ public class NewProfileActivity extends AppCompatActivity {
                     // Display the message
                     Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), result.getMessage(), Snackbar.LENGTH_LONG);
                     snackbar.show();
-
                 });
             }
         };
@@ -305,11 +334,109 @@ public class NewProfileActivity extends AppCompatActivity {
      * Update the image of the profile.
      */
     private void updateProfileImage() {
-        Uri  profileImageUrl = isAuthProfile ? AuthService.getInstance().getPhotoUrl() : otherAccount.getPhotoUrl();
+        Uri profileImageUrl = isAuthProfile ? AuthService.getInstance().getPhotoUrl() : ((OtherAccount)displayedAccount).getPhotoUrl();
         if(profileImageUrl == Uri.EMPTY) return;
         Glide.with(this)
                 .load(profileImageUrl)
                 .circleCrop()
                 .into((ImageView)findViewById(R.id.profile_picture));
+    }
+
+    /**
+     * Check if the user of this profile is a friend of the authenticated user.
+     * @return true of they are friends, false otherwise.
+     */
+    private boolean isFriend() {
+        return AuthService.getInstance().getAuthAccount().getFriends().stream().anyMatch(x -> x.getUid().equals(((OtherAccount)displayedAccount).getUserID()));
+    }
+
+    /**
+     * On add friend button click
+     */
+    public void addFriendButton(View view) {
+        hideFriendButtons();
+
+        if(!Database.getInstance().isOnline()) {
+            showErrorMessage();
+            hideUI(false, false);
+            return;
+        }
+
+        // Start a new thread that will handle the process
+        Thread addThread = new Thread(){
+            @Override
+            public void run() {
+                // Add the friend and wait for the task to end
+                ProfileOutcome addFriendOutcome = AuthService.getInstance().getAuthAccount().addFriend(((OtherAccount)displayedAccount).getUserID());
+
+                // Update the view on the UI thread
+                runOnUiThread(() -> {
+
+                    String outcomeMessage = getResources().getString(addFriendOutcome.getMessage());
+
+                    if(addFriendOutcome == ProfileOutcome.FRIEND_ADDED) {
+                        // Update UI
+                        hideUI(false, true);
+
+                        outcomeMessage = displayedAccount.getUsername() + " " + outcomeMessage;
+                    }
+
+                    // Display the message
+                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), outcomeMessage, Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                });
+            }
+        };
+        addThread.start();
+    }
+
+    /**
+     * On remove friend button click
+     */
+    public void removeFriendButton(View view) {
+        hideFriendButtons();
+
+        if(!Database.getInstance().isOnline()) {
+            showErrorMessage();
+            hideUI(false, true);
+            return;
+        }
+
+        // Start a new thread that will handle the process
+        Thread removeThread = new Thread(){
+            @Override
+            public void run() {
+                // Remove the friend and wait for the task to end
+                AuthService.getInstance().getAuthAccount().removeFriend(((OtherAccount)displayedAccount).getUserID());
+
+                // Update the view on the UI thread
+                runOnUiThread(() -> {
+                    // Update UI
+                    hideUI(false, false);
+
+                    String removedMessage = displayedAccount.getUsername() + " " + getResources().getString(R.string.friend_removed);
+                    // Display the message
+                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), removedMessage, Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                });
+            }
+        };
+        removeThread.start();
+    }
+
+    /**
+     * On social activity button click
+     */
+    public void socialActivityButton(View view) {
+        Intent intent = new Intent(this, SocialActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Show an error message when the DB is not online.
+     */
+    private void showErrorMessage() {
+        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), ProfileOutcome.FAIL.getMessage(), Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 }

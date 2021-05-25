@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.map.OSMMap;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.points.DownloadTopographyTask;
@@ -115,6 +116,8 @@ public class SettingsMapActivity extends AppCompatActivity {
         addBoundingBoxToContainer(saveObject, selectedPoint);
 
         addMapAndPOIsToContainer(saveObject, selectedPoint);
+
+        Database.getInstance().setOfflineMode();
     }
 
     /**

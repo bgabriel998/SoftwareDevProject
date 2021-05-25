@@ -9,8 +9,8 @@ import java.util.List;
 
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.points.POIPoint;
+import ch.epfl.sdp.peakar.social.SocialItem;
 import ch.epfl.sdp.peakar.user.challenge.Challenge;
-import ch.epfl.sdp.peakar.user.friends.FriendItem;
 
 /**
  * Class that represents the data content of an account.
@@ -21,7 +21,7 @@ public class AccountData {
     private final HashSet<POIPoint> discoveredPeaks;
     private final HashMap<String, CountryHighPoint> discoveredCountryHighPoint;
     private final HashSet<Integer> discoveredPeakHeights;
-    private final List<FriendItem> friends;
+    private final List<SocialItem> friends;
     private final List<Challenge> challenges;
     private Uri photoUrl;
 
@@ -112,14 +112,14 @@ public class AccountData {
     /**
      * Get the friends.
      */
-    public List<FriendItem> getFriends() {
+    public List<SocialItem> getFriends() {
         return friends;
     }
 
     /**
      * Add a friend.
      */
-    public void addFriend(FriendItem friendItem) {
+    public void addFriend(SocialItem friendItem) {
         friends.add(friendItem);
     }
 
@@ -128,7 +128,7 @@ public class AccountData {
      * @param friendID id of the friend to remove.
      */
     public void removeFriend(String friendID) {
-        friends.removeIf(x -> x.hasID(friendID));
+        friends.removeIf(x -> x.getUid().equals(friendID));
     }
 
     /**

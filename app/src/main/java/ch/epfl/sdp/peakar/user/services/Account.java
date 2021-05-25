@@ -8,8 +8,8 @@ import java.util.Map;
 
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.points.POIPoint;
+import ch.epfl.sdp.peakar.social.SocialItem;
 import ch.epfl.sdp.peakar.user.challenge.Challenge;
-import ch.epfl.sdp.peakar.user.friends.FriendItem;
 
 /**
  * This class describes the local behaviour of the account model regardless of the Database provider.
@@ -79,7 +79,7 @@ public abstract class Account {
     /**
      * Get the friends of the the user.
      */
-    public List<FriendItem> getFriends() {
+    public List<SocialItem> getFriends() {
         return accountData.getFriends();
     }
 
