@@ -10,6 +10,7 @@ import androidx.core.view.ViewCompat;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.MenuBarHandler;
+import ch.epfl.sdp.peakar.utils.OnSwipeTouchListener;
 
 import static ch.epfl.sdp.peakar.utils.StatusBarHandler.StatusBarTransparentBlack;
 import static ch.epfl.sdp.peakar.utils.TopBarHandler.setupTransparentTopBar;
@@ -29,6 +30,8 @@ public class MapActivity extends AppCompatActivity {
         StatusBarTransparentBlack(this);
         setupTransparentTopBar(this, R.color.Black);
         MenuBarHandler.setup(this);
+        //TODO remove from map or adapt
+        //findViewById(R.id.map).setOnTouchListener(new OnSwipeTouchListener(this));
 
         //Instantiate Map
         osmMap = new OSMMap(this, findViewById(R.id.map));
