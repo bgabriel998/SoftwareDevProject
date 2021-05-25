@@ -90,4 +90,20 @@ public class OnSwipeTouchListenerTest {
         onView(withId(R.id.social_list)).perform(leftToRightSwipe());
         intended(IntentMatchers.hasComponent(MapActivity.class.getName()));
     }
+
+    @Test
+    public void TestSwipleRightToLeftMap(){
+        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), MapActivity.class);
+        ActivityScenario.launch(intent);
+        onView(withId(R.id.social_list)).perform(rightToLeftSwipe());
+        intended(IntentMatchers.hasComponent(SocialActivity.class.getName()));
+    }
+
+    @Test
+    public void TestSwipleLeftToRightMap(){
+        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), MapActivity.class);
+        ActivityScenario.launch(intent);
+        onView(withId(R.id.map)).perform(leftToRightSwipe());
+        intended(IntentMatchers.hasComponent(CameraActivity.class.getName()));
+    }
 }
