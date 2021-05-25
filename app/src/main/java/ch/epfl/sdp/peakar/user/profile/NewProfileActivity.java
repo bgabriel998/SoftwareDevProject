@@ -223,6 +223,7 @@ public class NewProfileActivity extends AppCompatActivity {
                 newChallengeItem = new NewChallengeItem(
                         challengeName,
                         enrolledChallenge.getFounderID(),
+                        enrolledChallenge.getFounderUri(),
                         enrolledChallenge.getStatus(),
                         enrolledChallenge.getUsers().size(),
                         null,
@@ -235,6 +236,7 @@ public class NewProfileActivity extends AppCompatActivity {
                 newChallengeItem = new NewChallengeItem(
                         challengeName,
                         enrolledChallenge.getFounderID(),
+                        enrolledChallenge.getFounderUri(),
                         enrolledChallenge.getStatus(),
                         enrolledChallenge.getUsers().size(),
                         enrolledChallenge.getStartDateTime(),

@@ -240,8 +240,14 @@ public class RemoteAccountDataFactory implements RemoteResource {
         // Retrieve usernames
         HashMap<String,String> userIDUserNames = retrieveEnrolledUserNames(users);
 
+        String stringUri = Optional.ofNullable(Database.getInstance().getReference()
+                .child(Database.CHILD_USERS).child(founderID).child(Database.CHILD_PHOTO_URL)
+                .get().getValue(String.class)).orElse("");
+        Uri founderUri = Uri.parse(stringUri);
+
+
         // Add the challenge
-        accountData.addChallenge(new RemotePointsChallenge(id,founderID,challengeName, users,
+        accountData.addChallenge(new RemotePointsChallenge(id,founderID,founderUri,challengeName, users,
                 challengeStatus,creationDateTime,durationInDays,startDateTime, finishDateTime,challengeRanking,userIDUserNames));
         Log.d("FirebaseAccountDataFactory", "loadPointsChallenge: new challenges size = " + accountData.getChallenges().size());
     }

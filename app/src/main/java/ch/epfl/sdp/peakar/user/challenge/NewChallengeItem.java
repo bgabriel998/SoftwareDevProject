@@ -1,5 +1,7 @@
 package ch.epfl.sdp.peakar.user.challenge;
 
+import android.net.Uri;
+
 import androidx.annotation.Nullable;
 
 import java.time.LocalDateTime;
@@ -11,6 +13,7 @@ import java.util.HashMap;
 public class NewChallengeItem {
     private final String name;
     private final String founderID;
+    private final Uri founderUri;
     private final int status;
     private final int numberOfParticipants;
     private final LocalDateTime startDateTime;
@@ -24,12 +27,13 @@ public class NewChallengeItem {
      * @param startDateTime start time
      * @param endDateTime end time
      */
-    public NewChallengeItem(String name, String founderID, int status, int numberOfParticipants,
+    public NewChallengeItem(String name, String founderID, Uri founderUri, int status, int numberOfParticipants,
                             @Nullable LocalDateTime startDateTime, @Nullable LocalDateTime endDateTime
                             , @Nullable HashMap<String, Integer> challengeRanking,
                             @Nullable HashMap<String,String> enrolledUsers) {
         this.name = name;
         this.founderID = founderID;
+        this.founderUri = founderUri;
         this.status = status;
         this.numberOfParticipants = numberOfParticipants;
         this.startDateTime = startDateTime;
@@ -43,6 +47,8 @@ public class NewChallengeItem {
     }
 
     public String getFounderID(){return founderID;}
+
+    public Uri getFounderURI(){return founderUri;}
 
     public int getStatus() {
         return status;

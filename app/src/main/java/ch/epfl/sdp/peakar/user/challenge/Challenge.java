@@ -1,5 +1,7 @@
 package ch.epfl.sdp.peakar.user.challenge;
 
+import android.net.Uri;
+
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -80,6 +82,8 @@ public interface Challenge {
     String getChallengeName();
 
     String getFounderID();
+
+    Uri getFounderUri();
 
     /**
      * Change challenge status

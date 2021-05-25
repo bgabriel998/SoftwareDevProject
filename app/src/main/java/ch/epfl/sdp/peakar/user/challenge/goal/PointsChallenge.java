@@ -1,5 +1,7 @@
 package ch.epfl.sdp.peakar.user.challenge.goal;
 
+import android.net.Uri;
+
 import androidx.annotation.Nullable;
 
 import java.time.LocalDateTime;
@@ -21,6 +23,7 @@ public abstract class PointsChallenge implements Challenge {
     private final String challengeName;
     private final List<String> users;
     private final int durationInDays;
+    private final Uri founderUri;
     private int status;
     private final LocalDateTime creationDateTime;
     private LocalDateTime startDateTime;
@@ -37,11 +40,12 @@ public abstract class PointsChallenge implements Challenge {
      * @param users users who joined the challenge.
      * @param challengeRanking actual challenge ranking
      */
-    public PointsChallenge(String id, String founderID, String challengeName, List<String> users, int status,
+    public PointsChallenge(String id, String founderID, Uri founderUri, String challengeName, List<String> users, int status,
                            LocalDateTime creationDateTime, int durationInDays,
                            LocalDateTime startDateTime, LocalDateTime finishDateTime, @Nullable HashMap<String, Integer> challengeRanking, @Nullable HashMap<String,String> userIDUsername) {
         this.id = id;
         this.founderID = founderID;
+        this.founderUri = founderUri;
         this.challengeName = challengeName;
         this.users = users;
         this.startDateTime = startDateTime;
@@ -112,6 +116,9 @@ public abstract class PointsChallenge implements Challenge {
 
     @Override
     public String getFounderID(){return founderID;}
+
+    @Override
+    public Uri getFounderUri(){return founderUri;}
 
     @Override
     public void setStatus(ChallengeStatus challengeStatus){

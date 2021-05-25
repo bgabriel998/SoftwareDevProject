@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.ListAdapterInflater;
 
 import static android.os.Looper.getMainLooper;
@@ -73,12 +72,8 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
             TextView rankingSecondUser = view.findViewById(R.id.challenge_second_user_txt);
             TextView rankingThirdUser = view.findViewById(R.id.challenge_third_user_txt);
 
-            Uri profileImageUrl = AuthService.getInstance().getPhotoUrl();
-            if(profileImageUrl == Uri.EMPTY) return;
-            Glide.with(mContext)
-                    .load(profileImageUrl)
-                    .circleCrop()
-                    .into((ImageView)view.findViewById(R.id.challenge_owner_picture));
+            //Set founder profile picture
+            addFounderProfilePictureToItem(view,item.getFounderURI());
 
             nameText.setText(item.getName());
             enrolledUserSize.setText(mContext.getResources().getString(R.string.enrolledUser_display, item.getNumberOfParticipants()));
@@ -150,5 +145,13 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
      */
     private String formatDateTimeString(String input) {
         return input.replace("T"," ").substring(0,input.length()-7).replace("-","/").replace(":","h");
+    }
+
+    private void addFounderProfilePictureToItem(View view,Uri profileImageUrl){
+        if(profileImageUrl == Uri.EMPTY) return;
+        Glide.with(mContext)
+                .load(profileImageUrl)
+                .circleCrop()
+                .into((ImageView)view.findViewById(R.id.challenge_owner_picture));
     }
 }

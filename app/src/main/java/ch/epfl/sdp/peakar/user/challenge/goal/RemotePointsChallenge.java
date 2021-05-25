@@ -1,6 +1,7 @@
 package ch.epfl.sdp.peakar.user.challenge.goal;
 
 import android.annotation.SuppressLint;
+import android.net.Uri;
 import android.os.Build;
 
 import androidx.annotation.Nullable;
@@ -28,7 +29,6 @@ import ch.epfl.sdp.peakar.user.services.OtherAccount;
  */
 public class RemotePointsChallenge extends PointsChallenge {
 
-
     /**
      * Constructor for a new concrete points challenge. This constructor needs to be called to retrieve an existing challenge, not to create a new one.
      * @param id unique identifier of the challenge.
@@ -38,10 +38,14 @@ public class RemotePointsChallenge extends PointsChallenge {
      * @param userIDPointsMap current user ranking
      * @param userIDUsernameMap map between user ID and user names
      */
-    public RemotePointsChallenge(String id, String founderID, String challengeName, List<String> users, int status,
+    public RemotePointsChallenge(String id, String founderID, Uri founderUri , String challengeName, List<String> users, int status,
                                  LocalDateTime creationDateTime, int durationInDays,
-                                 LocalDateTime startDateTime, LocalDateTime finishDateTime, @Nullable HashMap<String,Integer> userIDPointsMap, @Nullable HashMap<String,String> userIDUsernameMap) {
-        super(id, founderID, challengeName, users, status, creationDateTime, durationInDays, startDateTime, finishDateTime, userIDPointsMap,userIDUsernameMap);
+                                 LocalDateTime startDateTime, LocalDateTime finishDateTime,
+                                 @Nullable HashMap<String,Integer> userIDPointsMap,
+                                 @Nullable HashMap<String,String> userIDUsernameMap) {
+        super(id, founderID, founderUri, challengeName, users, status, creationDateTime, durationInDays, startDateTime, finishDateTime, userIDPointsMap,userIDUsernameMap);
+
+
     }
 
     /**
@@ -76,7 +80,7 @@ public class RemotePointsChallenge extends PointsChallenge {
 
         // Join the new challenge remotely + set value to current amount of points that the user has
         Database.getInstance().getReference().child(Database.CHILD_USERS).child(founderID).child(Database.CHILD_CHALLENGES).child(id).setValue(0);
-        RemotePointsChallenge newChallenge = new RemotePointsChallenge(id,founderID, challengeName, users, ChallengeStatus.PENDING.getValue(),
+        RemotePointsChallenge newChallenge = new RemotePointsChallenge(id,founderID, AuthService.getInstance().getPhotoUrl(), challengeName, users, ChallengeStatus.PENDING.getValue(),
                             creationTime, durationInDays,null,null, null, null);
         // Add locally if the founder is the authenticated user
         if(founderID.equals(AuthService.getInstance().getID())) AuthService.getInstance().getAuthAccount().getChallenges().add(newChallenge);
