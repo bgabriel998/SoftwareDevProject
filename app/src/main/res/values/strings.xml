@@ -14,6 +14,7 @@
     <!-- BUTTON TITLES -->
     <string name="start_button">Start Peak AR</string>
     <string name="collection_button">Collection</string>
+    <string name="challenge_button" translatable="false">Challenge</string>
     <string name="ranking_button">Ranking</string>
     <string name="gallery_button">Gallery</string>
     <string name="map_button">Map</string>
@@ -67,6 +68,7 @@
     <string name='description_sort_button' translatable="false">Sort button</string>
     <string name="description_icon" translatable="false">Peak AR Icon</string>
     <string name='description_icon_country' translatable="false">Country icon</string>
+    <string name='description_icon_avatar' translatable="false">Avatar icon</string>
     <string name='description_icon_trophy' translatable="false">Trophy icon</string>
     <string name='description_icon_collection' translatable="false">Collection icon</string>
     <string name="description_collected_image" translatable="false">Photo over collected mountain</string>
@@ -113,6 +115,28 @@
     <string name="points_display" translatable="true">Points: %s</string>
     <string name="date_display" translatable="true">Date: %s</string>
     <string name="position_display" translatable="true">Position: (1%.2f, 2%.2f) </string>
+
+    <!-- CHALLENGE TEXT -->
+    <string name="notStartedStart_display" translatable="false">Start: Waiting for users to join...</string>
+    <string name="notStartedFinish_display" translatable="false">Finish: Waiting for users to join...</string>
+    <string name="startTime_display" translatable="false">Start: %s</string>
+    <string name="finishTime_display" translatable="false">Finish: %s</string>
+    <string name="achieved_points" translatable="false">Achieved: %d pts</string>
+    <string name="remainingTime_display" translatable="false">Remaining: %s</string>
+    <string name="enrolledUser_display" translatable="false">Enrolled users: %d</string>
+
+    <string name="choose_challenge_duration" translatable="false">Choose challenge duration</string>
+    <string name="toast_challenge_name" translatable="false">Challenge name must contain between 3 and 25 characters</string>
+    <string name="enter_challenge_name" translatable="false">Enter challenge name</string>
+    <string name="cancel_button" translatable="false">Cancel</string>
+    <string name="ok_button" translatable="false">OK</string>
+    <string-array name="challenge_duration">
+        <item>1 day</item>
+        <item>2 days</item>
+        <item>5 days</item>
+        <item>7 days</item>
+        <item>14 days</item>
+    </string-array>
 
     <!-- SOCIAL TEXT -->
     <string name="search_username_hint" translatable="true">Search Username</string>

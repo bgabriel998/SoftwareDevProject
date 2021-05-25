@@ -1,12 +1,11 @@
 package ch.epfl.sdp.peakar.user.profile;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -17,17 +16,27 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.collection.NewCollectedItem;
 import ch.epfl.sdp.peakar.collection.NewCollectionListAdapter;
 import ch.epfl.sdp.peakar.points.POIPoint;
+import ch.epfl.sdp.peakar.user.challenge.ChallengeStatus;
+import ch.epfl.sdp.peakar.user.challenge.NewChallengeItem;
+import ch.epfl.sdp.peakar.user.challenge.NewChallengeListAdapter;
+import ch.epfl.sdp.peakar.user.challenge.goal.RemotePointsChallenge;
 import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.score.ScoringConstants;
 import ch.epfl.sdp.peakar.user.services.Account;
@@ -60,6 +69,8 @@ public class NewProfileActivity extends AppCompatActivity {
         Intent startingIntent = getIntent();
         isAuthProfile = startingIntent.getBooleanExtra(AUTH_INTENT, false);
 
+
+
         if(!isAuthProfile) {
             String otherId = startingIntent.getStringExtra(OTHER_INTENT);
             new Thread(() -> {
@@ -72,7 +83,7 @@ public class NewProfileActivity extends AppCompatActivity {
                     hideUI(false, true);
                     setupProfile(otherAccount.getUsername(), (int)otherAccount.getScore());
 
-                    fillListView();
+                    fillCollectedListView();
                 });
 
             }).start();
@@ -91,7 +102,7 @@ public class NewProfileActivity extends AppCompatActivity {
                 // Set text view
                 ((TextView)findViewById(R.id.profile_empty_text)).setText(R.string.empty_collection_not_registered);
             } else {
-                fillListView();
+                fillCollectedListView();
             }
         }
     }
@@ -136,7 +147,8 @@ public class NewProfileActivity extends AppCompatActivity {
      * Fill list view.
      * TODO show correct date and correct country
      */
-    private void fillListView() {
+    private void fillCollectedListView() {
+        findViewById(R.id.add_challenge).setVisibility(View.GONE);
         // Show correct text if empty
         ((TextView)findViewById(R.id.profile_empty_text)).setText(R.string.empty_collection);
 
@@ -168,18 +180,103 @@ public class NewProfileActivity extends AppCompatActivity {
         collectionListView.setOnItemClickListener(collectionClicked);
     }
 
+    private void fillChallengeListView() {
+        // Show correct text if empty
+        findViewById(R.id.add_challenge).setVisibility(View.VISIBLE);
+        ((TextView)findViewById(R.id.profile_empty_text)).setText(R.string.empty_collection);
+
+        ArrayList<NewChallengeItem> items = new ArrayList<>();
+        List<RemotePointsChallenge> challengeList  =
+                AuthService.getInstance().getAuthAccount().getChallenges().stream().map( c -> (RemotePointsChallenge) c).collect(Collectors.toList());
+
+        for(RemotePointsChallenge enrolledChallenge: challengeList) {
+            NewChallengeItem newChallengeItem;
+            //Retrieve challenge owner name
+            String challengeName = enrolledChallenge.getChallengeName();
+
+            if(enrolledChallenge.getStatus() == ChallengeStatus.PENDING.getValue()){
+                newChallengeItem = new NewChallengeItem(
+                        challengeName,
+                        enrolledChallenge.getFounderID(),
+                        enrolledChallenge.getStatus(),
+                        enrolledChallenge.getUsers().size(),
+                        null,
+                        null,
+                        null,
+                        null
+                );
+            }
+            else{
+                newChallengeItem = new NewChallengeItem(
+                        challengeName,
+                        enrolledChallenge.getFounderID(),
+                        enrolledChallenge.getStatus(),
+                        enrolledChallenge.getUsers().size(),
+                        enrolledChallenge.getStartDateTime(),
+                        enrolledChallenge.getFinishDateTime(),
+                        enrolledChallenge.getChallengeRanking(),
+                        enrolledChallenge.getChallengeUserNames()
+                );
+            }
+            items.add(newChallengeItem);
+        }
+
+
+        ListView challengeListView = findViewById(R.id.profile_collection);
+        NewChallengeListAdapter listAdapter = new NewChallengeListAdapter(this,
+                R.layout.profile_challenge_item,
+                items);
+        challengeListView.setAdapter(listAdapter);
+        challengeListView.setOnItemClickListener(challengeClicked);
+    }
+
     /**
      * Called when an item is pressed. Expands the clicked item, unless already expanded.
      * Then it shrinks it.
      */
-    private final AdapterView.OnItemClickListener collectionClicked = (parent, view, position, id) -> {
-        expandSelected(false);
+    private final AdapterView.OnItemClickListener challengeClicked = (parent, view, position, id) -> {
+        String numberOfUsersStr = ((TextView) view.findViewById(R.id.challenge_enrolled_user_size))
+                .getText().toString().replaceAll("\\D+","");
+        int numberOfUsers = Integer.parseInt(numberOfUsersStr);
+        expandSelectedChallenge(false,numberOfUsers);
         if (view == selectedCollected) {
             selectedCollected = null;
         }
         else {
             selectedCollected = view;
-            expandSelected(true);
+            expandSelectedChallenge(true,numberOfUsers);
+        }
+    };
+
+
+
+    /**
+     * Expand or shrink the selected collected view.
+     * @param expand boolean if expand or shrink.
+     */
+    private void expandSelectedChallenge(boolean expand, int enrolledUsers) {
+        if (selectedCollected != null && enrolledUsers != 1) {
+            selectedCollected.findViewById(R.id.challenge_first_user).setVisibility(expand ? View.VISIBLE:View.GONE);
+            selectedCollected.findViewById(R.id.challenge_second_user).setVisibility(expand ? View.VISIBLE:View.GONE);
+            if(enrolledUsers>2)
+                selectedCollected.findViewById(R.id.challenge_third_user).setVisibility(expand ? View.VISIBLE:View.GONE);
+        }
+    }
+
+
+
+    /**
+     * Called when an item is pressed. Expands the clicked item, unless already expanded.
+     * Then it shrinks it.
+     */
+    private final AdapterView.OnItemClickListener collectionClicked = (parent, view, position, id) -> {
+        expandSelectedCollection(false);
+        if (view == selectedCollected) {
+            selectedCollected = null;
+        }
+        else {
+            selectedCollected = view;
+            expandSelectedCollection(true);
         }
     };
 
@@ -187,7 +284,7 @@ public class NewProfileActivity extends AppCompatActivity {
      * Expand or shrink the selected collected view.
      * @param expand boolean if expand or shrink.
      */
-    private void expandSelected(boolean expand) {
+    private void expandSelectedCollection(boolean expand) {
         if (selectedCollected != null) {
             selectedCollected.findViewById(R.id.collected_position).setVisibility(expand ? View.VISIBLE:View.GONE);
             selectedCollected.findViewById(R.id.collected_date).setVisibility(expand ? View.VISIBLE:View.GONE);
@@ -252,7 +349,7 @@ public class NewProfileActivity extends AppCompatActivity {
                         removeUsernameChangeUI();
                         ((TextView)findViewById(R.id.profile_username)).setText(AuthService.getInstance().getAuthAccount().getUsername());
                     }
-                    if(result == ProfileOutcome.USERNAME_REGISTERED) fillListView();
+                    if(result == ProfileOutcome.USERNAME_REGISTERED) fillCollectedListView();
 
                     // Display the message
                     Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), result.getMessage(), Snackbar.LENGTH_LONG);
@@ -311,5 +408,81 @@ public class NewProfileActivity extends AppCompatActivity {
                 .load(profileImageUrl)
                 .circleCrop()
                 .into((ImageView)findViewById(R.id.profile_picture));
+    }
+
+    /*Collection button callback*/
+    public void collectionButton(View view) {
+        fillCollectedListView();
+    }
+
+    /*challenge button callback*/
+    public void challengeButton(View view) {
+        fillChallengeListView();
+    }
+
+
+    /**
+     * Callback method when + button is pressed.
+     * Ask for a challenge Name
+     * @param view challenge view
+     */
+    public void addChallengeButton(View view){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getResources().getString(R.string.enter_challenge_name));
+
+        // Set up the input
+        final EditText challengeNameInput = new EditText(this);
+
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        challengeNameInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE);
+        builder.setView(challengeNameInput);
+
+        // Set up the buttons
+        builder.setPositiveButton(getResources().getString(R.string.ok_button), (dialog, which) -> {
+            String retrievedText = challengeNameInput.getText().toString();
+            //Check that input challenge name length is between 3 and 25
+            if(retrievedText.length() < 3 || retrievedText.length() > 25){
+                dialog.dismiss();
+                Toast.makeText(this, getResources().getString(R.string.toast_challenge_name),Toast.LENGTH_SHORT).show();
+                addChallengeButton(view);
+            }
+            else{
+                setChallengeDuration(retrievedText);
+            }
+        });
+        builder.setNegativeButton(getResources().getString(R.string.cancel_button), (dialog, which) -> dialog.cancel());
+        builder.show();
+    }
+
+    /**
+     * Ask user to input challenge duration
+     * This method finalizes the challenge creation
+     * @param challengeName challenge name selected in the previous step
+     */
+    private void setChallengeDuration(String challengeName){
+        // setup the alert builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getResources().getString(R.string.choose_challenge_duration));
+
+        String[] durations = getResources().getStringArray(R.array.challenge_duration);
+
+        builder.setItems(durations, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    default: return;
+                    case 0: RemotePointsChallenge.generateNewChallenge(AuthService.getInstance().getID(),challengeName,1); break;
+                    case 1: RemotePointsChallenge.generateNewChallenge(AuthService.getInstance().getID(),challengeName,2); break;
+                    case 2: RemotePointsChallenge.generateNewChallenge(AuthService.getInstance().getID(),challengeName,5); break;
+                    case 3: RemotePointsChallenge.generateNewChallenge(AuthService.getInstance().getID(),challengeName,7); break;
+                    case 4: RemotePointsChallenge.generateNewChallenge(AuthService.getInstance().getID(),challengeName,14); break;
+                }
+                //Refresh the list of challenges
+                fillChallengeListView();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

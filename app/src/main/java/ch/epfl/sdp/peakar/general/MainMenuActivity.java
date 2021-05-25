@@ -11,7 +11,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.preference.PreferenceManager;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.camera.CameraActivity;
@@ -19,7 +18,10 @@ import ch.epfl.sdp.peakar.collection.CollectionActivity;
 import ch.epfl.sdp.peakar.gallery.GalleryActivity;
 import ch.epfl.sdp.peakar.map.MapActivity;
 import ch.epfl.sdp.peakar.rankings.RankingsActivity;
+import ch.epfl.sdp.peakar.user.challenge.Challenge;
 import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
+import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.user.services.OtherAccount;
 
 public class MainMenuActivity extends AppCompatActivity {
     private static final int CAMERA_REQUEST_CODE = 100;
@@ -29,8 +31,18 @@ public class MainMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+
+
     }
 
+
+    /** Changes view to SettingsActivity */
+    public void newProfileButton(View view) {
+        new Thread(() -> {        OtherAccount account = OtherAccount.getInstance(AuthService.getInstance().getAuthAccount().getFriends().get(0).getUid());
+            Challenge challenge = account.getChallenges().get(0);
+            challenge.join();}).start();
+
+    }
     /** Changes view to SettingsActivity */
     public void settingsButton(View view) {
         Intent intent = new Intent(this, SettingsActivity.class);
