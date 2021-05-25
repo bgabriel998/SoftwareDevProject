@@ -323,4 +323,13 @@ public class AuthProfileActivityTest {
         databaseRefRoot.child(Database.CHILD_CHALLENGES).child(challenge2.getID()).removeValue();
     }
 
+    @Test
+    public void pressNewChallenge(){
+        //Click on challenge button
+        onView(withId(R.id.challenge_button)).perform(click());
+
+        //Click on add challenge button
+        onView(withId(R.id.add_challenge)).perform(click());
+    }
+
 }

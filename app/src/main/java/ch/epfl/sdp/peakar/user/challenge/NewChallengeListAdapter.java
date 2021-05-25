@@ -27,12 +27,15 @@ import ch.epfl.sdp.peakar.utils.ListAdapterInflater;
 import static android.os.Looper.getMainLooper;
 
 public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
-
-
     private final int resourceLayout;
     private final Context mContext;
 
-
+    /**
+     * Class constructor, setup challenges items
+     * @param context application context
+     * @param resource resource
+     * @param items list of challenges items
+     */
     public NewChallengeListAdapter(@NonNull Context context, int resource, @NonNull List<NewChallengeItem> items) {
         super(context, resource, items);
         resourceLayout = resource;
@@ -72,7 +75,7 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
 
             //Setup item differently if the challenge is PENDING or ONGOING/ENDED
             if(item.getStatus() == ChallengeStatus.PENDING.getValue()){
-                setupUnStartedChallenge(view, item);
+                setupUnStartedChallenge(view);
             }
             else{
                 setupOngoingChallenge(view,item);
@@ -89,11 +92,12 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
     private void addRemainingTimeHandler(View view, NewChallengeItem item){
         TextView remainingTime = view.findViewById(R.id.challenge_remaining_time);
         if(Duration.between(LocalDateTime.now(),item.getEndDateTime()).isNegative()){
-            remainingTime.setText("FINISHED");
+            remainingTime.setText(mContext.getString(R.string.challenge_finished));
             remainingTime.setTextColor(Color.RED);
             return;
         }
 
+        //Add handler for stopwatch time
         final Handler remainingTimeHandler = new Handler(getMainLooper());
         remainingTimeHandler.postDelayed(new Runnable() {
             @SuppressLint("NewApi")
@@ -116,6 +120,11 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
         return input.replace("T"," ").substring(0,input.length()-7).replace("-","/").replace(":","h");
     }
 
+    /**
+     * Retrieve founder profile picture and place it in image view of challenge item
+     * @param view the view to place image on.
+     * @param profileImageUrl uri of the founder to place in the image view
+     */
     private void addFounderProfilePictureToItem(View view,Uri profileImageUrl){
         if(profileImageUrl == Uri.EMPTY) return;
         Glide.with(mContext)
@@ -129,6 +138,7 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
      * @param view the view to place text on.
      * @param item the item to base text off.
      */
+    @SuppressLint("SetTextI18n")
     private void displayPodium(View view, NewChallengeItem item){
         TextView rankingFirstUser = view.findViewById(R.id.challenge_first_user_txt);
         TextView rankingSecondUser = view.findViewById(R.id.challenge_second_user_txt);
@@ -139,20 +149,20 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
         //Add 1st
         Map.Entry<String, Integer> entry = ranking.entrySet().stream()
                 .max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get();
-        rankingFirstUser.setText(enrolledUsers.get(entry.getKey()) + " "+ entry.getValue()+"pts");
+        rankingFirstUser.setText(enrolledUsers.get(entry.getKey()) + " "+ entry.getValue()+mContext.getString(R.string.challenge_points));
         ranking.remove(entry.getKey());
 
         //Add 2nd
         Map.Entry<String, Integer> entrySec = ranking.entrySet().stream()
                 .max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get();
-        rankingSecondUser.setText(enrolledUsers.get(entrySec.getKey())  + " "+ entrySec.getValue()+"pts");
+        rankingSecondUser.setText(enrolledUsers.get(entrySec.getKey())  + " "+ entrySec.getValue()+mContext.getString(R.string.challenge_points));
         ranking.remove(entrySec.getKey());
 
         //Add third if more than two users are enrolled
         if(ranking.size() != 0 ) {
             Map.Entry<String, Integer> entryThird = ranking.entrySet().stream()
                     .max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get();
-            rankingThirdUser.setText(enrolledUsers.get(entryThird.getKey())  + " " + entryThird.getValue() + "pts");
+            rankingThirdUser.setText(enrolledUsers.get(entryThird.getKey())  + " " + entryThird.getValue()+mContext.getString(R.string.challenge_points));
             ranking.remove(entrySec.getKey());
         }
     }
@@ -161,9 +171,8 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
     /**
      * Setup item containing unStarted challenge
      * @param view view to setup
-     * @param item unStarted challenge
      */
-    private void setupUnStartedChallenge(View view, NewChallengeItem item){
+    private void setupUnStartedChallenge(View view){
         TextView nameText = view.findViewById(R.id.challenge_name);
         TextView startTimeText = view.findViewById(R.id.challenge_start_time);
         TextView finishTimeText = view.findViewById(R.id.challenge_stop_time);
@@ -176,6 +185,11 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
         remainingTime.setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * Setup fields for ongoing challenges
+     * @param view view to setup
+     * @param item started challenge
+     */
     private void setupOngoingChallenge(View view, NewChallengeItem item){
         TextView startTimeText = view.findViewById(R.id.challenge_start_time);
         TextView finishTimeText = view.findViewById(R.id.challenge_stop_time);

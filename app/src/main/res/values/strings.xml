@@ -127,6 +127,8 @@
     <string name="enrolledUser_display" translatable="false">Enrolled users: %d</string>
 
     <string name="choose_challenge_duration" translatable="false">Choose challenge duration</string>
+    <string name="challenge_points" translatable="false">pts</string>
+    <string name="challenge_finished" translatable="false">Finished!</string>
     <string name="toast_challenge_name" translatable="false">Challenge name must contain between 3 and 25 characters</string>
     <string name="enter_challenge_name" translatable="false">Enter challenge name</string>
     <string name="cancel_button" translatable="false">Cancel</string>

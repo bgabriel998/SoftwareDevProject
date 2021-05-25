@@ -28,7 +28,6 @@ public abstract class PointsChallenge implements Challenge {
     private final LocalDateTime creationDateTime;
     private LocalDateTime startDateTime;
     private LocalDateTime finishDateTime;
-
     private final HashMap<String, Integer> challengeRanking;
     private final HashMap<String, String> userIDUsername;
 
@@ -40,9 +39,12 @@ public abstract class PointsChallenge implements Challenge {
      * @param users users who joined the challenge.
      * @param challengeRanking actual challenge ranking
      */
-    public PointsChallenge(String id, String founderID, Uri founderUri, String challengeName, List<String> users, int status,
+    public PointsChallenge(String id, String founderID, Uri founderUri,
+                           String challengeName, List<String> users, int status,
                            LocalDateTime creationDateTime, int durationInDays,
-                           LocalDateTime startDateTime, LocalDateTime finishDateTime, @Nullable HashMap<String, Integer> challengeRanking, @Nullable HashMap<String,String> userIDUsername) {
+                           LocalDateTime startDateTime, LocalDateTime finishDateTime,
+                           @Nullable HashMap<String, Integer> challengeRanking,
+                           @Nullable HashMap<String,String> userIDUsername) {
         this.id = id;
         this.founderID = founderID;
         this.founderUri = founderUri;

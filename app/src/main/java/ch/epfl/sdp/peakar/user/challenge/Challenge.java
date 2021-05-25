@@ -28,6 +28,9 @@ public interface Challenge {
      */
     HashMap<String,Integer> getChallengeRanking();
 
+    /**
+     * @return map between UID and username from users
+     */
     HashMap<String,String> getChallengeUserNames();
 
     /**

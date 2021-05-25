@@ -252,7 +252,6 @@ public class NewProfileActivity extends AppCompatActivity {
             items.add(newChallengeItem);
         }
 
-
         ListView challengeListView = findViewById(R.id.profile_collection);
         NewChallengeListAdapter listAdapter = new NewChallengeListAdapter(this,
                 R.layout.profile_challenge_item,
@@ -466,6 +465,7 @@ public class NewProfileActivity extends AppCompatActivity {
 
         // Set up the input
         final EditText challengeNameInput = new EditText(this);
+        challengeNameInput.getId();
 
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         challengeNameInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE);
