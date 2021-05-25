@@ -221,7 +221,7 @@ public class UITestHelper {
      * Swipes from right to left
      * @return viewAction
      */
-    public static ViewAction leftSwipe() {
+    public static ViewAction rightToLeftSwipe() {
         return new GeneralSwipeAction(Swipe.FAST, GeneralLocation.CENTER_RIGHT,
                 GeneralLocation.CENTER_LEFT, Press.FINGER);
     }
@@ -230,7 +230,7 @@ public class UITestHelper {
      * Swipes from left to right
      * @return viewAction
      */
-    public static ViewAction rightSwipe() {
+    public static ViewAction leftToRightSwipe() {
         return new GeneralSwipeAction(Swipe.FAST, GeneralLocation.CENTER_LEFT,
                 GeneralLocation.CENTER_RIGHT, Press.FINGER);
     }

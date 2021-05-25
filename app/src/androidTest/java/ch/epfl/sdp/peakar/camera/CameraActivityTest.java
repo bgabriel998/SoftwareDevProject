@@ -13,8 +13,6 @@ import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.uiautomator.UiDevice;
-import androidx.test.uiautomator.UiSelector;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -35,15 +33,13 @@ import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.MenuBarTestHelper;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static ch.epfl.sdp.peakar.utils.TestingConstants.SHORT_SLEEP_TIME;
 import static ch.epfl.sdp.peakar.user.AuthAccountTest.registerAuthUser;
 import static ch.epfl.sdp.peakar.user.AuthAccountTest.removeAuthUser;
-import static ch.epfl.sdp.peakar.utils.UITestHelper.leftSwipe;
-import static ch.epfl.sdp.peakar.utils.UITestHelper.withScaleEqualTo;
-import static ch.epfl.sdp.peakar.utils.UITestHelper.withScaleGreaterThan;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.SHORT_SLEEP_TIME;
+import static ch.epfl.sdp.peakar.utils.UITestHelper.leftToRightSwipe;
+import static ch.epfl.sdp.peakar.utils.UITestHelper.rightToLeftSwipe;
 import static org.junit.Assert.assertTrue;
 
 
@@ -160,14 +156,14 @@ public class CameraActivityTest {
     }
 
     @Test
-    public void TestSwipleLeft(){
-        onView(withId(R.id.cameraFragment)).perform(leftSwipe());
+    public void TestSwipleRightToLeft(){
+        onView(withId(R.id.cameraFragment)).perform(rightToLeftSwipe());
         intended(IntentMatchers.hasComponent(GalleryActivity.class.getName()));
     }
 
     @Test
-    public void TestSwipleRight(){
-        onView(withId(R.id.cameraFragment)).perform(leftSwipe());
+    public void TestSwipleLeftToRight(){
+        onView(withId(R.id.cameraFragment)).perform(leftToRightSwipe());
         intended(IntentMatchers.hasComponent(MapActivity.class.getName()));
     }
 

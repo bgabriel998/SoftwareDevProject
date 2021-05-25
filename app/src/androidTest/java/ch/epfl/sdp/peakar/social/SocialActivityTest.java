@@ -3,7 +3,6 @@ package ch.epfl.sdp.peakar.social;
 import android.view.View;
 import android.widget.ListView;
 
-import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
@@ -30,14 +29,12 @@ import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.database.DatabaseReference;
-import ch.epfl.sdp.peakar.gallery.GalleryActivity;
 import ch.epfl.sdp.peakar.map.MapActivity;
 import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.services.FirebaseAuthService;
 import ch.epfl.sdp.peakar.utils.MenuBarTestHelper;
-import ch.epfl.sdp.peakar.utils.UIUtils;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -46,19 +43,19 @@ import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.peakar.database.DatabaseTest.databaseRefRoot;
 import static ch.epfl.sdp.peakar.user.AuthAccountTest.registerAuthUser;
 import static ch.epfl.sdp.peakar.user.AuthAccountTest.removeAuthUser;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.BASIC_USERNAME;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.LONG_SLEEP_TIME;
-import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.peakar.utils.UITestHelper.leftSwipe;
+import static ch.epfl.sdp.peakar.utils.UITestHelper.leftToRightSwipe;
+import static ch.epfl.sdp.peakar.utils.UITestHelper.rightToLeftSwipe;
 import static ch.epfl.sdp.peakar.utils.UITestHelper.withBackgroundColor;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.any;
@@ -344,14 +341,14 @@ public class SocialActivityTest {
     }
 
     @Test
-    public void TestSwipleLeft(){
-        onView(withId(R.id.social_list)).perform(leftSwipe());
+    public void TestSwipleRightToLeft(){
+        onView(withId(R.id.social_list)).perform(rightToLeftSwipe());
         intended(IntentMatchers.hasComponent(MapActivity.class.getName()));
     }
 
     @Test
-    public void TestSwipleRight(){
-        onView(withId(R.id.social_list)).perform(leftSwipe());
+    public void TestSwipleLeftToRight(){
+        onView(withId(R.id.social_list)).perform(leftToRightSwipe());
         intended(IntentMatchers.hasComponent(CameraActivity.class.getName()));
     }
 

@@ -17,7 +17,6 @@ import org.junit.runner.RunWith;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.general.SettingsActivity;
-import ch.epfl.sdp.peakar.map.MapActivity;
 import ch.epfl.sdp.peakar.utils.MenuBarTestHelper;
 import ch.epfl.sdp.peakar.utils.UITestHelper;
 
@@ -27,7 +26,8 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.peakar.utils.UITestHelper.leftSwipe;
+import static ch.epfl.sdp.peakar.utils.UITestHelper.leftToRightSwipe;
+import static ch.epfl.sdp.peakar.utils.UITestHelper.rightToLeftSwipe;
 import static ch.epfl.sdp.peakar.utils.UITestHelper.withBackgroundColor;
 
 /**
@@ -101,14 +101,14 @@ public class EmptyGalleryActivityTest {
     }
 
     @Test
-    public void TestSwipleLeft(){
-        onView(withId(R.id.gallery_recyclerview)).perform(leftSwipe());
-        intended(IntentMatchers.hasComponent(SettingsActivity.class.getName()));
+    public void TestSwipleRightToLeft(){
+        onView(withId(R.id.gallery_recyclerview)).perform(rightToLeftSwipe());
+        intended(IntentMatchers.hasComponent(CameraActivity.class.getName()));
     }
 
     @Test
-    public void TestSwipleRight(){
-        onView(withId(R.id.gallery_recyclerview)).perform(leftSwipe());
-        intended(IntentMatchers.hasComponent(CameraActivity.class.getName()));
+    public void TestSwipleLeftToRight(){
+        onView(withId(R.id.gallery_recyclerview)).perform(leftToRightSwipe());
+        intended(IntentMatchers.hasComponent(SettingsActivity.class.getName()));
     }
 }
