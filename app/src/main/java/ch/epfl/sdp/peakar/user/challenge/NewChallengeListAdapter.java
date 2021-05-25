@@ -63,58 +63,19 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
     private void setupItemView(View view, NewChallengeItem item) {
         if (item != null) {
             TextView nameText = view.findViewById(R.id.challenge_name);
-            TextView startTimeText = view.findViewById(R.id.challenge_start_time);
-            TextView finishTimeText = view.findViewById(R.id.challenge_stop_time);
             TextView enrolledUserSize = view.findViewById(R.id.challenge_enrolled_user_size);
-            TextView remainingTime = view.findViewById(R.id.challenge_remaining_time);
-            TextView pointsAchieved = view.findViewById(R.id.points_achieved);
-            TextView rankingFirstUser = view.findViewById(R.id.challenge_first_user_txt);
-            TextView rankingSecondUser = view.findViewById(R.id.challenge_second_user_txt);
-            TextView rankingThirdUser = view.findViewById(R.id.challenge_third_user_txt);
 
             //Set founder profile picture
             addFounderProfilePictureToItem(view,item.getFounderURI());
-
             nameText.setText(item.getName());
             enrolledUserSize.setText(mContext.getResources().getString(R.string.enrolledUser_display, item.getNumberOfParticipants()));
+
+            //Setup item differently if the challenge is PENDING or ONGOING/ENDED
             if(item.getStatus() == ChallengeStatus.PENDING.getValue()){
-                view.setBackgroundResource(R.drawable.rounded_rect_grayed);
-                nameText.setTextColor(Color.WHITE);
-                startTimeText.setText(mContext.getResources().getString(R.string.notStartedStart_display));
-                finishTimeText.setText(mContext.getResources().getString(R.string.notStartedFinish_display));
-                remainingTime.setVisibility(View.INVISIBLE);
+                setupUnStartedChallenge(view, item);
             }
             else{
-                startTimeText.setText(mContext.getResources().getString(R.string.startTime_display, formatDateTimeString(item.getStartDateTime().toString())));
-                finishTimeText.setText(mContext.getResources().getString(R.string.finishTime_display, formatDateTimeString(item.getEndDateTime().toString())));
-                pointsAchieved.setText(mContext.getResources().getString(R.string.achieved_points,item.getChallengeRanking().get(item.getFounderID())));
-
-                //Check if the logged user is the winner of the challenge
-                if(item.getChallengeRanking().entrySet().stream()
-                        .max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
-                        .get().getKey().equals(item.getFounderID()))
-                {
-                    view.findViewById(R.id.collected_trophy).setVisibility(View.VISIBLE);
-                }
-
-                HashMap<String,Integer> ranking = new HashMap<>(item.getChallengeRanking());
-                HashMap<String,String> enrolledUsers = item.getEnrolledUsers();
-                Map.Entry<String, Integer> entry = ranking.entrySet().stream()
-                        .max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get();
-                rankingFirstUser.setText(enrolledUsers.get(entry.getKey()) + " "+ entry.getValue()+"pts");
-                ranking.remove(entry.getKey());
-
-                Map.Entry<String, Integer> entrySec = ranking.entrySet().stream()
-                        .max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get();
-                rankingSecondUser.setText(enrolledUsers.get(entrySec.getKey())  + " "+ entrySec.getValue()+"pts");
-                ranking.remove(entrySec.getKey());
-                if(ranking.size() != 0 ) {
-                    Map.Entry<String, Integer> entryThird = ranking.entrySet().stream()
-                            .max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get();
-                    rankingThirdUser.setText(enrolledUsers.get(entryThird.getKey())  + " " + entryThird.getValue() + "pts");
-                    ranking.remove(entrySec.getKey());
-                }
-                addRemainingTimeHandler(view,item);
+                setupOngoingChallenge(view,item);
             }
         }
     }
@@ -124,14 +85,22 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
      * @param view the view to place text on.
      * @param item the item to base text off.
      */
-    private void addRemainingTimeHandler(View view,NewChallengeItem item){
+    @SuppressLint("NewApi")
+    private void addRemainingTimeHandler(View view, NewChallengeItem item){
         TextView remainingTime = view.findViewById(R.id.challenge_remaining_time);
+        if(Duration.between(LocalDateTime.now(),item.getEndDateTime()).isNegative()){
+            remainingTime.setText("FINISHED");
+            remainingTime.setTextColor(Color.RED);
+            return;
+        }
+
         final Handler remainingTimeHandler = new Handler(getMainLooper());
         remainingTimeHandler.postDelayed(new Runnable() {
             @SuppressLint("NewApi")
             @Override
             public void run() {
-                String remainingTimeStr = Duration.between(LocalDateTime.now(),item.getEndDateTime()).toString().split("M")[0].substring(2).toLowerCase() + "m";
+                Duration duration = Duration.between(LocalDateTime.now(),item.getEndDateTime());
+                String remainingTimeStr = duration.toString().split("M")[0].substring(2).toLowerCase() + "m";
                 remainingTime.setText(remainingTimeStr);
                 remainingTimeHandler.postDelayed(this, 1000*60);
             }
@@ -154,4 +123,82 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
                 .circleCrop()
                 .into((ImageView)view.findViewById(R.id.challenge_owner_picture));
     }
+
+    /**
+     * Add usernames and gained points to the podium section
+     * @param view the view to place text on.
+     * @param item the item to base text off.
+     */
+    private void displayPodium(View view, NewChallengeItem item){
+        TextView rankingFirstUser = view.findViewById(R.id.challenge_first_user_txt);
+        TextView rankingSecondUser = view.findViewById(R.id.challenge_second_user_txt);
+        TextView rankingThirdUser = view.findViewById(R.id.challenge_third_user_txt);
+        HashMap<String,Integer> ranking = new HashMap<>(item.getChallengeRanking());
+        HashMap<String,String> enrolledUsers = item.getEnrolledUsers();
+
+        //Add 1st
+        Map.Entry<String, Integer> entry = ranking.entrySet().stream()
+                .max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get();
+        rankingFirstUser.setText(enrolledUsers.get(entry.getKey()) + " "+ entry.getValue()+"pts");
+        ranking.remove(entry.getKey());
+
+        //Add 2nd
+        Map.Entry<String, Integer> entrySec = ranking.entrySet().stream()
+                .max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get();
+        rankingSecondUser.setText(enrolledUsers.get(entrySec.getKey())  + " "+ entrySec.getValue()+"pts");
+        ranking.remove(entrySec.getKey());
+
+        //Add third if more than two users are enrolled
+        if(ranking.size() != 0 ) {
+            Map.Entry<String, Integer> entryThird = ranking.entrySet().stream()
+                    .max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get();
+            rankingThirdUser.setText(enrolledUsers.get(entryThird.getKey())  + " " + entryThird.getValue() + "pts");
+            ranking.remove(entrySec.getKey());
+        }
+    }
+
+
+    /**
+     * Setup item containing unStarted challenge
+     * @param view view to setup
+     * @param item unStarted challenge
+     */
+    private void setupUnStartedChallenge(View view, NewChallengeItem item){
+        TextView nameText = view.findViewById(R.id.challenge_name);
+        TextView startTimeText = view.findViewById(R.id.challenge_start_time);
+        TextView finishTimeText = view.findViewById(R.id.challenge_stop_time);
+        TextView remainingTime = view.findViewById(R.id.challenge_remaining_time);
+
+        view.setBackgroundResource(R.drawable.rounded_rect_grayed);
+        nameText.setTextColor(Color.WHITE);
+        startTimeText.setText(mContext.getResources().getString(R.string.notStartedStart_display));
+        finishTimeText.setText(mContext.getResources().getString(R.string.notStartedFinish_display));
+        remainingTime.setVisibility(View.INVISIBLE);
+    }
+
+    private void setupOngoingChallenge(View view, NewChallengeItem item){
+        TextView startTimeText = view.findViewById(R.id.challenge_start_time);
+        TextView finishTimeText = view.findViewById(R.id.challenge_stop_time);
+        TextView pointsAchieved = view.findViewById(R.id.points_achieved);
+
+        startTimeText.setText(mContext.getResources().getString(R.string.startTime_display, formatDateTimeString(item.getStartDateTime().toString())));
+        finishTimeText.setText(mContext.getResources().getString(R.string.finishTime_display, formatDateTimeString(item.getEndDateTime().toString())));
+        pointsAchieved.setText(mContext.getResources().getString(R.string.achieved_points,item.getChallengeRanking().get(item.getFounderID())));
+
+        //Check if the logged user is the winner of the challenge
+        if(item.getChallengeRanking().entrySet().stream()
+                .max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
+                .get().getKey().equals(item.getFounderID()))
+        {
+            view.findViewById(R.id.collected_trophy).setVisibility(View.VISIBLE);
+        }
+
+        //Display podium
+        displayPodium(view,item);
+
+        //Add stopwatch handler for time that is up
+        addRemainingTimeHandler(view,item);
+
+    }
+
 }

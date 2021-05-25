@@ -27,6 +27,9 @@ import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.collection.NewCollectedItem;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.POIPoint;
+import ch.epfl.sdp.peakar.user.challenge.Challenge;
+import ch.epfl.sdp.peakar.user.challenge.NewChallengeItem;
+import ch.epfl.sdp.peakar.user.challenge.goal.RemotePointsChallenge;
 import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
 import ch.epfl.sdp.peakar.user.score.UserScore;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
@@ -50,6 +53,7 @@ import static ch.epfl.sdp.peakar.utils.TestingConstants.AIGUILLE_DU_PLAN_LAT;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.AIGUILLE_DU_PLAN_LONG;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.AIGUILLE_DU_PLAN_NAME;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.BASIC_USERNAME;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.CHALLENGE_DURATION_DAYS;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.DENT_DU_GEANT_ALT;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.DENT_DU_GEANT_LAT;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.DENT_DU_GEANT_LONG;
@@ -293,4 +297,30 @@ public class AuthProfileActivityTest {
         interaction.atPosition(2).onChildView(withId(R.id.collected_name)).check(matches(withText(AIGUILLE_DU_PLAN_NAME)));
         interaction.atPosition(3).onChildView(withId(R.id.collected_name)).check(matches(withText(POINTE_DE_LAPAZ_NAME)));
     }
+
+    /*Check that the enrolled challenges are displayed*/
+    @Test
+    public void pressOnEnrolledChallenges(){
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).child(Database.CHILD_USERNAME).setValue(user1);
+        Challenge challenge = RemotePointsChallenge.generateNewChallenge(user1,"Test_Challenge_1", CHALLENGE_DURATION_DAYS);
+        Challenge challenge2 = RemotePointsChallenge.generateNewChallenge(AuthService.getInstance().getID(),"Test_Challenge_2", CHALLENGE_DURATION_DAYS);
+        AuthService.getInstance().getAuthAccount().addFriend(user2);
+        challenge.join();
+        FirebaseAuthService.getInstance().forceRetrieveData();
+
+        //Click on challenge button
+        onView(withId(R.id.challenge_button)).perform(click());
+        DataInteraction interaction = onData(instanceOf(NewChallengeItem.class));
+
+        //Check two added challenges
+        interaction.atPosition(0).onChildView(withId(R.id.challenge_name)).check(matches(withText("Test_Challenge_1")));
+        interaction.atPosition(1).onChildView(withId(R.id.challenge_name)).check(matches(withText("Test_Challenge_2")));
+
+        onView(withId(R.id.collected_peaks_button)).perform(click());
+        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
+        databaseRefRoot.child(Database.CHILD_USERS).child(user1).removeValue();
+        databaseRefRoot.child(Database.CHILD_CHALLENGES).child(challenge.getID()).removeValue();
+        databaseRefRoot.child(Database.CHILD_CHALLENGES).child(challenge2.getID()).removeValue();
+    }
+
 }
