@@ -95,7 +95,7 @@ public class OnSwipeTouchListenerTest {
     public void TestSwipleRightToLeftMap(){
         Intent intent = new Intent(ApplicationProvider.getApplicationContext(), MapActivity.class);
         ActivityScenario.launch(intent);
-        onView(withId(R.id.social_list)).perform(rightToLeftSwipe());
+        onView(withId(R.id.map)).perform(rightToLeftSwipe());
         intended(IntentMatchers.hasComponent(SocialActivity.class.getName()));
     }
 
