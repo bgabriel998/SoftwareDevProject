@@ -33,14 +33,6 @@ public class MainMenuActivity extends AppCompatActivity {
 
     }
 
-
-    /** Changes view to SettingsActivity */
-    public void newProfileButton(View view) {
-        new Thread(() -> {        OtherAccount account = OtherAccount.getInstance(AuthService.getInstance().getAuthAccount().getFriends().get(0).getUid());
-            Challenge challenge = account.getChallenges().get(0);
-            challenge.join();}).start();
-
-    }
     /** Changes view to SettingsActivity */
     public void settingsButton(View view) {
         Intent intent = new Intent(this, SettingsActivity.class);

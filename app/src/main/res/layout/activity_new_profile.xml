@@ -142,21 +142,37 @@
 
         <!-- Collection Icon -->
         <ImageView
+            android:id="@+id/collected_peaks_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/profile_icon_collection"
+            app:srcCompat="@drawable/ic_landscape_black_48dp"
             android:layout_marginStart="10dp"
             app:layout_constraintTop_toBottomOf="@id/profile_profile_container"
             app:layout_constraintStart_toStartOf="@id/profile_line"
             app:tint="@color/DarkGreen"
-            android:contentDescription="@string/collection_button"/>
+            android:contentDescription="@string/collection_button"
+            android:onClick="collectionButton"/>
 
-        <!-- Dots Icon -->
+        <ImageView
+            android:id="@+id/challenge_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_noun_challenge_1517250"
+            android:layout_marginStart="10dp"
+            app:layout_constraintTop_toBottomOf="@id/profile_profile_container"
+            app:layout_constraintStart_toEndOf="@id/collected_peaks_button"
+            app:tint="@color/DarkGreen"
+            android:contentDescription="@string/challenge_button"
+            android:onClick="challengeButton"/>
+
+
         <ImageButton
-            android:id="@+id/profile_dots"
+            android:id="@+id/add_challenge"
+            android:onClick="addChallengeButton"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            app:srcCompat="@drawable/general_icon_dots"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/ic_add_circle_outline_black_24dp"
             android:background="@null"
             android:layout_marginBottom="5dp"
             android:layout_marginEnd="5dp"
@@ -196,139 +212,6 @@
         <ListView
             android:id="@+id/profile_collection"
             android:layout_width="match_parent"
-
-            android:layout_height="28dp"
-            android:gravity="center"
-            android:text="Points: 4 987" />
-    </LinearLayout>
-
-    <!-- Change Username -->
-    <ImageButton
-        android:id="@+id/profile_change_username"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="109dp"
-        android:background="@null"
-        android:contentDescription="@string/description_change_user_button"
-        android:onClick="changeUsernameButton"
-        app:layout_constraintStart_toEndOf="@id/profile_profile_container"
-        app:layout_constraintTop_toTopOf="@id/profile_profile_container"
-        app:srcCompat="@drawable/profile_icon_edit_username"
-        app:tint="@color/DarkGreen" />
-
-    <!-- Add friend -->
-    <ImageButton
-        android:id="@+id/profile_add_friend"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        app:srcCompat="@drawable/profile_icon_add"
-        android:background="@null"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="17dp"
-        app:layout_constraintTop_toTopOf="@id/profile_profile_container"
-        app:layout_constraintBottom_toBottomOf="@id/profile_profile_container"
-        app:layout_constraintEnd_toEndOf="@id/profile_profile_container"
-        android:contentDescription="@string/add_friend_button"/>
-
-    <!-- Remove friend -->
-    <ImageButton
-        android:id="@+id/profile_remove_friend"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        app:srcCompat="@drawable/profile_icon_remove"
-        android:background="@null"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="17dp"
-        app:layout_constraintTop_toTopOf="@id/profile_profile_container"
-        app:layout_constraintBottom_toBottomOf="@id/profile_profile_container"
-        app:layout_constraintEnd_toEndOf="@id/profile_profile_container"
-        android:contentDescription="@string/description_remove_friend_button"/>
-
-    <!-- Collection Icon -->
-    <ImageView
-        android:id="@+id/collected_peaks_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_landscape_black_48dp"
-        android:layout_marginStart="10dp"
-        app:layout_constraintTop_toBottomOf="@id/profile_profile_container"
-        app:layout_constraintStart_toStartOf="@id/profile_line"
-        app:tint="@color/DarkGreen"
-        android:contentDescription="@string/collection_button"
-        android:onClick="collectionButton"/>
-
-    <ImageView
-        android:id="@+id/challenge_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_noun_challenge_1517250"
-        android:layout_marginStart="10dp"
-        app:layout_constraintTop_toBottomOf="@id/profile_profile_container"
-        app:layout_constraintStart_toEndOf="@id/collected_peaks_button"
-        app:tint="@color/DarkGreen"
-        android:contentDescription="@string/challenge_button"
-        android:onClick="challengeButton"/>
-
-
-    <!-- Dots Icon -->
-    <ImageButton
-        android:id="@+id/add_challenge"
-        android:onClick="addChallengeButton"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:visibility="invisible"
-        app:srcCompat="@drawable/ic_add_circle_outline_black_24dp"
-        android:background="@null"
-        android:layout_marginBottom="5dp"
-        android:layout_marginEnd="5dp"
-        app:layout_constraintBottom_toTopOf="@id/profile_line"
-        app:layout_constraintEnd_toEndOf="@id/profile_line"
-        app:tint="@color/DarkGreen"
-        android:contentDescription="@string/description_sort_button"/>
-
-    <!-- Line -->
-    <ImageView
-        android:id="@+id/profile_line"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        app:srcCompat="@drawable/profile_line_dark_green"
-        android:layout_marginTop="40dp"
-        android:layout_marginStart="6dp"
-        android:layout_marginEnd="6dp"
-        app:layout_constraintTop_toBottomOf="@id/profile_profile_container"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:contentDescription="@string/description_dark_green_line"/>
-
-    <!-- Empty collection text -->
-    <TextView
-        android:id="@+id/profile_empty_text"
-        style="@style/LargeText.LightBlue"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:gravity="center"
-        android:layout_marginTop="100dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profile_line"
-        android:text="@string/empty_collection" />
-
-    <!-- Collection -->
-    <ListView
-        android:id="@+id/profile_collection"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="9dp"
-        android:layout_marginTop="329dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
-
             android:layout_height="match_parent"
             android:divider="@android:color/transparent"
             android:dividerHeight="9dp"
@@ -340,4 +223,3 @@
             app:layout_constraintTop_toTopOf="@id/profile_layout"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-

@@ -1,13 +1,9 @@
 package ch.epfl.sdp.peakar.user.profile;
 
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
@@ -25,6 +21,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
@@ -39,11 +36,11 @@ import ch.epfl.sdp.peakar.collection.NewCollectedItem;
 import ch.epfl.sdp.peakar.collection.NewCollectionListAdapter;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.POIPoint;
+import ch.epfl.sdp.peakar.social.SocialActivity;
 import ch.epfl.sdp.peakar.user.challenge.ChallengeStatus;
 import ch.epfl.sdp.peakar.user.challenge.NewChallengeItem;
 import ch.epfl.sdp.peakar.user.challenge.NewChallengeListAdapter;
 import ch.epfl.sdp.peakar.user.challenge.goal.RemotePointsChallenge;
-import ch.epfl.sdp.peakar.social.SocialActivity;
 import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.score.ScoringConstants;
 import ch.epfl.sdp.peakar.user.services.Account;
@@ -140,7 +137,7 @@ public class NewProfileActivity extends AppCompatActivity {
             // Set text view
             ((TextView)findViewById(R.id.profile_empty_text)).setText(R.string.empty_collection_not_registered);
         } else {
-            fillListView();
+            fillCollectedListView();
         }
     }
 
@@ -490,7 +487,7 @@ public class NewProfileActivity extends AppCompatActivity {
      * This method finalizes the challenge creation
      * @param challengeName challenge name selected in the previous step
      */
-    private void setChallengeDuration(String challengeName){
+    private void setChallengeDuration(String challengeName) {
         // setup the alert builder
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getResources().getString(R.string.choose_challenge_duration));
@@ -501,12 +498,23 @@ public class NewProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
-                    default: return;
-                    case 0: RemotePointsChallenge.generateNewChallenge(AuthService.getInstance().getID(),challengeName,1); break;
-                    case 1: RemotePointsChallenge.generateNewChallenge(AuthService.getInstance().getID(),challengeName,2); break;
-                    case 2: RemotePointsChallenge.generateNewChallenge(AuthService.getInstance().getID(),challengeName,5); break;
-                    case 3: RemotePointsChallenge.generateNewChallenge(AuthService.getInstance().getID(),challengeName,7); break;
-                    case 4: RemotePointsChallenge.generateNewChallenge(AuthService.getInstance().getID(),challengeName,14); break;
+                    default:
+                        return;
+                    case 0:
+                        RemotePointsChallenge.generateNewChallenge(AuthService.getInstance().getID(), challengeName, 1);
+                        break;
+                    case 1:
+                        RemotePointsChallenge.generateNewChallenge(AuthService.getInstance().getID(), challengeName, 2);
+                        break;
+                    case 2:
+                        RemotePointsChallenge.generateNewChallenge(AuthService.getInstance().getID(), challengeName, 5);
+                        break;
+                    case 3:
+                        RemotePointsChallenge.generateNewChallenge(AuthService.getInstance().getID(), challengeName, 7);
+                        break;
+                    case 4:
+                        RemotePointsChallenge.generateNewChallenge(AuthService.getInstance().getID(), challengeName, 14);
+                        break;
                 }
                 //Refresh the list of challenges
                 fillChallengeListView();
@@ -515,6 +523,7 @@ public class NewProfileActivity extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
 
     /**
      * Check if the user of this profile is a friend of the authenticated user.

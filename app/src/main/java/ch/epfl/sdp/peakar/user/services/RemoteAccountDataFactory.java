@@ -21,11 +21,9 @@ import ch.epfl.sdp.peakar.general.remote.RemoteResource;
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.points.POIPoint;
 
-import ch.epfl.sdp.peakar.user.challenge.Challenge;
 import ch.epfl.sdp.peakar.social.RemoteFriendItem;
 
 import ch.epfl.sdp.peakar.user.challenge.goal.RemotePointsChallenge;
-import ch.epfl.sdp.peakar.user.friends.RemoteFriendItem;
 
 /**
  * This class implements helper methods that can generate an <code>AccountData</code> retrieving data from the DB.
