@@ -13,6 +13,8 @@ import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiSelector;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -24,17 +26,24 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
+import ch.epfl.sdp.peakar.gallery.GalleryActivity;
+import ch.epfl.sdp.peakar.map.MapActivity;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
 import ch.epfl.sdp.peakar.user.profile.ProfileLauncherActivity;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.MenuBarTestHelper;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.SHORT_SLEEP_TIME;
 import static ch.epfl.sdp.peakar.user.AuthAccountTest.registerAuthUser;
 import static ch.epfl.sdp.peakar.user.AuthAccountTest.removeAuthUser;
+import static ch.epfl.sdp.peakar.utils.UITestHelper.leftSwipe;
+import static ch.epfl.sdp.peakar.utils.UITestHelper.withScaleEqualTo;
+import static ch.epfl.sdp.peakar.utils.UITestHelper.withScaleGreaterThan;
 import static org.junit.Assert.assertTrue;
 
 
@@ -86,7 +95,7 @@ public class CameraActivityTest {
     }
 
     /* Test that menu bars settings icon works as intended */
-// TODO Fix test.
+    // TODO Fix test.
     //@Test
     public void TestMenuBarSettings(){
         MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_settings);
@@ -148,6 +157,18 @@ public class CameraActivityTest {
         button.perform(ViewActions.click());
 
         intended(IntentMatchers.hasComponent(NewProfileActivity.class.getName()));
+    }
+
+    @Test
+    public void TestSwipleLeft(){
+        onView(withId(R.id.cameraFragment)).perform(leftSwipe());
+        intended(IntentMatchers.hasComponent(GalleryActivity.class.getName()));
+    }
+
+    @Test
+    public void TestSwipleRight(){
+        onView(withId(R.id.cameraFragment)).perform(leftSwipe());
+        intended(IntentMatchers.hasComponent(MapActivity.class.getName()));
     }
 
     public void createTestUser() {

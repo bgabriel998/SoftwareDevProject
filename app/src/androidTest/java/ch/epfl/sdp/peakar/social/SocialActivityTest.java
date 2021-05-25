@@ -27,8 +27,11 @@ import java.util.Comparator;
 import java.util.List;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.database.DatabaseReference;
+import ch.epfl.sdp.peakar.gallery.GalleryActivity;
+import ch.epfl.sdp.peakar.map.MapActivity;
 import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
@@ -55,6 +58,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sdp.peakar.utils.UITestHelper.leftSwipe;
 import static ch.epfl.sdp.peakar.utils.UITestHelper.withBackgroundColor;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.any;
@@ -338,4 +342,17 @@ public class SocialActivityTest {
                 .check(matches(isDisplayed()))
                 .check(matches(not(hasDescendant(any(View.class)))));
     }
+
+    @Test
+    public void TestSwipleLeft(){
+        onView(withId(R.id.social_list)).perform(leftSwipe());
+        intended(IntentMatchers.hasComponent(MapActivity.class.getName()));
+    }
+
+    @Test
+    public void TestSwipleRight(){
+        onView(withId(R.id.social_list)).perform(leftSwipe());
+        intended(IntentMatchers.hasComponent(CameraActivity.class.getName()));
+    }
+
 }

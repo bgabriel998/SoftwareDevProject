@@ -12,6 +12,11 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.ViewAction;
+import androidx.test.espresso.action.GeneralLocation;
+import androidx.test.espresso.action.GeneralSwipeAction;
+import androidx.test.espresso.action.Press;
+import androidx.test.espresso.action.Swipe;
 import androidx.test.espresso.matcher.BoundedMatcher;
 
 import ch.epfl.sdp.peakar.R;
@@ -210,5 +215,23 @@ public class UITestHelper {
                 imgFile.delete();
             }
         }
+    }
+
+    /**
+     * Swipes from right to left
+     * @return viewAction
+     */
+    public static ViewAction leftSwipe() {
+        return new GeneralSwipeAction(Swipe.FAST, GeneralLocation.CENTER_RIGHT,
+                GeneralLocation.CENTER_LEFT, Press.FINGER);
+    }
+
+    /**
+     * Swipes from left to right
+     * @return viewAction
+     */
+    public static ViewAction rightSwipe() {
+        return new GeneralSwipeAction(Swipe.FAST, GeneralLocation.CENTER_LEFT,
+                GeneralLocation.CENTER_RIGHT, Press.FINGER);
     }
 }
