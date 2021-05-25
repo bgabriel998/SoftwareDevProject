@@ -5,7 +5,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Build;
 import android.util.DisplayMetrics;
+
+import androidx.annotation.RequiresApi;
+import androidx.preference.PreferenceManager;
 
 import java.util.Locale;
 
@@ -22,9 +26,9 @@ public final class SettingsUtilities {
      * Updates the language depending on the preferences
      *
      * @param context context of the application
-     * @param sharedPreferences shared preferences
      */
-    public static void updateLanguage(Context context, SharedPreferences sharedPreferences){
+    public static void updateLanguage(Context context){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         String language =  sharedPreferences.getString(context.getResources().getString(R.string.language_key), DEFAULT_LANGUAGE);
         SettingsUtilities.setLocale(context, SettingsUtilities.getLanguageCode(language));
     }
@@ -73,5 +77,33 @@ public final class SettingsUtilities {
         activity.overridePendingTransition(0, 0);
         activity.startActivity(activity.getIntent());
         activity.overridePendingTransition(0, 0);
+    }
+
+    /**
+     * Gets the locale currently set
+     * @param context context of the application
+     * @return Locale that is set in the settings
+     */
+    private static Locale getSetLocale(Context context){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        String language =  sharedPreferences.getString(context.getResources().getString(R.string.language_key), DEFAULT_LANGUAGE);
+        return new Locale(getLanguageCode(language));
+    }
+
+    /**
+     * Checks for the currently used locale and the locale set in the settings and refreshes the
+     * activity if the current locale is not equal to the locale in the settings
+     *
+     * @param context context of application
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static void checkForLanguage(Context context){
+        //Only check the first two letters to only check for the language
+        String localeSettings = getSetLocale(context).stripExtensions().toString().substring(0, 2);
+        String currentLocale = context.getResources().getConfiguration().getLocales().get(0).toString().substring(0, 2);
+        if(!localeSettings.equals(currentLocale)){
+            updateLanguage(context);
+        }
     }
 }
