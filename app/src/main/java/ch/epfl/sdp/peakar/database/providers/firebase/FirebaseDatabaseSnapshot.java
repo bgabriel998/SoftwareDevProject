@@ -42,7 +42,7 @@ public class FirebaseDatabaseSnapshot implements DatabaseSnapshot {
 
     @Override
     public boolean exists() {
-        return firebaseDatabaseSnapshot.exists();
+        return firebaseDatabaseSnapshot != null && firebaseDatabaseSnapshot.exists();
     }
 
     @Override

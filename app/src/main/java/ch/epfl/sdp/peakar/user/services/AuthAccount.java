@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.points.POIPoint;
+import ch.epfl.sdp.peakar.social.SocialItem;
 import ch.epfl.sdp.peakar.user.challenge.Challenge;
-import ch.epfl.sdp.peakar.user.friends.FriendItem;
 import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 
 /**
@@ -62,16 +62,16 @@ public abstract class AuthAccount extends Account {
 
     /**
      * Add a friend of the authenticated user.
-     * @param friendUsername friend's username.
+     * @param friendId friend's ID.
      * @return outcome of the process.
      */
-    public abstract ProfileOutcome addFriend(String friendUsername);
+    public abstract ProfileOutcome addFriend(String friendId);
 
     /**
      * Add a <code>friendItem</code> to the list of friend items of the user.
      * @param friendItem <code>friendItem</code> corresponding to a new friend.
      */
-    protected void addFriend(FriendItem friendItem) {
+    protected void addFriend(SocialItem friendItem) {
         accountData.addFriend(friendItem);
     }
 

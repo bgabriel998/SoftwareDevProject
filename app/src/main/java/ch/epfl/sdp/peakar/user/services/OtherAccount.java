@@ -19,6 +19,14 @@ public abstract class OtherAccount extends Account {
     }
 
     /**
+     * Get a new account instance. If the account was already loaded, it is downloaded once again.
+     * @param userID id of the user.
+     */
+    public static OtherAccount getNewInstance(String userID) {
+        return RemoteOtherAccount.getNewInstance(userID);
+    }
+
+    /**
      * Get the ID of the user.
      */
     public abstract String getUserID();

@@ -1,86 +1,202 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_refresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
-    tools:context=".user.profile.NewProfileActivity">
+    android:layout_marginTop="0dp"
+    android:layout_marginStart="0dp">
 
-    <!-- Sign out button -->
-    <ImageButton
-        android:id="@+id/profile_sign_out"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="10dp"
-        android:background="@null"
-        android:contentDescription="@string/description_sign_out_button"
-        android:onClick="signOutButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/profile_icon_sign_out"
-        app:tint="@color/DarkGreen" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/profile_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background"
+        tools:context=".user.profile.NewProfileActivity">
 
-    <!-- Friend Icon -->
-    <ImageView
-        android:id="@+id/profile_friend"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:srcCompat="@drawable/menu_icons_social"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/LightBlue"
-        android:contentDescription="@string/description_social_button"/>
+        <!-- Sign out button -->
+        <ImageButton
+            android:id="@+id/profile_sign_out"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="10dp"
+            android:background="@null"
+            android:contentDescription="@string/description_sign_out_button"
+            android:onClick="signOutButton"
+            app:layout_constraintEnd_toEndOf="@id/profile_layout"
+            app:layout_constraintTop_toTopOf="@id/profile_layout"
+            app:srcCompat="@drawable/profile_icon_sign_out"
+            app:tint="@color/DarkGreen" />
 
-    <!-- Profile container -->
-    <LinearLayout
-        android:id="@+id/profile_profile_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="100dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <!-- Profile picture -->
+        <!-- Friend Icon -->
         <ImageView
-            android:id="@+id/profile_picture"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            app:srcCompat="@drawable/temp_avatar"
-            android:contentDescription="@string/description_user_avatar"/>
+            android:id="@+id/profile_friend"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="20dp"
+            android:contentDescription="@string/description_social_button"
+            android:onClick="socialActivityButton"
+            app:layout_constraintEnd_toEndOf="@id/profile_layout"
+            app:layout_constraintTop_toTopOf="@id/profile_layout"
+            app:srcCompat="@drawable/menu_icons_social"
+            app:tint="@color/LightBlue" />
 
-        <!-- Username -->
-        <TextView
-            android:id="@+id/profile_username"
-            style="@style/LargeText.DarkGreen"
-            android:layout_width="170dp"
-            android:layout_height="35dp"
-            android:gravity="center"
-            android:text="Username" />
+        <!-- Profile container -->
+        <LinearLayout
+            android:id="@+id/profile_profile_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="100dp"
+            app:layout_constraintTop_toTopOf="@id/profile_layout"
+            app:layout_constraintStart_toStartOf="@id/profile_layout"
+            app:layout_constraintEnd_toEndOf="@id/profile_layout">
 
-        <!-- Edit username -->
-        <EditText
-            android:id="@+id/profile_username_edit"
-            style="@style/LargeText.DarkGreen"
-            android:layout_width="170dp"
-            android:layout_height="35dp"
-            android:gravity="center"
-            android:visibility="gone"
-            android:autofillHints="@string/insert_username_button"
-            android:inputType="text"
-            android:hint="@string/insert_username_button"
-            tools:ignore="LabelFor" />
+            <!-- Profile picture -->
+            <ImageView
+                android:id="@+id/profile_picture"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/temp_avatar"
+                android:contentDescription="@string/description_user_avatar"/>
 
-        <TextView
-            android:id="@+id/profile_points"
-            style="@style/StandardText.LightBlue"
+            <!-- Username -->
+            <TextView
+                android:id="@+id/profile_username"
+                style="@style/LargeText.DarkGreen"
+                android:layout_width="170dp"
+                android:layout_height="35dp"
+                android:gravity="center"
+                android:text="Username" />
+
+            <!-- Edit username -->
+            <EditText
+                android:id="@+id/profile_username_edit"
+                style="@style/LargeText.DarkGreen"
+                android:layout_width="170dp"
+                android:layout_height="35dp"
+                android:gravity="center"
+                android:visibility="gone"
+                android:autofillHints="@string/insert_username_button"
+                android:inputType="text"
+                android:hint="@string/insert_username_button"
+                tools:ignore="LabelFor" />
+
+            <TextView
+                android:id="@+id/profile_points"
+                style="@style/StandardText.LightBlue"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:gravity="center"
+                android:text="Points: 4 987" />
+        </LinearLayout>
+
+        <!-- Change Username -->
+        <ImageButton
+            android:id="@+id/profile_change_username"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="109dp"
+            android:background="@null"
+            android:contentDescription="@string/description_change_user_button"
+            android:onClick="changeUsernameButton"
+            app:layout_constraintStart_toEndOf="@id/profile_profile_container"
+            app:layout_constraintTop_toTopOf="@id/profile_profile_container"
+            app:srcCompat="@drawable/profile_icon_edit_username"
+            app:tint="@color/DarkGreen" />
+
+        <!-- Add friend -->
+        <ImageButton
+            android:id="@+id/profile_add_friend"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="11dp"
+            android:layout_marginEnd="17dp"
+            android:background="@null"
+            android:contentDescription="@string/add_friend_button"
+            android:onClick="addFriendButton"
+            app:layout_constraintBottom_toBottomOf="@id/profile_profile_container"
+            app:layout_constraintEnd_toEndOf="@id/profile_profile_container"
+            app:layout_constraintTop_toTopOf="@id/profile_profile_container"
+            app:srcCompat="@drawable/profile_icon_add" />
+
+        <!-- Remove friend -->
+        <ImageButton
+            android:id="@+id/profile_remove_friend"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="11dp"
+            android:layout_marginEnd="17dp"
+            android:background="@null"
+            android:contentDescription="@string/description_remove_friend_button"
+            android:onClick="removeFriendButton"
+            app:layout_constraintBottom_toBottomOf="@id/profile_profile_container"
+            app:layout_constraintEnd_toEndOf="@id/profile_profile_container"
+            app:layout_constraintTop_toTopOf="@id/profile_profile_container"
+            app:srcCompat="@drawable/profile_icon_remove" />
+
+        <!-- Collection Icon -->
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/profile_icon_collection"
+            android:layout_marginStart="10dp"
+            app:layout_constraintTop_toBottomOf="@id/profile_profile_container"
+            app:layout_constraintStart_toStartOf="@id/profile_line"
+            app:tint="@color/DarkGreen"
+            android:contentDescription="@string/collection_button"/>
+
+        <!-- Dots Icon -->
+        <ImageButton
+            android:id="@+id/profile_dots"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            app:srcCompat="@drawable/general_icon_dots"
+            android:background="@null"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="5dp"
+            app:layout_constraintBottom_toTopOf="@id/profile_line"
+            app:layout_constraintEnd_toEndOf="@id/profile_line"
+            app:tint="@color/DarkGreen"
+            android:contentDescription="@string/description_sort_button"/>
+
+        <!-- Line -->
+        <ImageView
+            android:id="@+id/profile_line"
             android:layout_width="match_parent"
+            android:layout_height="2dp"
+            app:srcCompat="@drawable/profile_line_dark_green"
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
+            app:layout_constraintTop_toBottomOf="@id/profile_profile_container"
+            app:layout_constraintStart_toStartOf="@id/profile_layout"
+            app:layout_constraintEnd_toEndOf="@id/profile_layout"
+            android:contentDescription="@string/description_dark_green_line"/>
+
+        <!-- Empty collection text -->
+        <TextView
+            android:id="@+id/profile_empty_text"
+            style="@style/LargeText.LightBlue"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:gravity="center"
+            android:layout_marginTop="100dp"
+            app:layout_constraintStart_toStartOf="@id/profile_layout"
+            app:layout_constraintEnd_toEndOf="@id/profile_layout"
+            app:layout_constraintTop_toBottomOf="@id/profile_line"
+            android:text="@string/empty_collection" />
+
+        <!-- Collection -->
+        <ListView
+            android:id="@+id/profile_collection"
+            android:layout_width="match_parent"
+
             android:layout_height="28dp"
             android:gravity="center"
             android:text="Points: 4 987" />
@@ -212,3 +328,16 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+            android:layout_height="match_parent"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="9dp"
+            android:layout_marginTop="329dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            app:layout_constraintStart_toStartOf="@id/profile_layout"
+            app:layout_constraintEnd_toEndOf="@id/profile_layout"
+            app:layout_constraintTop_toTopOf="@id/profile_layout"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+

@@ -3,6 +3,7 @@ package ch.epfl.sdp.peakar.points;
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.util.GeoPoint;
 
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -21,6 +22,7 @@ public class POIPoint extends Point {
     }
 
     private String name;
+    private String discoveredDate;
 
     /**
      * Constructor for POIPoint.
@@ -76,5 +78,23 @@ public class POIPoint extends Point {
         if (obj == this)
             return true;
         return name.equals(((POIPoint)obj).getName());
+    }
+
+    /**
+     * Get the discovered date for the POIPoint
+     *
+     * @return date where the POIPoint got discovered
+     */
+    public String getDiscoveredDate(){
+        return discoveredDate;
+    }
+
+    /**
+     * Set the discovered date for the POIPoint
+     *
+     * @param date date where the POIPoint got discovered
+     */
+    public void setDiscoveredDate(String date){
+        discoveredDate = date;
     }
 }

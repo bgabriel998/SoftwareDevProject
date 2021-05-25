@@ -26,6 +26,14 @@ public class SocialItem {
     }
 
     /**
+     * Constructor for friend items
+     * @param uid used to find user in database.
+     */
+    public SocialItem(String uid) {
+        this.uid = uid;
+    }
+
+    /**
      * Getter of the social item user id
      * @return id of the user on the database
      */
