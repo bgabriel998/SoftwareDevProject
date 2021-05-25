@@ -93,7 +93,7 @@ public class MenuBarHandler {
                     Intent intent = intentHashMap.get(v.getId());
                     if (intent == null) {
                         intent = new Intent(context, classToStart);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                         intentHashMap.put(v.getId(), intent);
                     }
                     context.startActivity(intent);
