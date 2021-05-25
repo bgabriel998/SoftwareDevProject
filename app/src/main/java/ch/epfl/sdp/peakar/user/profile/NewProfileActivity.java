@@ -235,16 +235,14 @@ public class NewProfileActivity extends AppCompatActivity {
      * Then it shrinks it.
      */
     private final AdapterView.OnItemClickListener challengeClicked = (parent, view, position, id) -> {
-        String numberOfUsersStr = ((TextView) view.findViewById(R.id.challenge_enrolled_user_size))
-                .getText().toString().replaceAll("\\D+","");
-        int numberOfUsers = Integer.parseInt(numberOfUsersStr);
-        expandSelectedChallenge(false,numberOfUsers);
+        NewChallengeItem item = (NewChallengeItem)parent.getItemAtPosition(position);
+        expandSelectedChallenge(false,item.getNumberOfParticipants());
         if (view == selectedCollected) {
             selectedCollected = null;
         }
         else {
             selectedCollected = view;
-            expandSelectedChallenge(true,numberOfUsers);
+            expandSelectedChallenge(true,item.getNumberOfParticipants());
         }
     };
 
