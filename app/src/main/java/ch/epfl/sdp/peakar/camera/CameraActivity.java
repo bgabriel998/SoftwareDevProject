@@ -29,7 +29,11 @@ import ch.epfl.sdp.peakar.user.services.Account;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.CameraUtilities;
+import ch.epfl.sdp.peakar.utils.MenuBarHandler;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
+
+import static ch.epfl.sdp.peakar.utils.StatusBarHandler.StatusBarTransparentBlack;
+import static ch.epfl.sdp.peakar.utils.TopBarHandler.setupTransparentTopBar;
 
 /**
  * CameraActivity handles the AR part of the application.
@@ -72,9 +76,9 @@ public class CameraActivity extends AppCompatActivity{
                     .commitNow();
         }
 
-        //Hide status-bar
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        StatusBarTransparentBlack(this);
+        setupTransparentTopBar(this, R.color.White);
+        MenuBarHandler.setup(this);
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -283,13 +287,5 @@ public class CameraActivity extends AppCompatActivity{
      */
     public void setLastToast(String lastToast){
         cameraPreview.lastToast = lastToast;
-    }
-
-    /**
-     * Callback for the profile button
-     */
-    public void profileButton(View view) {
-        Intent intent = new Intent(this, ProfileLauncherActivity.class);
-        startActivity(intent);
     }
 }

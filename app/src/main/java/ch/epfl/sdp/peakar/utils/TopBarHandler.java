@@ -1,12 +1,15 @@
 package ch.epfl.sdp.peakar.utils;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 
 import androidx.appcompat.widget.SwitchCompat;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.user.profile.ProfileLauncherActivity;
 
 import static ch.epfl.sdp.peakar.utils.UIUtils.setSwitchColor;
 import static ch.epfl.sdp.peakar.utils.UIUtils.setText;
@@ -18,6 +21,25 @@ import static ch.epfl.sdp.peakar.utils.UIUtils.setTintColor;
  * displayed in several activities.
  */
 public class TopBarHandler {
+
+    /**
+     * Sets up the top bar in it's transparent form.
+     * By coloring top bar transparent and setting all icons to a given color
+     * @param activity activity that displays bar.
+     * @param iconColorId color to set icons to.
+     */
+    public static void setupTransparentTopBar(Activity activity, int iconColorId){
+        activity.findViewById(R.id.top_bar).setBackground(null);
+        setTintColor(activity.findViewById(R.id.top_bar_profile_button), iconColorId);
+        setTintColor(activity.findViewById(R.id.top_bar_dots_button), iconColorId);
+
+        setTextStyle(activity.findViewById(R.id.top_bar_switch_text_left), iconColorId);
+        setTextStyle(activity.findViewById(R.id.top_bar_switch_text_right), iconColorId);
+        setSwitchColor(activity.findViewById(R.id.top_bar_switch_button), iconColorId, iconColorId);
+
+        hideAll(activity);
+        setupProfileButton(activity);
+    }
 
     /**
      * Sets up the top bar in it's grey form.
@@ -34,6 +56,7 @@ public class TopBarHandler {
         setSwitchColor(activity.findViewById(R.id.top_bar_switch_button), R.color.DarkGreen, R.color.LightGrey);
 
         hideAll(activity);
+        setupProfileButton(activity);
     }
 
     /**
@@ -45,6 +68,18 @@ public class TopBarHandler {
         activity.findViewById(R.id.top_bar_title).setVisibility(View.INVISIBLE);
         activity.findViewById(R.id.top_bar_dots_button).setVisibility(View.INVISIBLE);
         activity.findViewById(R.id.top_bar_switch).setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * Set listener to profile button for starting the profile view.
+     * @param activity currently using
+     */
+    private static void setupProfileButton(Activity activity) {
+        ImageButton profileButton = activity.findViewById(R.id.top_bar_profile_button);
+        profileButton.setOnClickListener(v -> {
+            Intent intent = new Intent(activity, ProfileLauncherActivity.class);
+            activity.startActivity(intent);
+        });
     }
 
     /**
@@ -62,5 +97,16 @@ public class TopBarHandler {
         SwitchCompat sw = activity.findViewById(R.id.top_bar_switch_button);
         sw.setOnCheckedChangeListener(listener);
         activity.findViewById(R.id.top_bar_switch).setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Setup the dots button given a listener that gets called when dots button is clicked.
+     * @param activity currently using
+     * @param listener to be called when dots button is clicked
+     */
+    public static void setupDots(Activity activity, View.OnClickListener listener){
+        ImageButton dots = activity.findViewById(R.id.top_bar_dots_button);
+        dots.setOnClickListener(listener);
+        dots.setVisibility(View.VISIBLE);
     }
 }

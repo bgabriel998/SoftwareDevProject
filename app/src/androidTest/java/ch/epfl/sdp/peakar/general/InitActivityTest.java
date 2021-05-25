@@ -13,6 +13,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.sdp.peakar.camera.CameraActivity;
+
 import static androidx.test.espresso.intent.Intents.intended;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.THREAD_SLEEP_10MS;
 
@@ -39,6 +41,6 @@ public class InitActivityTest {
         ActivityScenario.launch(intent);
         Thread.sleep(THREAD_SLEEP_10MS);
         //Check that MainMenuActivity gets called
-        intended(IntentMatchers.hasComponent(MainMenuActivity.class.getName()));
+        intended(IntentMatchers.hasComponent(CameraActivity.class.getName()));
     }
 }
