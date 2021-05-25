@@ -102,7 +102,7 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
                     view.findViewById(R.id.collected_trophy).setVisibility(View.VISIBLE);
                 }
 
-                HashMap<String,Integer> ranking = item.getChallengeRanking();
+                HashMap<String,Integer> ranking = new HashMap<>(item.getChallengeRanking());
                 HashMap<String,String> enrolledUsers = item.getEnrolledUsers();
                 Map.Entry<String, Integer> entry = ranking.entrySet().stream()
                         .max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get();
