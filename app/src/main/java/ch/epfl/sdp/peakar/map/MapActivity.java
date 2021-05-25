@@ -30,8 +30,7 @@ public class MapActivity extends AppCompatActivity {
         StatusBarTransparentBlack(this);
         setupTransparentTopBar(this, R.color.Black);
         MenuBarHandler.setup(this);
-        //TODO remove from map or adapt
-        //findViewById(R.id.map).setOnTouchListener(new OnSwipeTouchListener(this));
+        findViewById(R.id.map).setOnTouchListener(new OnSwipeTouchListener(this));
 
         //Instantiate Map
         osmMap = new OSMMap(this, findViewById(R.id.map));
