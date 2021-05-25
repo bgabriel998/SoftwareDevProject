@@ -2,7 +2,6 @@ package ch.epfl.sdp.peakar.gallery;
 
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.Intents;
-import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -15,19 +14,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.camera.CameraActivity;
-import ch.epfl.sdp.peakar.general.SettingsActivity;
 import ch.epfl.sdp.peakar.utils.MenuBarTestHelper;
 import ch.epfl.sdp.peakar.utils.UITestHelper;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.peakar.utils.UITestHelper.leftToRightSwipe;
-import static ch.epfl.sdp.peakar.utils.UITestHelper.rightToLeftSwipe;
 import static ch.epfl.sdp.peakar.utils.UITestHelper.withBackgroundColor;
 
 /**
@@ -98,17 +92,5 @@ public class EmptyGalleryActivityTest {
         ViewInteraction galleryEmptyText = onView(withId(R.id.gallery_empty));
         galleryEmptyText.check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         galleryEmptyText.check(matches(withText(R.string.empty_gallery)));
-    }
-
-    @Test
-    public void TestSwipleRightToLeft(){
-        onView(withId(R.id.gallery_recyclerview)).perform(rightToLeftSwipe());
-        intended(IntentMatchers.hasComponent(CameraActivity.class.getName()));
-    }
-
-    @Test
-    public void TestSwipleLeftToRight(){
-        onView(withId(R.id.gallery_recyclerview)).perform(leftToRightSwipe());
-        intended(IntentMatchers.hasComponent(SettingsActivity.class.getName()));
     }
 }
