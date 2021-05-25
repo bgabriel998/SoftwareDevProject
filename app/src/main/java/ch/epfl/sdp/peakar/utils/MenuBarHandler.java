@@ -7,6 +7,8 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -24,6 +26,25 @@ import static ch.epfl.sdp.peakar.utils.UIUtils.setTintColor;
  * With the function setup to be called from activities that show the menu bar.
  */
 public class MenuBarHandler {
+
+    /**
+     * Map for pairing the icon with class to send intent
+     */
+    private static final ArrayList<Class<?>> iconClassesIndex = new ArrayList<>(Arrays.asList(
+            SettingsActivity.class, GalleryActivity.class, CameraActivity.class,
+            MapActivity.class, SocialActivity.class));
+
+    /**
+     * Map for intent to solve issue with recreating activities.
+     */
+    private static final HashMap<Integer, Intent> intentHashMap = new HashMap<>();
+    static {
+        intentHashMap.put(R.id.menu_bar_settings, null);
+        intentHashMap.put(R.id.menu_bar_gallery, null);
+        intentHashMap.put(R.id.menu_bar_camera, null);
+        intentHashMap.put(R.id.menu_bar_map, null);
+        intentHashMap.put(R.id.menu_bar_social, null);
+    }
 
     /**
      * Map for pairing the icon with class to send intent
@@ -56,6 +77,7 @@ public class MenuBarHandler {
      * @param activity current active activity.
      */
     public static void setup(AppCompatActivity activity) {
+        activity.getWindow().setNavigationBarColor(activity.getColor(R.color.Black));
         for (Entry<Integer, Class<?>> pair : iconClassMap.entrySet()) {
             if (pair.getValue() == activity.getClass()) {
                 selectIcon(activity, pair.getKey());
@@ -63,12 +85,37 @@ public class MenuBarHandler {
             else {
                 activity.findViewById(iconPointerMap.get(pair.getKey())).setVisibility(View.INVISIBLE);
                 activity.findViewById(pair.getKey()).setOnClickListener(v ->  {
-                    Class<?> classToStart = iconClassMap.get(v.getId());
+                    Class<?> classToStart = pair.getValue();
                     Context context = v.getContext();
-                    Intent setIntent = new Intent(context, classToStart);
-                    context.startActivity(setIntent);
+                    Intent intent = intentHashMap.get(v.getId());
+                    if (intent == null) {
+                        intent = new Intent(context, classToStart);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        intentHashMap.put(v.getId(), intent);
+                    }
+                    context.startActivity(intent);
+                    setAnimationTransition(activity, classToStart);
                 });
             }
+        }
+    }
+
+    /**
+     * Set the correct transition
+     * if the activity should slide left or right based on the activity to start.
+     * @param activity current activity
+     * @param toClass class of next activity.
+     */
+    private static void setAnimationTransition(AppCompatActivity activity, Class<?> toClass) {
+        int fromIndex = iconClassesIndex.indexOf(activity.getClass());
+        int toIndex = iconClassesIndex.indexOf(toClass);
+
+        if (fromIndex < toIndex) {
+            activity.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+        }
+
+        if (fromIndex > toIndex) {
+            activity.overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
         }
     }
 

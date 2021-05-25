@@ -8,11 +8,6 @@
     android:background="@drawable/background"
     tools:context="ch.epfl.sdp.peakar.user.profile.ProfileActivity">
 
-    <!-- Toolbar -->
-    <include
-        android:id="@+id/include"
-        layout="@layout/toolbar" />
-
     <RelativeLayout
         android:id="@+id/loadingView"
         android:layout_width="0dp"
@@ -23,7 +18,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/settingsMapView"
         app:layout_constraintEnd_toEndOf="@+id/settingsMapView"
         app:layout_constraintStart_toStartOf="@+id/settingsMapView"
-        app:layout_constraintTop_toBottomOf="@+id/include">
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <ProgressBar
@@ -41,7 +36,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Download button -->
     <Button

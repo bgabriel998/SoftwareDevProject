@@ -22,8 +22,10 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import java.util.List;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
+import ch.epfl.sdp.peakar.social.SocialActivity;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.SettingsUtilities;
 
@@ -84,11 +86,11 @@ public class InitActivity extends AppCompatActivity {
      */
     public void launchApp(){
         if(hasCameraPermission()){
-            Intent intent = new Intent(this, MainMenuActivity.class);
+            Intent intent = new Intent(this, CameraActivity.class);
             startActivity(intent);
         }
         else{
-            Intent intent = new Intent(this, MainMenuActivity.class);
+            Intent intent = new Intent(this, SocialActivity.class);
             startActivity(intent);
         }
     }

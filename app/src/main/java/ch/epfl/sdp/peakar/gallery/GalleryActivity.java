@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.utils.CameraUtilities;
+import ch.epfl.sdp.peakar.utils.MenuBarHandler;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
@@ -22,6 +23,10 @@ import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
+import static ch.epfl.sdp.peakar.utils.StatusBarHandler.StatusBarLightGrey;
+import static ch.epfl.sdp.peakar.utils.TopBarHandler.setupDots;
+import static ch.epfl.sdp.peakar.utils.TopBarHandler.setupGreyTopBar;
+
 public class GalleryActivity extends AppCompatActivity {
 
     private static final int COLUMNS = 3;
@@ -31,7 +36,13 @@ public class GalleryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
-        ToolbarHandler.SetupToolbar(this, getString(R.string.toolbar_gallery));
+        StatusBarLightGrey(this);
+        setupGreyTopBar(this);
+        MenuBarHandler.setup(this);
+
+        setupDots(this, v -> {
+            // TODO Sort images
+        });
 
         setupGallery();
     }
