@@ -38,6 +38,18 @@ public class MenuBarHandler {
             MapActivity.class, SocialActivity.class));
 
     /**
+     * Map for intent to solve issue with recreating activities.
+     */
+    private static final HashMap<Integer, Intent> intentHashMap = new HashMap<>();
+    static {
+        intentHashMap.put(R.id.menu_bar_settings, null);
+        intentHashMap.put(R.id.menu_bar_gallery, null);
+        intentHashMap.put(R.id.menu_bar_camera, null);
+        intentHashMap.put(R.id.menu_bar_map, null);
+        intentHashMap.put(R.id.menu_bar_social, null);
+    }
+
+    /**
      * Map for pairing the icon with class to send intent
      */
     private static final HashMap<Integer, Class<?>> iconClassMap = new HashMap<>();
@@ -76,10 +88,15 @@ public class MenuBarHandler {
             else {
                 activity.findViewById(iconPointerMap.get(pair.getKey())).setVisibility(View.INVISIBLE);
                 activity.findViewById(pair.getKey()).setOnClickListener(v ->  {
-                    Class<?> classToStart = iconClassMap.get(v.getId());
+                    Class<?> classToStart = pair.getValue();
                     Context context = v.getContext();
-                    Intent setIntent = new Intent(context, classToStart);
-                    context.startActivity(setIntent);
+                    Intent intent = intentHashMap.get(v.getId());
+                    if (intent == null) {
+                        intent = new Intent(context, classToStart);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        intentHashMap.put(v.getId(), intent);
+                    }
+                    context.startActivity(intent);
                     setAnimationTransition(activity, classToStart);
                 });
             }
