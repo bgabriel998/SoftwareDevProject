@@ -631,6 +631,5 @@ public class NewProfileActivity extends AppCompatActivity {
     private void showErrorMessage() {
         Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), ProfileOutcome.FAIL.getMessage(), Snackbar.LENGTH_LONG);
         snackbar.show();
-
     }
 }
