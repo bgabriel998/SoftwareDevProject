@@ -1,9 +1,6 @@
 package ch.epfl.sdp.peakar.collection;
 
 import android.content.Context;
-import android.location.Address;
-import android.location.Geocoder;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
