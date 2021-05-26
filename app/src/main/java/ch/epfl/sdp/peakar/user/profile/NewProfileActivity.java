@@ -37,7 +37,6 @@ import ch.epfl.sdp.peakar.collection.NewCollectionListAdapter;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.social.SocialActivity;
-import ch.epfl.sdp.peakar.user.challenge.ChallengeStatus;
 import ch.epfl.sdp.peakar.user.challenge.NewChallengeItem;
 import ch.epfl.sdp.peakar.user.challenge.NewChallengeListAdapter;
 import ch.epfl.sdp.peakar.user.challenge.goal.RemotePointsChallenge;
@@ -60,7 +59,7 @@ public class NewProfileActivity extends AppCompatActivity {
 
     private boolean isAuthProfile;
     private Account displayedAccount = null;
-
+    private String otherId = null;
     private View selectedCollected = null;
 
     @Override
@@ -71,7 +70,7 @@ public class NewProfileActivity extends AppCompatActivity {
         Intent startingIntent = getIntent();
         isAuthProfile = startingIntent.getBooleanExtra(AUTH_INTENT, false);
         if(!isAuthProfile) {
-            String otherId = startingIntent.getStringExtra(OTHER_INTENT);
+            otherId = startingIntent.getStringExtra(OTHER_INTENT);
             new Thread(() -> {
                 displayedAccount = OtherAccount.getInstance(otherId);
                 runOnUiThread(() -> {
@@ -211,44 +210,22 @@ public class NewProfileActivity extends AppCompatActivity {
      */
     private void fillChallengeListView() {
         // Show correct text if empty
-        findViewById(R.id.add_challenge).setVisibility(View.VISIBLE);
+        if(AuthService.getInstance().getAuthAccount().equals(displayedAccount))
+            findViewById(R.id.add_challenge).setVisibility(View.VISIBLE);
         ((TextView)findViewById(R.id.profile_empty_text)).setText(R.string.empty_collection);
 
         ArrayList<NewChallengeItem> items = new ArrayList<>();
         List<RemotePointsChallenge> challengeList  =
-                AuthService.getInstance().getAuthAccount().getChallenges().stream().map( c -> (RemotePointsChallenge) c).collect(Collectors.toList());
+                displayedAccount.getChallenges().stream().map( c -> (RemotePointsChallenge) c).collect(Collectors.toList());
 
         for(RemotePointsChallenge enrolledChallenge: challengeList) {
             NewChallengeItem newChallengeItem;
-            //Retrieve challenge owner name
-            String challengeName = enrolledChallenge.getChallengeName();
 
-            if(enrolledChallenge.getStatus() == ChallengeStatus.PENDING.getValue()){
-                newChallengeItem = new NewChallengeItem(
-                        challengeName,
-                        enrolledChallenge.getFounderID(),
-                        enrolledChallenge.getFounderUri(),
-                        enrolledChallenge.getStatus(),
-                        enrolledChallenge.getUsers().size(),
-                        null,
-                        null,
-                        null,
-                        null
-                );
-            }
-            else{
-                newChallengeItem = new NewChallengeItem(
-                        challengeName,
-                        enrolledChallenge.getFounderID(),
-                        enrolledChallenge.getFounderUri(),
-                        enrolledChallenge.getStatus(),
-                        enrolledChallenge.getUsers().size(),
-                        enrolledChallenge.getStartDateTime(),
-                        enrolledChallenge.getFinishDateTime(),
-                        enrolledChallenge.getChallengeRanking(),
-                        enrolledChallenge.getChallengeUserNames()
-                );
-            }
+            newChallengeItem = new NewChallengeItem(
+                    enrolledChallenge,
+                    enrolledChallenge.getFounderID().equals(otherId)
+            );
+
             items.add(newChallengeItem);
         }
 

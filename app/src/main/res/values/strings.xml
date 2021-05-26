@@ -125,6 +125,7 @@
     <string name="achieved_points" translatable="false">Achieved: %d pts</string>
     <string name="remainingTime_display" translatable="false">Remaining: %s</string>
     <string name="enrolledUser_display" translatable="false">Enrolled users: %d</string>
+    <string name="challenge_join" translatable="false">JOIN</string>
 
     <string name="choose_challenge_duration" translatable="false">Choose challenge duration</string>
     <string name="challenge_points" translatable="false">pts</string>

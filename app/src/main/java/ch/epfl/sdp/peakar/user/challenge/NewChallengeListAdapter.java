@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.ListAdapterInflater;
 
 import static android.os.Looper.getMainLooper;
@@ -80,7 +82,14 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
             else{
                 setupOngoingChallenge(view,item);
             }
+
+            if(item.isAuthAccountFounder() && !item.isAuthAccountEnrolled()){
+                view.findViewById(R.id.join_button).setVisibility(View.VISIBLE);
+            }
         }
+
+        Button joinButton = view.findViewById(R.id.join_button);
+        joinButton.setOnClickListener(new JoinOnClickListenerClass(item));
     }
 
     /**
@@ -197,12 +206,12 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
 
         startTimeText.setText(mContext.getResources().getString(R.string.startTime_display, formatDateTimeString(item.getStartDateTime().toString())));
         finishTimeText.setText(mContext.getResources().getString(R.string.finishTime_display, formatDateTimeString(item.getEndDateTime().toString())));
-        pointsAchieved.setText(mContext.getResources().getString(R.string.achieved_points,item.getChallengeRanking().get(item.getFounderID())));
+        pointsAchieved.setText(mContext.getResources().getString(R.string.achieved_points,item.getChallengeRanking().get(AuthService.getInstance().getID())));
 
         //Check if the logged user is the winner of the challenge
         if(item.getChallengeRanking().entrySet().stream()
                 .max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
-                .get().getKey().equals(item.getFounderID()))
+                .get().getKey().equals(AuthService.getInstance().getID()))
         {
             view.findViewById(R.id.collected_trophy).setVisibility(View.VISIBLE);
         }
@@ -215,4 +224,22 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
 
     }
 
+    /**
+     * Extended OnClickListener
+     * Used to pass correct NewChallengeItem item to the listener
+     * This onClickListener is used only for join button on challenges items
+     */
+    private class JoinOnClickListenerClass implements View.OnClickListener{
+        private final NewChallengeItem item;
+        public JoinOnClickListenerClass(NewChallengeItem item){
+            this.item = item;
+        }
+        @Override
+        public void onClick(View v){
+            //Join Challenge and
+            item.getRemotePointsChallenge().join();
+            v.setVisibility(View.INVISIBLE);
+
+        }
+    }
 }

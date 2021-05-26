@@ -2,71 +2,57 @@ package ch.epfl.sdp.peakar.user.challenge;
 
 import android.net.Uri;
 
-import androidx.annotation.Nullable;
-
 import java.time.LocalDateTime;
 import java.util.HashMap;
+
+import ch.epfl.sdp.peakar.user.challenge.goal.RemotePointsChallenge;
+import ch.epfl.sdp.peakar.user.services.AuthService;
 
 /**
  * Item holding all information regarding challenge
  */
 public class NewChallengeItem {
-    private final String name;
-    private final String founderID;
-    private final Uri founderUri;
-    private final int status;
-    private final int numberOfParticipants;
-    private final LocalDateTime startDateTime;
-    private final LocalDateTime endDateTime;
-    private final HashMap<String, Integer> challengeRanking;
-    private final HashMap<String, String> enrolledUsers;
+    private final boolean isAuthAccountFounder;
+    private final RemotePointsChallenge remotePointsChallenge;
 
-    /**
-     *  @param name challenge name (name of the owner + challenge)
-     * @param numberOfParticipants number of enrolled users
-     * @param startDateTime start time
-     * @param endDateTime end time
-     */
-    public NewChallengeItem(String name, String founderID, Uri founderUri, int status, int numberOfParticipants,
-                            @Nullable LocalDateTime startDateTime, @Nullable LocalDateTime endDateTime
-                            , @Nullable HashMap<String, Integer> challengeRanking,
-                            @Nullable HashMap<String,String> enrolledUsers) {
-        this.name = name;
-        this.founderID = founderID;
-        this.founderUri = founderUri;
-        this.status = status;
-        this.numberOfParticipants = numberOfParticipants;
-        this.startDateTime = startDateTime;
-        this.endDateTime = endDateTime;
-        this.challengeRanking = challengeRanking;
-        this.enrolledUsers = enrolledUsers;
+    public NewChallengeItem(RemotePointsChallenge remotePointsChallenge, boolean isAuthAccountFounder) {
+        this.isAuthAccountFounder = isAuthAccountFounder;
+        this.remotePointsChallenge = remotePointsChallenge;
     }
 
     public String getName() {
-        return name;
+        return remotePointsChallenge.getChallengeName();
     }
 
-    public String getFounderID(){return founderID;}
+    public String getFounderID(){return remotePointsChallenge.getFounderID();}
 
-    public Uri getFounderURI(){return founderUri;}
+    public boolean isAuthAccountFounder(){return isAuthAccountFounder;}
+
+    public Uri getFounderURI(){return remotePointsChallenge.getFounderUri();}
 
     public int getStatus() {
-        return status;
+        return remotePointsChallenge.getStatus();
     }
 
     public int getNumberOfParticipants() {
-        return numberOfParticipants;
+        return remotePointsChallenge.getUsers().size();
     }
 
     public LocalDateTime getStartDateTime() {
-        return startDateTime;
+        return remotePointsChallenge.getStartDateTime();
     }
 
     public LocalDateTime getEndDateTime() {
-        return endDateTime;
+        return remotePointsChallenge.getFinishDateTime();
     }
 
-    public HashMap<String, Integer> getChallengeRanking(){return challengeRanking;}
+    public HashMap<String, Integer> getChallengeRanking(){return remotePointsChallenge.getChallengeRanking();}
 
-    public HashMap<String, String> getEnrolledUsers(){return enrolledUsers;}
+    public HashMap<String, String> getEnrolledUsers(){return remotePointsChallenge.getChallengeUserNames();}
+
+    public RemotePointsChallenge getRemotePointsChallenge(){ return remotePointsChallenge;}
+
+    public boolean isAuthAccountEnrolled(){
+        return remotePointsChallenge.getUsers().contains(AuthService.getInstance().getID());
+    }
 }
