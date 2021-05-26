@@ -64,8 +64,7 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
      * @return Intent to start
      */
     public Intent getIntentLeft() {
-        String activityName = context.getClass().getSimpleName();
-        switch (activityName){
+        switch (getActivityName(context)){
             case "CameraActivity":
                 return new Intent(context, GalleryActivity.class);
             case "GalleryActivity":
@@ -83,8 +82,7 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
      * @return Intent to start
      */
     public Intent getIntentRight() {
-        String activityName = context.getClass().getSimpleName();
-        switch (activityName){
+        switch (getActivityName(context)){
             case "CameraActivity":
                 return new Intent(context, MapActivity.class);
             case "MapActivity":
@@ -95,6 +93,15 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
             default:
                 return new Intent(context, CameraActivity.class);
         }
+    }
+
+    /**
+     * Gets the name of the current activity
+     * @param context context
+     * @return Name of the activity
+     */
+    private String getActivityName(Context context){
+        return context.getClass().getSimpleName();
     }
 
     /**
