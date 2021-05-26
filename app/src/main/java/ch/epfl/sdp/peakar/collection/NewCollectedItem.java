@@ -19,6 +19,7 @@ public class NewCollectedItem implements Comparable< NewCollectedItem >{
     private final float longitude;
     private final float latitude;
     private final String date;
+    private final String country;
 
     /**
      * Constructor
@@ -31,7 +32,7 @@ public class NewCollectedItem implements Comparable< NewCollectedItem >{
      * @param date item got collected.
      */
     public NewCollectedItem(String name,int points, int height, boolean topInCountry,
-                            float longitude, float latitude, String date) {
+                            float longitude, float latitude, String date, String country) {
         this.name = name;
         this.points = points;
         this.height = height;
@@ -39,6 +40,7 @@ public class NewCollectedItem implements Comparable< NewCollectedItem >{
         this.longitude = longitude;
         this.latitude = latitude;
         this.date = date;
+        this.country = country;
     }
 
     /**
@@ -88,6 +90,13 @@ public class NewCollectedItem implements Comparable< NewCollectedItem >{
      */
     public String getDate() {
         return date;
+    }
+
+    /**
+     * @return collected country
+     */
+    public String getCountry() {
+        return country;
     }
 
     /**

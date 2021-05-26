@@ -7,6 +7,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +27,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.collection.NewCollectedItem;
@@ -174,7 +178,9 @@ public class NewProfileActivity extends AppCompatActivity {
                     displayedAccount.getDiscoveredCountryHighPointNames().contains(discoveredPeak.getName()),
                     (float)discoveredPeak.getLongitude(),
                     (float)discoveredPeak.getLatitude(),
-                    discoveredPeak.getDiscoveredDate());
+                    discoveredPeak.getDiscoveredDate(),
+                    getCountryFromCoordinates((float)discoveredPeak.getLatitude(),
+                                              (float)discoveredPeak.getLongitude()));
             items.add(newCollectedItem);
         }
 
@@ -438,5 +444,25 @@ public class NewProfileActivity extends AppCompatActivity {
     private void showErrorMessage() {
         Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), ProfileOutcome.FAIL.getMessage(), Snackbar.LENGTH_LONG);
         snackbar.show();
+    }
+
+    /**
+     * Retrieve country using input latitude and longitude
+     * @param latitude poiPoint latitude (peak latitude)
+     * @param longitude poiPoint longitude (peak longitude)
+     * @return Name of the country where the peak is located
+     */
+    private String getCountryFromCoordinates(double latitude,double longitude){
+        Geocoder gcd = new Geocoder(this, Locale.forLanguageTag("en"));
+        try {
+            List<Address> addresses = gcd.getFromLocation(latitude, longitude, 1);
+            if (addresses.size() > 0) {
+                return addresses.get(0).getCountryName();
+            }
+        }
+        catch(Exception e){
+            Log.e("getCountryFromCoordinates", "Can't get country from coordinates");
+        }
+        return null;
     }
 }

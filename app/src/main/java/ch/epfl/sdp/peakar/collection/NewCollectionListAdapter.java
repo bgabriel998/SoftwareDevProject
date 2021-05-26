@@ -1,12 +1,17 @@
 package ch.epfl.sdp.peakar.collection;
 
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Locale;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.utils.ListAdapterInflater;
@@ -83,7 +88,21 @@ public class NewCollectionListAdapter extends ArrayAdapter<NewCollectedItem> {
 
             positionText.setVisibility(View.GONE);
             dateText.setVisibility(View.GONE);
-
+            setCountryFlag(view, item.getCountry());
         }
+    }
+
+    private void setCountryFlag(View view, String country) {
+        ImageView countryView = view.findViewById(R.id.collected_country);
+        if (country != null) {
+            // Maybe work on country string
+            int id = mContext.getResources().getIdentifier(country, "drawable", mContext.getPackageName());
+            if (id != 0) {
+                countryView.setImageResource(id);
+                countryView.setVisibility(View.VISIBLE);
+                return;
+            }
+        }
+        countryView.setVisibility(View.GONE);
     }
 }
