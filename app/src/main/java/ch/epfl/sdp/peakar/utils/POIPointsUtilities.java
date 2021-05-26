@@ -1,9 +1,16 @@
 package ch.epfl.sdp.peakar.utils;
 
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
+import android.util.Log;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -80,5 +87,26 @@ public final class POIPointsUtilities {
             }
         }
         return true;
+    }
+
+    /**
+     * Retrieve country using input latitude and longitude
+     * @param context used to get Geocoder.
+     * @param latitude poiPoint latitude (peak latitude)
+     * @param longitude poiPoint longitude (peak longitude)
+     * @return Name of the country where the peak is located
+     */
+    public static String getCountryFromCoordinates(Context context, double latitude, double longitude){
+        Geocoder gcd = new Geocoder(context, Locale.forLanguageTag("en"));
+        try {
+            List<Address> addresses = gcd.getFromLocation(latitude, longitude, 1);
+            if (addresses.size() > 0) {
+                return addresses.get(0).getCountryName();
+            }
+        }
+        catch(Exception e){
+            Log.e("getCountryFromCoordinates", "Can't get country from coordinates");
+        }
+        return null;
     }
 }

@@ -30,6 +30,7 @@ public class NewCollectedItem implements Comparable< NewCollectedItem >{
      * @param longitude of collected.
      * @param latitude of collected.
      * @param date item got collected.
+     * @param country of collected.
      */
     public NewCollectedItem(String name,int points, int height, boolean topInCountry,
                             float longitude, float latitude, String date, String country) {
