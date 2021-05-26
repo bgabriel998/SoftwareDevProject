@@ -10,7 +10,6 @@ import java.util.List;
  * Interface of a basic challenge.
  */
 public interface Challenge {
-    long AWARDED_POINTS_PER_USER = 100;
     String FOUNDER = "founder";
     String JOINED = "joined";
 
@@ -84,8 +83,14 @@ public interface Challenge {
      */
     String getChallengeName();
 
+    /**
+     * @return challenge founder UID
+     */
     String getFounderID();
 
+    /**
+     * @return challenge founder profile pic uri
+     */
     Uri getFounderUri();
 
     /**
@@ -96,6 +101,6 @@ public interface Challenge {
     /**
      * Make the authenticated user join a new challenge.
      */
-    ChallengeOutcome join();
+    void join();
 
 }

@@ -18,7 +18,6 @@ import java.util.Optional;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.database.DatabaseReference;
 import ch.epfl.sdp.peakar.user.challenge.Challenge;
-import ch.epfl.sdp.peakar.user.challenge.ChallengeOutcome;
 import ch.epfl.sdp.peakar.user.challenge.ChallengeStatus;
 import ch.epfl.sdp.peakar.user.score.ScoringConstants;
 import ch.epfl.sdp.peakar.user.services.AuthService;
@@ -35,6 +34,12 @@ public class RemotePointsChallenge extends PointsChallenge {
      * @param founderID Id of the founder
      * @param challengeName challenge name.
      * @param users users who joined the challenge.
+     * @param creationDateTime challenge creation date
+     * @param startDateTime challenge start date
+     * @param finishDateTime challenge finish date
+     * @param durationInDays challenge duration (given in days)
+     * @param founderUri URI of the founder profile picture
+     * @param status challenge status
      * @param userIDPointsMap current user ranking
      * @param userIDUsernameMap map between user ID and user names
      */
@@ -44,13 +49,12 @@ public class RemotePointsChallenge extends PointsChallenge {
                                  @Nullable HashMap<String,Integer> userIDPointsMap,
                                  @Nullable HashMap<String,String> userIDUsernameMap) {
         super(id, founderID, founderUri, challengeName, users, status, creationDateTime, durationInDays, startDateTime, finishDateTime, userIDPointsMap,userIDUsernameMap);
-
-
     }
 
     /**
      * Generate a new PointsChallenge.
      * @param founderID ID of the founder of the challenge.
+     * @param challengeName name of the challenge
      * @param durationInDays duration of the challenge in number of days
      */
     @SuppressLint("NewApi")
@@ -90,9 +94,9 @@ public class RemotePointsChallenge extends PointsChallenge {
 
     @SuppressLint("NewApi")
     @Override
-    public ChallengeOutcome join() {
+    public void join() {
         // If the authenticated user has already joined this challenge.
-        if(getUsers().contains(AuthService.getInstance().getID())) return ChallengeOutcome.NOT_POSSIBLE;
+        if(getUsers().contains(AuthService.getInstance().getID())) return;
 
         // Join remotely
         Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(getID()).child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).setValue(JOINED);
@@ -124,9 +128,7 @@ public class RemotePointsChallenge extends PointsChallenge {
 
             }
         }
-        return super.join();
     }
-
 
     /**
      * Challenge Timer expired

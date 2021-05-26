@@ -9,9 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import ch.epfl.sdp.peakar.user.challenge.Challenge;
-import ch.epfl.sdp.peakar.user.challenge.ChallengeOutcome;
 import ch.epfl.sdp.peakar.user.challenge.ChallengeStatus;
-import ch.epfl.sdp.peakar.user.services.AuthService;
 
 /**
  * Challenge in which the goal is to have the maximum amount of points
@@ -34,10 +32,17 @@ public abstract class PointsChallenge implements Challenge {
     /**
      * Create a new Points Challenge.
      * @param id unique identifier of the challenge.
-     * @param founderID ID of the founder of the challenge.
-     * @param challengeName name of the challenge
+     * @param founderID Id of the founder
+     * @param challengeName challenge name.
      * @param users users who joined the challenge.
-     * @param challengeRanking actual challenge ranking
+     * @param creationDateTime challenge creation date
+     * @param startDateTime challenge start date
+     * @param finishDateTime challenge finish date
+     * @param durationInDays challenge duration (given in days)
+     * @param founderUri URI of the founder profile picture
+     * @param status challenge status
+     * @param challengeRanking current user ranking
+     * @param userIDUsername map between user ID and user names
      */
     public PointsChallenge(String id, String founderID, Uri founderUri,
                            String challengeName, List<String> users, int status,
@@ -64,13 +69,6 @@ public abstract class PointsChallenge implements Challenge {
         return id;
     }
 
-    @Override
-    public ChallengeOutcome join() {
-        // If the authenticated user has already joined this challenge.
-        if(getUsers().contains(AuthService.getInstance().getID())) return ChallengeOutcome.NOT_POSSIBLE;
-        users.add(AuthService.getInstance().getID());
-        return ChallengeOutcome.JOINED;
-    }
 
     @Override
     public HashMap<String,Integer> getChallengeRanking(){
