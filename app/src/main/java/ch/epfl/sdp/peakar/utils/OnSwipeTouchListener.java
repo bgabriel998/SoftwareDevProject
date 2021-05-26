@@ -9,8 +9,7 @@ import android.view.View;
 
 import ch.epfl.sdp.peakar.map.MapActivity;
 
-import static ch.epfl.sdp.peakar.utils.MenuBarHandler.onSwipeLeftToRight;
-import static ch.epfl.sdp.peakar.utils.MenuBarHandler.onSwipeRightToLeft;
+import static ch.epfl.sdp.peakar.utils.MenuBarHandler.onSwipe;
 
 /**
  * Detects left and right swipes across a view.
@@ -82,12 +81,7 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
                         return false;
                     }
                 }
-                if (distanceX > 0){
-                    onSwipeLeftToRight(context);
-                }
-                else{
-                    onSwipeRightToLeft(context);
-                }
+                onSwipe(context, (distanceX > 0));
                 return true;
             }
             return false;

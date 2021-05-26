@@ -129,69 +129,34 @@ public class MenuBarHandler {
     }
 
     /**
-     * Gets the intent to be started when a left swipe is detected
+     * Gets the intent to be started when a swipe is detected
+     * @param context Context of application
+     * @param left If true, then the left intent is returned, else the right one
      * @return Intent to start
      */
-    public static Intent getIntentLeft(Context context) {
-        switch (getActivityName(context)){
+    public static Intent getIntent(Context context, boolean left) {
+        switch (context.getClass().getSimpleName()){
+            case "CameraActivity":
+                return left ? new Intent(context, GalleryActivity.class) : new Intent(context, MapActivity.class);
             case "GalleryActivity":
-                return new Intent(context, SettingsActivity.class);
-            case "SocialActivity":
-                return new Intent(context, MapActivity.class);
-            case "CameraActivity":
-                return new Intent(context, GalleryActivity.class);
+                return left ? new Intent(context, SettingsActivity.class) : new Intent(context, CameraActivity.class);
             case "MapActivity":
-            default:
-                return new Intent(context, CameraActivity.class);
-        }
-    }
-
-    /**
-     * Gets the intent to be started when a right swipe is detected
-     * @return Intent to start
-     */
-    public static Intent getIntentRight(Context context) {
-        switch (getActivityName(context)){
-            case "CameraActivity":
-                return new Intent(context, MapActivity.class);
-            case "MapActivity":
-                return new Intent(context, SocialActivity.class);
+                return left ? new Intent(context, CameraActivity.class) : new Intent(context, SocialActivity.class);
             case "SettingsActivity":
-                return new Intent(context, GalleryActivity.class);
-            case "GalleryActivity":
+                return left ? new Intent(context, CameraActivity.class) : new Intent(context, GalleryActivity.class);
+            case "SocialActivity":
+                return left ? new Intent(context, MapActivity.class) : new Intent(context, CameraActivity.class);
             default:
                 return new Intent(context, CameraActivity.class);
         }
-    }
-
-    /**
-     * Gets the name of the current activity
-     * @param context context
-     * @return Name of the activity
-     */
-    private static String getActivityName(Context context){
-        return context.getClass().getSimpleName();
     }
 
     /**
      * Starts the intent for the left swipe
      * @param context context
      */
-    public static void onSwipeLeftToRight(Context context) {
-        Intent intent = getIntentLeft(context);
-        startIntent(context, intent);
-    }
-
-    /**
-     * Starts the intent for the right swipe
-     * @param context context
-     */
-    public static void onSwipeRightToLeft(Context context) {
-        Intent intent = getIntentRight(context);
-        startIntent(context, intent);
-    }
-
-    private static void startIntent(Context context, Intent intent){
+    public static void onSwipe(Context context, boolean leftToRight) {
+        Intent intent = getIntent(context, leftToRight);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivity(intent);
         setAnimationTransition((AppCompatActivity) context, context.getClass());
