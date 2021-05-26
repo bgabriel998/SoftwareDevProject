@@ -47,12 +47,6 @@ public class GalleryActivity extends AppCompatActivity {
         setupGallery();
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        setupGallery();
-    }
-
     /**
      * Gets the recycler view and fills it up with all images.
      */

@@ -92,11 +92,17 @@ public class NewCollectionListAdapter extends ArrayAdapter<NewCollectedItem> {
         }
     }
 
+    /**
+     * Set the correct flag based on a given country.
+     * Hides flag if no flag is found.
+     * @param view collected item view
+     * @param country given country.
+     */
     private void setCountryFlag(View view, String country) {
         ImageView countryView = view.findViewById(R.id.collected_country);
         if (country != null) {
-            // Maybe work on country string
-            int id = mContext.getResources().getIdentifier(country, "drawable", mContext.getPackageName());
+            String countryResource = String.format("country_%s", country.toLowerCase());
+            int id = mContext.getResources().getIdentifier(countryResource, "drawable", mContext.getPackageName());
             if (id != 0) {
                 countryView.setImageResource(id);
                 countryView.setVisibility(View.VISIBLE);
