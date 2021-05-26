@@ -1,5 +1,7 @@
 package ch.epfl.sdp.peakar.points;
 
+import android.util.Log;
+
 import androidx.core.util.Pair;
 
 import java.util.ArrayList;
@@ -142,8 +144,9 @@ public class LineOfSight {
         int slope_error_new = m_new - Math.abs(x2 - x1);
 
         List<Pair<Integer, Integer>> line = new ArrayList<>();
+        int x, y;
 
-        for (int x = Math.min(x1, x2), y = x1 < x2 ? y1 : y2; x <= Math.max(x1, x2); x++) {
+        for (x = Math.min(x1, x2), y = x1 < x2 ? y1 : y2; x <= Math.max(x1, x2); x++) {
 
             line.add(new Pair<>(x, y));
 
@@ -156,6 +159,13 @@ public class LineOfSight {
                 y = y2 > y1 ? y + 1 : y - 1;
                 slope_error_new -= 2 * Math.abs(x2 - x1);
             }
+        }
+
+        // Fill the missing gap
+        int lastY = x1 < x2 ? y2 : y1;
+        while (y != lastY) {
+            y = y < lastY ? y + 1 : y - 1;
+            line.add(new Pair<>(x-1, y));
         }
 
         return line;

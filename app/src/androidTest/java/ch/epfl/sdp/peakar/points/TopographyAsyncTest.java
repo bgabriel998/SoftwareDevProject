@@ -188,6 +188,7 @@ public class TopographyAsyncTest {
      *
      * TODO disabled because another bug was found, enable after fixing
      */
+    @Test
     public void getVisiblePointsLabeledTest() {
 
         Context mContext = ApplicationProvider.getApplicationContext();
