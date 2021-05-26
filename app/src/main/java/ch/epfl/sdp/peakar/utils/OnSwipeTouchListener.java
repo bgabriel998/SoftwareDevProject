@@ -1,17 +1,16 @@
 package ch.epfl.sdp.peakar.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import ch.epfl.sdp.peakar.camera.CameraActivity;
-import ch.epfl.sdp.peakar.gallery.GalleryActivity;
-import ch.epfl.sdp.peakar.general.SettingsActivity;
 import ch.epfl.sdp.peakar.map.MapActivity;
-import ch.epfl.sdp.peakar.social.SocialActivity;
+
+import static ch.epfl.sdp.peakar.utils.MenuBarHandler.onSwipeLeftToRight;
+import static ch.epfl.sdp.peakar.utils.MenuBarHandler.onSwipeRightToLeft;
 
 /**
  * Detects left and right swipes across a view.
@@ -31,22 +30,9 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
     }
 
     /**
-     * Starts the intent for the left swipe
-     * @param intent intent to be started
+     * Use onClick to override a simple click event
      */
-    public void onSwipeLeft(Intent intent) {
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        context.startActivity(intent);
-    }
-
-    /**
-     * Starts the intent for the right swipe
-     * @param intent intent to be started
-     */
-    public void onSwipeRight(Intent intent) {
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        context.startActivity(intent);
-    }
+    public void onClick(){}
 
     /**
      * Triggers callback for swipe gestures detection
@@ -55,53 +41,9 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
      * @param event current motion event
      * @return True if motion has been consumed, else false
      */
+    @SuppressLint("ClickableViewAccessibility")
     public boolean onTouch(View v, MotionEvent event) {
         return gestureDetector.onTouchEvent(event);
-    }
-
-    /**
-     * Gets the intent to be started when a left swipe is detected
-     * @return Intent to start
-     */
-    public Intent getIntentLeft() {
-        switch (getActivityName(context)){
-            case "CameraActivity":
-                return new Intent(context, GalleryActivity.class);
-            case "GalleryActivity":
-                return new Intent(context, SettingsActivity.class);
-            case "SocialActivity":
-                return new Intent(context, MapActivity.class);
-            case "MapActivity":
-            default:
-                return new Intent(context, CameraActivity.class);
-        }
-    }
-
-    /**
-     * Gets the intent to be started when a right swipe is detected
-     * @return Intent to start
-     */
-    public Intent getIntentRight() {
-        switch (getActivityName(context)){
-            case "CameraActivity":
-                return new Intent(context, MapActivity.class);
-            case "MapActivity":
-                return new Intent(context, SocialActivity.class);
-            case "SettingsActivity":
-                return new Intent(context, GalleryActivity.class);
-            case "GalleryActivity":
-            default:
-                return new Intent(context, CameraActivity.class);
-        }
-    }
-
-    /**
-     * Gets the name of the current activity
-     * @param context context
-     * @return Name of the activity
-     */
-    private String getActivityName(Context context){
-        return context.getClass().getSimpleName();
     }
 
     /**
@@ -116,6 +58,12 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
         @Override
         public boolean onDown(MotionEvent e) {
             return true;
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            onClick();
+            return super.onSingleTapUp(e);
         }
 
         @Override
@@ -135,10 +83,10 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
                     }
                 }
                 if (distanceX > 0){
-                    onSwipeRight(getIntentLeft());
+                    onSwipeLeftToRight(context);
                 }
                 else{
-                    onSwipeLeft(getIntentRight());
+                    onSwipeRightToLeft(context);
                 }
                 return true;
             }

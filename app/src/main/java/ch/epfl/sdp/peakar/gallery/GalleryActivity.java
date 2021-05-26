@@ -64,6 +64,5 @@ public class GalleryActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         setupGallery();
-        findViewById(R.id.gallery_recyclerview).setOnTouchListener(new OnSwipeTouchListener(this));
     }
 }
