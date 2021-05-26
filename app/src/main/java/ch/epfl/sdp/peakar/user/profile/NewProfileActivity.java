@@ -460,6 +460,10 @@ public class NewProfileActivity extends AppCompatActivity {
      * @param view challenge view
      */
     public void addChallengeButton(View view){
+    if(!Database.getInstance().isOnline()) {
+        showErrorMessage();
+        return;
+    }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getResources().getString(R.string.enter_challenge_name));
 
