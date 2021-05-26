@@ -134,12 +134,12 @@ public class MenuBarHandler {
      */
     public static Intent getIntentLeft(Context context) {
         switch (getActivityName(context)){
-            case "CameraActivity":
-                return new Intent(context, GalleryActivity.class);
             case "GalleryActivity":
                 return new Intent(context, SettingsActivity.class);
             case "SocialActivity":
                 return new Intent(context, MapActivity.class);
+            case "CameraActivity":
+                return new Intent(context, GalleryActivity.class);
             case "MapActivity":
             default:
                 return new Intent(context, CameraActivity.class);
