@@ -57,6 +57,13 @@ android {
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
     }
+    sourceSets {
+        main {
+            res {
+                srcDirs 'src\\main\\res', 'src\\main\\res\\drawable\\countries'
+            }
+        }
+    }
 
 }
 
