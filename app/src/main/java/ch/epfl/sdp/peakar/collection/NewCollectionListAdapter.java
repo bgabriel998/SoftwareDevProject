@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
-import java.util.Locale;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.utils.ListAdapterInflater;
