@@ -1,12 +1,10 @@
 package ch.epfl.sdp.peakar.user.profile;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,6 +38,7 @@ import ch.epfl.sdp.peakar.user.services.OtherAccount;
 import ch.epfl.sdp.peakar.utils.StatusBarHandler;
 import ch.epfl.sdp.peakar.utils.UIUtils;
 
+import static ch.epfl.sdp.peakar.utils.POIPointsUtilities.getCountryFromCoordinates;
 import static ch.epfl.sdp.peakar.utils.UIUtils.setTintColor;
 
 /**
@@ -174,7 +173,9 @@ public class NewProfileActivity extends AppCompatActivity {
                     displayedAccount.getDiscoveredCountryHighPointNames().contains(discoveredPeak.getName()),
                     (float)discoveredPeak.getLongitude(),
                     (float)discoveredPeak.getLatitude(),
-                    discoveredPeak.getDiscoveredDate());
+                    discoveredPeak.getDiscoveredDate(),
+                    getCountryFromCoordinates(this, (float)discoveredPeak.getLatitude(),
+                                              (float)discoveredPeak.getLongitude()));
             items.add(newCollectedItem);
         }
 
