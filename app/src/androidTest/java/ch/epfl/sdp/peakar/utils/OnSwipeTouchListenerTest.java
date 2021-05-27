@@ -76,14 +76,6 @@ public class OnSwipeTouchListenerTest {
     }
 
     @Test
-    public void TestSwipleRightToLeftSocial(){
-        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), SocialActivity.class);
-        ActivityScenario.launch(intent);
-        onView(withId(R.id.social_list)).perform(rightToLeftSwipe());
-        intended(IntentMatchers.hasComponent(CameraActivity.class.getName()));
-    }
-
-    @Test
     public void TestSwipleLeftToRightSocial(){
         Intent intent = new Intent(ApplicationProvider.getApplicationContext(), SocialActivity.class);
         ActivityScenario.launch(intent);
@@ -91,6 +83,7 @@ public class OnSwipeTouchListenerTest {
         intended(IntentMatchers.hasComponent(MapActivity.class.getName()));
     }
 
+    //TODO Fix swipes on map
     //@Test
     public void TestSwipleRightToLeftMap(){
         Intent intent = new Intent(ApplicationProvider.getApplicationContext(), MapActivity.class);
