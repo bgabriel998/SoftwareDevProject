@@ -4,11 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Toast;
 
@@ -19,6 +21,7 @@ import androidx.preference.PreferenceManager;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
@@ -46,6 +49,7 @@ public class CameraUiView extends View implements Observer {
     private Paint mainTextPaint;
     private Paint mountainInfo;
     private Paint secondaryTextPaint;
+    private Paint backgroundRectPaint;
 
     //Colors of the compass-view
     private int compassColor;
@@ -62,9 +66,12 @@ public class CameraUiView extends View implements Observer {
     private static final int OFFSET_MOUNTAIN_INFO = 15;
 
     //Factors for the sizes
+    private static final int RADIUS_RECT_CORNER = 60;
     private static final int MAIN_TEXT_FACTOR = 20;
     private static final int SEC_TEXT_FACTOR = 15;
+    private static final int OFFSET_RECTANGLE_X_EDGE = 7;
     private static final int MAIN_LINE_FACTOR = 5;
+    private static final int OFFSET_RECTANGLE_Y_EDGE = 4;
     private static final int SEC_LINE_FACTOR = 3;
     private static final int TER_LINE_FACTOR = 2;
 
@@ -181,7 +188,7 @@ public class CameraUiView extends View implements Observer {
     private void widgetInit(){
         //Initialize colors
         compassColor = getResources().getColor(R.color.Black, null);
-        int mountainInfoColor = getResources().getColor(R.color.Black, null);
+        int mountainInfoColor = getResources().getColor(R.color.White, null);
 
         //Initialize fonts
         screenDensity = getResources().getDisplayMetrics().scaledDensity;
@@ -195,8 +202,6 @@ public class CameraUiView extends View implements Observer {
 
         heightBitmap = getBitmapFromVectorDrawable(getContext(), R.drawable.ic_double_arrow);
         distanceBitmap = rotateBitmap(heightBitmap);
-
-        //heightBitmap = getBitmapFromVectorDrawable(getContext(), R.drawable.ic_baseline_arrow_upward_24);
 
         //Initialize paints
         mountainInfo = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -219,6 +224,8 @@ public class CameraUiView extends View implements Observer {
 
         //Paint used for the terciary lines (15°, 30°, 60°, 75°, 105°, ...)
         terciaryLinePaint = configureLinePaint(TER_LINE_FACTOR*screenDensity);
+
+        backgroundRectPaint = configureRectPaint();
     }
 
     public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
@@ -242,6 +249,22 @@ public class CameraUiView extends View implements Observer {
         paint.setStrokeWidth(strokeWidth);
         paint.setColor(compassColor);
         paint.setAlpha(MAX_ALPHA);
+        return paint;
+    }
+
+    /**
+     * Method to create a rectangle paint around the text
+     * @return configured paint
+     */
+    private Paint configureRectPaint(){
+        Paint paint = new Paint();
+        paint.setStrokeWidth(0);
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = getContext().getTheme();
+        theme.resolveAttribute(R.attr.colorControlNormal, typedValue, true);
+        paint.setColor(typedValue.data);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setAlpha(100);
         return paint;
     }
 
@@ -423,27 +446,42 @@ public class CameraUiView extends View implements Observer {
         //Save status before Screen Rotation
         canvas.save();
         canvas.rotate(LABEL_ROTATION, left, mountainMarkerPosition);
+
         String textName = poiPoint.getName();
         float xName = left + mountainInfo.getTextSize();
-        float yName = mountainMarkerPosition + mountainInfo.getTextSize();
-        canvas.drawText(textName, xName, yName, mountainInfo);
+        float yName = mountainMarkerPosition + mountainInfo.getTextSize() + OFFSET_RECTANGLE_Y_EDGE*screenDensity;
 
-        float xBitmapHeight = xName - heightBitmap.getWidth()/(2*screenDensity);
-        float yBitmapHeight = yName + heightBitmap.getHeight()/(2*screenDensity);
-        canvas.drawBitmap(heightBitmap, xBitmapHeight, yBitmapHeight, null);
+        float xBitmapHeight = xName - OFFSET_RECTANGLE_Y_EDGE*screenDensity;
+        float yBitmapHeight = yName + 2*screenDensity;
 
         String textHeight = " " + (int)poiPoint.getAltitude() + "m, ";
         float xTextHeight = xBitmapHeight + heightBitmap.getWidth()/2f;
         float yTextHeight = yName + mountainInfo.getTextSize();
-        canvas.drawText(textHeight, xTextHeight, yTextHeight, mountainInfo);
 
         float xBitmapDistance = xTextHeight + mountainInfo.measureText(textHeight);
         float yBitmapDistance = yBitmapHeight;
-        canvas.drawBitmap(distanceBitmap, xBitmapDistance, yBitmapDistance, null);
 
-        String textDistance = " " + (int)poiPoint.getDistanceToUser() + "m";
+        Formatter mToKm = new Formatter();
+        mToKm.format("%.2f", poiPoint.getDistanceToUser()/1000);
+        String textDistance = " " + mToKm.toString() + "km";
         float xTextDistance = xBitmapDistance + distanceBitmap.getWidth();
         float yTextDistance = yTextHeight;
+        
+        float leftRect = left - mountainMarker.getHeight()/screenDensity;
+        float topRect = yName - mountainInfo.getTextSize() + 2*screenDensity;
+        float bottomRect = yTextDistance + OFFSET_RECTANGLE_Y_EDGE*screenDensity;
+        float rightRect = Math.max(xTextDistance + mountainInfo.measureText(textDistance), xName + mountainInfo.measureText(textName)) + OFFSET_RECTANGLE_X_EDGE*screenDensity;
+
+        float xNameCentered = xName + (rightRect - xName - mountainInfo.measureText(textName) - OFFSET_RECTANGLE_X_EDGE*screenDensity)/2;
+
+        //Draw first rectangle to overdraw the background
+        canvas.drawRoundRect(leftRect, topRect, rightRect, bottomRect, RADIUS_RECT_CORNER, RADIUS_RECT_CORNER, backgroundRectPaint);
+
+        canvas.drawText(textName, Math.max(xNameCentered, xName), yName, mountainInfo);
+
+        canvas.drawBitmap(heightBitmap, xBitmapHeight, yBitmapHeight, null);
+        canvas.drawText(textHeight, xTextHeight, yTextHeight, mountainInfo);
+        canvas.drawBitmap(distanceBitmap, xBitmapDistance, yBitmapDistance, null);
         canvas.drawText(textDistance, xTextDistance, yTextDistance, mountainInfo);
 
         //Restore the saved state
