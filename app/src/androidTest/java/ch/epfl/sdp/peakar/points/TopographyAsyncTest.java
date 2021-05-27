@@ -2,7 +2,6 @@ package ch.epfl.sdp.peakar.points;
 
 import android.content.Context;
 
-import androidx.annotation.WorkerThread;
 import androidx.core.util.Pair;
 import androidx.test.core.app.ApplicationProvider;
 
