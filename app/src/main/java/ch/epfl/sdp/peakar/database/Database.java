@@ -40,6 +40,7 @@ public class Database {
     public static final String CHILD_ATTRIBUTE_PEAK_LATITUDE = "latitude";
     public static final String CHILD_ATTRIBUTE_PEAK_LONGITUDE = "longitude";
     public static final String CHILD_ATTRIBUTE_PEAK_ALTITUDE = "altitude";
+    public static final String CHILD_ATTRIBUTE_PEAK_DISCOVERED_DATE = "discoveredDate";
     public static final String CHILD_CHALLENGES = "challenges/";
     public static final String CHILD_CHALLENGE_GOAL = "goal";
     public static final String CHILD_CHALLENGE_STATUS = "challengeStatus";

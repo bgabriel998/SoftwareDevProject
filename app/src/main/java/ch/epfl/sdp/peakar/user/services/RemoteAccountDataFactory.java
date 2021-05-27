@@ -116,7 +116,8 @@ public class RemoteAccountDataFactory implements RemoteResource {
             POIPoint newPeak = new POIPoint(peak.child(Database.CHILD_ATTRIBUTE_PEAK_NAME).getValue(String.class),
                     Optional.ofNullable(peak.child(Database.CHILD_ATTRIBUTE_PEAK_LATITUDE).getValue(Double.class)).orElse(0.0),
                     Optional.ofNullable(peak.child(Database.CHILD_ATTRIBUTE_PEAK_LONGITUDE).getValue(Double.class)).orElse(0.0),
-                    Optional.ofNullable(peak.child(Database.CHILD_ATTRIBUTE_PEAK_ALTITUDE).getValue(Long.class)).orElse(0L));
+                    Optional.ofNullable(peak.child(Database.CHILD_ATTRIBUTE_PEAK_ALTITUDE).getValue(Long.class)).orElse(0L),
+                    Optional.ofNullable(peak.child(Database.CHILD_ATTRIBUTE_PEAK_DISCOVERED_DATE).getValue(String.class)).orElse(""));
 
             // Add the peak
             accountData.addPeak(newPeak);
