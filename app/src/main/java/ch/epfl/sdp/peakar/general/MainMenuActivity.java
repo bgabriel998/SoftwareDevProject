@@ -20,6 +20,7 @@ import ch.epfl.sdp.peakar.map.MapActivity;
 import ch.epfl.sdp.peakar.social.SocialActivity;
 import ch.epfl.sdp.peakar.user.profile.ProfileLauncherActivity;
 
+
 public class MainMenuActivity extends AppCompatActivity {
     private static final int CAMERA_REQUEST_CODE = 100;
     private static final String[] CAMERA_PERMISSION = new String[]{Manifest.permission.CAMERA};
