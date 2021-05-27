@@ -62,8 +62,6 @@ public class CameraUiView extends View implements Observer {
 
     //Rotation to be applied for the addition info of the mountains
     private static final int LABEL_ROTATION = -45;
-    //Offset for the text to be above the marker
-    private static final int OFFSET_MOUNTAIN_INFO = 15;
 
     //Factors for the sizes
     private static final int RADIUS_RECT_CORNER = 60;
@@ -452,24 +450,22 @@ public class CameraUiView extends View implements Observer {
         float yName = mountainMarkerPosition + mountainInfo.getTextSize() + OFFSET_RECTANGLE_Y_EDGE*screenDensity;
 
         float xBitmapHeight = xName - OFFSET_RECTANGLE_Y_EDGE*screenDensity;
-        float yBitmapHeight = yName + 2*screenDensity;
+        float yBitmap = yName + 2*screenDensity;
 
         String textHeight = " " + (int)poiPoint.getAltitude() + "m, ";
         float xTextHeight = xBitmapHeight + heightBitmap.getWidth()/2f;
-        float yTextHeight = yName + mountainInfo.getTextSize();
+        float yTextInfo = yName + mountainInfo.getTextSize();
 
         float xBitmapDistance = xTextHeight + mountainInfo.measureText(textHeight);
-        float yBitmapDistance = yBitmapHeight;
 
         Formatter mToKm = new Formatter();
         mToKm.format("%.2f", poiPoint.getDistanceToUser()/1000);
         String textDistance = " " + mToKm.toString() + "km";
         float xTextDistance = xBitmapDistance + distanceBitmap.getWidth();
-        float yTextDistance = yTextHeight;
         
         float leftRect = left - mountainMarker.getWidth()/2f;
         float topRect = yName - mountainInfo.getTextSize() + 2*screenDensity;
-        float bottomRect = yTextDistance + OFFSET_RECTANGLE_Y_EDGE*screenDensity;
+        float bottomRect = yTextInfo + OFFSET_RECTANGLE_Y_EDGE*screenDensity;
         float rightRect = Math.max(xTextDistance + mountainInfo.measureText(textDistance), xName + mountainInfo.measureText(textName)) + OFFSET_RECTANGLE_X_EDGE*screenDensity;
 
         float xNameCentered = xName + (rightRect - xName - mountainInfo.measureText(textName) - OFFSET_RECTANGLE_X_EDGE*screenDensity)/2;
@@ -479,10 +475,10 @@ public class CameraUiView extends View implements Observer {
 
         canvas.drawText(textName, Math.max(xNameCentered, xName), yName, mountainInfo);
 
-        canvas.drawBitmap(heightBitmap, xBitmapHeight, yBitmapHeight, null);
-        canvas.drawText(textHeight, xTextHeight, yTextHeight, mountainInfo);
-        canvas.drawBitmap(distanceBitmap, xBitmapDistance, yBitmapDistance, null);
-        canvas.drawText(textDistance, xTextDistance, yTextDistance, mountainInfo);
+        canvas.drawBitmap(heightBitmap, xBitmapHeight, yBitmap, null);
+        canvas.drawText(textHeight, xTextHeight, yTextInfo, mountainInfo);
+        canvas.drawBitmap(distanceBitmap, xBitmapDistance, yBitmap, null);
+        canvas.drawText(textDistance, xTextDistance, yTextInfo, mountainInfo);
 
         //Restore the saved state
         canvas.restore();
