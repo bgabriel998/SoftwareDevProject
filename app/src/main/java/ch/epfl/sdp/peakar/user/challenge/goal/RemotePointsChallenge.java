@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.database.DatabaseReference;
 import ch.epfl.sdp.peakar.user.challenge.Challenge;
@@ -50,6 +51,7 @@ public class RemotePointsChallenge extends PointsChallenge {
                                  @Nullable HashMap<String,String> userIDUsernameMap) {
         super(id, founderID, founderUri, challengeName, users, status, creationDateTime, durationInDays, startDateTime, finishDateTime, userIDPointsMap,userIDUsernameMap);
     }
+    
 
     /**
      * Generate a new PointsChallenge.
