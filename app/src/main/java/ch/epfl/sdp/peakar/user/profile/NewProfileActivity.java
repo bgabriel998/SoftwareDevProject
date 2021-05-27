@@ -229,7 +229,7 @@ public class NewProfileActivity extends AppCompatActivity {
             newChallengeItem = new NewChallengeItem(
                     enrolledChallenge,
                     enrolledChallenge.getFounderID().equals(otherId),
-                    !(AuthService.getInstance().getAuthAccount() == null)
+                    AuthService.getInstance().getAuthAccount() != null
             );
 
             items.add(newChallengeItem);
