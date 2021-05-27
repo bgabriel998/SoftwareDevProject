@@ -1,19 +1,16 @@
 package ch.epfl.sdp.peakar.user.score;
 
 import android.content.Context;
-import android.location.Address;
-import android.location.Geocoder;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 
 import ch.epfl.sdp.peakar.database.DatabaseHelper;
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.user.services.FirebaseAuthService;
+
+import static ch.epfl.sdp.peakar.utils.POIPointsUtilities.getCountryFromCoordinates;
 
 public class UserScore {
 
@@ -63,7 +60,7 @@ public class UserScore {
         long retValue = 0;
         dataBaseHelper.openDataBase();
         /*Search country*/
-        String country = getCountryFromCoordinates(poiPoint.getLatitude(), poiPoint.getLongitude());
+        String country = getCountryFromCoordinates(mContext, poiPoint.getLatitude(), poiPoint.getLongitude());
         if(country != null){
             CountryHighPoint countryInfo = getDataFromCache(country);
             if (countryInfo == null) {
@@ -189,26 +186,5 @@ public class UserScore {
         FirebaseAuthService.getInstance().getAuthAccount().setScore(userScore);
         //Add all new discovered peaks to the database
         FirebaseAuthService.getInstance().getAuthAccount().setDiscoveredPeaks(filteredScannedPeaks);
-    }
-
-
-    /**
-     * Retrieve country using input latitude and longitude
-     * @param latitude poiPoint latitude (peak latitude)
-     * @param longitude poiPoint longitude (peak longitude)
-     * @return Name of the country where the peak is located
-     */
-    private String getCountryFromCoordinates(double latitude,double longitude){
-        Geocoder gcd = new Geocoder(mContext, Locale.forLanguageTag("en"));
-        try {
-            List<Address> addresses = gcd.getFromLocation(latitude, longitude, 1);
-            if (addresses.size() > 0) {
-                return addresses.get(0).getCountryName();
-            }
-        }
-        catch(Exception e){
-            Log.e("getCountryFromCoordinates", "Can't get country from coordinates");
-        }
-        return null;
     }
 }
