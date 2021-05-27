@@ -212,7 +212,7 @@ public class NewProfileActivity extends AppCompatActivity {
      */
     private void fillChallengeListView() {
         // Show correct text if empty
-        if(!(AuthService.getInstance().getAuthAccount() == null)){
+        if(AuthService.getInstance().getAuthAccount() != null){
             if(AuthService.getInstance().getAuthAccount().equals(displayedAccount))
                 findViewById(R.id.add_challenge).setVisibility(View.VISIBLE);
         }
