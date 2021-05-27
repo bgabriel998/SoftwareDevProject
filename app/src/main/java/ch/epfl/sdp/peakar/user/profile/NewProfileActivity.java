@@ -1,7 +1,5 @@
 package ch.epfl.sdp.peakar.user.profile;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -214,8 +212,11 @@ public class NewProfileActivity extends AppCompatActivity {
      */
     private void fillChallengeListView() {
         // Show correct text if empty
-        if(AuthService.getInstance().getAuthAccount().equals(displayedAccount))
-            findViewById(R.id.add_challenge).setVisibility(View.VISIBLE);
+        if(!(AuthService.getInstance().getAuthAccount() == null)){
+            if(AuthService.getInstance().getAuthAccount().equals(displayedAccount))
+                findViewById(R.id.add_challenge).setVisibility(View.VISIBLE);
+        }
+
         ((TextView)findViewById(R.id.profile_empty_text)).setText(R.string.empty_collection);
 
         ArrayList<NewChallengeItem> items = new ArrayList<>();
@@ -227,7 +228,8 @@ public class NewProfileActivity extends AppCompatActivity {
 
             newChallengeItem = new NewChallengeItem(
                     enrolledChallenge,
-                    enrolledChallenge.getFounderID().equals(otherId)
+                    enrolledChallenge.getFounderID().equals(otherId),
+                    !(AuthService.getInstance().getAuthAccount() == null)
             );
 
             items.add(newChallengeItem);
@@ -441,14 +443,11 @@ public class NewProfileActivity extends AppCompatActivity {
      * @param view challenge view
      */
     public void addChallengeButton(View view){
-    if(!Database.getInstance().isOnline()) {
-        showErrorMessage();
-        return;
-    }
-    if(!Database.getInstance().isOnline()) {
-        showErrorMessage();
-        return;
-    }
+        if(!Database.getInstance().isOnline()) {
+            showErrorMessage();
+            return;
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getResources().getString(R.string.enter_challenge_name));
 

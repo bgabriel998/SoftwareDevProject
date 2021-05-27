@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -23,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.database.Database;
+import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.ListAdapterInflater;
 
@@ -83,13 +86,14 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
                 setupOngoingChallenge(view,item);
             }
 
-            if(item.isAuthAccountFounder() && !item.isAuthAccountEnrolled()){
+            if(item.isAuthAccountFounder() && !item.isAuthAccountEnrolled() && item.isAuthAccount()){
                 view.findViewById(R.id.join_button).setVisibility(View.VISIBLE);
+                Button joinButton = view.findViewById(R.id.join_button);
+                joinButton.setOnClickListener(new JoinOnClickListenerClass(item));
             }
         }
 
-        Button joinButton = view.findViewById(R.id.join_button);
-        joinButton.setOnClickListener(new JoinOnClickListenerClass(item));
+
     }
 
     /**
@@ -206,7 +210,8 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
 
         startTimeText.setText(mContext.getResources().getString(R.string.startTime_display, formatDateTimeString(item.getStartDateTime().toString())));
         finishTimeText.setText(mContext.getResources().getString(R.string.finishTime_display, formatDateTimeString(item.getEndDateTime().toString())));
-        pointsAchieved.setText(mContext.getResources().getString(R.string.achieved_points,item.getChallengeRanking().get(AuthService.getInstance().getID())));
+        if(item.isAuthAccount() && item.isAuthAccountEnrolled())
+            pointsAchieved.setText(mContext.getResources().getString(R.string.achieved_points,item.getChallengeRanking().get(AuthService.getInstance().getID())));
 
         //Check if the logged user is the winner of the challenge
         if(item.getChallengeRanking().entrySet().stream()
@@ -236,6 +241,11 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
         }
         @Override
         public void onClick(View v){
+            if(!Database.getInstance().isOnline()) {
+                Snackbar snackbar = Snackbar.make(v.findViewById(android.R.id.content), ProfileOutcome.FAIL.getMessage(), Snackbar.LENGTH_LONG);
+                snackbar.show();
+                return;
+            }
             //Join Challenge and
             item.getRemotePointsChallenge().join();
             v.setVisibility(View.INVISIBLE);
