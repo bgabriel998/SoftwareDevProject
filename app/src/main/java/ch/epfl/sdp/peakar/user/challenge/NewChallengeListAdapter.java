@@ -1,6 +1,7 @@
 package ch.epfl.sdp.peakar.user.challenge;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
@@ -240,14 +241,21 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
         @Override
         public void onClick(View v){
             if(!Database.getInstance().isOnline()) {
-                Snackbar snackbar = Snackbar.make(v.findViewById(android.R.id.content), ProfileOutcome.FAIL.getMessage(), Snackbar.LENGTH_LONG);
-                snackbar.show();
+                showErrorMessage();
                 return;
             }
             //Join Challenge and
             item.getRemotePointsChallenge().join();
             v.setVisibility(View.INVISIBLE);
 
+        }
+
+        /**
+         * Show an error message when the DB is not online.
+         */
+        private void showErrorMessage() {
+            Snackbar snackbar = Snackbar.make(((Activity)mContext).findViewById(android.R.id.content), ProfileOutcome.FAIL.getMessage(), Snackbar.LENGTH_LONG);
+            snackbar.show();
         }
     }
 }
