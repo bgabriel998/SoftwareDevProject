@@ -137,17 +137,17 @@ public class MenuBarHandler {
     public static Intent getIntent(Context context, boolean left) {
         switch (context.getClass().getSimpleName()){
             case "CameraActivity":
-                return left ? new Intent(context, GalleryActivity.class) : new Intent(context, MapActivity.class);
+                return new Intent(context, left ? GalleryActivity.class : MapActivity.class);
             case "GalleryActivity":
-                return left ? new Intent(context, SettingsActivity.class) : new Intent(context, CameraActivity.class);
+                return new Intent(context, left ? SettingsActivity.class : CameraActivity.class);
             case "MapActivity":
-                return left ? new Intent(context, CameraActivity.class) : new Intent(context, SocialActivity.class);
+                return new Intent(context, left ? CameraActivity.class : SocialActivity.class);
             case "SettingsActivity":
-                return left ? new Intent(context, CameraActivity.class) : new Intent(context, GalleryActivity.class);
+                return left ? null : new Intent(context, GalleryActivity.class);
             case "SocialActivity":
-                return left ? new Intent(context, MapActivity.class) : new Intent(context, CameraActivity.class);
+                return left ? new Intent(context, MapActivity.class) : null;
             default:
-                return new Intent(context, CameraActivity.class);
+                return null;
         }
     }
 
@@ -157,8 +157,10 @@ public class MenuBarHandler {
      */
     public static void onSwipe(Context context, boolean leftToRight) {
         Intent intent = getIntent(context, leftToRight);
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        context.startActivity(intent);
-        setAnimationTransition((AppCompatActivity) context, context.getClass());
+        if(intent!=null){
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            context.startActivity(intent);
+            setAnimationTransition((AppCompatActivity) context, context.getClass());
+        }
     }
 }
