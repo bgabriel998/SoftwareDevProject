@@ -226,4 +226,27 @@ public class TopographyAsyncTest {
         // Check if the points are labeled correctly
         Assert.assertEquals(labeledPOIPoints, lineOfSight.getVisiblePointsLabeled(pointsToCheck));
     }
+
+    @Test
+    public void debugTest() {
+
+        Context mContext = ApplicationProvider.getApplicationContext();
+
+        // setting location near everest peak
+        UserPoint userPoint = UserPoint.getInstance(mContext);
+        userPoint.setLocation(46.52301918715015, 6.56573360554917,400, 0);
+
+        LineOfSight lineOfSight = new LineOfSight(topographyPair, userPoint);
+
+        // PoiPoints to check
+        List<POIPoint> pointsToCheck = new ArrayList<>();
+        POIPoint point1 = new POIPoint(new GeoPoint(46.16435337858528, 6.382873031645256, 978));
+        pointsToCheck.add(point1);
+
+        Map<POIPoint, Boolean> filtered = lineOfSight.getVisiblePointsLabeled(pointsToCheck);
+
+        Assert.assertTrue(true);
+
+    }
+
 }

@@ -1,5 +1,7 @@
 package ch.epfl.sdp.peakar.points;
 
+import android.util.Log;
+
 import androidx.core.util.Pair;
 
 import java.util.ArrayList;
@@ -114,6 +116,8 @@ public class LineOfSight {
                 poiIndexes.first, poiIndexes.second);
 
         return line.parallelStream()
+                .peek(p -> Log.d("DEBUG", String.valueOf(computeMaxElevation(userLongitude, userAltitude, p.second, slope) -
+                        elevationMap.getAltitudeAtLocation(p.first, p.second))))
                 .map(p -> computeMaxElevation(userLongitude, userAltitude, p.second, slope) -
                         elevationMap.getAltitudeAtLocation(p.first, p.second) >
                         - ELEVATION_DIFFERENCE_THRESHOLD)
