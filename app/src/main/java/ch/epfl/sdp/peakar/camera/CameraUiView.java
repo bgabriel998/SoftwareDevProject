@@ -467,7 +467,7 @@ public class CameraUiView extends View implements Observer {
         float xTextDistance = xBitmapDistance + distanceBitmap.getWidth();
         float yTextDistance = yTextHeight;
         
-        float leftRect = left - mountainMarker.getHeight()/screenDensity;
+        float leftRect = left - mountainMarker.getWidth()/2f;
         float topRect = yName - mountainInfo.getTextSize() + 2*screenDensity;
         float bottomRect = yTextDistance + OFFSET_RECTANGLE_Y_EDGE*screenDensity;
         float rightRect = Math.max(xTextDistance + mountainInfo.measureText(textDistance), xName + mountainInfo.measureText(textName)) + OFFSET_RECTANGLE_X_EDGE*screenDensity;
