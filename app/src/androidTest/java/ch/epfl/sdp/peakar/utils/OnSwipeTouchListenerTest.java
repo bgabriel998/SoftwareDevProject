@@ -40,9 +40,7 @@ public class OnSwipeTouchListenerTest {
         Intents.release();
     }
 
-    @Rule
-    public ActivityScenarioRule<CameraActivity> testRuleCamera = new ActivityScenarioRule<>(CameraActivity.class);
-
+    /* Tests that a swipe from right to left on the CameraActivity opens the MapActivity */
     @Test
     public void TestSwipleRightToLeftCamera() {
         Intent intent = new Intent(ApplicationProvider.getApplicationContext(), CameraActivity.class);
@@ -51,6 +49,7 @@ public class OnSwipeTouchListenerTest {
         intended(IntentMatchers.hasComponent(MapActivity.class.getName()));
     }
 
+    /* Tests that a swipe from left to right on the CameraActivity opens the GalleryActivity */
     @Test
     public void TestSwipleLeftToRightCamera(){
         Intent intent = new Intent(ApplicationProvider.getApplicationContext(), CameraActivity.class);
@@ -59,6 +58,7 @@ public class OnSwipeTouchListenerTest {
         intended(IntentMatchers.hasComponent(GalleryActivity.class.getName()));
     }
 
+    /* Tests that a swipe from right to left on the GalleryActivity opens the CameraActivity */
     @Test
     public void TestSwipleRightToLeftGallery(){
         Intent intent = new Intent(ApplicationProvider.getApplicationContext(), GalleryActivity.class);
@@ -67,6 +67,7 @@ public class OnSwipeTouchListenerTest {
         intended(IntentMatchers.hasComponent(CameraActivity.class.getName()));
     }
 
+    /* Tests that a swipe from left to right on the GalleryActivity opens the SettingsActivity */
     @Test
     public void TestSwipleLeftToRightGallery(){
         Intent intent = new Intent(ApplicationProvider.getApplicationContext(), GalleryActivity.class);
@@ -75,6 +76,7 @@ public class OnSwipeTouchListenerTest {
         intended(IntentMatchers.hasComponent(SettingsActivity.class.getName()));
     }
 
+    /* Tests that a swipe from left to right on the SocialActivity opens the MapActivity */
     @Test
     public void TestSwipleLeftToRightSocial(){
         Intent intent = new Intent(ApplicationProvider.getApplicationContext(), SocialActivity.class);
@@ -84,6 +86,8 @@ public class OnSwipeTouchListenerTest {
     }
 
     //TODO Fix swipes on map
+
+    /* Tests that a swipe from right to left on the MapActivity opens the SocialActivity */
     //@Test
     public void TestSwipleRightToLeftMap(){
         Intent intent = new Intent(ApplicationProvider.getApplicationContext(), MapActivity.class);
@@ -92,6 +96,7 @@ public class OnSwipeTouchListenerTest {
         intended(IntentMatchers.hasComponent(SocialActivity.class.getName()));
     }
 
+    /* Tests that a swipe from left to right on the MapActivity opens the CameraActivity */
     //@Test
     public void TestSwipleLeftToRightMap(){
         Intent intent = new Intent(ApplicationProvider.getApplicationContext(), MapActivity.class);
