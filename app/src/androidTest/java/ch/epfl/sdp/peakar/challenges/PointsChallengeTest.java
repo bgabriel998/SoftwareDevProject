@@ -97,6 +97,7 @@ public class PointsChallengeTest {
 
             // Make the mock user join the challenge
             challenge.join();
+            FirebaseAuthService.getInstance().forceRetrieveData();
 
             // Check if the user has been put in correctly
             assertSame(2, challenge.getUsers().size());

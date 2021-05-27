@@ -10,6 +10,7 @@ import java.util.List;
 
 import ch.epfl.sdp.peakar.user.challenge.Challenge;
 import ch.epfl.sdp.peakar.user.challenge.ChallengeStatus;
+import ch.epfl.sdp.peakar.user.services.AuthService;
 
 /**
  * Challenge in which the goal is to have the maximum amount of points
@@ -123,5 +124,10 @@ public abstract class PointsChallenge implements Challenge {
     @Override
     public void setStatus(ChallengeStatus challengeStatus){
         status = challengeStatus.getValue();
+    }
+
+    @Override
+    public void join(){
+        users.add(AuthService.getInstance().getID());
     }
 }

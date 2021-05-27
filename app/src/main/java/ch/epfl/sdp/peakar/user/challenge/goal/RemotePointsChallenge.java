@@ -97,7 +97,6 @@ public class RemotePointsChallenge extends PointsChallenge {
     public void join() {
         // If the authenticated user has already joined this challenge.
         if(getUsers().contains(AuthService.getInstance().getID())) return;
-
         // Join remotely
         Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(getID()).child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).setValue(JOINED);
         // Add locally
@@ -128,6 +127,7 @@ public class RemotePointsChallenge extends PointsChallenge {
 
             }
         }
+        super.join();
     }
 
     /**
