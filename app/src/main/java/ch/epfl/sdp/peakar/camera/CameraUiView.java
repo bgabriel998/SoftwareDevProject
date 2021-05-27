@@ -29,6 +29,8 @@ import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.utils.CameraUtilities;
 
+import static ch.epfl.sdp.peakar.utils.ImageHandler.rotateBitmap;
+
 /**
  * CameraUiView draws a canvas with the compass and mountain information on the camera-preview
  */
@@ -72,6 +74,7 @@ public class CameraUiView extends View implements Observer {
 
     //Number of pixels per degree
     private float pixDeg;
+    private float screenDensity;
 
     //Range of the for-loop to draw the compass
     private float minDegrees;
@@ -94,6 +97,8 @@ public class CameraUiView extends View implements Observer {
     //Marker used to display mountains on camera-preview
     private Bitmap mountainMarkerVisible;
     private Bitmap mountainMarkerNotVisible;
+    private Bitmap distanceBitmap;
+    private Bitmap heightBitmap;
 
     //Map that contains the labeled POIPoints
     private Map<POIPoint, Boolean> labeledPOIPoints;
@@ -179,7 +184,7 @@ public class CameraUiView extends View implements Observer {
         int mountainInfoColor = getResources().getColor(R.color.Black, null);
 
         //Initialize fonts
-        float screenDensity = getResources().getDisplayMetrics().scaledDensity;
+        screenDensity = getResources().getDisplayMetrics().scaledDensity;
         mainTextSize = (int) (MAIN_TEXT_FACTOR * screenDensity);
 
         //Initialize mountain marker that are in line of sight
@@ -188,10 +193,15 @@ public class CameraUiView extends View implements Observer {
         //Initialize mountain marker that are not in line of sight
         mountainMarkerNotVisible = getBitmapFromVectorDrawable(getContext(), R.drawable.ic_mountain_marker_not_visible);
 
+        heightBitmap = getBitmapFromVectorDrawable(getContext(), R.drawable.ic_double_arrow);
+        distanceBitmap = rotateBitmap(heightBitmap);
+
+        //heightBitmap = getBitmapFromVectorDrawable(getContext(), R.drawable.ic_baseline_arrow_upward_24);
+
         //Initialize paints
         mountainInfo = new Paint(Paint.ANTI_ALIAS_FLAG);
         mountainInfo.setTextAlign(Paint.Align.LEFT);
-        mountainInfo.setTextSize(MAIN_TEXT_FACTOR*screenDensity);
+        mountainInfo.setTextSize(SEC_TEXT_FACTOR*screenDensity);
         mountainInfo.setColor(mountainInfoColor);
         mountainInfo.setAlpha(MAX_ALPHA);
 
@@ -413,10 +423,29 @@ public class CameraUiView extends View implements Observer {
         //Save status before Screen Rotation
         canvas.save();
         canvas.rotate(LABEL_ROTATION, left, mountainMarkerPosition);
-        canvas.drawText(poiPoint.getName() + " " + poiPoint.getAltitude() + "m",
-                left + mountainInfo.getTextSize() - OFFSET_MOUNTAIN_INFO,
-                mountainMarkerPosition + mountainInfo.getTextSize() + OFFSET_MOUNTAIN_INFO,
-                mountainInfo);
+        String textName = poiPoint.getName();
+        float xName = left + mountainInfo.getTextSize();
+        float yName = mountainMarkerPosition + mountainInfo.getTextSize();
+        canvas.drawText(textName, xName, yName, mountainInfo);
+
+        float xBitmapHeight = xName - heightBitmap.getWidth()/(2*screenDensity);
+        float yBitmapHeight = yName + heightBitmap.getHeight()/(2*screenDensity);
+        canvas.drawBitmap(heightBitmap, xBitmapHeight, yBitmapHeight, null);
+
+        String textHeight = " " + (int)poiPoint.getAltitude() + "m, ";
+        float xTextHeight = xBitmapHeight + heightBitmap.getWidth()/2f;
+        float yTextHeight = yName + mountainInfo.getTextSize();
+        canvas.drawText(textHeight, xTextHeight, yTextHeight, mountainInfo);
+
+        float xBitmapDistance = xTextHeight + mountainInfo.measureText(textHeight);
+        float yBitmapDistance = yBitmapHeight;
+        canvas.drawBitmap(distanceBitmap, xBitmapDistance, yBitmapDistance, null);
+
+        String textDistance = " " + (int)poiPoint.getDistanceToUser() + "m";
+        float xTextDistance = xBitmapDistance + distanceBitmap.getWidth();
+        float yTextDistance = yTextHeight;
+        canvas.drawText(textDistance, xTextDistance, yTextDistance, mountainInfo);
+
         //Restore the saved state
         canvas.restore();
     }

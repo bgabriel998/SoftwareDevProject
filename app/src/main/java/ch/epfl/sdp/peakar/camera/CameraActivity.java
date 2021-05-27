@@ -143,10 +143,6 @@ public class CameraActivity extends AppCompatActivity{
         };
     }
 
-    /**
-     * onPause release the sensor listener from compass when user leaves the application
-     * without closing it (app running in background)
-     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -154,10 +150,6 @@ public class CameraActivity extends AppCompatActivity{
         compass.stop();
     }
 
-    /**
-     * onResume restarts the compass listener from when user reopens the application
-     * without closing it (app running in background)
-     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -165,15 +157,18 @@ public class CameraActivity extends AppCompatActivity{
         startCompass();
     }
 
-    /**
-     * Unbind and shutdown camera before exiting camera and stop the compass and add the discovered
-     * POIPoints
-     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
         compass.stop();
         addDiscoveredPOIsToDatabase();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        showDevOptions = sharedPref.getBoolean(getResources().getString(R.string.devOptions_key), false);
+        displayDeveloperOptions(showDevOptions);
     }
 
     /**
