@@ -7,21 +7,13 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import ch.epfl.sdp.peakar.camera.CameraActivity;
-import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.utils.CameraUtilities;
-import ch.epfl.sdp.peakar.utils.MenuBarHandler;
-import ch.epfl.sdp.peakar.utils.StorageHandler;
-import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.camera.CameraActivity;
-import ch.epfl.sdp.peakar.utils.ToolbarHandler;
+import ch.epfl.sdp.peakar.utils.MenuBarHandler;
+import ch.epfl.sdp.peakar.utils.OnSwipeTouchListener;
+import ch.epfl.sdp.peakar.utils.StorageHandler;
 
 import static ch.epfl.sdp.peakar.utils.StatusBarHandler.StatusBarLightGrey;
 import static ch.epfl.sdp.peakar.utils.TopBarHandler.setupDots;
@@ -45,6 +37,7 @@ public class GalleryActivity extends AppCompatActivity {
         });
 
         setupGallery();
+        findViewById(R.id.gallery_recyclerview).setOnTouchListener(new OnSwipeTouchListener(this));
     }
 
     /**
@@ -65,5 +58,11 @@ public class GalleryActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.gallery_recyclerview);
         recyclerView.setLayoutManager(new GridLayoutManager(this, COLUMNS));
         recyclerView.setAdapter(galleryAdapter);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        setupGallery();
     }
 }

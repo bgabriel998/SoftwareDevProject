@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/LightGreen</item>
         <item name="colorPrimaryDark">@color/DarkGreen</item>
         <item name="colorAccent">@color/LightGrey</item>
+        <item name="android:windowAnimationStyle">@null</item>
     </style>
 
     <!-- Dark Buttons -->
