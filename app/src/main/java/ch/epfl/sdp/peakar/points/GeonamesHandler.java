@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.utils.SettingsUtilities;
 
 
 public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>> implements Geonames {
@@ -61,7 +62,7 @@ public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>
         this.POIs = new ArrayList<POI>();
 
         //Retrieve the range from the shared preferences
-        this.rangeInKm = getSelectedRange(context);
+        this.rangeInKm = SettingsUtilities.getSelectedRange(context);
         this.queryMaxResults = DEFAULT_QUERY_MAX_RESULT;
         this.queryTimeout = DEFAULT_QUERY_TIMEOUT;
         this.retryNbr = 0;
@@ -95,38 +96,6 @@ public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>
         this.POIs = new ArrayList<POI>();
         this.retryNbr = 0;
     }
-
-    /**
-     * Retrieve range from preferences
-     * @param context application context
-     * @return range in integer format
-     */
-    private int getSelectedRange(Context context){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String selectedRange = sharedPreferences.getString(context.getResources().getString(R.string.range_key),
-                context.getResources().getStringArray(R.array.range_values)[3]);
-        int returnVal = DEFAULT_RANGE_IN_KM;
-        switch (selectedRange){
-            case "first_range":
-                returnVal = 5;
-                break;
-            case "sec_range":
-                returnVal = 10;
-                break;
-            case "third_range":
-                returnVal = 20;
-                break;
-            case "fourth_range":
-                returnVal = 30;
-                break;
-            case "fifth_range":
-                returnVal = 50;
-                break;
-        }
-        return returnVal;
-    }
-
-
 
     /**
      * onPreExecute method.
