@@ -1,7 +1,5 @@
 package ch.epfl.sdp.peakar.points;
 
-import android.util.Log;
-
 import androidx.core.util.Pair;
 
 import java.util.ArrayList;
@@ -21,7 +19,7 @@ import java.util.stream.Collectors;
  */
 public class LineOfSight {
 
-    static final int ELEVATION_DIFFERENCE_THRESHOLD = 50; // in meters
+    static final int ELEVATION_DIFFERENCE_THRESHOLD = 100; // in meters
 
     private final UserPoint userPoint;
 
@@ -34,7 +32,6 @@ public class LineOfSight {
      *
      * @param userPoint userPoint from wich the visible POIPoints are computed.
      */
-    @SuppressWarnings("ConstantConditions")
     public LineOfSight(Pair<int[][], Double> topography, UserPoint userPoint) {
         this.userPoint = userPoint;
         this.mapCellSize = topography.second;
@@ -103,7 +100,6 @@ public class LineOfSight {
      * @return              <code>true</code> if the POIPoint is visible from the user's location.
      * 	                    <code>false</code> otherwise.
      */
-    @SuppressWarnings("ConstantConditions")
     private boolean isVisible(POIPoint poiPoint, Pair<Integer, Integer> userIndexes,
                               double userLongitude, int userAltitude) {
 
@@ -118,9 +114,9 @@ public class LineOfSight {
                 poiIndexes.first, poiIndexes.second);
 
         return line.parallelStream()
-                .map(p -> elevationMap.getAltitudeAtLocation(p.first, p.second) -
-                        computeMaxElevation(userLongitude, userAltitude, p.second, slope) >
-                        ELEVATION_DIFFERENCE_THRESHOLD)
+                .map(p -> computeMaxElevation(userLongitude, userAltitude, p.second, slope) -
+                        elevationMap.getAltitudeAtLocation(p.first, p.second) >
+                        - ELEVATION_DIFFERENCE_THRESHOLD)
                 .reduce(true, (vis, v) -> vis &&  v);
 
     }
@@ -167,6 +163,9 @@ public class LineOfSight {
             y = y < lastY ? y + 1 : y - 1;
             line.add(new Pair<>(x-1, y));
         }
+
+        // Keep the user location at the start of the line
+        if (x1 > x2) Collections.reverse(line);
 
         return line;
 

@@ -2,6 +2,7 @@ package ch.epfl.sdp.peakar.points;
 
 import android.content.Context;
 
+import androidx.annotation.WorkerThread;
 import androidx.core.util.Pair;
 import androidx.test.core.app.ApplicationProvider;
 
@@ -149,8 +150,8 @@ public class TopographyAsyncTest {
      * This tests checks if the POIPoints are filtered correctly by the
      * getVisiblePoints method.
      *
-     * TODO disabled because another bug was found, enable after fixing
      */
+    @Test
     public void getVisiblePoints(){
         LineOfSight lineOfSight = new LineOfSight(topographyPair, userPoint);
 
@@ -186,7 +187,6 @@ public class TopographyAsyncTest {
      * This tests checks if the POIPoints are labeled correctly by the
      * getVisiblePointsLabeled method.
      *
-     * TODO disabled because another bug was found, enable after fixing
      */
     @Test
     public void getVisiblePointsLabeledTest() {
