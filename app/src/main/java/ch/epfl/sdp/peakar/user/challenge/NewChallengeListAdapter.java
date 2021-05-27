@@ -92,8 +92,6 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
                 joinButton.setOnClickListener(new JoinOnClickListenerClass(item));
             }
         }
-
-
     }
 
     /**
