@@ -68,6 +68,7 @@ import static ch.epfl.sdp.peakar.utils.TestingConstants.POINTE_DE_LAPAZ_LAT;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.POINTE_DE_LAPAZ_LONG;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.POINTE_DE_LAPAZ_NAME;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.THREAD_SLEEP_5S;
+import static ch.epfl.sdp.peakar.utils.UITestHelper.withDrawable;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertNotSame;
 
@@ -296,6 +297,11 @@ public class AuthProfileActivityTest {
         interaction.atPosition(1).onChildView(withId(R.id.collected_name)).check(matches(withText(DENT_DU_GEANT_NAME)));
         interaction.atPosition(2).onChildView(withId(R.id.collected_name)).check(matches(withText(AIGUILLE_DU_PLAN_NAME)));
         interaction.atPosition(3).onChildView(withId(R.id.collected_name)).check(matches(withText(POINTE_DE_LAPAZ_NAME)));
+
+        interaction.atPosition(0).onChildView(withId(R.id.collected_country)).check(matches(withDrawable(R.drawable.country_france)));
+        interaction.atPosition(1).onChildView(withId(R.id.collected_country)).check(matches(withDrawable(R.drawable.country_france)));
+        interaction.atPosition(2).onChildView(withId(R.id.collected_country)).check(matches(withDrawable(R.drawable.country_france)));
+        interaction.atPosition(3).onChildView(withId(R.id.collected_country)).check(matches(withDrawable(R.drawable.country_france)));
     }
 
     /*Check that the enrolled challenges are displayed*/
