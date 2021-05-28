@@ -76,7 +76,6 @@
             style="@style/ButtonGrey"
             android:text="@string/map_button"
             android:onClick="mapButton" />
-
     </LinearLayout>
 
     <!-- Profile Icon Button -->

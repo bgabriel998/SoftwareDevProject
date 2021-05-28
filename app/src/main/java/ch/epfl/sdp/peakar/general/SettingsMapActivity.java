@@ -3,6 +3,7 @@ package ch.epfl.sdp.peakar.general;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -31,9 +32,7 @@ import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.points.Point;
 import ch.epfl.sdp.peakar.utils.OfflineContentContainer;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
-import ch.epfl.sdp.peakar.utils.ToolbarHandler;
 
-import static ch.epfl.sdp.peakar.utils.StatusBarHandler.StatusBarLightGrey;
 import static ch.epfl.sdp.peakar.utils.StatusBarHandler.StatusBarTransparentBlack;
 
 /**
@@ -42,10 +41,7 @@ import static ch.epfl.sdp.peakar.utils.StatusBarHandler.StatusBarTransparentBlac
  * TODO modify GUI once final GUI is decided
  */
 public class SettingsMapActivity extends AppCompatActivity {
-
-    // CONSTANTS
-    private static final String  TOOLBAR_TITLE = "Offline Mode";
-
+    
     private Button downloadButton;
     private View loadingView;
     private OSMMap osmMap;
@@ -196,6 +192,8 @@ public class SettingsMapActivity extends AppCompatActivity {
                      .putBoolean(this.getResources().getString(R.string.offline_mode_key), false)
                      .apply();
 
+             Intent intent = new Intent(this, SettingsActivity.class);
+             startActivity(intent);
              this.finish();
          }
     }
