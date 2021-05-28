@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="60dp"
+    android:layout_marginTop="9dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/rounded_rect">
+
+    <!-- Country Icon -->
+    <ImageView
+        android:id="@+id/challenge_owner_picture"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:srcCompat="@drawable/temp_avatar"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:contentDescription="@string/description_icon_avatar"/>
+
+    <!-- challenge name -->
+    <TextView
+        android:id="@+id/challenge_name"
+        style="@style/SmallText.DarkGreen"
+        android:layout_width="220dp"
+        android:layout_height="21dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginStart="60dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- Trophy icon -->
+    <ImageView
+        android:id="@+id/collected_trophy"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        app:srcCompat="@drawable/collected_icon_trophy"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="40dp"
+        android:visibility="invisible"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/description_icon_trophy"/>
+
+    <!-- Remaining time -->
+    <TextView
+        android:id="@+id/challenge_remaining_time"
+        style="@style/SmallText.LightBlue"
+        android:layout_width="100dp"
+        android:layout_height="21dp"
+        android:gravity="center"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintTop_toBottomOf="@id/collected_trophy"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Remaining time -->
+    <TextView
+        android:id="@+id/points_achieved"
+        style="@style/SmallText.LightBlue"
+        android:layout_width="100dp"
+        android:layout_height="21dp"
+        android:gravity="center"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintTop_toBottomOf="@id/challenge_remaining_time"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+        android:id="@+id/join_button"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintTop_toBottomOf="@id/points_achieved"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/challenge_join"
+        android:visibility="invisible"
+        android:textColor="@color/DarkGreen"
+        android:backgroundTint="@color/LightGreen"
+        />
+
+
+
+    <!-- Info container -->
+    <LinearLayout
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="9dp"
+        android:orientation="vertical"
+        android:layout_marginTop="3dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintTop_toBottomOf="@id/challenge_name"
+        app:layout_constraintStart_toStartOf="@id/challenge_name">
+
+        <!-- challenge start time-->
+        <TextView
+            android:id="@+id/challenge_start_time"
+            style="@style/SmallText.LightBlue"
+            android:layout_width="match_parent"
+            android:layout_height="21dp"/>
+
+        <!-- Challenge stop time -->
+        <TextView
+            android:id="@+id/challenge_stop_time"
+            style="@style/SmallText.LightBlue"
+            android:layout_width="match_parent"
+            android:layout_height="21dp"/>
+
+        <!-- challenge enrolled user size -->
+        <TextView
+            android:id="@+id/challenge_enrolled_user_size"
+            style="@style/SmallText.LightBlue"
+            android:layout_width="match_parent"
+            android:layout_height="21dp"/>
+
+        <LinearLayout
+            android:id="@+id/challenge_first_user"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+            <ImageView
+                android:id="@+id/gold_medal"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="end"
+                android:src="@drawable/social_medal_gold" />
+
+            <!-- challenge enrolled ranking -->
+            <TextView
+                android:id="@+id/challenge_first_user_txt"
+                style="@style/SmallText.LightBlue"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:visibility="visible"
+                android:gravity="start"
+                android:layout_height="21dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/challenge_second_user"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+            <ImageView
+                android:id="@+id/silver_medal"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="end"
+                android:src="@drawable/social_medal_silver" />
+
+            <!-- challenge enrolled ranking -->
+            <TextView
+                android:id="@+id/challenge_second_user_txt"
+                style="@style/SmallText.LightBlue"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:visibility="visible"
+                android:gravity="start"
+                android:layout_height="21dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/challenge_third_user"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+            <ImageView
+                android:id="@+id/bronze_medal"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="end"
+                android:src="@drawable/social_medal_bronze" />
+
+            <!-- challenge enrolled ranking -->
+            <TextView
+                android:id="@+id/challenge_third_user_txt"
+                style="@style/SmallText.LightBlue"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:visibility="visible"
+                android:gravity="start"
+                android:layout_height="21dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

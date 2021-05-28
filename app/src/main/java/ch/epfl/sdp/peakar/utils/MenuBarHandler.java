@@ -127,4 +127,40 @@ public class MenuBarHandler {
     private static void selectIcon(AppCompatActivity activity, int viewId) {
         setTintColor((ImageView)activity.findViewById(viewId), R.color.LightGreen);
     }
+
+    /**
+     * Gets the intent to be started when a swipe is detected
+     * @param context Context of application
+     * @param left If true, then the left intent is returned, else the right one
+     * @return Intent to start
+     */
+    public static Intent getIntent(Context context, boolean left) {
+        switch (context.getClass().getSimpleName()){
+            case "CameraActivity":
+                return new Intent(context, left ? GalleryActivity.class : MapActivity.class);
+            case "GalleryActivity":
+                return new Intent(context, left ? SettingsActivity.class : CameraActivity.class);
+            case "MapActivity":
+                return new Intent(context, left ? CameraActivity.class : SocialActivity.class);
+            case "SettingsActivity":
+                return left ? null : new Intent(context, GalleryActivity.class);
+            case "SocialActivity":
+                return left ? new Intent(context, MapActivity.class) : null;
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Starts the intent for the left swipe
+     * @param context context
+     */
+    public static void onSwipe(Context context, boolean leftToRight) {
+        Intent intent = getIntent(context, leftToRight);
+        if(intent!=null){
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            context.startActivity(intent);
+            setAnimationTransition((AppCompatActivity) context, context.getClass());
+        }
+    }
 }

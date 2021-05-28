@@ -24,6 +24,7 @@ import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.MenuBarHandler;
+import ch.epfl.sdp.peakar.utils.OnSwipeTouchListener;
 
 import static ch.epfl.sdp.peakar.utils.StatusBarHandler.StatusBarLightGrey;
 import static ch.epfl.sdp.peakar.utils.TopBarHandler.setupGreyTopBar;
@@ -82,6 +83,8 @@ public class SocialActivity extends AppCompatActivity {
                                       int arg3) {
             }
         });
+
+        findViewById(R.id.social_list).setOnTouchListener(new OnSwipeTouchListener(this));
     }
 
     /**
