@@ -36,6 +36,11 @@ import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.utils.CameraUtilities;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
 
+import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarLightGrey;
+import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarTransparentBlack;
+import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupGreyTopBar;
+import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupTransparentTopBar;
+
 /**
  * A {@link Fragment} subclass that represents the camera-preview.
  * Use the {@link CameraFragment#newInstance} factory method to
@@ -62,6 +67,8 @@ public class CameraFragment extends Fragment{
 
     String lastToast = null;
 
+    private boolean returnToFragment;
+
     /**
      * Constructor for the CameraPreview
      * Is required to be empty for the fragments
@@ -81,6 +88,7 @@ public class CameraFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        returnToFragment = false;
     }
 
     @Override
@@ -106,12 +114,32 @@ public class CameraFragment extends Fragment{
         //Configure context
         context = getContext();
 
+
+        //MenuBarHandler.setup(this);
+
         //Wait for the view to be properly laid out
         previewView.post(() -> {
             previewDisplayId = previewView.getDisplay().getDisplayId();
-
+            initFragment();
             setUpCamera();
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(returnToFragment){
+            initFragment();
+            setUpCamera();
+        }
+        else
+            returnToFragment = true;
+    }
+
+    private void initFragment() {
+        StatusBarTransparentBlack(this);
+        setupTransparentTopBar(this, R.color.White);
+        //MenuBarHandler.setup(this);
     }
 
     /**

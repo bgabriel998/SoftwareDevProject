@@ -15,6 +15,9 @@ import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.map.OSMMap;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 
+import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarTransparentBlack;
+import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupTransparentTopBar;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link MapFragment#newInstance} factory method to
@@ -58,8 +61,12 @@ public class MapFragment extends Fragment {
 
         ConstraintLayout container = (ConstraintLayout) view;
 
+        StatusBarTransparentBlack(this);
+        setupTransparentTopBar(this, R.color.Black);
+        //MenuBarHandler.setup(this);
+
         //Instantiate Map
-        osmMap = new OSMMap(getContext(), container.findViewById(R.id.map));
+        osmMap = new OSMMap(requireContext(), container.findViewById(R.id.map));
 
 
         //Display markers on the map
@@ -67,10 +74,10 @@ public class MapFragment extends Fragment {
 
         osmMap.displayUserLocation();
 
-        zoomOnUserLocationButton = (ImageButton) container.findViewById(R.id.zoomOnUserLocation);
+        zoomOnUserLocationButton = container.findViewById(R.id.zoomOnUserLocation);
         zoomOnUserLocationButton.setOnClickListener(v -> osmMap.zoomOnUserLocation());
 
-        changeMapTileSourceButton = (ImageButton) container.findViewById(R.id.changeMapTile);
+        changeMapTileSourceButton = container.findViewById(R.id.changeMapTile);
         changeMapTileSourceButton.setOnClickListener(v -> osmMap.changeMapTileSource(zoomOnUserLocationButton,changeMapTileSourceButton ));
     }
 
