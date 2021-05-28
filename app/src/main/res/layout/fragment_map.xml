@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".general.MapFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <org.osmdroid.views.MapView
+            android:id="@+id/map"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+        </org.osmdroid.views.MapView>
+    </LinearLayout>
+
+    <!-- Button container -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginEnd="22dp"
+        android:layout_marginBottom="12dp">
+
+        <!-- Satellite button -->
+        <ImageButton
+            android:id="@+id/changeMapTile"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="10dp"
+            android:contentDescription="@string/buttonGetUserLoc"
+            android:tint="@color/Black"
+            android:background="@null"/>
+
+        <!-- User location button -->
+        <ImageButton
+            android:id="@+id/zoomOnUserLocation"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="@string/buttonGetUserLoc"
+            android:background="@null"/>
+    </LinearLayout>
+
+</FrameLayout>
