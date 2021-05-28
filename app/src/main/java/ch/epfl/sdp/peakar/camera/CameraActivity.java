@@ -1,12 +1,10 @@
 package ch.epfl.sdp.peakar.camera;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.hardware.camera2.CameraAccessException;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,7 +22,6 @@ import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.gallery.GalleryActivity;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.points.UserPoint;
-import ch.epfl.sdp.peakar.user.profile.ProfileLauncherActivity;
 import ch.epfl.sdp.peakar.user.score.UserScore;
 import ch.epfl.sdp.peakar.user.services.Account;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
@@ -150,10 +147,6 @@ public class CameraActivity extends AppCompatActivity{
         };
     }
 
-    /**
-     * onPause release the sensor listener from compass when user leaves the application
-     * without closing it (app running in background)
-     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -161,10 +154,6 @@ public class CameraActivity extends AppCompatActivity{
         compass.stop();
     }
 
-    /**
-     * onResume restarts the compass listener from when user reopens the application
-     * without closing it (app running in background)
-     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -172,15 +161,18 @@ public class CameraActivity extends AppCompatActivity{
         startCompass();
     }
 
-    /**
-     * Unbind and shutdown camera before exiting camera and stop the compass and add the discovered
-     * POIPoints
-     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
         compass.stop();
         addDiscoveredPOIsToDatabase();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        showDevOptions = sharedPref.getBoolean(getResources().getString(R.string.devOptions_key), false);
+        displayDeveloperOptions(showDevOptions);
     }
 
     /**

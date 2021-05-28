@@ -1,14 +1,17 @@
 package ch.epfl.sdp.peakar.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.SwitchCompat;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.user.profile.ProfileLauncherActivity;
 
 import static ch.epfl.sdp.peakar.utils.UIUtils.setSwitchColor;
@@ -76,6 +79,9 @@ public class TopBarHandler {
      */
     private static void setupProfileButton(Activity activity) {
         ImageButton profileButton = activity.findViewById(R.id.top_bar_profile_button);
+        if(activity.getClass().getSimpleName().equals(CameraActivity.class.getSimpleName())){
+            activity.findViewById(R.id.profile_background).setVisibility(View.VISIBLE);
+        }
         profileButton.setOnClickListener(v -> {
             Intent intent = new Intent(activity, ProfileLauncherActivity.class);
             activity.startActivity(intent);

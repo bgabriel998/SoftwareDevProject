@@ -10,6 +10,20 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toTopOf="parent">
 
+    <!-- Profile button background on camera -->
+    <ImageView
+        android:id="@+id/profile_background"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_circle_background"
+        app:layout_constraintStart_toStartOf="@+id/top_bar_profile_button"
+        app:layout_constraintTop_toTopOf="@+id/top_bar_profile_button"
+        app:layout_constraintBottom_toBottomOf="@+id/top_bar_profile_button"
+        app:layout_constraintEnd_toEndOf="@+id/top_bar_profile_button"
+        android:background="@null"
+        android:contentDescription="@string/description_profile_button"
+        android:visibility="invisible"/>
+
     <!-- Profile button -->
     <ImageButton
         android:id="@+id/top_bar_profile_button"
