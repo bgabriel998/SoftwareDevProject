@@ -1,18 +1,14 @@
 package ch.epfl.sdp.peakar.user.services;
-
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
-
-
 import androidx.annotation.RequiresApi;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.database.DatabaseReference;
 import ch.epfl.sdp.peakar.database.DatabaseSnapshot;
@@ -20,8 +16,9 @@ import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
 import ch.epfl.sdp.peakar.general.remote.RemoteResource;
 import ch.epfl.sdp.peakar.points.CountryHighPoint;
 import ch.epfl.sdp.peakar.points.POIPoint;
-import ch.epfl.sdp.peakar.user.challenge.Challenge;
+
 import ch.epfl.sdp.peakar.social.RemoteFriendItem;
+
 import ch.epfl.sdp.peakar.user.challenge.goal.RemotePointsChallenge;
 
 /**
@@ -206,6 +203,11 @@ public class RemoteAccountDataFactory implements RemoteResource {
             Log.d("FirebaseAccountDataFactory", "loadPointsChallenge: added user = " + user.getKey());
             users.add(user.getKey());
         }
+        //get name
+        String challengeName = Optional.ofNullable(data.child(Database.CHILD_CHALLENGE_NAME).getValue(String.class)).orElse("");
+
+        //get founder
+        String founderID = Optional.ofNullable(data.child(Database.CHILD_CHALLENGE_FOUNDER).getValue(String.class)).orElse("");
 
         // Get start
         LocalDateTime startDateTime = null;
@@ -229,12 +231,57 @@ public class RemoteAccountDataFactory implements RemoteResource {
         // Get challenge status
         int challengeStatus = Optional.ofNullable(data.child(Database.CHILD_CHALLENGE_STATUS).getValue(Integer.class)).orElse(0);
 
-        // Compute prize
-        long prize = (users.size() - 1) * Challenge.AWARDED_POINTS_PER_USER;
-        Log.d("FirebaseAccountDataFactory", "loadPointsChallenge: prize = " + prize);
+        // Compute challenge ranking
+        HashMap<String, Integer> challengeRanking = computeChallengeRanking(id,users);
+
+        // Retrieve usernames
+        HashMap<String,String> userIDUserNames = retrieveEnrolledUserNames(users);
+
+        String stringUri = Optional.ofNullable(Database.getInstance().getReference()
+                .child(Database.CHILD_USERS).child(founderID).child(Database.CHILD_PHOTO_URL)
+                .get().getValue(String.class)).orElse("");
+        Uri founderUri = Uri.parse(stringUri);
+
 
         // Add the challenge
-        accountData.addChallenge(new RemotePointsChallenge(id, users, prize,challengeStatus,creationDateTime,durationInDays,startDateTime, finishDateTime));
+        accountData.addChallenge(new RemotePointsChallenge(id,founderID,founderUri,challengeName, users,
+                challengeStatus,creationDateTime,durationInDays,startDateTime, finishDateTime,challengeRanking,userIDUserNames));
         Log.d("FirebaseAccountDataFactory", "loadPointsChallenge: new challenges size = " + accountData.getChallenges().size());
+    }
+
+    /**
+     * Compute the actual ranking of the challenge
+     * @param challengeID challenge ID
+     * @param users list of enrolled users
+     * @return HashMap containing user ID and current score for the challenge
+     */
+    private HashMap<String,Integer> computeChallengeRanking(String challengeID, List<String> users){
+        if(users.size() == 1) return null; // only one user in challenge return immediately
+        HashMap<String,Integer> retChallengeRanking = new HashMap<>();
+        for(String user : users){
+            int userScore = Optional.ofNullable(Database.getInstance().getReference().child(Database.CHILD_USERS)
+                    .child(user).child(Database.CHILD_SCORE).get().getValue(Integer.class)).orElse(0);
+            int userInitScore = Optional.ofNullable(Database.getInstance().getReference().child(Database.CHILD_USERS)
+                    .child(user).child(Database.CHILD_CHALLENGES).child(challengeID).get().getValue(Integer.class)).orElse(0);
+
+            retChallengeRanking.put(user,userScore - userInitScore);
+        }
+        return retChallengeRanking;
+    }
+
+    /**
+     * Retrieve the userNames of the participants
+     * @param users list of user IDs
+     * @return HashMap containing UID as key and username as value
+     */
+    private HashMap<String,String> retrieveEnrolledUserNames(List<String> users){
+        if(users.size() == 1) return null; // only one user in challenge return immediately
+        HashMap<String,String> retChallengeUserNames = new HashMap<>();
+        for(String user : users) {
+            String username = Optional.ofNullable(Database.getInstance().getReference().child(Database.CHILD_USERS)
+                    .child(user).child(Database.CHILD_USERNAME).get().getValue(String.class)).orElse("");
+            retChallengeUserNames.put(user,username);
+        }
+        return retChallengeUserNames;
     }
 }

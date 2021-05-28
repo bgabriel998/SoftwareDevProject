@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.gallery.GalleryActivity;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.points.UserPoint;
 import ch.epfl.sdp.peakar.user.score.UserScore;
@@ -27,6 +28,7 @@ import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.CameraUtilities;
 import ch.epfl.sdp.peakar.utils.MenuBarHandler;
+import ch.epfl.sdp.peakar.utils.OnSwipeTouchListener;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
 
 import static ch.epfl.sdp.peakar.utils.StatusBarHandler.StatusBarTransparentBlack;
@@ -76,6 +78,8 @@ public class CameraActivity extends AppCompatActivity{
         StatusBarTransparentBlack(this);
         setupTransparentTopBar(this, R.color.White);
         MenuBarHandler.setup(this);
+        findViewById(R.id.fragment_camera).setOnTouchListener(new OnSwipeTouchListener(this));
+
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 

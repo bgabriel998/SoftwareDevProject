@@ -1,8 +1,10 @@
 package ch.epfl.sdp.peakar.user.challenge.goal;
 
 import android.annotation.SuppressLint;
+import android.net.Uri;
 import android.os.Build;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import java.time.LocalDateTime;
@@ -13,10 +15,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.database.DatabaseReference;
 import ch.epfl.sdp.peakar.user.challenge.Challenge;
-import ch.epfl.sdp.peakar.user.challenge.ChallengeOutcome;
 import ch.epfl.sdp.peakar.user.challenge.ChallengeStatus;
 import ch.epfl.sdp.peakar.user.score.ScoringConstants;
 import ch.epfl.sdp.peakar.user.services.AuthService;
@@ -30,22 +32,35 @@ public class RemotePointsChallenge extends PointsChallenge {
     /**
      * Constructor for a new concrete points challenge. This constructor needs to be called to retrieve an existing challenge, not to create a new one.
      * @param id unique identifier of the challenge.
+     * @param founderID Id of the founder
+     * @param challengeName challenge name.
      * @param users users who joined the challenge.
-     * @param awardPoints points that will be awarded to the winner.
+     * @param creationDateTime challenge creation date
+     * @param startDateTime challenge start date
+     * @param finishDateTime challenge finish date
+     * @param durationInDays challenge duration (given in days)
+     * @param founderUri URI of the founder profile picture
+     * @param status challenge status
+     * @param userIDPointsMap current user ranking
+     * @param userIDUsernameMap map between user ID and user names
      */
-    public RemotePointsChallenge(String id, List<String> users, long awardPoints, int status,
+    public RemotePointsChallenge(String id, String founderID, Uri founderUri , String challengeName, List<String> users, int status,
                                  LocalDateTime creationDateTime, int durationInDays,
-                                 LocalDateTime startDateTime, LocalDateTime finishDateTime) {
-        super(id, users, awardPoints, status, creationDateTime, durationInDays, startDateTime, finishDateTime);
+                                 LocalDateTime startDateTime, LocalDateTime finishDateTime,
+                                 @Nullable HashMap<String,Integer> userIDPointsMap,
+                                 @Nullable HashMap<String,String> userIDUsernameMap) {
+        super(id, founderID, founderUri, challengeName, users, status, creationDateTime, durationInDays, startDateTime, finishDateTime, userIDPointsMap,userIDUsernameMap);
     }
+    
 
     /**
      * Generate a new PointsChallenge.
      * @param founderID ID of the founder of the challenge.
+     * @param challengeName name of the challenge
      * @param durationInDays duration of the challenge in number of days
      */
     @SuppressLint("NewApi")
-    public static Challenge generateNewChallenge(String founderID, int durationInDays) {
+    public static Challenge generateNewChallenge(String founderID, String challengeName, int durationInDays) {
         // Create a new challenge remotely
         DatabaseReference challengeRef = Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).push();
         // Get ID of new challenge
@@ -54,6 +69,12 @@ public class RemotePointsChallenge extends PointsChallenge {
         // Add users
         List<String> users = new ArrayList<>(Collections.singleton(founderID));
         challengeRef.child(Database.CHILD_USERS).child(founderID).setValue(FOUNDER);
+
+        //Set name
+        challengeRef.child(Database.CHILD_CHALLENGE_NAME).setValue(challengeName);
+
+        //Set name
+        challengeRef.child(Database.CHILD_CHALLENGE_FOUNDER).setValue(founderID);
 
         // Add start/finish times
         LocalDateTime creationTime = LocalDateTime.now();
@@ -65,29 +86,19 @@ public class RemotePointsChallenge extends PointsChallenge {
 
         // Join the new challenge remotely + set value to current amount of points that the user has
         Database.getInstance().getReference().child(Database.CHILD_USERS).child(founderID).child(Database.CHILD_CHALLENGES).child(id).setValue(0);
-        RemotePointsChallenge newChallenge = new RemotePointsChallenge(id, users, 0L, ChallengeStatus.PENDING.getValue(),
-                            creationTime, durationInDays,null,null);
+        RemotePointsChallenge newChallenge = new RemotePointsChallenge(id,founderID, AuthService.getInstance().getPhotoUrl(), challengeName, users, ChallengeStatus.PENDING.getValue(),
+                            creationTime, durationInDays,null,null, null, null);
         // Add locally if the founder is the authenticated user
         if(founderID.equals(AuthService.getInstance().getID())) AuthService.getInstance().getAuthAccount().getChallenges().add(newChallenge);
         return newChallenge;
     }
 
 
-    /**
-     * @return true if the challenge expired, false if not
-     */
-    @SuppressLint("NewApi")
-    public boolean isChallengeFinished(){
-       LocalDateTime finishDateTime = getFinishDateTime();
-        return finishDateTime.compareTo(LocalDateTime.now()) < 0;
-    }
-
     @SuppressLint("NewApi")
     @Override
-    public ChallengeOutcome join() {
+    public void join() {
         // If the authenticated user has already joined this challenge.
-        if(getUsers().contains(AuthService.getInstance().getID())) return ChallengeOutcome.NOT_POSSIBLE;
-
+        if(getUsers().contains(AuthService.getInstance().getID())) return;
         // Join remotely
         Database.getInstance().getReference().child(Database.CHILD_CHALLENGES).child(getID()).child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).setValue(JOINED);
         // Add locally
@@ -118,7 +129,7 @@ public class RemotePointsChallenge extends PointsChallenge {
 
             }
         }
-        return super.join();
+        super.join();
     }
 
     /**
@@ -189,7 +200,7 @@ public class RemotePointsChallenge extends PointsChallenge {
      * @param enrolledUserScoreMap map between UID and score points gained during the challenge
      * @return UID of the user with the most points gained
      */
-    private String findWinner(HashMap<String, Integer> enrolledUserScoreMap){
+    public String findWinner(HashMap<String, Integer> enrolledUserScoreMap){
         Map.Entry<String, Integer> maxEntry = null;
         for(Map.Entry<String,Integer> entry : enrolledUserScoreMap.entrySet()){
             if(maxEntry == null || entry.getValue().compareTo(maxEntry.getValue())> 0)
@@ -220,7 +231,7 @@ public class RemotePointsChallenge extends PointsChallenge {
      * @param enrolledUsers list of enrolled users
      * @return HashMap<String,Integer> with key = UID and value = points gained
      */
-    private HashMap<String,Integer> getPointsGainedPerUser(List<String> enrolledUsers){
+    public HashMap<String,Integer> getPointsGainedPerUser(List<String> enrolledUsers){
         HashMap<String, Integer> retScoreMap = new HashMap<>();
         for(String user : enrolledUsers){
             //Get user score at beginning of challenge
@@ -234,6 +245,11 @@ public class RemotePointsChallenge extends PointsChallenge {
                     .child(Database.CHILD_USERS).child(user)
                     .child(Database.CHILD_SCORE)
                     .get().getValue(Integer.class)).orElse(0);
+
+            String username = Optional.ofNullable(Database.getInstance().getReference()
+                    .child(Database.CHILD_USERS).child(user)
+                    .child(Database.CHILD_USERNAME)
+                    .get().getValue(String.class)).orElse("");
 
             //Compute the number of points gained during the challenge
             int pointsGainedInChallenge = currentScore - initialScore;
