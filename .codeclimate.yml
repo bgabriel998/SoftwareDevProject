@@ -15,6 +15,9 @@ checks:
     identical-code:
         config:
             threshold: 50
+    similar-code:
+        config:
+            threshold: 60
     return-statements:
         config:
             threshold: 8

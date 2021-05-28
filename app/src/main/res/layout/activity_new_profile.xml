@@ -142,6 +142,7 @@
 
         <!-- Collection Icon -->
         <ImageView
+            android:id="@+id/collected_peaks_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/profile_icon_collection"
@@ -149,14 +150,29 @@
             app:layout_constraintTop_toBottomOf="@id/profile_profile_container"
             app:layout_constraintStart_toStartOf="@id/profile_line"
             app:tint="@color/DarkGreen"
-            android:contentDescription="@string/collection_button"/>
+            android:contentDescription="@string/collection_button"
+            android:onClick="collectionButton"/>
 
-        <!-- Dots Icon -->
+        <ImageView
+            android:id="@+id/challenge_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_competition"
+            android:layout_marginStart="10dp"
+            app:layout_constraintTop_toBottomOf="@id/profile_profile_container"
+            app:layout_constraintStart_toEndOf="@id/collected_peaks_button"
+            app:tint="@color/DarkGreen"
+            android:contentDescription="@string/challenge_button"
+            android:onClick="challengeButton"/>
+
+
         <ImageButton
-            android:id="@+id/profile_dots"
+            android:id="@+id/add_challenge"
+            android:onClick="addChallengeButton"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            app:srcCompat="@drawable/general_icon_dots"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/ic_add_circle_outline_black_24dp"
             android:background="@null"
             android:layout_marginBottom="5dp"
             android:layout_marginEnd="5dp"

@@ -15,11 +15,10 @@ import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.points.POICache;
 import ch.epfl.sdp.peakar.utils.MenuBarHandler;
-import ch.epfl.sdp.peakar.utils.ToolbarHandler;
+import ch.epfl.sdp.peakar.utils.OnSwipeTouchListener;
 
-import static ch.epfl.sdp.peakar.utils.SettingsUtilities.*;
+import static ch.epfl.sdp.peakar.utils.SettingsUtilities.updateLanguage;
 import static ch.epfl.sdp.peakar.utils.StatusBarHandler.StatusBarLightGrey;
-import static ch.epfl.sdp.peakar.utils.TopBarHandler.setupGreyTopBar;
 
 public class SettingsActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
 
@@ -41,6 +40,8 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        findViewById(R.id.settings).setOnTouchListener(new OnSwipeTouchListener(this));
     }
 
     @Override
@@ -116,6 +117,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         if (offlineModeValue) {
             Intent setIntent = new Intent(this, SettingsMapActivity.class);
             startActivity(setIntent);
+            finish();
         } else {
             // Connect to the DB again
             Database.getInstance().setOnlineMode();

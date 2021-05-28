@@ -1,13 +1,15 @@
 package ch.epfl.sdp.peakar.user.challenge;
 
+import android.net.Uri;
+
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * Interface of a basic challenge.
  */
 public interface Challenge {
-    long AWARDED_POINTS_PER_USER = 100;
     String FOUNDER = "founder";
     String JOINED = "joined";
 
@@ -18,6 +20,17 @@ public interface Challenge {
      * Get the unique identifier of the challenge.
      */
     String getID();
+
+
+    /**
+     * @return actual challenge ranking. Null if not applicable
+     */
+    HashMap<String,Integer> getChallengeRanking();
+
+    /**
+     * @return map between UID and username from users
+     */
+    HashMap<String,String> getChallengeUserNames();
 
     /**
      * Get the users who joined the challenge.
@@ -66,19 +79,28 @@ public interface Challenge {
     int getStatus();
 
     /**
+     * @return challenge Name
+     */
+    String getChallengeName();
+
+    /**
+     * @return challenge founder UID
+     */
+    String getFounderID();
+
+    /**
+     * @return challenge founder profile pic uri
+     */
+    Uri getFounderUri();
+
+    /**
      * Change challenge status
      */
     void setStatus(ChallengeStatus challengeStatus);
 
-
-    /**
-     * Get the points that will be assigned to the winner after the challenge ends.
-     */
-    long getPoints();
-
     /**
      * Make the authenticated user join a new challenge.
      */
-    ChallengeOutcome join();
+    void join();
 
 }
