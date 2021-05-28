@@ -439,8 +439,6 @@ public class CameraUiView extends View implements Observer {
         //Draw the marker on the preview depending on the line of sight
         Bitmap mountainMarker = isVisible ? mountainMarkerVisible : mountainMarkerNotVisible;
 
-        canvas.drawBitmap(mountainMarker, left, mountainMarkerPosition, null);
-
         //Save status before Screen Rotation
         canvas.save();
         canvas.rotate(LABEL_ROTATION, left, mountainMarkerPosition);
@@ -480,8 +478,12 @@ public class CameraUiView extends View implements Observer {
         canvas.drawBitmap(distanceBitmap, xBitmapDistance, yBitmap, null);
         canvas.drawText(textDistance, xTextDistance, yTextInfo, mountainInfo);
 
+
         //Restore the saved state
         canvas.restore();
+
+        //Overdraw the marker on the rectangle
+        canvas.drawBitmap(mountainMarker, left, mountainMarkerPosition, null);
     }
 
     /**

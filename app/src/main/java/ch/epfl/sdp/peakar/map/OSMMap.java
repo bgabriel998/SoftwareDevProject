@@ -42,6 +42,7 @@ import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.points.Point;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.utils.SettingsUtilities;
 
 public class OSMMap {
 
@@ -318,7 +319,7 @@ public class OSMMap {
     public Polygon drawBoundingBox(Point selectedPoint, MapView mapView, Polygon boundingBoxPolygon) {
 
         List<GeoPoint> edges = new ArrayList<>();
-        BoundingBox boundingBox = selectedPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM);
+        BoundingBox boundingBox = selectedPoint.computeBoundingBox(SettingsUtilities.getSelectedRange(context));
 
         edges.add(new GeoPoint(boundingBox.getLatNorth(), boundingBox.getLonWest()));
         edges.add(new GeoPoint(boundingBox.getLatNorth(), boundingBox.getLonEast()));

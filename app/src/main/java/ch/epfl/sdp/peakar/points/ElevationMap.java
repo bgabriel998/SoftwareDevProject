@@ -1,10 +1,13 @@
 package ch.epfl.sdp.peakar.points;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.core.util.Pair;
 
 import org.osmdroid.util.BoundingBox;
+
+import ch.epfl.sdp.peakar.utils.SettingsUtilities;
 
 /**
  * ElevationMap is a class that represents the elevation map of the bounding box sorrounding the user.
@@ -16,13 +19,9 @@ import org.osmdroid.util.BoundingBox;
  * A method to obtain the altitude at a certain location (using coordinates or indexes is provided).
  * A method to compute the indexes of coordinates for accessing the topography map is provided.
  * A method to obtain the map cell size in arcs/s is provided.
- *
- * TODO handle updates of the map (to do after implementation of other elements of the app)
- * TODO handle caching of the map
  */
 public class ElevationMap {
 
-    static final int BOUNDING_BOX_RANGE = 20; //range of the bounding box in km
     static final int MINIMUM_DISTANCE_FOR_UPDATE = 2000;    // minimum distance in m between user and old
     // bounding center to update bounding center
 
@@ -33,15 +32,20 @@ public class ElevationMap {
     private static int[][] topographyMap;
     private static double mapCellSize;
 
+    private static Context context;
+
     /**
      * Constructor for the ElevationMap.
      *
-     * @param userPoint the user point around which the bounding box is computed.
+     * @param topography    pair with topography map and cell size.
+     * @param userPoint     the user point around which the bounding box is computed.
+     * @param context       context of the application.
      */
     @SuppressWarnings("ConstantConditions")
-    public ElevationMap(Pair<int[][], Double> topography, UserPoint userPoint) {
+    public ElevationMap(Pair<int[][], Double> topography, UserPoint userPoint, Context context) {
         this.userPoint = userPoint;
-        this.boundingBox = userPoint.computeBoundingBox(BOUNDING_BOX_RANGE);
+        Log.d("Debug", String.valueOf(SettingsUtilities.getSelectedRange(context)));
+        this.boundingBox = userPoint.computeBoundingBox(SettingsUtilities.getSelectedRange(context));
         this.boundingBoxCenter = new POIPoint(this.boundingBox.getCenterWithDateLine());
         topographyMap = topography.first;
         mapCellSize = topography.second;
@@ -52,7 +56,7 @@ public class ElevationMap {
      * the elevation map.
      */
     private static void downloadTopographyMap(UserPoint userPoint) {
-        new DownloadTopographyTask(){
+        new DownloadTopographyTask(context){
             @SuppressWarnings("ConstantConditions")
             @Override
             public void onResponseReceived(androidx.core.util.Pair<int[][], Double> topography) {
@@ -86,7 +90,7 @@ public class ElevationMap {
 
         if (userPoint.computeFlatDistance(boundingBoxCenter) > MINIMUM_DISTANCE_FOR_UPDATE) {
             Log.d("3D MAP",  "Updating");
-            boundingBox = userPoint.computeBoundingBox(BOUNDING_BOX_RANGE);
+            boundingBox = userPoint.computeBoundingBox(SettingsUtilities.getSelectedRange(context));
             boundingBoxCenter = new POIPoint(boundingBox.getCenterWithDateLine());
             Log.d("3D MAP",  "New Map download");
             downloadTopographyMap(userPoint);
@@ -178,4 +182,14 @@ public class ElevationMap {
     public double getBoundingBoxWestLong() {
         return boundingBox.getLonWest();
     }
+
+    /**
+     * Getter for the north latitude of the bounding box
+     *
+     * @return  north latitude of the bounding box (in degrees)
+     */
+    public double getBoundingBoxNorthLat() {
+        return boundingBox.getLatNorth();
+    }
+
 }

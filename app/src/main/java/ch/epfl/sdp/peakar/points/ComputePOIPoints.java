@@ -22,6 +22,7 @@ import java.util.Observer;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.utils.OfflineContentContainer;
+import ch.epfl.sdp.peakar.utils.SettingsUtilities;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
 
 import static ch.epfl.sdp.peakar.utils.POIPointsUtilities.filterHighestPOIs;
@@ -211,7 +212,7 @@ public class ComputePOIPoints extends Observable implements Observer{
      */
     @SuppressLint("StaticFieldLeak")
     private void getLabeledPOIs(UserPoint userPoint){
-        new DownloadTopographyTask(){
+        new DownloadTopographyTask(context){
             @Override
             public void onResponseReceived(Pair<int[][], Double> topography) {
                 super.onResponseReceived(topography);
@@ -220,7 +221,7 @@ public class ComputePOIPoints extends Observable implements Observer{
 
                 //Save POIs, BB and topography to the cache
                 POICache.getInstance().savePOIDataToCache(new ArrayList<>(POIs.keySet()),
-                        userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM),
+                        userPoint.computeBoundingBox(SettingsUtilities.getSelectedRange(context)),
                         topography,
                         context.getCacheDir());
             }
@@ -242,7 +243,7 @@ public class ComputePOIPoints extends Observable implements Observer{
      * @param topography topography map
      */
     private void applyFilteringLabeledPOIs(Pair<int[][], Double> topography){
-        LineOfSight lineOfSight = new LineOfSight(topography, userPoint);
+        LineOfSight lineOfSight = new LineOfSight(topography, userPoint, context);
         labeledPOIs = lineOfSight.getVisiblePointsLabeled(new ArrayList<>(POIs.keySet()));
         filteredLabeledPOIPoints = filterHighestPOIs(labeledPOIs);
 

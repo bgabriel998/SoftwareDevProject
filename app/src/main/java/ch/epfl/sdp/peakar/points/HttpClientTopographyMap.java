@@ -1,5 +1,6 @@
 package ch.epfl.sdp.peakar.points;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.core.util.Pair;
@@ -14,6 +15,10 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.stream.IntStream;
 
+import ch.epfl.sdp.peakar.utils.SettingsUtilities;
+
+import static android.app.PendingIntent.getActivity;
+
 /**
  * Class to request the topography map of the bounding box around a point.
  * The Elevation map is retrieved using the OpenTopography API as an AAIGrid and then converted into
@@ -25,7 +30,7 @@ import java.util.stream.IntStream;
  */
 public class HttpClientTopographyMap {
 
-    static final int BOUNDING_BOX_RANGE = 20; //range of the bounding box in km
+    static final int HTTP_OK_CODE = 200; //range of the bounding box in km
 
     private static final String BASE_URL = "https://portal.opentopography.org/API/globaldem";
     private static final String DEM_TYPE = "SRTMGL3";
@@ -35,13 +40,17 @@ public class HttpClientTopographyMap {
 
     private final BoundingBox boundingBox;
 
+    private Context context;
+
     /**
      * Constructor of class that handles the download of the AAIGrid and building of the matrix representing
      * the elevation map.
-     * @param point point around which compute the topography map
+     *
+     * @param point     point around which compute the topography map
+     * @param context   context of the application.
      */
-    public HttpClientTopographyMap(Point point){
-        boundingBox = point.computeBoundingBox(BOUNDING_BOX_RANGE);
+    public HttpClientTopographyMap(Point point, Context context){
+        boundingBox = point.computeBoundingBox(SettingsUtilities.getSelectedRange(context));
         URL url = generateURL();
 
         try {

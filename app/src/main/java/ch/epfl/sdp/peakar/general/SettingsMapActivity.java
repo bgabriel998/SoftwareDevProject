@@ -31,6 +31,7 @@ import ch.epfl.sdp.peakar.points.GeonamesHandler;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.points.Point;
 import ch.epfl.sdp.peakar.utils.OfflineContentContainer;
+import ch.epfl.sdp.peakar.utils.SettingsUtilities;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
 
 import static ch.epfl.sdp.peakar.utils.StatusBarHandler.StatusBarTransparentBlack;
@@ -38,7 +39,6 @@ import static ch.epfl.sdp.peakar.utils.StatusBarHandler.StatusBarTransparentBlac
 /**
  * Activity that allows the user to select a point around which compute and
  * download POIPoints and an elevation map for offline usage.
- * TODO modify GUI once final GUI is decided
  */
 public class SettingsMapActivity extends AppCompatActivity {
     
@@ -122,7 +122,7 @@ public class SettingsMapActivity extends AppCompatActivity {
      * @param selectedPoint     center point of the bounding box.
      */
     private void addBoundingBoxToContainer(OfflineContentContainer saveObject, Point selectedPoint) {
-        saveObject.boundingBox = selectedPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM);
+        saveObject.boundingBox = selectedPoint.computeBoundingBox(SettingsUtilities.getSelectedRange(this));
     }
 
     /**
@@ -133,7 +133,7 @@ public class SettingsMapActivity extends AppCompatActivity {
      */
     @SuppressLint("StaticFieldLeak")
     private void addMapAndPOIsToContainer(OfflineContentContainer saveObject, Point selectedPoint) {
-        new DownloadTopographyTask(){
+        new DownloadTopographyTask(this){
             @SuppressLint("StaticFieldLeak")
             @Override
             public void onResponseReceived(Pair<int[][], Double> topography) {

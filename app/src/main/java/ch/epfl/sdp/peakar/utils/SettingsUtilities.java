@@ -14,6 +14,7 @@ import androidx.preference.PreferenceManager;
 import java.util.Locale;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.points.GeonamesHandler;
 
 /**
  *  Utility class for the Settings Activity, contains utility methods for the settings like the language
@@ -106,4 +107,35 @@ public final class SettingsUtilities {
             updateLanguage(context);
         }
     }
+
+    /**
+     * Retrieve range from preferences
+     * @param context application context
+     * @return range in integer format
+     */
+    public static int getSelectedRange(Context context){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String selectedRange = sharedPreferences.getString(context.getResources().getString(R.string.range_key),
+                context.getResources().getStringArray(R.array.range_values)[3]);
+        int returnVal = GeonamesHandler.DEFAULT_RANGE_IN_KM;
+        switch (selectedRange){
+            case "first_range":
+                returnVal = 5;
+                break;
+            case "sec_range":
+                returnVal = 10;
+                break;
+            case "third_range":
+                returnVal = 20;
+                break;
+            case "fourth_range":
+                returnVal = 30;
+                break;
+            case "fifth_range":
+                returnVal = 50;
+                break;
+        }
+        return returnVal;
+    }
+
 }

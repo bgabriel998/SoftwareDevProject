@@ -24,6 +24,7 @@ import java.util.Map;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.utils.OfflineContentContainer;
+import ch.epfl.sdp.peakar.utils.SettingsUtilities;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
 
 import static java.lang.Double.NaN;
@@ -115,7 +116,7 @@ public class ComputePOIPointsTest {
 
 
 
-        BoundingBox mBoundingBox = userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM);
+        BoundingBox mBoundingBox = userPoint.computeBoundingBox(SettingsUtilities.getSelectedRange(mContext));
         System.out.println(mBoundingBox.getCenterWithDateLine());
 
         List<POIPoint> mPoiPoints = new ArrayList<>();

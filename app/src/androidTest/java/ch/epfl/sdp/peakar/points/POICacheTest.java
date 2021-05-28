@@ -18,6 +18,8 @@ import org.osmdroid.util.GeoPoint;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import ch.epfl.sdp.peakar.utils.SettingsUtilities;
+
 import static ch.epfl.sdp.peakar.utils.TestingConstants.AIGUILLE_DU_PLAN_ALT;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.AIGUILLE_DU_PLAN_LAT;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.AIGUILLE_DU_PLAN_LONG;
@@ -60,7 +62,7 @@ public class POICacheTest {
         Context mContext = ApplicationProvider.getApplicationContext();
         UserPoint userPoint = UserPoint.getInstance(mContext);
         userPoint.setLocation(GPSTracker.DEFAULT_LAT, GPSTracker.DEFAULT_LON,GPSTracker.DEFAULT_ALT, GPSTracker.DEFAULT_ACC);
-        new DownloadTopographyTask(){
+        new DownloadTopographyTask(mContext) {
             @Override
             public void onResponseReceived(Pair<int[][], Double> topography) {
                 super.onResponseReceived(topography);
@@ -122,9 +124,9 @@ public class POICacheTest {
                 MOCK_LOCATION_LON_CHAMONIX,
                 MOCK_LOCATION_ALT_CHAMONIX,
                 0);
-        BoundingBox boundingBox = userPoint.computeBoundingBox(GeonamesHandler.DEFAULT_RANGE_IN_KM);
+        BoundingBox boundingBox = userPoint.computeBoundingBox(SettingsUtilities.getSelectedRange(context));
 
-        new DownloadTopographyTask(){
+        new DownloadTopographyTask(context){
             @Override
             public void onResponseReceived(Pair<int[][], Double> topography) {
                 super.onResponseReceived(topography);
