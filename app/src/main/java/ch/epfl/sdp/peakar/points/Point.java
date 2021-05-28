@@ -29,6 +29,7 @@ public class Point {
 
     private double horizontalBearing;
     private double verticalBearing;
+    private double distanceToUser;
 
     /**
      * Constructor for the Point class.
@@ -144,6 +145,21 @@ public class Point {
         return altitude;
     }
 
+    /**
+     * gets the distance relative to the set userPoint
+     * @return distance in meters between point and set userPoint
+     */
+    public double getDistanceToUser(){
+        return distanceToUser;
+    }
+
+    /**
+     * Sets the distance between the point and the given userPoint
+     * @param userPoint userPoint for which the distance will be computed.
+     */
+    public void setDistanceToUser(UserPoint userPoint){
+        distanceToUser = this.computeDistance(userPoint);
+    }
 
     /**
      * Gets the horizontal bearing

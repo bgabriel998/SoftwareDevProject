@@ -50,7 +50,7 @@ public final class ImageHandler {
      * @param imageBitmap the image to rotate
      * @return the same image rotated 90 degrees
      */
-    private static Bitmap rotateBitmap(Bitmap imageBitmap) {
+    public static Bitmap rotateBitmap(Bitmap imageBitmap) {
         Matrix matrix = new Matrix();
         matrix.postRotate(ROTATE_DEGREES);
         return Bitmap.createBitmap(imageBitmap, 0, 0,

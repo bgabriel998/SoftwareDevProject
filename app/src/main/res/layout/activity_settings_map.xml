@@ -5,8 +5,7 @@
     android:id="@+id/profileLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
-    tools:context="ch.epfl.sdp.peakar.user.profile.ProfileActivity">
+    android:background="@drawable/background">
 
     <RelativeLayout
         android:id="@+id/loadingView"
@@ -44,8 +43,8 @@
         style="@style/ButtonDarkGreen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="55dp"
-        android:layout_marginEnd="55dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginEnd="70dp"
         android:layout_marginBottom="20dp"
         android:text="@string/offline_mode_button"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -58,7 +57,7 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/buttonGetUserLoc"
         android:background="@drawable/button_bg_round"
-        android:layout_marginEnd="1dp"
+        android:layout_marginEnd="15dp"
         app:layout_constraintBottom_toBottomOf="@+id/downloadButton"
         app:layout_constraintTop_toTopOf="@+id/downloadButton"
         app:layout_constraintRight_toLeftOf="@+id/downloadButton"
@@ -68,6 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/buttonGetUserLoc"
+        android:layout_marginStart="15dp"
         app:layout_constraintBottom_toBottomOf="@+id/downloadButton"
         app:layout_constraintTop_toTopOf="@+id/downloadButton"
         app:layout_constraintLeft_toRightOf="@+id/downloadButton"

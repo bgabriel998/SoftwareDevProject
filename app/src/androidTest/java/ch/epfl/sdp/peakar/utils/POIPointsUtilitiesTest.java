@@ -21,7 +21,7 @@ public class POIPointsUtilitiesTest {
         Point startPoint = new Point(0,0,0);
 
         for(int i = 0; i < 10; i++){
-            POIPoint poi = new POIPoint(""+i, (i+1)/10f, (i+1)/10f, i);
+            POIPoint poi = new POIPoint(""+i, (i+1)/10f, (i+1)/10f, i, null);
             poi.setHorizontalBearing(startPoint);
             poi.setVerticalBearing(startPoint);
             pois.put(poi, false);
@@ -33,8 +33,8 @@ public class POIPointsUtilitiesTest {
         assertEquals(9, highestPoi.getAltitude(), 0);
 
         //Add POIPoint that is in lineOfSight
-        POIPoint poiInLineOfSight1 = new POIPoint("inLineOfSight", 5, 5, 0);
-        POIPoint poiInLineOfSight2 = new POIPoint("inLineOfSight", 6, 6, 3);
+        POIPoint poiInLineOfSight1 = new POIPoint("inLineOfSight", 5, 5, 0, null);
+        POIPoint poiInLineOfSight2 = new POIPoint("inLineOfSight", 6, 6, 3, null);
         poiInLineOfSight1.setHorizontalBearing(startPoint);
         poiInLineOfSight2.setHorizontalBearing(startPoint);
         poiInLineOfSight1.setVerticalBearing(startPoint);
@@ -49,7 +49,7 @@ public class POIPointsUtilitiesTest {
         assertEquals(3, highestPoi.getAltitude(), 0);
 
         //Add POIPoint that is outside the 6° range
-        POIPoint poiOutside6 = new POIPoint("poiOutside6", 45, 38, 0);
+        POIPoint poiOutside6 = new POIPoint("poiOutside6", 45, 38, 0, null);
         poiOutside6.setHorizontalBearing(startPoint);
         poiOutside6.setVerticalBearing(startPoint);
         pois.put(poiOutside6, false);
@@ -62,7 +62,7 @@ public class POIPointsUtilitiesTest {
 
 
         //Add POIPoint that is higher
-        POIPoint poiHigh = new POIPoint("poiHigh", 0.5, 0.5, 2000);
+        POIPoint poiHigh = new POIPoint("poiHigh", 0.5, 0.5, 2000, null);
         poiHigh.setHorizontalBearing(startPoint);
         poiHigh.setVerticalBearing(startPoint);
         pois.put(poiHigh, false);

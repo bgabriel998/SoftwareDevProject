@@ -4,14 +4,10 @@ import android.util.Log;
 
 import androidx.core.util.Pair;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.osmdroid.util.BoundingBox;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
@@ -31,8 +27,6 @@ public class HttpClientTopographyMap {
 
     static final int BOUNDING_BOX_RANGE = 20; //range of the bounding box in km
 
-    static final int HTTP_OK_CODE = 200; //range of the bounding box in km
-
     private static final String BASE_URL = "https://portal.opentopography.org/API/globaldem";
     private static final String DEM_TYPE = "SRTMGL3";
     private static final String OUTPUT_FORMAT = "AAIGrid";
@@ -51,14 +45,12 @@ public class HttpClientTopographyMap {
         URL url = generateURL();
 
         try {
-            HttpClient httpClient = HttpClientBuilder.create().build();
-            HttpRequestBase base = new HttpGet(url.toString());
-            HttpResponse response = httpClient.execute(base);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
-            if (response.getStatusLine().getStatusCode() == HTTP_OK_CODE) {
-                result =  parseResponse(response);
+            if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                result =  parseResponse(urlConnection);
             } else {
-                Log.d("3d MAP", "Http error code: " + response.getStatusLine().getStatusCode());
+                Log.d("3d MAP", "Http error code: " + urlConnection.getResponseCode());
                 result = null;
             }
 
@@ -82,9 +74,9 @@ public class HttpClientTopographyMap {
      * @param response  HTTPResponse to parse.
      * @return Pair<int[][], Double> that contains the topographyMap and the mapCellSize
      */
-    private Pair<int[][], Double> parseResponse(HttpResponse response) {
+    private Pair<int[][], Double> parseResponse(HttpURLConnection response) {
         try {
-            Scanner responseObj = new Scanner(response.getEntity().getContent());
+            Scanner responseObj = new Scanner(response.getInputStream());
             int nCol =  Integer.parseInt(responseObj.nextLine().replaceAll("[\\D]", ""));
             int nRow = Integer.parseInt(responseObj.nextLine().replaceAll("[\\D]", ""));
             return buildMapGrid(nRow, nCol, responseObj);

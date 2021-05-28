@@ -119,8 +119,8 @@ public class ComputePOIPointsTest {
         System.out.println(mBoundingBox.getCenterWithDateLine());
 
         List<POIPoint> mPoiPoints = new ArrayList<>();
-        POIPoint pointOne = new POIPoint("pointOne", 45.802540, 6.850330, 3000);
-        POIPoint pointTwo = new POIPoint("pointTwo", 45.802536, 6.850326, 5000);
+        POIPoint pointOne = new POIPoint("pointOne", 45.802540, 6.850330, 3000, null);
+        POIPoint pointTwo = new POIPoint("pointTwo", 45.802536, 6.850326, 5000, null);
         mPoiPoints.add(pointOne);
         mPoiPoints.add(pointTwo);
 
