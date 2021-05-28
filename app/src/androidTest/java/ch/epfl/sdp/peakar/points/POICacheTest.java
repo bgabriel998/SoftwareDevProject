@@ -62,7 +62,7 @@ public class POICacheTest {
         Context mContext = ApplicationProvider.getApplicationContext();
         UserPoint userPoint = UserPoint.getInstance(mContext);
         userPoint.setLocation(GPSTracker.DEFAULT_LAT, GPSTracker.DEFAULT_LON,GPSTracker.DEFAULT_ALT, GPSTracker.DEFAULT_ACC);
-        new DownloadTopographyTask(){
+        new DownloadTopographyTask(mContext) {
             @Override
             public void onResponseReceived(Pair<int[][], Double> topography) {
                 super.onResponseReceived(topography);
@@ -126,7 +126,7 @@ public class POICacheTest {
                 0);
         BoundingBox boundingBox = userPoint.computeBoundingBox(SettingsUtilities.getSelectedRange(context));
 
-        new DownloadTopographyTask(){
+        new DownloadTopographyTask(context){
             @Override
             public void onResponseReceived(Pair<int[][], Double> topography) {
                 super.onResponseReceived(topography);

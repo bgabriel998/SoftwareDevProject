@@ -1,5 +1,6 @@
 package ch.epfl.sdp.peakar.points;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.core.util.Pair;
@@ -27,17 +28,23 @@ public class LineOfSight {
 
     private final ElevationMap elevationMap;
     private double mapCellSize;
+    private double boundingBoxNorthLat;
     private double boundingBoxWestLon;
+
+    private Context context;
 
     /**
      * Constructor for the LineOfSight class.
      *
-     * @param userPoint userPoint from wich the visible POIPoints are computed.
+     * @param topography    pair with topography map and cell size.
+     * @param userPoint     userPoint from wich the visible POIPoints are computed.
+     * @param context       context of the application.
      */
-    public LineOfSight(Pair<int[][], Double> topography, UserPoint userPoint) {
+    public LineOfSight(Pair<int[][], Double> topography, UserPoint userPoint, Context context) {
         this.userPoint = userPoint;
         this.mapCellSize = topography.second;
-        this.elevationMap = new ElevationMap(topography, this.userPoint);
+        this.context = context;
+        this.elevationMap = new ElevationMap(topography, this.userPoint, context);
     }
 
     /**
@@ -51,15 +58,17 @@ public class LineOfSight {
         elevationMap.updateElevationMatrix();
 
         this.mapCellSize = elevationMap.getMapCellSize();
+        this.boundingBoxNorthLat = elevationMap.getBoundingBoxNorthLat();
         this.boundingBoxWestLon = elevationMap.getBoundingBoxWestLong();
 
         Pair<Integer, Integer> userIndexes = elevationMap
                 .getIndexesFromCoordinates(userPoint.getLatitude(), userPoint.getLongitude());
+        double userLatitude = userPoint.getLatitude();
         double userLongitude = userPoint.getLongitude();
         int userAltitude = (int) userPoint.getAltitude();
 
         return poiPoints.parallelStream()
-                .filter(p -> isVisible(p, userIndexes, userLongitude, userAltitude))
+                .filter(p -> isVisible(p, userIndexes, userLatitude, userLongitude, userAltitude))
                 .collect(Collectors.toList());
 
     }
@@ -76,17 +85,19 @@ public class LineOfSight {
         elevationMap.updateElevationMatrix();
 
         this.mapCellSize = elevationMap.getMapCellSize();
+        this.boundingBoxNorthLat = elevationMap.getBoundingBoxNorthLat();
         this.boundingBoxWestLon = elevationMap.getBoundingBoxWestLong();
 
         Pair<Integer, Integer> userIndexes = elevationMap
                 .getIndexesFromCoordinates(userPoint.getLatitude(), userPoint.getLongitude());
+        double userLatitude = userPoint.getLatitude();
         double userLongitude = userPoint.getLongitude();
         int userAltitude = (int) userPoint.getAltitude();
 
         Map<POIPoint, Boolean> labeledPOIPoints = Collections.synchronizedMap(new HashMap<>());
 
         poiPoints.parallelStream()
-                .forEach(p -> labeledPOIPoints.put(p, isVisible(p, userIndexes, userLongitude, userAltitude)));
+                .forEach(p -> labeledPOIPoints.put(p, isVisible(p, userIndexes, userLatitude, userLongitude, userAltitude)));
 
         return labeledPOIPoints;
     }
@@ -97,39 +108,44 @@ public class LineOfSight {
      *
      * @param poiPoint      POIPoint to determine if it is visible.
      * @param userIndexes   indexes representing the user's location on the elevation map grid.
+     * @param userLatitude  latitude of the user's location (in degrees).
      * @param userLongitude longitude of the user's location (in degrees).
      * @param userAltitude  altitude of the user's location (in meters).
      * @return              <code>true</code> if the POIPoint is visible from the user's location.
      * 	                    <code>false</code> otherwise.
      */
     private boolean isVisible(POIPoint poiPoint, Pair<Integer, Integer> userIndexes,
-                              double userLongitude, int userAltitude) {
+                              double userLatitude, double userLongitude, int userAltitude) {
 
         Pair<Integer, Integer> poiIndexes = elevationMap
                 .getIndexesFromCoordinates(poiPoint.getLatitude(), poiPoint.getLongitude());
+
+        double poiLatitude = poiPoint.getLatitude();
         double poiLongitude = poiPoint.getLongitude();
         int poiAltitude = (int) poiPoint.getAltitude();
+        boolean useRow = Math.abs(userIndexes.first - poiIndexes.first) >
+                Math.abs(userIndexes.second - poiIndexes.second);
 
-        double slope = (poiAltitude - userAltitude) / (poiLongitude - userLongitude);
+        double slope = (poiAltitude - userAltitude) / (useRow ? (poiLatitude - userLatitude) : (poiLongitude - userLongitude));
 
-        List<Pair<Integer, Integer>> line = bresenham(  userIndexes.first, userIndexes.second,
+        Log.d("DEBUG", String.valueOf(slope));
+
+        List<Pair<Integer, Integer>> line = drawLine(  userIndexes.first, userIndexes.second,
                 poiIndexes.first, poiIndexes.second);
 
-        return line.parallelStream()
-                .peek(p -> Log.d("DEBUG", String.valueOf(computeMaxElevation(userLongitude, userAltitude, p.second, slope) -
+        return line.stream()
+                .peek(p -> Log.d("DEBUG", computeMaxElevation(userLatitude, userLongitude, userAltitude, p.first, p.second, useRow, slope) + " - " + elevationMap.getAltitudeAtLocation(p.first, p.second)  + " - " + (computeMaxElevation(userLatitude, userLongitude, userAltitude, p.first, p.second, useRow, slope) -
                         elevationMap.getAltitudeAtLocation(p.first, p.second))))
-                .map(p -> computeMaxElevation(userLongitude, userAltitude, p.second, slope) -
+                .map(p -> computeMaxElevation(userLatitude, userLongitude, userAltitude, p.first, p.second, useRow, slope) -
                         elevationMap.getAltitudeAtLocation(p.first, p.second) >
                         - ELEVATION_DIFFERENCE_THRESHOLD)
-                .reduce(true, (vis, v) -> vis &&  v);
+                .reduce(true, (vis, v) -> vis && v);
 
     }
 
     /**
      * This method draws the line between the user's location and the POIPoint on the
-     * elevation map grid. To do this the Bresenham algorithm is used:
-     *
-     * See <a href="Bresenham's line algorithm">https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm</a>
+     * elevation map grid.
      *
      * @param x1    x index of the user's location on the elevation map grid.
      * @param y1    y index of the user's location on the elevation map grid.
@@ -137,39 +153,52 @@ public class LineOfSight {
      * @param y2    y index of the POIPoint on the elevation map grid.
      * @return      a List of indexes representing the line in the elevation map grid.
      */
-    private List<Pair<Integer, Integer>> bresenham(int x1, int y1, int x2, int y2) {
+    private List<Pair<Integer, Integer>> drawLine(int x1, int y1, int x2, int y2) {
 
-        int m_new = 2 * Math.abs(y2 - y1);
+        int pixelX = x2 - x1;
+        int pixelY = y2 - y1;
 
-        int slope_error_new = m_new - Math.abs(x2 - x1);
+        Log.d("DEBUG" , "(" + x1 + "," + y1 + ") (" + x2 + "," + y2 + ")");
 
         List<Pair<Integer, Integer>> line = new ArrayList<>();
-        int x, y;
 
-        for (x = Math.min(x1, x2), y = x1 < x2 ? y1 : y2; x <= Math.max(x1, x2); x++) {
+        int ratio;
+        double error;
+        double cumulatedError = 0;
 
-            line.add(new Pair<>(x, y));
-
-            // Add slope to increment angle formed
-            slope_error_new += m_new;
-
-            // Slope error reached limit, time to
-            // increment or decrement y and update slope error.
-            if (slope_error_new >= 0) {
-                y = y2 > y1 ? y + 1 : y - 1;
-                slope_error_new -= 2 * Math.abs(x2 - x1);
+        if (Math.abs(pixelY) >= Math.abs(pixelX)) {
+            ratio = pixelX != 0 ? Math.abs(pixelY / pixelX) : Math.abs(pixelX);
+            error = pixelX != 0 ? Math.abs((double) ratio - Math.abs(((double) pixelY / (double) pixelX))) : 0;
+            for (int x = x1, y = y1; x1 < x2 ? x <= x2 : x >= x2; x = x1 < x2 ? x+1 : x-1) {
+                for (int i = 0; i < ratio && (y1 < y2 ? y <= y2 : y >= y2); i++) {
+                    line.add(new Pair<>(x, y));
+                    y = y1 < y2 ? y+1 : y-1;
+                    cumulatedError += error;
+                    if (cumulatedError >= 1) {
+                        line.add(new Pair<>(x, y));
+                        y = y1 < y2 ? y+1 : y-1;
+                        cumulatedError -= 1;
+                    }
+                }
+            }
+        } else {
+            ratio = pixelY != 0 ? Math.abs(pixelX / pixelY) : Math.abs(pixelY);
+            error = pixelY != 0 ? Math.abs((double) ratio - Math.abs(((double) pixelX / (double) pixelY))) : 0;
+            for (int x = x1, y = y1; y1 < y2 ? y <= y2 : y >= y2; y = y1 < y2 ? y+1 : y-1) {
+                for (int i = 0; i < ratio && (x1 < x2 ? x <= x2 : x >= x2); i++) {
+                    line.add(new Pair<>(x, y));
+                    x = x1 < x2 ? x+1 : x-1;
+                    cumulatedError += error;
+                    if (cumulatedError >= 1) {
+                        line.add(new Pair<>(x, y));
+                        x = x1 < x2 ? x+1 : x-1;
+                        cumulatedError -= 1;
+                    }
+                }
             }
         }
 
-        // Fill the missing gap
-        int lastY = x1 < x2 ? y2 : y1;
-        while (y != lastY) {
-            y = y < lastY ? y + 1 : y - 1;
-            line.add(new Pair<>(x-1, y));
-        }
-
-        // Keep the user location at the start of the line
-        if (x1 > x2) Collections.reverse(line);
+        Log.d("DEBUG", line.toString());
 
         return line;
 
@@ -179,18 +208,26 @@ public class LineOfSight {
      * Method that computes the elevation of the line connecting the user's location and the
      * POIPoint at a given index of the elevation map grid.
      *
+     * @param userLatitude  latitude of the user's location (in degrees).
      * @param userLongitude longitude of the user's location (in degrees).
      * @param userAltitude  altitude of the user's location (in meters).
+     * @param rowIndex      index of the row to compute the elevation.
      * @param colIndex      index of the column to compute the elevation.
-     * @param slope         slope of the line conncetgint the user's location and the POIPoint.
+     * @param useRow        boolean indicating the method to use row/column for computing the elevation.
+     * @param slope         slope of the line connecting the user's location and the POIPoint.
      * @return              elevation (in meters).
      */
-    private int computeMaxElevation(double userLongitude, double userAltitude,
-                                    int colIndex, double slope) {
+    private int computeMaxElevation(double userLatitude, double userLongitude,
+                                    double userAltitude,
+                                    int rowIndex, int colIndex, boolean useRow,
+                                    double slope) {
 
+        double latitude = -(rowIndex * mapCellSize) + boundingBoxNorthLat;
         double longitude = colIndex * mapCellSize + boundingBoxWestLon;
 
-        return (int) (slope*(longitude - userLongitude) + userAltitude);
+        Log.d("DEBUG", rowIndex + " - " + latitude + " - " + slope);
+
+        return (int) (useRow ? (slope*(latitude - userLatitude) + userAltitude) : (slope*(longitude - userLongitude) + userAltitude));
 
     }
 

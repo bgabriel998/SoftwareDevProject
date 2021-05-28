@@ -137,7 +137,7 @@ public class SettingsMapActivity extends AppCompatActivity {
      */
     @SuppressLint("StaticFieldLeak")
     private void addMapAndPOIsToContainer(OfflineContentContainer saveObject, Point selectedPoint) {
-        new DownloadTopographyTask(){
+        new DownloadTopographyTask(this){
             @SuppressLint("StaticFieldLeak")
             @Override
             public void onResponseReceived(Pair<int[][], Double> topography) {

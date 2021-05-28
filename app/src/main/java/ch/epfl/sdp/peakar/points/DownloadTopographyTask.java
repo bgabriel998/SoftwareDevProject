@@ -1,5 +1,6 @@
 package ch.epfl.sdp.peakar.points;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
 import androidx.core.util.Pair;
@@ -12,9 +13,20 @@ import androidx.core.util.Pair;
 public class DownloadTopographyTask extends AsyncTask<Point, Void, Pair<int[][], Double>>
         implements DownloadTopography {
 
+    Context context;
+
+    /**
+     * Constructor.
+     *
+     * @param context context of the application.
+     */
+    public DownloadTopographyTask(Context context) {
+        this.context = context;
+    }
+
     @Override
     protected Pair<int[][], Double> doInBackground(Point... points) {
-        HttpClientTopographyMap httpClient = new HttpClientTopographyMap(points[0]);
+        HttpClientTopographyMap httpClient = new HttpClientTopographyMap(points[0], context);
         return httpClient.getTopographyMap();
     }
 
