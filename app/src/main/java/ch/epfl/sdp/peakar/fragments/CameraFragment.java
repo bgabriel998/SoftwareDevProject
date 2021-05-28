@@ -87,7 +87,7 @@ public class CameraFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.camera_preview, container, false);
+        return inflater.inflate(R.layout.fragment_camera, container, false);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class CameraFragment extends Fragment{
         super.onViewCreated(view, savedInstanceState);
 
         ConstraintLayout container = (ConstraintLayout) view;
-        previewView = container.findViewById(R.id.cameraPreview);
+        previewView = container.findViewById(R.id.cameraPreviewFragment);
 
         //Initialize background executor
         cameraExecutor = Executors.newSingleThreadExecutor();

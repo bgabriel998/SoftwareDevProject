@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         //MenuBarHandler.setup((AppCompatActivity) this);
 
         ViewPager2 viewPager = findViewById(R.id.viewPager);
-        adapterViewPager = new MyPagerAdapter(getSupportFragmentManager(), getLifecycle());
+        adapterViewPager = new MyPagerAdapter(this);
         viewPager.setAdapter(adapterViewPager);
         viewPager.setCurrentItem(2);
     }

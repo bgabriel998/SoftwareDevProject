@@ -8,8 +8,10 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import ch.epfl.sdp.peakar.camera.CameraPreview;
+import ch.epfl.sdp.peakar.fragments.CameraFragment;
 import ch.epfl.sdp.peakar.fragments.GalleryFragment;
 import ch.epfl.sdp.peakar.fragments.MapFragment;
+import ch.epfl.sdp.peakar.fragments.SettingsFragment;
 import ch.epfl.sdp.peakar.fragments.SocialFragment;
 
 public class MyPagerAdapter extends FragmentStateAdapter {
@@ -19,9 +21,10 @@ public class MyPagerAdapter extends FragmentStateAdapter {
     private static final int SOCIAL_FRAGMENT = 4;
     private static final int SETTINGS_FRAGMENT = 0;
     private static final int GALLERY_FRAGMENT = 1;
+    private static final int NUM_PAGES = 5;
 
-    public MyPagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
-        super(fragmentManager, lifecycle);
+    public MyPagerAdapter(FragmentActivity fa) {
+        super(fa);
     }
 
     @NonNull
@@ -29,14 +32,13 @@ public class MyPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch(position){
             case CAMERA_PREVIEW:
-                return CameraPreview.newInstance();
+                return CameraFragment.newInstance();
             case MAP_FRAGMENT:
                 return MapFragment.newInstance();
             case SOCIAL_FRAGMENT:
                 return SocialFragment.newInstance();
             case SETTINGS_FRAGMENT:
-                //return SettingsFragment.newInstance();
-                return null;
+                return SettingsFragment.newInstance();
             case GALLERY_FRAGMENT:
                 return GalleryFragment.newInstance();
             default:
@@ -46,6 +48,6 @@ public class MyPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 5;
+        return NUM_PAGES;
     }
 }

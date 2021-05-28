@@ -86,11 +86,11 @@ public class InitActivity extends AppCompatActivity {
      */
     public void launchApp(){
         if(hasCameraPermission()){
-            Intent intent = new Intent(this, CameraActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
         else{
-            Intent intent = new Intent(this, SocialActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
     }

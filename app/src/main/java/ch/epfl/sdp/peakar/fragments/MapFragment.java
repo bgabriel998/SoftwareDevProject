@@ -1,25 +1,19 @@
 package ch.epfl.sdp.peakar.fragments;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.map.OSMMap;
 import ch.epfl.sdp.peakar.user.services.AuthService;
-import ch.epfl.sdp.peakar.utils.MenuBarHandler;
-
-import static ch.epfl.sdp.peakar.utils.StatusBarHandler.StatusBarTransparentBlack;
-import static ch.epfl.sdp.peakar.utils.TopBarHandler.setupTransparentTopBar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -80,6 +74,10 @@ public class MapFragment extends Fragment {
         changeMapTileSourceButton.setOnClickListener(v -> osmMap.changeMapTileSource(zoomOnUserLocationButton,changeMapTileSourceButton ));
     }
 
+    /**
+     * Gets the currently used osmMap
+     * @return Currently used OSMMap
+     */
     public OSMMap getOsmMap() {
         return osmMap;
     }
