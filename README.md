@@ -33,9 +33,8 @@ ___
 
 ___
 ## Devs
-- Gangloff Maximilian ì
+- Gangloff Maximilian
 - Gabriel Bastien 
 - Monea Giovanni
 - Olsson Alexander
 - Srinivasan Ravi
-
