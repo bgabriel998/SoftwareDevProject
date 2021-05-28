@@ -162,8 +162,7 @@ public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>
         }
         try {
             //parse JSON and build POIs
-            JsonParser parser = new JsonParser();
-            JsonElement json = parser.parse(jString);
+            JsonElement json = JsonParser.parseString(jString);
             JsonObject jResult = json.getAsJsonObject();
             JsonArray jElements = jResult.get("elements").getAsJsonArray();
             ArrayList<POI> pois = new ArrayList<POI>(jElements.size());

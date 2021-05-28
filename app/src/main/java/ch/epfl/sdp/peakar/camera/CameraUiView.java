@@ -4,11 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Toast;
 
@@ -19,6 +21,7 @@ import androidx.preference.PreferenceManager;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
@@ -28,6 +31,8 @@ import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.utils.CameraUtilities;
+
+import static ch.epfl.sdp.peakar.utils.ImageHandler.rotateBitmap;
 
 /**
  * CameraUiView draws a canvas with the compass and mountain information on the camera-preview
@@ -44,6 +49,7 @@ public class CameraUiView extends View implements Observer {
     private Paint mainTextPaint;
     private Paint mountainInfo;
     private Paint secondaryTextPaint;
+    private Paint backgroundRectPaint;
 
     //Colors of the compass-view
     private int compassColor;
@@ -56,13 +62,14 @@ public class CameraUiView extends View implements Observer {
 
     //Rotation to be applied for the addition info of the mountains
     private static final int LABEL_ROTATION = -45;
-    //Offset for the text to be above the marker
-    private static final int OFFSET_MOUNTAIN_INFO = 15;
 
     //Factors for the sizes
+    private static final int RADIUS_RECT_CORNER = 60;
     private static final int MAIN_TEXT_FACTOR = 20;
     private static final int SEC_TEXT_FACTOR = 15;
+    private static final int OFFSET_RECTANGLE_X_EDGE = 7;
     private static final int MAIN_LINE_FACTOR = 5;
+    private static final int OFFSET_RECTANGLE_Y_EDGE = 4;
     private static final int SEC_LINE_FACTOR = 3;
     private static final int TER_LINE_FACTOR = 2;
 
@@ -72,6 +79,7 @@ public class CameraUiView extends View implements Observer {
 
     //Number of pixels per degree
     private float pixDeg;
+    private float screenDensity;
 
     //Range of the for-loop to draw the compass
     private float minDegrees;
@@ -94,6 +102,8 @@ public class CameraUiView extends View implements Observer {
     //Marker used to display mountains on camera-preview
     private Bitmap mountainMarkerVisible;
     private Bitmap mountainMarkerNotVisible;
+    private Bitmap distanceBitmap;
+    private Bitmap heightBitmap;
 
     //Map that contains the labeled POIPoints
     private Map<POIPoint, Boolean> labeledPOIPoints;
@@ -176,10 +186,10 @@ public class CameraUiView extends View implements Observer {
     private void widgetInit(){
         //Initialize colors
         compassColor = getResources().getColor(R.color.Black, null);
-        int mountainInfoColor = getResources().getColor(R.color.Black, null);
+        int mountainInfoColor = getResources().getColor(R.color.White, null);
 
         //Initialize fonts
-        float screenDensity = getResources().getDisplayMetrics().scaledDensity;
+        screenDensity = getResources().getDisplayMetrics().scaledDensity;
         mainTextSize = (int) (MAIN_TEXT_FACTOR * screenDensity);
 
         //Initialize mountain marker that are in line of sight
@@ -188,10 +198,13 @@ public class CameraUiView extends View implements Observer {
         //Initialize mountain marker that are not in line of sight
         mountainMarkerNotVisible = getBitmapFromVectorDrawable(getContext(), R.drawable.ic_mountain_marker_not_visible);
 
+        heightBitmap = getBitmapFromVectorDrawable(getContext(), R.drawable.ic_double_arrow);
+        distanceBitmap = rotateBitmap(heightBitmap);
+
         //Initialize paints
         mountainInfo = new Paint(Paint.ANTI_ALIAS_FLAG);
         mountainInfo.setTextAlign(Paint.Align.LEFT);
-        mountainInfo.setTextSize(MAIN_TEXT_FACTOR*screenDensity);
+        mountainInfo.setTextSize(SEC_TEXT_FACTOR*screenDensity);
         mountainInfo.setColor(mountainInfoColor);
         mountainInfo.setAlpha(MAX_ALPHA);
 
@@ -209,6 +222,8 @@ public class CameraUiView extends View implements Observer {
 
         //Paint used for the terciary lines (15°, 30°, 60°, 75°, 105°, ...)
         terciaryLinePaint = configureLinePaint(TER_LINE_FACTOR*screenDensity);
+
+        backgroundRectPaint = configureRectPaint();
     }
 
     public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
@@ -232,6 +247,22 @@ public class CameraUiView extends View implements Observer {
         paint.setStrokeWidth(strokeWidth);
         paint.setColor(compassColor);
         paint.setAlpha(MAX_ALPHA);
+        return paint;
+    }
+
+    /**
+     * Method to create a rectangle paint around the text
+     * @return configured paint
+     */
+    private Paint configureRectPaint(){
+        Paint paint = new Paint();
+        paint.setStrokeWidth(0);
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = getContext().getTheme();
+        theme.resolveAttribute(R.attr.colorControlNormal, typedValue, true);
+        paint.setColor(typedValue.data);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setAlpha(100);
         return paint;
     }
 
@@ -408,17 +439,51 @@ public class CameraUiView extends View implements Observer {
         //Draw the marker on the preview depending on the line of sight
         Bitmap mountainMarker = isVisible ? mountainMarkerVisible : mountainMarkerNotVisible;
 
-        canvas.drawBitmap(mountainMarker, left, mountainMarkerPosition, null);
-
         //Save status before Screen Rotation
         canvas.save();
         canvas.rotate(LABEL_ROTATION, left, mountainMarkerPosition);
-        canvas.drawText(poiPoint.getName() + " " + poiPoint.getAltitude() + "m",
-                left + mountainInfo.getTextSize() - OFFSET_MOUNTAIN_INFO,
-                mountainMarkerPosition + mountainInfo.getTextSize() + OFFSET_MOUNTAIN_INFO,
-                mountainInfo);
+
+        String textName = poiPoint.getName();
+        float xName = left + mountainInfo.getTextSize();
+        float yName = mountainMarkerPosition + mountainInfo.getTextSize() + OFFSET_RECTANGLE_Y_EDGE*screenDensity;
+
+        float xBitmapHeight = xName - OFFSET_RECTANGLE_Y_EDGE*screenDensity;
+        float yBitmap = yName + 2*screenDensity;
+
+        String textHeight = " " + (int)poiPoint.getAltitude() + "m, ";
+        float xTextHeight = xBitmapHeight + heightBitmap.getWidth()/2f;
+        float yTextInfo = yName + mountainInfo.getTextSize();
+
+        float xBitmapDistance = xTextHeight + mountainInfo.measureText(textHeight);
+
+        Formatter mToKm = new Formatter();
+        mToKm.format("%.2f", poiPoint.getDistanceToUser()/1000);
+        String textDistance = " " + mToKm.toString() + "km";
+        float xTextDistance = xBitmapDistance + distanceBitmap.getWidth();
+        
+        float leftRect = left - mountainMarker.getWidth()/2f;
+        float topRect = yName - mountainInfo.getTextSize() + 2*screenDensity;
+        float bottomRect = yTextInfo + OFFSET_RECTANGLE_Y_EDGE*screenDensity;
+        float rightRect = Math.max(xTextDistance + mountainInfo.measureText(textDistance), xName + mountainInfo.measureText(textName)) + OFFSET_RECTANGLE_X_EDGE*screenDensity;
+
+        float xNameCentered = xName + (rightRect - xName - mountainInfo.measureText(textName) - OFFSET_RECTANGLE_X_EDGE*screenDensity)/2;
+
+        //Draw first rectangle to overdraw the background
+        canvas.drawRoundRect(leftRect, topRect, rightRect, bottomRect, RADIUS_RECT_CORNER, RADIUS_RECT_CORNER, backgroundRectPaint);
+
+        canvas.drawText(textName, Math.max(xNameCentered, xName), yName, mountainInfo);
+
+        canvas.drawBitmap(heightBitmap, xBitmapHeight, yBitmap, null);
+        canvas.drawText(textHeight, xTextHeight, yTextInfo, mountainInfo);
+        canvas.drawBitmap(distanceBitmap, xBitmapDistance, yBitmap, null);
+        canvas.drawText(textDistance, xTextDistance, yTextInfo, mountainInfo);
+
+
         //Restore the saved state
         canvas.restore();
+
+        //Overdraw the marker on the rectangle
+        canvas.drawBitmap(mountainMarker, left, mountainMarkerPosition, null);
     }
 
     /**

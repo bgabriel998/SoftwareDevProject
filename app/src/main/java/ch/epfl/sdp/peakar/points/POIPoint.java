@@ -49,10 +49,10 @@ public class POIPoint extends Point {
      * @param longitude peak longitude
      * @param altitude peak height (in meters)
      */
-    public POIPoint(String name, double latitude, double longitude, long altitude){
+    public POIPoint(String name, double latitude, double longitude, long altitude, String discoveredDate){
         super(latitude, longitude, altitude);
         this.setName(name);
-
+        this.setDiscoveredDate(discoveredDate);
     }
 
     /**

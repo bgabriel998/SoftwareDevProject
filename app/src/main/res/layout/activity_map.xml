@@ -47,9 +47,9 @@
             android:layout_height="40dp"
             android:layout_marginBottom="10dp"
             android:contentDescription="@string/buttonGetUserLoc"
-            android:tint="@color/Black"
             app:srcCompat="@drawable/map_icon_map_tile"
-            android:background="@null"/>
+            android:background="@null"
+            app:tint="@color/Black" />
 
         <!-- User location button -->
         <ImageButton

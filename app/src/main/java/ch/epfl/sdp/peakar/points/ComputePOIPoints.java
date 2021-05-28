@@ -143,6 +143,7 @@ public class ComputePOIPoints extends Observable implements Observer{
                 for(POIPoint poiPoint : offlineContent.POIPoints){
                     poiPoint.setHorizontalBearing(userPoint);
                     poiPoint.setVerticalBearing(userPoint);
+                    poiPoint.setDistanceToUser(userPoint);
                     POIs.put(poiPoint, false);
                 }
                 applyFilteringLabeledPOIs(topography);
@@ -165,6 +166,7 @@ public class ComputePOIPoints extends Observable implements Observer{
         cachedPOIs.forEach(poiPoint -> {
             poiPoint.setHorizontalBearing(userPoint);
             poiPoint.setVerticalBearing(userPoint);
+            poiPoint.setDistanceToUser(userPoint);
             POIs.put(poiPoint, false);
         });
         //Retrieve topography map from cache
@@ -191,6 +193,7 @@ public class ComputePOIPoints extends Observable implements Observer{
                         POIPoint poiPoint = new POIPoint(poi);
                         poiPoint.setHorizontalBearing(userPoint);
                         poiPoint.setVerticalBearing(userPoint);
+                        poiPoint.setDistanceToUser(userPoint);
                         POIs.put(poiPoint, false);
                     }
                     filteredPOIPoints = filterHighestPOIs(POIs);
