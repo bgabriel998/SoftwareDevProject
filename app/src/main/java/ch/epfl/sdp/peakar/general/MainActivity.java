@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import java.util.Objects;
+
 import ch.epfl.sdp.peakar.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         ViewPager2 viewPager = findViewById(R.id.viewPager);
         adapterViewPager = new MyPagerAdapter(this);
         viewPager.setAdapter(adapterViewPager);
+        viewPager.setOffscreenPageLimit(Objects.requireNonNull(viewPager.getAdapter()).getItemCount());
         viewPager.setCurrentItem(2);
     }
 }

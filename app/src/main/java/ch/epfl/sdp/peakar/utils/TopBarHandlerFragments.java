@@ -127,7 +127,7 @@ public class TopBarHandlerFragments {
     }
 
     /**
-     *
+     * Sets the visibility of the top bar
      * @param fragment active fragment
      * @param visible If true visible else invisible
      */

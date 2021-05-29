@@ -120,7 +120,6 @@ public class CameraFragment extends Fragment{
         //Wait for the view to be properly laid out
         previewView.post(() -> {
             previewDisplayId = previewView.getDisplay().getDisplayId();
-            initFragment();
             setUpCamera();
         });
     }
@@ -128,9 +127,9 @@ public class CameraFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
+        initFragment();
         if(returnToFragment){
-            initFragment();
-            setUpCamera();
+            //setUpCamera();
         }
         else
             returnToFragment = true;

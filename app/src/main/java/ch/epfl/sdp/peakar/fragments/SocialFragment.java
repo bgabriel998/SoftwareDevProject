@@ -34,10 +34,8 @@ public class SocialFragment extends Fragment {
      *
      * @return A new instance of fragment SocialFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static SocialFragment newInstance() {
-        SocialFragment fragment = new SocialFragment();
-        return fragment;
+        return new SocialFragment();
     }
 
     @Override
@@ -56,6 +54,7 @@ public class SocialFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initFragment();
     }
 
     @Override

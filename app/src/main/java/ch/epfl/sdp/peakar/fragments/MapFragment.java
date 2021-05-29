@@ -28,6 +28,8 @@ public class MapFragment extends Fragment {
     private OSMMap osmMap;
     private ImageButton zoomOnUserLocationButton;
     private ImageButton changeMapTileSourceButton;
+    private ConstraintLayout container;
+    private boolean returnToFragment;
 
     public MapFragment() {
         // Required empty public constructor
@@ -59,15 +61,17 @@ public class MapFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ConstraintLayout container = (ConstraintLayout) view;
+        container = (ConstraintLayout) view;
 
+        //initMapFragment(container);
+    }
+
+    private void initMapFragment(ConstraintLayout container){
         StatusBarTransparentBlack(this);
         setupTransparentTopBar(this, R.color.Black);
-        //MenuBarHandler.setup(this);
 
         //Instantiate Map
         osmMap = new OSMMap(requireContext(), container.findViewById(R.id.map));
-
 
         //Display markers on the map
         osmMap.setMarkersForDiscoveredPeaks(AuthService.getInstance().getAuthAccount() != null);
@@ -79,6 +83,26 @@ public class MapFragment extends Fragment {
 
         changeMapTileSourceButton = container.findViewById(R.id.changeMapTile);
         changeMapTileSourceButton.setOnClickListener(v -> osmMap.changeMapTileSource(zoomOnUserLocationButton,changeMapTileSourceButton ));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(returnToFragment){
+            reloadFragment();
+        }
+        else {
+            returnToFragment = true;
+            initMapFragment(container);
+        }
+    }
+
+    private void reloadFragment() {
+        StatusBarTransparentBlack(this);
+        setupTransparentTopBar(this, R.color.Black);
+
+        //Display markers on the map
+        osmMap.updateMarkers(AuthService.getInstance().getAuthAccount() != null);
     }
 
     /**
