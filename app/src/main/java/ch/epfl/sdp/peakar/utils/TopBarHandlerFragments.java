@@ -100,13 +100,15 @@ public class TopBarHandlerFragments {
 
     /**
      * Setup the switch given two texts and a listener for switch event
-     * @param activity currently using
+     * @param fragment currently using
      * @param leftText text that appears left of switch.
      * @param rightText text that appears right of switch.
      * @param listener listener to event when switch is pressed.
      */
-    public static void setupSwitch(Activity activity, String leftText, String rightText,
+    public static void setupSwitch(Fragment fragment, String leftText, String rightText,
                                    CompoundButton.OnCheckedChangeListener listener) {
+        Activity activity = fragment.getActivity();
+        assert activity != null;
         setText(activity.findViewById(R.id.top_bar_switch_text_left), leftText);
         setText(activity.findViewById(R.id.top_bar_switch_text_right), rightText);
 

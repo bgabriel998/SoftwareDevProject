@@ -605,8 +605,9 @@ public class NewProfileActivity extends AppCompatActivity {
      * On social activity button click
      */
     public void socialActivityButton(View view) {
-        Intent intent = new Intent(this, SocialActivity.class);
-        startActivity(intent);
+        //Intent intent = new Intent(this, SocialActivity.class);
+        //startActivity(intent);
+        finish();
     }
 
     /**

@@ -340,9 +340,10 @@ public class OSMMap {
             drawMarkersOnMap(countryHighPointsName, newDiscoveredPeaks);
         }
         else{
-            mapView.getOverlays().removeAll(markers);
             Toast toast = Toast.makeText(context,context.getString(R.string.toast_no_account),Toast.LENGTH_LONG);
             toast.show();
+            mapView.getOverlays().removeAll(markers);
+            discoveredPeaks.clear();
         }
         mapView.invalidate();
     }
