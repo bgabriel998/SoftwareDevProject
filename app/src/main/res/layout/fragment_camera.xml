@@ -72,6 +72,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+
         app:layout_constraintLeft_toLeftOf="@+id/compassMiniature"
         app:layout_constraintRight_toRightOf="@+id/compassMiniature"
         app:layout_constraintTop_toTopOf="@+id/compassMiniature"

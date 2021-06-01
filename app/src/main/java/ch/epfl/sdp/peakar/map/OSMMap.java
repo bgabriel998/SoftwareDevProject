@@ -19,6 +19,7 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.MapTileIndex;
+import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.Projection;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
@@ -43,6 +44,9 @@ import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.SettingsUtilities;
 
+/**
+ * Class used to create an OSMMap
+ */
 public class OSMMap {
 
     /*Constants for map creation and initialization*/
@@ -69,9 +73,10 @@ public class OSMMap {
     public OSMMap(Context context, MapView view){
         this.context = context;
         markers = new ArrayList<>();
+        discoveredPeaks = new HashSet<>();
         Context applicationContext = context.getApplicationContext();
         Configuration.getInstance().load(applicationContext, PreferenceManager.getDefaultSharedPreferences(applicationContext));
-        mapView = (MapView) view;
+        mapView = view;
         initMapView();
     }
 
@@ -92,7 +97,7 @@ public class OSMMap {
         mapView.setTilesScaleFactor(TILE_SCALING_FACTOR);
         IMapController mapController  = mapView.getController();
         mapController.setZoom(DEFAULT_ZOOM_FACTOR);
-        mapView.setBuiltInZoomControls(false);
+        mapView.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
         mapView.setMultiTouchControls(true);
         mapView.setHorizontalMapRepetitionEnabled(true);
         mapView.setVerticalMapRepetitionEnabled(false);
@@ -120,8 +125,8 @@ public class OSMMap {
 
     /**
      * Zoom on user Location
-     * @param zoomOnUserLocationButton
-     * @param changeMapTileSourceButton
+     * @param zoomOnUserLocationButton button used to zoom on user location
+     * @param changeMapTileSourceButton button used to change the map tiles
      */
     @SuppressLint("UseCompatLoadingForDrawables")
     public void changeMapTileSource(ImageButton zoomOnUserLocationButton, ImageButton changeMapTileSourceButton){
