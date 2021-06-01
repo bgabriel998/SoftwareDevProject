@@ -40,8 +40,6 @@ public class HttpClientTopographyMap {
 
     private final BoundingBox boundingBox;
 
-    private Context context;
-
     /**
      * Constructor of class that handles the download of the AAIGrid and building of the matrix representing
      * the elevation map.

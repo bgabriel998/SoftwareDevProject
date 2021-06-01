@@ -210,4 +210,5 @@
     <string name="toolbar_collections">Collections</string>
     <string name="toolbar_rankings">Rankings</string>
     <string name="toolbar_gallery">Gallery</string>
+    <string name="download_error_toast" translatable="false">An error occurred while downloading offline content</string>
 </resources>
