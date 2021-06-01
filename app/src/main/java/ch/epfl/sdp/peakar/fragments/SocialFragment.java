@@ -105,24 +105,24 @@ public class SocialFragment extends Fragment {
     private void reloadFragment() {
         StatusBarLightGrey(this);
         setupGreyTopBar(this);
-        //MenuBarHandler.setup(this);
-    }
-
-    private void initFragment() {
-        StatusBarLightGrey(this);
-        setupGreyTopBar(this);
-
-        listView = container.findViewById(R.id.social_list);
-        emptyFriendsView = container.findViewById(R.id.social_empty_friends);
-
-        globalAdapter = setupGlobalListAdapter();
-        friendsAdapter = setupFriendsListAdapter();
-
         setupSwitch(this, getString(R.string.switch_all), getString(R.string.switch_friends),
                 (switchView, friendsChecked) -> {
                     if (friendsChecked) setFriendsView();
                     else setGlobalView();
                 });
+
+    }
+
+    private void initFragment() {
+
+        listView = container.findViewById(R.id.social_list);
+        emptyFriendsView = container.findViewById(R.id.social_empty_friends);
+
+        reloadFragment();
+
+        globalAdapter = setupGlobalListAdapter();
+        friendsAdapter = setupFriendsListAdapter();
+
 
         setGlobalView();
 

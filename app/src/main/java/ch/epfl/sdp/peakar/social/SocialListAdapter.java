@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Locale;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.fragments.SocialFragment;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.ListAdapterInflater;
 import ch.epfl.sdp.peakar.utils.UIUtils;
@@ -64,6 +65,7 @@ public class SocialListAdapter extends ArrayAdapter<SocialItem> implements Filte
         }
         SocialItem item = getItem(position);
         setupItem(convertView, item, SocialActivity.getGlobalRank(item));
+        setupItem(convertView, item, SocialFragment.getGlobalRank(item));
 
         return convertView;
     }
