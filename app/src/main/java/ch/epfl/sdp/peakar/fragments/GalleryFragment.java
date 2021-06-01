@@ -13,6 +13,9 @@ import android.view.ViewGroup;
 
 import ch.epfl.sdp.peakar.R;
 
+import static ch.epfl.sdp.peakar.general.MainActivity.lastFragmentIndex;
+import static ch.epfl.sdp.peakar.general.MyPagerAdapter.CAMERA_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.general.MyPagerAdapter.GALLERY_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.MenuBarHandlerFragments.updateSelectedIcon;
 import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarLightGrey;
 import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarTransparentBlack;
@@ -40,8 +43,7 @@ public class GalleryFragment extends Fragment {
      */
     // TODO: Rename and change types and number of parameters
     public static GalleryFragment newInstance() {
-        GalleryFragment fragment = new GalleryFragment();
-        return fragment;
+        return new GalleryFragment();
     }
 
     @Override
@@ -66,6 +68,11 @@ public class GalleryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if(lastFragmentIndex.contains(GALLERY_FRAGMENT_INDEX)) {
+            lastFragmentIndex.remove((Object)GALLERY_FRAGMENT_INDEX);
+        }
+        lastFragmentIndex.push(GALLERY_FRAGMENT_INDEX);
+
         initFragment();
         updateSelectedIcon(this);
         if(returnToFragment){
@@ -79,6 +86,5 @@ public class GalleryFragment extends Fragment {
         requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         StatusBarLightGrey(this);
         setupGreyTopBar(this);
-        //MenuBarHandler.setup(this);
     }
 }

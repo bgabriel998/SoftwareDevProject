@@ -16,6 +16,8 @@ import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.map.OSMMap;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 
+import static ch.epfl.sdp.peakar.general.MainActivity.lastFragmentIndex;
+import static ch.epfl.sdp.peakar.general.MyPagerAdapter.MAP_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.MenuBarHandlerFragments.updateSelectedIcon;
 import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarTransparentBlack;
 import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupTransparentTopBar;
@@ -92,6 +94,10 @@ public class MapFragment extends Fragment {
         super.onResume();
         requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         updateSelectedIcon(this);
+        if(lastFragmentIndex.contains(MAP_FRAGMENT_INDEX)) {
+            lastFragmentIndex.remove((Object)MAP_FRAGMENT_INDEX);
+        }
+        lastFragmentIndex.push(MAP_FRAGMENT_INDEX);
         if(returnToFragment){
             reloadFragment();
         }

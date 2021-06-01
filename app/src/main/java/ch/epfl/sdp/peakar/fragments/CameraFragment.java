@@ -42,7 +42,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -59,6 +58,8 @@ import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.CameraUtilities;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
 
+import static ch.epfl.sdp.peakar.general.MainActivity.lastFragmentIndex;
+import static ch.epfl.sdp.peakar.general.MyPagerAdapter.CAMERA_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.MenuBarHandlerFragments.updateSelectedIcon;
 import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarTransparentBlack;
 import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupTransparentTopBar;
@@ -359,6 +360,11 @@ public class CameraFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
+        //Remove the fragment from the stack if it is already contained and then push it on the stack
+        if(lastFragmentIndex.contains(CAMERA_FRAGMENT_INDEX)) {
+            lastFragmentIndex.remove((Object)CAMERA_FRAGMENT_INDEX);
+        }
+        lastFragmentIndex.push(CAMERA_FRAGMENT_INDEX);
         initFragment();
         if(returnToFragment){
             //setUpCamera();

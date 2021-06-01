@@ -34,6 +34,10 @@ import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 
+import static ch.epfl.sdp.peakar.general.MainActivity.lastFragmentIndex;
+import static ch.epfl.sdp.peakar.general.MyPagerAdapter.CAMERA_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.general.MyPagerAdapter.SETTINGS_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.general.MyPagerAdapter.SOCIAL_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.MenuBarHandlerFragments.updateSelectedIcon;
 import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarLightGrey;
 import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupSwitch;
@@ -93,13 +97,17 @@ public class SocialFragment extends Fragment {
         super.onResume();
         requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         updateSelectedIcon(this);
+        if(lastFragmentIndex.contains(SOCIAL_FRAGMENT_INDEX)) {
+            lastFragmentIndex.remove((Object)SOCIAL_FRAGMENT_INDEX);
+        }
+        lastFragmentIndex.push(SOCIAL_FRAGMENT_INDEX);
         if(returnToFragment){
             reloadFragment();
         }
         else{
             initFragment();
-        }
             returnToFragment = true;
+        }
     }
 
     private void reloadFragment() {
