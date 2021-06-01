@@ -158,6 +158,8 @@ public class LineOfSight {
         int pixelX = x2 - x1;
         int pixelY = y2 - y1;
 
+        int x,y;
+
         Log.d("DEBUG" , "(" + x1 + "," + y1 + ") (" + x2 + "," + y2 + ")");
 
         List<Pair<Integer, Integer>> line = new ArrayList<>();
@@ -167,9 +169,9 @@ public class LineOfSight {
         double cumulatedError = 0;
 
         if (Math.abs(pixelY) >= Math.abs(pixelX)) {
-            ratio = pixelX != 0 ? Math.abs(pixelY / pixelX) : Math.abs(pixelX);
+            ratio = pixelX != 0 ? Math.abs(pixelY / pixelX) : Math.abs(pixelY);
             error = pixelX != 0 ? Math.abs((double) ratio - Math.abs(((double) pixelY / (double) pixelX))) : 0;
-            for (int x = x1, y = y1; x1 < x2 ? x <= x2 : x >= x2; x = x1 < x2 ? x+1 : x-1) {
+            for (x = x1, y = y1; x1 < x2 ? x <= x2 : x >= x2; x = x1 < x2 ? x+1 : x-1) {
                 for (int i = 0; i < ratio && (y1 < y2 ? y <= y2 : y >= y2); i++) {
                     line.add(new Pair<>(x, y));
                     y = y1 < y2 ? y+1 : y-1;
@@ -182,9 +184,10 @@ public class LineOfSight {
                 }
             }
         } else {
-            ratio = pixelY != 0 ? Math.abs(pixelX / pixelY) : Math.abs(pixelY);
+            ratio = pixelY != 0 ? Math.abs(pixelX / pixelY) : Math.abs(pixelX);
             error = pixelY != 0 ? Math.abs((double) ratio - Math.abs(((double) pixelX / (double) pixelY))) : 0;
-            for (int x = x1, y = y1; y1 < y2 ? y <= y2 : y >= y2; y = y1 < y2 ? y+1 : y-1) {
+            Log.d("DEBUG", ratio + " - " + error);
+            for (x = x1, y = y1; y1 < y2 ? y <= y2 : y >= y2; y = y1 < y2 ? y+1 : y-1) {
                 for (int i = 0; i < ratio && (x1 < x2 ? x <= x2 : x >= x2); i++) {
                     line.add(new Pair<>(x, y));
                     x = x1 < x2 ? x+1 : x-1;
@@ -198,6 +201,7 @@ public class LineOfSight {
             }
         }
 
+        if (x != x2 || y != y2) line.add(new Pair<>(x2, y2));
         Log.d("DEBUG", line.toString());
 
         return line;

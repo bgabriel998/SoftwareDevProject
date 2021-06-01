@@ -151,9 +151,6 @@ public class TopographyAsyncTest {
     /**
      * This tests checks if the POIPoints are filtered correctly by the
      * getVisiblePoints method.
-     *
-     * TODO investigate point 4 issue
-     *
      */
     @Test
     public void getVisiblePoints(){
@@ -165,15 +162,16 @@ public class TopographyAsyncTest {
         List<POIPoint> visiblePoints = new ArrayList<>();
         POIPoint point1 = new POIPoint(new GeoPoint(28.011581, 86.907036, 6200));
         POIPoint point2 = new POIPoint(new GeoPoint(28.017394, 86.922196, 7000));
+        POIPoint point3 = new POIPoint(new GeoPoint(27.987947, 86.933671, 8000));
         point1.setName("point1");
         point2.setName("point2");
+        point3.setName("point3");
         visiblePoints.add(point1);
         visiblePoints.add(point2);
+        visiblePoints.add(point3);
 
         // points that should not be visible
-        POIPoint point3 = new POIPoint(new GeoPoint(27.951538, 86.928781, 6400));
-        POIPoint point4 = new POIPoint(new GeoPoint(27.987947, 86.933671, 8000));
-        point3.setName("point3");
+        POIPoint point4 = new POIPoint(new GeoPoint(27.951538, 86.928781, 6400));
         point4.setName("point4");
 
 
@@ -181,7 +179,7 @@ public class TopographyAsyncTest {
         pointsToCheck.add(point1);
         pointsToCheck.add(point2);
         pointsToCheck.add(point3);
-        //pointsToCheck.add(point4);
+        pointsToCheck.add(point4);
 
         // Check if the points are filtered correctly
         Assert.assertEquals(new HashSet<>(lineOfSight.getVisiblePoints(pointsToCheck)), new HashSet<>(visiblePoints));
@@ -205,12 +203,12 @@ public class TopographyAsyncTest {
         List<POIPoint> pointsToCheck = new ArrayList<>();
         POIPoint point1 = new POIPoint(new GeoPoint(28.011581, 86.907036, 6200));
         POIPoint point2 = new POIPoint(new GeoPoint(28.017394, 86.922196, 7000));
+        POIPoint point3 = new POIPoint(new GeoPoint(27.987947, 86.933671, 8000));
         point1.setName("point1");
         point2.setName("point2");
-        // points that should not be visible
-        POIPoint point3 = new POIPoint(new GeoPoint(27.951538, 86.928781, 6400));
-        POIPoint point4 = new POIPoint(new GeoPoint(27.987947, 86.933671, 8000));
         point3.setName("point3");
+        // points that should not be visible
+        POIPoint point4 = new POIPoint(new GeoPoint(27.951538, 86.928781, 6400));
         point4.setName("point4");
 
         // Add the points to the points to check
@@ -223,8 +221,8 @@ public class TopographyAsyncTest {
         Map<POIPoint, Boolean> labeledPOIPoints = new HashMap<>();
         labeledPOIPoints.put(point1, true);
         labeledPOIPoints.put(point2, true);
-        labeledPOIPoints.put(point3, false);
-        //labeledPOIPoints.put(point4, false);
+        labeledPOIPoints.put(point3, true);
+        labeledPOIPoints.put(point4, false);
 
         // Check if the points are labeled correctly
         Assert.assertEquals(labeledPOIPoints, lineOfSight.getVisiblePointsLabeled(pointsToCheck));
