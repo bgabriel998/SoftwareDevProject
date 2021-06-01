@@ -102,7 +102,6 @@ public class TopographyAsyncTest {
 
     /**
      * Checks if the altitude is calculated correctly and that the elevation map gets udated correctly
-     *
      */
     @Test
     public void getAltitudeAndIndexesTest() throws InterruptedException {
@@ -153,7 +152,7 @@ public class TopographyAsyncTest {
      * getVisiblePoints method.
      */
     @Test
-    public void getVisiblePoints(){
+    public void getVisiblePointsTest(){
         LineOfSight lineOfSight = new LineOfSight(topographyPair, userPoint, mContext);
 
         // PoiPoints to check
@@ -188,7 +187,6 @@ public class TopographyAsyncTest {
     /**
      * This tests checks if the POIPoints are labeled correctly by the
      * getVisiblePointsLabeled method.
-     *
      */
     @Test
     public void getVisiblePointsLabeledTest() {
@@ -225,38 +223,6 @@ public class TopographyAsyncTest {
 
         // Check if the points are labeled correctly
         Assert.assertEquals(labeledPOIPoints, lineOfSight.getVisiblePointsLabeled(pointsToCheck));
-    }
-
-    /*
-    Used for debug purposes, not for testing
-     */
-    public void debugTest() throws ExecutionException, InterruptedException {
-
-        // setting location near everest peak
-        UserPoint userPoint = UserPoint.getInstance(mContext);
-        userPoint.setLocation(46.52301918715015, 6.56573360554917,400, 0);
-
-        new DownloadTopographyTask(mContext){
-            @Override
-            public void onResponseReceived(Pair<int[][], Double> topography) {
-                super.onResponseReceived(topography);
-                topographyPair = topography;
-            }
-        }.execute(userPoint).get();
-
-        LineOfSight lineOfSight = new LineOfSight(topographyPair, userPoint, mContext);
-
-        // PoiPoints to check
-        List<POIPoint> pointsToCheck = new ArrayList<>();
-        POIPoint point1 = new POIPoint(new GeoPoint(46.19544415848338, 6.6072792585438656, 2244));
-        point1.setName("point1");
-        pointsToCheck.add(point1);
-
-        Map<POIPoint, Boolean> filtered = lineOfSight.getVisiblePointsLabeled(pointsToCheck);
-
-        Log.d("DEBUG", filtered.toString());
-
-        Assert.assertTrue(true);
 
     }
 
