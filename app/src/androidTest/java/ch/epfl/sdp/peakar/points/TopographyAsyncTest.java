@@ -1,11 +1,9 @@
 package ch.epfl.sdp.peakar.points;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.core.util.Pair;
 import androidx.test.core.app.ApplicationProvider;
-import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
