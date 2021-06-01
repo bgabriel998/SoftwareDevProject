@@ -189,9 +189,8 @@ public class TopographyAsyncTest {
      * This tests checks if the POIPoints are labeled correctly by the
      * getVisiblePointsLabeled method.
      *
-     * TODO fix bug with labels
-     *
      */
+    @Test
     public void getVisiblePointsLabeledTest() {
 
         // setting location near everest peak
@@ -215,7 +214,7 @@ public class TopographyAsyncTest {
         pointsToCheck.add(point1);
         pointsToCheck.add(point2);
         pointsToCheck.add(point3);
-        //pointsToCheck.add(point4);
+        pointsToCheck.add(point4);
 
         // Create the test map
         Map<POIPoint, Boolean> labeledPOIPoints = new HashMap<>();
