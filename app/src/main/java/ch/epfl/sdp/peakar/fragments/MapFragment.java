@@ -1,5 +1,6 @@
 package ch.epfl.sdp.peakar.fragments;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,6 +89,7 @@ public class MapFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         if(returnToFragment){
             reloadFragment();
         }

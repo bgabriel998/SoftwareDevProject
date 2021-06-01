@@ -2,6 +2,7 @@ package ch.epfl.sdp.peakar.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.hardware.camera2.CameraAccessException;
@@ -41,6 +42,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -374,6 +376,7 @@ public class CameraFragment extends Fragment{
     }
 
     private void initFragment() {
+        requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         StatusBarTransparentBlack(this);
         setupTransparentTopBar(this, R.color.White);
         //MenuBarHandler.setup(this);

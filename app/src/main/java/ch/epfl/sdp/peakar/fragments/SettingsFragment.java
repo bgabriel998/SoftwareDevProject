@@ -1,5 +1,6 @@
 package ch.epfl.sdp.peakar.fragments;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import androidx.preference.PreferenceFragmentCompat;
@@ -18,13 +19,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     }
 
     public static SettingsFragment newInstance() {
-        SettingsFragment fragment = new SettingsFragment();
-        return fragment;
+        return new SettingsFragment();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setVisibilityTopBar(this, false);
         StatusBarLightGrey(this);
         //MenuBarHandler.setup(this);

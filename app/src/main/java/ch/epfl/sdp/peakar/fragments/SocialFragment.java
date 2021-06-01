@@ -1,6 +1,7 @@
 package ch.epfl.sdp.peakar.fragments;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -89,6 +90,7 @@ public class SocialFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         if(returnToFragment){
             reloadFragment();
         }

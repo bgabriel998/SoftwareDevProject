@@ -1,5 +1,6 @@
 package ch.epfl.sdp.peakar.fragments;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -73,6 +74,7 @@ public class GalleryFragment extends Fragment {
     }
 
     private void initFragment() {
+        requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         StatusBarLightGrey(this);
         setupGreyTopBar(this);
         //MenuBarHandler.setup(this);
