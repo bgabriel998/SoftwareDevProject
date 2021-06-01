@@ -128,14 +128,10 @@ public class LineOfSight {
 
         double slope = (poiAltitude - userAltitude) / (useRow ? (poiLatitude - userLatitude) : (poiLongitude - userLongitude));
 
-        Log.d("DEBUG", String.valueOf(slope));
-
         List<Pair<Integer, Integer>> line = drawLine(  userIndexes.first, userIndexes.second,
                 poiIndexes.first, poiIndexes.second);
 
         return line.stream()
-                .peek(p -> Log.d("DEBUG", computeMaxElevation(userLatitude, userLongitude, userAltitude, p.first, p.second, useRow, slope) + " - " + elevationMap.getAltitudeAtLocation(p.first, p.second)  + " - " + (computeMaxElevation(userLatitude, userLongitude, userAltitude, p.first, p.second, useRow, slope) -
-                        elevationMap.getAltitudeAtLocation(p.first, p.second))))
                 .map(p -> computeMaxElevation(userLatitude, userLongitude, userAltitude, p.first, p.second, useRow, slope) -
                         elevationMap.getAltitudeAtLocation(p.first, p.second) >
                         - ELEVATION_DIFFERENCE_THRESHOLD)
@@ -159,8 +155,6 @@ public class LineOfSight {
         int pixelY = y2 - y1;
 
         int x,y;
-
-        Log.d("DEBUG" , "(" + x1 + "," + y1 + ") (" + x2 + "," + y2 + ")");
 
         List<Pair<Integer, Integer>> line = new ArrayList<>();
 
@@ -186,7 +180,6 @@ public class LineOfSight {
         } else {
             ratio = pixelY != 0 ? Math.abs(pixelX / pixelY) : Math.abs(pixelX);
             error = pixelY != 0 ? Math.abs((double) ratio - Math.abs(((double) pixelX / (double) pixelY))) : 0;
-            Log.d("DEBUG", ratio + " - " + error);
             for (x = x1, y = y1; y1 < y2 ? y <= y2 : y >= y2; y = y1 < y2 ? y+1 : y-1) {
                 for (int i = 0; i < ratio && (x1 < x2 ? x <= x2 : x >= x2); i++) {
                     line.add(new Pair<>(x, y));
@@ -202,8 +195,6 @@ public class LineOfSight {
         }
 
         if (x != x2 || y != y2) line.add(new Pair<>(x2, y2));
-        Log.d("DEBUG", line.toString());
-
         return line;
 
     }
@@ -228,8 +219,6 @@ public class LineOfSight {
 
         double latitude = -(rowIndex * mapCellSize) + boundingBoxNorthLat;
         double longitude = colIndex * mapCellSize + boundingBoxWestLon;
-
-        Log.d("DEBUG", rowIndex + " - " + latitude + " - " + slope);
 
         return (int) (useRow ? (slope*(latitude - userLatitude) + userAltitude) : (slope*(longitude - userLongitude) + userAltitude));
 
