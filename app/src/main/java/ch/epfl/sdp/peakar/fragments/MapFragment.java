@@ -17,7 +17,7 @@ import ch.epfl.sdp.peakar.map.OSMMap;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 
 import static ch.epfl.sdp.peakar.general.MainActivity.lastFragmentIndex;
-import static ch.epfl.sdp.peakar.general.MyPagerAdapter.MAP_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.MAP_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.MenuBarHandlerFragments.updateSelectedIcon;
 import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarTransparentBlack;
 import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupTransparentTopBar;

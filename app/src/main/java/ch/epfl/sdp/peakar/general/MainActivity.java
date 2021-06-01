@@ -1,9 +1,7 @@
 package ch.epfl.sdp.peakar.general;
 
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.util.DisplayMetrics;
-import android.view.MotionEvent;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
@@ -14,8 +12,9 @@ import java.util.Stack;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.utils.MenuBarHandlerFragments;
+import ch.epfl.sdp.peakar.utils.MyPagerAdapter;
 
-import static ch.epfl.sdp.peakar.general.MyPagerAdapter.CAMERA_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.CAMERA_FRAGMENT_INDEX;
 
 public class MainActivity extends AppCompatActivity {
 

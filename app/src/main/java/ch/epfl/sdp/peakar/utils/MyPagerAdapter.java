@@ -1,4 +1,4 @@
-package ch.epfl.sdp.peakar.general;
+package ch.epfl.sdp.peakar.utils;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

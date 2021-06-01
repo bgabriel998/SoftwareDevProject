@@ -8,7 +8,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import ch.epfl.sdp.peakar.R;
 
 import static ch.epfl.sdp.peakar.general.MainActivity.lastFragmentIndex;
-import static ch.epfl.sdp.peakar.general.MyPagerAdapter.SETTINGS_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.SETTINGS_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.MenuBarHandlerFragments.updateSelectedIcon;
 import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarLightGrey;
 import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setVisibilityTopBar;
