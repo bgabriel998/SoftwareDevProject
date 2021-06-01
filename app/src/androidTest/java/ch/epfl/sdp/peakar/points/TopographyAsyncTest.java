@@ -103,8 +103,8 @@ public class TopographyAsyncTest {
     /**
      * Checks if the altitude is calculated correctly and that the elevation map gets udated correctly
      *
-     * TODO re enable after fixing
      */
+    @Test
     public void getAltitudeAndIndexesTest() throws InterruptedException {
 
         UserPoint userPoint = UserPoint.getInstance(mContext);
@@ -139,7 +139,7 @@ public class TopographyAsyncTest {
         // check the altitude around the Mont Blanc Peak using indexes
         indexes = elevationMap.getIndexesFromCoordinates(45.8326, 6.8652);
         // check the indexes around the Mont Blanc Peak
-        Assert.assertEquals(new Pair<>(178, 326), indexes);
+        Assert.assertEquals(new Pair<>(502, 790), indexes);
         Assert.assertNotNull(indexes);
         Assert.assertNotNull(indexes.first);
         Assert.assertNotNull(indexes.second);
