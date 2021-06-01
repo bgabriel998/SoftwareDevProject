@@ -34,6 +34,7 @@ import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 
+import static ch.epfl.sdp.peakar.utils.MenuBarHandlerFragments.updateSelectedIcon;
 import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarLightGrey;
 import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupSwitch;
 import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupGreyTopBar;
@@ -91,6 +92,7 @@ public class SocialFragment extends Fragment {
     public void onResume() {
         super.onResume();
         requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        updateSelectedIcon(this);
         if(returnToFragment){
             reloadFragment();
         }

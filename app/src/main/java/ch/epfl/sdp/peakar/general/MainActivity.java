@@ -11,6 +11,8 @@ import androidx.viewpager2.widget.ViewPager2;
 import java.util.Objects;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.utils.MenuBarHandler;
+import ch.epfl.sdp.peakar.utils.MenuBarHandlerFragments;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,5 +28,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(adapterViewPager);
         viewPager.setOffscreenPageLimit(Objects.requireNonNull(viewPager.getAdapter()).getItemCount());
         viewPager.setCurrentItem(2);
+
+        MenuBarHandlerFragments.setup(this, viewPager);
     }
 }

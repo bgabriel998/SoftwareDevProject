@@ -7,6 +7,7 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import ch.epfl.sdp.peakar.R;
 
+import static ch.epfl.sdp.peakar.utils.MenuBarHandlerFragments.updateSelectedIcon;
 import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarLightGrey;
 import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setVisibilityTopBar;
 import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupGreyTopBar;
@@ -26,6 +27,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onResume() {
         super.onResume();
         requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        updateSelectedIcon(this);
         setVisibilityTopBar(this, false);
         StatusBarLightGrey(this);
         //MenuBarHandler.setup(this);

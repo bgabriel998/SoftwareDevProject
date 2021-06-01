@@ -13,12 +13,12 @@ import ch.epfl.sdp.peakar.fragments.SocialFragment;
 
 public class MyPagerAdapter extends FragmentStateAdapter {
 
-    private static final int CAMERA_PREVIEW = 2;
-    private static final int MAP_FRAGMENT = 3;
-    private static final int SOCIAL_FRAGMENT = 4;
-    private static final int SETTINGS_FRAGMENT = 0;
-    private static final int GALLERY_FRAGMENT = 1;
-    private static final int NUM_FRAGMENTS = 5;
+    public static final int CAMERA_FRAGMENT_INDEX = 2;
+    public static final int MAP_FRAGMENT_INDEX = 3;
+    public static final int SOCIAL_FRAGMENT_INDEX = 4;
+    public static final int SETTINGS_FRAGMENT_INDEX = 0;
+    public static final int GALLERY_FRAGMENT_INDEX = 1;
+    public static final int NUM_FRAGMENTS = 5;
 
     public MyPagerAdapter(FragmentActivity fa) {
         super(fa);
@@ -29,15 +29,15 @@ public class MyPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         switch(position){
-            case MAP_FRAGMENT:
+            case MAP_FRAGMENT_INDEX:
                 return MapFragment.newInstance();
-            case SOCIAL_FRAGMENT:
+            case SOCIAL_FRAGMENT_INDEX:
                 return SocialFragment.newInstance();
-            case SETTINGS_FRAGMENT:
+            case SETTINGS_FRAGMENT_INDEX:
                 return SettingsFragment.newInstance();
-            case GALLERY_FRAGMENT:
+            case GALLERY_FRAGMENT_INDEX:
                 return GalleryFragment.newInstance();
-            case CAMERA_PREVIEW:
+            case CAMERA_FRAGMENT_INDEX:
             default:
                 return CameraFragment.newInstance();
         }

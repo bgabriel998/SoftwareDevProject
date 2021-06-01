@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import ch.epfl.sdp.peakar.R;
 
+import static ch.epfl.sdp.peakar.utils.MenuBarHandlerFragments.updateSelectedIcon;
 import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarLightGrey;
 import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarTransparentBlack;
 import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupGreyTopBar;
@@ -66,6 +67,7 @@ public class GalleryFragment extends Fragment {
     public void onResume() {
         super.onResume();
         initFragment();
+        updateSelectedIcon(this);
         if(returnToFragment){
 
         }

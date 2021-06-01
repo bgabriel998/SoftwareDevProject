@@ -59,6 +59,7 @@ import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.CameraUtilities;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
 
+import static ch.epfl.sdp.peakar.utils.MenuBarHandlerFragments.updateSelectedIcon;
 import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarTransparentBlack;
 import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupTransparentTopBar;
 
@@ -377,6 +378,7 @@ public class CameraFragment extends Fragment{
 
     private void initFragment() {
         requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        updateSelectedIcon(this);
         StatusBarTransparentBlack(this);
         setupTransparentTopBar(this, R.color.White);
         //MenuBarHandler.setup(this);
