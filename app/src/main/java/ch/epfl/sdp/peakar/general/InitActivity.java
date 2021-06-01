@@ -1,16 +1,19 @@
 package ch.epfl.sdp.peakar.general;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.View;
 import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import com.google.firebase.FirebaseApp;
 import com.karumi.dexter.Dexter;
@@ -18,6 +21,8 @@ import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+
+import org.osmdroid.config.Configuration;
 
 import java.util.List;
 
@@ -42,6 +47,10 @@ public class InitActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
+
         setContentView(R.layout.activity_init);
 
         createPermissionListener();

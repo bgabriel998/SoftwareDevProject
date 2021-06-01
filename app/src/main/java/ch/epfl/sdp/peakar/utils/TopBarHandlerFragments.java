@@ -119,10 +119,11 @@ public class TopBarHandlerFragments {
 
     /**
      * Setup the dots button given a listener that gets called when dots button is clicked.
-     * @param activity currently using
+     * @param fragment currently using
      * @param listener to be called when dots button is clicked
      */
-    public static void setupDots(Activity activity, View.OnClickListener listener){
+    public static void setupDots(Fragment fragment, View.OnClickListener listener){
+        Activity activity = fragment.requireActivity();
         ImageButton dots = activity.findViewById(R.id.top_bar_dots_button);
         dots.setOnClickListener(listener);
         dots.setVisibility(View.VISIBLE);

@@ -1,6 +1,7 @@
 package ch.epfl.sdp.peakar.general;
 
 import android.os.Bundle;
+import android.os.StrictMode;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;

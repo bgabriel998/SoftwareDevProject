@@ -55,6 +55,21 @@
         app:layout_constraintBottom_toBottomOf="@+id/takePicture"
         app:srcCompat="@drawable/ic_binoculars" />
 
+
+    <!--TextView indicates the horizontal heading of the user-->
+    <TextView
+        android:id="@+id/textDisplayPOImode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/White"
+        android:textSize="11sp"
+        app:layout_constraintLeft_toLeftOf="@+id/switchDisplayPOIs"
+        app:layout_constraintRight_toRightOf="@+id/switchDisplayPOIs"
+        app:layout_constraintBottom_toBottomOf="@+id/switchDisplayPOIs"
+        android:text=""
+        android:layout_marginBottom="5dp" />
+
     <!-- Image button to switch between the different possibilities to display the POIs -->
     <ImageButton
         android:id="@+id/compassMiniature"

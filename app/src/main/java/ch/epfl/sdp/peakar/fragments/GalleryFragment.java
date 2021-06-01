@@ -1,26 +1,33 @@
 package ch.epfl.sdp.peakar.fragments;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
+
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.gallery.GalleryAdapter;
+import ch.epfl.sdp.peakar.gallery.ImageActivity;
+import ch.epfl.sdp.peakar.utils.OnSwipeTouchListener;
+import ch.epfl.sdp.peakar.utils.StorageHandler;
 
 import static ch.epfl.sdp.peakar.general.MainActivity.lastFragmentIndex;
-import static ch.epfl.sdp.peakar.general.MyPagerAdapter.CAMERA_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.general.MyPagerAdapter.GALLERY_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.MenuBarHandlerFragments.updateSelectedIcon;
 import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarLightGrey;
-import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarTransparentBlack;
+import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupDots;
 import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupGreyTopBar;
-import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupTransparentTopBar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +37,8 @@ import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupTransparentTo
 public class GalleryFragment extends Fragment {
 
     private boolean returnToFragment;
+    private ConstraintLayout container;
+    private static final int COLUMNS = 3;
 
     public GalleryFragment() {
         // Required empty public constructor
@@ -62,7 +71,7 @@ public class GalleryFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initFragment();
+        container = (ConstraintLayout) view;
     }
 
     @Override
@@ -73,18 +82,51 @@ public class GalleryFragment extends Fragment {
         }
         lastFragmentIndex.push(GALLERY_FRAGMENT_INDEX);
 
-        initFragment();
         updateSelectedIcon(this);
         if(returnToFragment){
-
+            reloadFragment();
         }
-        else
+        else{
+            initFragment();
             returnToFragment = true;
+        }
     }
 
-    private void initFragment() {
+    private void reloadFragment() {
         requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         StatusBarLightGrey(this);
         setupGreyTopBar(this);
+
+        setupGallery();
+    }
+
+    /**
+     * Gets the recycler view and fills it up with all images.
+     */
+    private void setupGallery(){
+        List<String> imagePaths = StorageHandler.getImagePaths(getContext());
+        if (!imagePaths.isEmpty()) {
+            container.findViewById(R.id.gallery_empty).setVisibility(View.GONE);
+        }
+
+        GalleryAdapter galleryAdapter = new GalleryAdapter(getContext(), imagePaths, imagePath -> {
+            Intent intent = new Intent(getContext(), ImageActivity.class);
+            intent.putExtra(ImageActivity.IMAGE_PATH_INTENT, imagePath);
+            startActivity(intent);
+        });
+
+        RecyclerView recyclerView = container.findViewById(R.id.gallery_recyclerview);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), COLUMNS));
+        recyclerView.setAdapter(galleryAdapter);
+    }
+
+    private void initFragment() {
+        reloadFragment();
+
+        setupDots(this, v -> {
+            // TODO Sort images
+        });
+
+        container.findViewById(R.id.gallery_recyclerview).setOnTouchListener(new OnSwipeTouchListener(getContext()));
     }
 }

@@ -103,6 +103,7 @@ public class CameraFragment extends Fragment{
     private TextView userAltitude;
     private Compass compass;
     private View flash;
+    private TextView displayModeText;
 
     //SharedPreferences
     private SharedPreferences sharedPref;
@@ -182,6 +183,9 @@ public class CameraFragment extends Fragment{
 
     private void setUpUI() {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(requireContext());
+
+        displayModeText = container.findViewById(R.id.textDisplayPOImode);
+        displayModeText.setText(sharedPref.getString(getResources().getString(R.string.displayPOIs_key), DISPLAY_ALL_POIS));
 
         showDevOptions = sharedPref.getBoolean(getResources().getString(R.string.devOptions_key), false);
         displayDeveloperOptions(showDevOptions);
@@ -320,7 +324,7 @@ public class CameraFragment extends Fragment{
         String mode = sharedPref.getString(displayPOIsKey, DISPLAY_ALL_POIS);
         int actualMode = Integer.parseInt(mode);
         int newMode = (actualMode + 1) % 3;
-
+        displayModeText.setText(String.valueOf(newMode));
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(displayPOIsKey, "" + newMode);
         editor.apply();
