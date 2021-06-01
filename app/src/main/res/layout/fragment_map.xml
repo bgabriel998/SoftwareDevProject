@@ -7,15 +7,12 @@
     tools:context=".fragments.MapFragment"
     android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <org.osmdroid.views.MapView
-            android:id="@+id/map"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-        </org.osmdroid.views.MapView>
-    </LinearLayout>
+    <ch.epfl.sdp.peakar.utils.MapViewInScroll
+        android:id="@+id/map"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <!-- Button container -->
     <LinearLayout
