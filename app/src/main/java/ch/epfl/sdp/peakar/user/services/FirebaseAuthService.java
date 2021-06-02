@@ -14,10 +14,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.util.Objects;
 
-import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
 import ch.epfl.sdp.peakar.general.remote.RemoteResource;
-import ch.epfl.sdp.peakar.social.RemoteSocialList;
 
 /**
  * This class describes the Auth service provided by Firebase.

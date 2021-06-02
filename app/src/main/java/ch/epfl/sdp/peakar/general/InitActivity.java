@@ -123,9 +123,11 @@ public class InitActivity extends AppCompatActivity {
                         Log.d("InitActivity", ": loading account");
                         loadAccount();
                     }
-                    else {  // Otherwise, force a sign out
+                    else {  // Otherwise, try to download data but in another non blocking thread
                         Log.d("InitActivity", ": user offline");
-                        AuthService.getInstance().signOut(mContext);
+                        new Thread(() -> {
+                            loadAccount();
+                        }).start();
                     }
                     runOnUiThread(() -> launchApp());
                 }).start();
