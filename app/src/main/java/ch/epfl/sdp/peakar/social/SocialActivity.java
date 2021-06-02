@@ -41,6 +41,7 @@ public class SocialActivity extends AppCompatActivity {
     private SocialListAdapter globalAdapter;
     private SocialListAdapter friendsAdapter;
     private View emptyFriendsView;
+    private String authUserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +91,21 @@ public class SocialActivity extends AppCompatActivity {
         findViewById(R.id.social_list).setOnTouchListener(new OnSwipeTouchListener(this));
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // If the user is not the same, reload the friends list
+        if(AuthService.getInstance().getID() == null || !AuthService.getInstance().getID().equals(authUserID)) {
+            SocialListAdapter oldFriendAdapter = friendsAdapter;
+            authUserID = AuthService.getInstance().getID();
+            friendsAdapter = setupFriendsListAdapter();
+
+            // If the list that is shown is the list of friends, immediately update the view
+            if(listView.getAdapter().equals(oldFriendAdapter)) setFriendsView();
+        }
+    }
+
     /**
      * Sets up the global list adapter, by syncing the database with a static list
      * @return a list adapter synced with the database displaying all users.
@@ -109,12 +125,16 @@ public class SocialActivity extends AppCompatActivity {
      * @return a list adapter synced with the database displaying all friends.
      */
     private SocialListAdapter setupFriendsListAdapter() {
+        friendSocialItems.clear();
         SocialListAdapter friendsAdapter = new SocialListAdapter(this,
                 R.layout.social_profile_item,
                 friendSocialItems,
                 Collections.synchronizedList(new ArrayList<>()));
         friendsAdapter.setNotifyOnChange(false);
-        if(AuthService.getInstance().getAuthAccount() != null) RemoteSocialList.synchronizeFriends(friendSocialItems, friendsAdapter);
+        if(AuthService.getInstance().getAuthAccount() != null) {
+            authUserID = AuthService.getInstance().getID();
+            RemoteSocialList.synchronizeFriends(friendSocialItems, friendsAdapter);
+        }
         return friendsAdapter;
     }
 

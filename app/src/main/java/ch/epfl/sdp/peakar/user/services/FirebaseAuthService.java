@@ -14,8 +14,10 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.util.Objects;
 
+import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
 import ch.epfl.sdp.peakar.general.remote.RemoteResource;
+import ch.epfl.sdp.peakar.social.RemoteSocialList;
 
 /**
  * This class describes the Auth service provided by Firebase.
@@ -34,7 +36,6 @@ public class FirebaseAuthService implements AuthService {
             instance = new FirebaseAuthService();
             // On class initialization, retrieve any previously logged account and, if necessary, the account data
             authAccount = FirebaseAuth.getInstance().getCurrentUser() != null ? RemoteAuthAccount.getInstance(FirebaseAuth.getInstance().getCurrentUser().getUid()) : null;
-            if(authAccount != null) new Thread (() -> authAccount.retrieveData()).start();
         }
         return instance;
     }
@@ -130,7 +131,7 @@ public class FirebaseAuthService implements AuthService {
                 // Wait for the sign out to finish
                 Tasks.await(signOutTask);
             } catch (Exception e) {
-                Log.d("AUTH", "signOut: failed");
+                Log.d("FirebaseAuthService", "signOut: failed");
             }
         }
     }

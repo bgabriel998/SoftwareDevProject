@@ -176,34 +176,39 @@ public class NewProfileActivity extends AppCompatActivity {
         // Show correct text if empty
         ((TextView)findViewById(R.id.profile_empty_text)).setText(R.string.empty_collection);
 
-        ArrayList<NewCollectedItem> items = new ArrayList<>();
-        for(POIPoint discoveredPeak: displayedAccount.getDiscoveredPeaks()) {
-            NewCollectedItem newCollectedItem = new NewCollectedItem(
-                    discoveredPeak.getName(),
-                    (int)(discoveredPeak.getAltitude() * ScoringConstants.PEAK_FACTOR),
-                    (int)discoveredPeak.getAltitude(),
-                    displayedAccount.getDiscoveredCountryHighPointNames().contains(discoveredPeak.getName()),
-                    (float)discoveredPeak.getLongitude(),
-                    (float)discoveredPeak.getLatitude(),
-                    discoveredPeak.getDiscoveredDate(),
-                    getCountryFromCoordinates(this, (float)discoveredPeak.getLatitude(),
-                                              (float)discoveredPeak.getLongitude()));
-            items.add(newCollectedItem);
-        }
+        new Thread(() -> {
+            ArrayList<NewCollectedItem> items = new ArrayList<>();
+            for(POIPoint discoveredPeak: displayedAccount.getDiscoveredPeaks()) {
+                NewCollectedItem newCollectedItem = new NewCollectedItem(
+                        discoveredPeak.getName(),
+                        (int)(discoveredPeak.getAltitude() * ScoringConstants.PEAK_FACTOR),
+                        (int)discoveredPeak.getAltitude(),
+                        displayedAccount.getDiscoveredCountryHighPointNames().contains(discoveredPeak.getName()),
+                        (float)discoveredPeak.getLongitude(),
+                        (float)discoveredPeak.getLatitude(),
+                        discoveredPeak.getDiscoveredDate(),
+                        getCountryFromCoordinates(this, (float)discoveredPeak.getLatitude(),
+                                (float)discoveredPeak.getLongitude()));
+                items.add(newCollectedItem);
+            }
 
-        // Sort the items by the peak points
-        items.sort(Comparator.comparing(NewCollectedItem::getPoints).reversed());
-        ListView collectionListView = findViewById(R.id.profile_collection);
-        NewCollectionListAdapter listAdapter = new NewCollectionListAdapter(this,
-                R.layout.profile_collected_item,
-                items);
+            // Sort the items by the peak points
+            items.sort(Comparator.comparing(NewCollectedItem::getPoints).reversed());
 
-        collectionListView.setAdapter(listAdapter);
+            runOnUiThread(() -> {
+                ListView collectionListView = findViewById(R.id.profile_collection);
+                NewCollectionListAdapter listAdapter = new NewCollectionListAdapter(this,
+                        R.layout.profile_collected_item,
+                        items);
 
-        if (items.size() > 0) {
-            findViewById(R.id.profile_empty_text).setVisibility(View.INVISIBLE);
-        }
-        collectionListView.setOnItemClickListener(collectionClicked);
+                collectionListView.setAdapter(listAdapter);
+
+                if (items.size() > 0) {
+                    findViewById(R.id.profile_empty_text).setVisibility(View.INVISIBLE);
+                }
+                collectionListView.setOnItemClickListener(collectionClicked);
+            });
+        }).start();
     }
 
     /**
@@ -306,8 +311,10 @@ public class NewProfileActivity extends AppCompatActivity {
      * On sign out button click
      */
     public void signOutButton(View view) {
-        AuthService.getInstance().signOut(this);
-        finish();
+        new Thread(() -> {
+            AuthService.getInstance().signOut(this);
+            finish();
+        }).start();
     }
 
     /**

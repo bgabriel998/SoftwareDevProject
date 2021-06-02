@@ -1,10 +1,12 @@
 package ch.epfl.sdp.peakar.general;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -38,11 +40,21 @@ import ch.epfl.sdp.peakar.utils.SettingsUtilities;
 public class InitActivity extends AppCompatActivity {
 
     private MultiplePermissionsListener allPermissionsListener;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mContext = this;
+
         setContentView(R.layout.activity_init);
+
+        FirebaseApp.initializeApp(this);
+
+        Database.init(this);
+
+        Log.d("InitActivity", "onCreate: online ? " + Database.getInstance().isOnline());
 
         createPermissionListener();
 
@@ -55,10 +67,6 @@ public class InitActivity extends AppCompatActivity {
                 ).withListener(allPermissionsListener)
                 .check();
 
-        FirebaseApp.initializeApp(this);
-
-        Database.init(this);
-
         ProgressBar progressBar = findViewById(R.id.progressBarInitActivity);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -69,13 +77,17 @@ public class InitActivity extends AppCompatActivity {
      * Init application global stuff before opening the main menu
      */
     private synchronized void initApp(){
-        new Thread(() -> {
-            if (AuthService.getInstance().getAuthAccount() != null) {
-                AuthService.getInstance().getAuthAccount().init();
-            }
-        }).start();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             SettingsUtilities.checkForLanguage(this);
+        }
+    }
+
+    /**
+     * Download the authenticated account data, if present
+     */
+    private void loadAccount() {
+        if (AuthService.getInstance().getAuthAccount() != null) {
+            AuthService.getInstance().getAuthAccount().init();
         }
     }
 
@@ -104,7 +116,19 @@ public class InitActivity extends AppCompatActivity {
             @Override
             public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
                 ComputePOIPoints.getInstance(getApplicationContext());
-                launchApp();
+                new Thread(() -> {
+                    Log.d("InitActivity", "onPermissionsChecked: online ? " + Database.getInstance().isOnline());
+                    // If user is online, retrieve data
+                    if(Database.getInstance().isOnline()) {
+                        Log.d("InitActivity", ": loading account");
+                        loadAccount();
+                    }
+                    else {  // Otherwise, force a sign out
+                        Log.d("InitActivity", ": user offline");
+                        AuthService.getInstance().signOut(mContext);
+                    }
+                    runOnUiThread(() -> launchApp());
+                }).start();
             }
 
             @Override

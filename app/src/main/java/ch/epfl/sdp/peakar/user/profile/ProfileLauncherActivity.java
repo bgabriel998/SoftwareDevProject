@@ -21,9 +21,12 @@ import android.widget.RelativeLayout;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.material.snackbar.Snackbar;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.general.remote.RemoteOutcome;
+import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.services.AuthProvider;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 
@@ -50,7 +53,11 @@ public class ProfileLauncherActivity extends AppCompatActivity {
 
 
         if(isUserSignedIn()){
-            launchProfileActivity();
+            new Thread(() -> {
+                AuthService.getInstance().getAuthAccount().init();
+                runOnUiThread(this::launchProfileActivity);
+            }).start();
+
         }
         else{
             // Set the options for Google Sign In intent
@@ -121,12 +128,14 @@ public class ProfileLauncherActivity extends AppCompatActivity {
     }
 
     /**
-     * Launches the Profile Activity
+     * Launches the Profile Activity, if the user is online. Otherwise, force a sign out
      */
     private void launchProfileActivity(){
-        Intent intent = new Intent(this, NewProfileActivity.class);
-        intent.putExtra(NewProfileActivity.AUTH_INTENT, true);
-        startActivity(intent);
+        if(Database.getInstance().isOnline()) {
+            Intent intent = new Intent(this, NewProfileActivity.class);
+            intent.putExtra(NewProfileActivity.AUTH_INTENT, true);
+            startActivity(intent);
+        }
         finish();
     }
 
