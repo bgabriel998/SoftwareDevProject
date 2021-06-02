@@ -1,7 +1,9 @@
 package ch.epfl.sdp.peakar.social;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -23,6 +25,7 @@ import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
 import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.user.services.OtherAccount;
 import ch.epfl.sdp.peakar.utils.MenuBarHandler;
 import ch.epfl.sdp.peakar.utils.OnSwipeTouchListener;
 
@@ -153,9 +156,24 @@ public class SocialActivity extends AppCompatActivity {
             snackbar.show();
             return;
         }
-        Intent intent = new Intent(this, NewProfileActivity.class);
-        fillIntent(intent, item);
-        startActivity(intent);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(R.layout.progress);
+        Dialog loadingDialog = builder.create();
+        loadingDialog.show();
+
+        new Thread(() -> {
+            // Load the account
+            OtherAccount.getInstance(item.getUid());
+
+            runOnUiThread(() -> {
+                loadingDialog.dismiss();
+
+                Intent intent = new Intent(this, NewProfileActivity.class);
+                fillIntent(intent, item);
+                startActivity(intent);
+            });
+        }).start();
+
     }
 
     /**

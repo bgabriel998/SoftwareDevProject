@@ -2,12 +2,21 @@ package ch.epfl.sdp.peakar.user.profile;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.ContentFrameLayout;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -60,22 +69,27 @@ public class ProfileLauncherActivity extends AppCompatActivity {
     private final ActivityResultLauncher<Intent> googleSignInLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setView(R.layout.progress);
+                Dialog loadingDialog = builder.create();
+                loadingDialog.show();
+
                 try {
                     // Handle the auth UI
-                    handleAuth(GOOGLE, GoogleSignIn.getSignedInAccountFromIntent(result.getData()).getResult(ApiException.class).getIdToken());
+                    handleAuth(GOOGLE, GoogleSignIn.getSignedInAccountFromIntent(result.getData()).getResult(ApiException.class).getIdToken(), loadingDialog);
                 } catch (ApiException e) {
                     // The ApiException status code indicates the detailed failure reason.
                     Log.w("Google Sign API", "signInResult:failed code=" + e.getStatusCode());
-
+                    loadingDialog.dismiss();
+                    finish();
                 }
-                finish();
             });
 
 
     /**
      * Handle the UI before and after an auth task runs
      */
-    private void handleAuth(AuthProvider provider, String token) {
+    private void handleAuth(AuthProvider provider, String token, Dialog loadingDialog) {
 
         // Start a new thread that will handle the auth process
         Thread authThread = new Thread(){
@@ -88,7 +102,9 @@ public class ProfileLauncherActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     // Handle the auth result
                     if(authResult != RemoteOutcome.FAIL){
+                        loadingDialog.dismiss();
                         launchProfileActivity();
+                        finish();
                     }
                 });
             }
