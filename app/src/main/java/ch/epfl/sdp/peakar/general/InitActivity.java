@@ -130,7 +130,6 @@ public class InitActivity extends AppCompatActivity {
                                 loadAccount();
                                 Log.d("InitActivity", ": successful download of data");
                             } catch(Exception e) {
-                                AuthService.getInstance().signOut(mContext);
                                 Log.d("InitActivity", ": failed download of data");
                             }
 
