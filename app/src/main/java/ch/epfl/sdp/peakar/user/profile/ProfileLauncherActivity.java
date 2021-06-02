@@ -10,6 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -49,26 +50,38 @@ public class ProfileLauncherActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        authService = AuthService.getInstance();
+        if(!Database.getInstance().isOnline()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(ProfileOutcome.FAIL.getMessage())
+                    .setCancelable(false)
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            finish();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        } else {
+            authService = AuthService.getInstance();
 
+            if(isUserSignedIn()){
+                new Thread(() -> {
+                    AuthService.getInstance().getAuthAccount().init();
+                    runOnUiThread(this::launchProfileActivity);
+                }).start();
 
-        if(isUserSignedIn()){
-            new Thread(() -> {
-                AuthService.getInstance().getAuthAccount().init();
-                runOnUiThread(this::launchProfileActivity);
-            }).start();
+            }
+            else{
+                // Set the options for Google Sign In intent
+                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).
+                        requestIdToken(getResources().getString(R.string.default_web_client_id)).requestEmail().build();
 
-        }
-        else{
-            // Set the options for Google Sign In intent
-            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).
-                    requestIdToken(getResources().getString(R.string.default_web_client_id)).requestEmail().build();
+                // Create a new Google Sign In intent
+                Intent googleSignInIntent = GoogleSignIn.getClient(this, gso).getSignInIntent();
 
-            // Create a new Google Sign In intent
-            Intent googleSignInIntent = GoogleSignIn.getClient(this, gso).getSignInIntent();
-
-            // Start the intent with the callback
-            googleSignInLauncher.launch(googleSignInIntent);
+                // Start the intent with the callback
+                googleSignInLauncher.launch(googleSignInIntent);
+            }
         }
     }
 
@@ -80,6 +93,8 @@ public class ProfileLauncherActivity extends AppCompatActivity {
                 builder.setView(R.layout.progress);
                 Dialog loadingDialog = builder.create();
                 loadingDialog.show();
+                loadingDialog.setCanceledOnTouchOutside(false);
+                loadingDialog.setCancelable(false);
 
                 try {
                     // Handle the auth UI
@@ -131,11 +146,9 @@ public class ProfileLauncherActivity extends AppCompatActivity {
      * Launches the Profile Activity, if the user is online. Otherwise, force a sign out
      */
     private void launchProfileActivity(){
-        if(Database.getInstance().isOnline()) {
-            Intent intent = new Intent(this, NewProfileActivity.class);
-            intent.putExtra(NewProfileActivity.AUTH_INTENT, true);
-            startActivity(intent);
-        }
+        Intent intent = new Intent(this, NewProfileActivity.class);
+        intent.putExtra(NewProfileActivity.AUTH_INTENT, true);
+        startActivity(intent);
         finish();
     }
 

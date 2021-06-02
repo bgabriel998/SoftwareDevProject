@@ -180,6 +180,8 @@ public class SocialActivity extends AppCompatActivity {
         builder.setView(R.layout.progress);
         Dialog loadingDialog = builder.create();
         loadingDialog.show();
+        loadingDialog.setCanceledOnTouchOutside(false);
+        loadingDialog.setCancelable(false);
 
         new Thread(() -> {
             // Load the account
