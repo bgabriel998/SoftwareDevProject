@@ -1,9 +1,7 @@
 package ch.epfl.sdp.peakar.general;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -12,7 +10,6 @@ import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
 import com.google.firebase.FirebaseApp;
@@ -27,12 +24,12 @@ import org.osmdroid.config.Configuration;
 import java.util.List;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
-import ch.epfl.sdp.peakar.social.SocialActivity;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.SettingsUtilities;
+
+import static ch.epfl.sdp.peakar.utils.PermissionUtilities.hasLocationPermission;
 
 /**
  * Initialises the application:
@@ -53,13 +50,17 @@ public class InitActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_init);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            SettingsUtilities.checkForLanguage(this);
+        }
+
         createPermissionListener();
 
         Dexter.withContext(this)
                 .withPermissions(
                         Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                //        Manifest.permission.READ_EXTERNAL_STORAGE,
+                //        Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.CAMERA
                 ).withListener(allPermissionsListener)
                 .check();
@@ -83,25 +84,6 @@ public class InitActivity extends AppCompatActivity {
                 AuthService.getInstance().getAuthAccount().init();
             }
         }).start();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            SettingsUtilities.checkForLanguage(this);
-        }
-    }
-
-    /**
-     * Launches the application if the camera permission is granted
-     * TODO replace activity with CameraActivity if permission is given
-     * TODO replace activity with another activity then CameraActivity if permission is given
-     */
-    public void launchApp(){
-        if(hasCameraPermission()){
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        }
-        else{
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        }
     }
 
     /**
@@ -112,8 +94,11 @@ public class InitActivity extends AppCompatActivity {
         allPermissionsListener = new MultiplePermissionsListener() {
             @Override
             public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
-                ComputePOIPoints.getInstance(getApplicationContext());
-                launchApp();
+                if(hasLocationPermission(getApplicationContext())){
+                    ComputePOIPoints.getInstance(getApplicationContext());
+                }
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
             }
 
             @Override
@@ -140,15 +125,5 @@ public class InitActivity extends AppCompatActivity {
                 })
                 .setOnDismissListener(dialog -> permissionToken.cancelPermissionRequest())
                 .show();
-    }
-
-    /**
-     * Checks if the camera permission was already granted
-     */
-    private boolean hasCameraPermission() {
-        return ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-        ) == PackageManager.PERMISSION_GRANTED;
     }
 }

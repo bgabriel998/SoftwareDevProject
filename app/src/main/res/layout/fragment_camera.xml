@@ -21,6 +21,34 @@
         android:background="@drawable/rectangle"
         android:visibility="gone"/>
 
+    <LinearLayout
+        android:id="@+id/permissionRequestLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@color/BackgroundGrey"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/permissionRequest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/permission_rationale_message"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:textColor="@color/White"/>
+
+        <ImageButton
+            android:id="@+id/openSettingsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/Transparent"
+            android:paddingTop="5dp"
+            app:srcCompat="@drawable/ic_settings" />
+
+    </LinearLayout>
+
     <!-- Compass View-->
     <ch.epfl.sdp.peakar.camera.CameraUiView
         android:id="@+id/compass"

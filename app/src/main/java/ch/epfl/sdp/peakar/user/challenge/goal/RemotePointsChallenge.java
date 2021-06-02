@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import br.com.goncalves.pugnotification.notification.PugNotification;
 import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.database.DatabaseReference;
@@ -90,6 +91,8 @@ public class RemotePointsChallenge extends PointsChallenge {
                             creationTime, durationInDays,null,null, null, null);
         // Add locally if the founder is the authenticated user
         if(founderID.equals(AuthService.getInstance().getID())) AuthService.getInstance().getAuthAccount().getChallenges().add(newChallenge);
+
+
         return newChallenge;
     }
 

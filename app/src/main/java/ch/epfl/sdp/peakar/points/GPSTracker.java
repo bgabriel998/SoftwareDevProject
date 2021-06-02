@@ -142,17 +142,15 @@ public class GPSTracker extends Service implements LocationListener {
      */
     private void setLocation(String selectedProvider) {
         //check the permission
-        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions((Activity) mContext, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
-        }
-        // request location
-        locationManager.requestLocationUpdates(
-                selectedProvider,
-                MIN_TIME_BW_UPDATES,
-                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-        // set new location
-        if (locationManager != null) {
-            location = locationManager.getLastKnownLocation(selectedProvider);
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(
+                    selectedProvider,
+                    MIN_TIME_BW_UPDATES,
+                    MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+            // set new location
+            if (locationManager != null) {
+                location = locationManager.getLastKnownLocation(selectedProvider);
+            }
         }
     }
 
@@ -160,6 +158,7 @@ public class GPSTracker extends Service implements LocationListener {
      * Set the default location
      */
     private void setDefaultLocation() {
+        location = new Location("");
         location.setLatitude(DEFAULT_LAT);
         location.setLongitude(DEFAULT_LON);
         location.setAltitude(DEFAULT_ALT);

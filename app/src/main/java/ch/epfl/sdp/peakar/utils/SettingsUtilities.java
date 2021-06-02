@@ -72,7 +72,14 @@ public final class SettingsUtilities {
         conf.setLocale(myLocale);
         //update locale configuration with new language
         res.updateConfiguration(conf, dm);
-        Activity activity = (Activity) context;
+    }
+
+    /**
+     * Restarts the activity, needs to be called when the activity needs to be reloaded after changing
+     * the language
+     * @param activity activity to reload
+     */
+    public static void restartActivity(Activity activity){
         activity.finish();
         //Override transition and restart activity
         activity.overridePendingTransition(0, 0);
@@ -97,15 +104,18 @@ public final class SettingsUtilities {
      * activity if the current locale is not equal to the locale in the settings
      *
      * @param context context of application
+     * @return True if the language does not need to be changed, false otherwise
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static void checkForLanguage(Context context){
+    public static boolean checkForLanguage(Context context){
         //Only check the first two letters to only check for the language
         String localeSettings = getSetLocale(context).stripExtensions().toString().substring(0, 2);
         String currentLocale = context.getResources().getConfiguration().getLocales().get(0).toString().substring(0, 2);
         if(!localeSettings.equals(currentLocale)){
             updateLanguage(context);
+            return false;
         }
+        return true;
     }
 
     /**

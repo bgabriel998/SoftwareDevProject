@@ -1,6 +1,8 @@
 package ch.epfl.sdp.peakar.fragments;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -9,6 +11,7 @@ import android.hardware.camera2.CameraAccessException;
 import android.hardware.display.DisplayManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,10 +24,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.camera.core.CameraSelector;
-import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
-import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
@@ -36,6 +37,8 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.preference.PreferenceManager;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,8 +62,10 @@ import ch.epfl.sdp.peakar.utils.CameraUtilities;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
 
 import static ch.epfl.sdp.peakar.general.MainActivity.lastFragmentIndex;
-import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.CAMERA_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.MenuBarHandlerFragments.updateSelectedIcon;
+import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.CAMERA_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.PermissionUtilities.createAllPermissionListener;
+import static ch.epfl.sdp.peakar.utils.PermissionUtilities.hasCameraPermission;
 import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarTransparentBlack;
 import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupTransparentTopBar;
 
@@ -79,8 +84,6 @@ public class CameraFragment extends Fragment{
     private Context context;
 
     private final int FILE_LENGTH = 27;
-
-    private ImageAnalysis imageAnalysis;
 
     private int previewDisplayId = -1;
 
@@ -116,6 +119,8 @@ public class CameraFragment extends Fragment{
     private TextView headingCompass;
 
     private ConstraintLayout container;
+
+    private MultiplePermissionsListener allPermissionsListener;
 
     /**
      * Constructor for the CameraPreview
@@ -164,8 +169,17 @@ public class CameraFragment extends Fragment{
         //Wait for the view to be properly laid out
         previewView.post(() -> {
             previewDisplayId = previewView.getDisplay().getDisplayId();
+            initFragment();
             setUpCamera();
             setUpUI();
+            Dexter.withContext(requireContext())
+                    .withPermissions(
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                    //        Manifest.permission.READ_EXTERNAL_STORAGE,
+                    //        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.CAMERA
+                    ).withListener(allPermissionsListener)
+                    .check();
         });
     }
 
@@ -179,6 +193,8 @@ public class CameraFragment extends Fragment{
         changeCompass.setOnClickListener(this::switchDisplayCompass);
         ImageButton changeDisplayedPOIs = container.findViewById(R.id.switchDisplayPOIs);
         changeDisplayedPOIs.setOnClickListener(this::switchDisplayPOIMode);
+        container.findViewById(R.id.openSettingsButton).setOnTouchListener((v, event) -> openSettings());
+        allPermissionsListener = createAllPermissionListener(requireContext(), container);
     }
 
     private void setUpUI() {
@@ -369,15 +385,15 @@ public class CameraFragment extends Fragment{
             lastFragmentIndex.remove((Object)CAMERA_FRAGMENT_INDEX);
         }
         lastFragmentIndex.push(CAMERA_FRAGMENT_INDEX);
-        initFragment();
         if(returnToFragment){
-            //setUpCamera();
+            initFragment();
             startCompass();
             showDevOptions = sharedPref.getBoolean(getResources().getString(R.string.devOptions_key), false);
             displayDeveloperOptions(showDevOptions);
         }
-        else
+        else{
             returnToFragment = true;
+        }
     }
 
     @Override
@@ -391,7 +407,14 @@ public class CameraFragment extends Fragment{
         updateSelectedIcon(this);
         StatusBarTransparentBlack(this);
         setupTransparentTopBar(this, R.color.White);
-        //MenuBarHandler.setup(this);
+
+
+        if(!hasCameraPermission(requireContext())) {
+            container.findViewById(R.id.permissionRequestLayout).setVisibility(View.VISIBLE);
+        }
+        else{
+            container.findViewById(R.id.permissionRequestLayout).setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -415,7 +438,6 @@ public class CameraFragment extends Fragment{
             public void onDisplayChanged(int displayId) {
                 if(displayId == previewDisplayId){
                     imageCapture.setTargetRotation(requireView().getDisplay().getRotation());
-                    imageAnalysis.setTargetRotation(requireView().getDisplay().getRotation());
                 }
             }
         };
@@ -492,22 +514,11 @@ public class CameraFragment extends Fragment{
                 .setTargetRotation(rotation)
                 .build();
 
-        //ImageAnalysis
-        //Only deliver latest image to the analyzer
-        imageAnalysis = new ImageAnalysis.Builder()
-                .setTargetAspectRatio(screenAspectRatio)
-                .setTargetRotation(rotation)
-                //Only deliver latest image to the analyzer
-                //.setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                .build();
-        //Assign analyzer to the instance
-        imageAnalysis.setAnalyzer(cameraExecutor, ImageProxy::close);
-
         //Unbind use-cases before rebinding
         cameraProvider.unbindAll();
 
         //Bind use cases to camera
-        cameraProvider.bindToLifecycle((LifecycleOwner) context, cameraSelector, preview, imageCapture, imageAnalysis);
+        cameraProvider.bindToLifecycle((LifecycleOwner) context, cameraSelector, preview, imageCapture);
 
         //Attach the viewfinder's surface provider to preview
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
@@ -567,5 +578,18 @@ public class CameraFragment extends Fragment{
      */
     public Bitmap getBitmap(){
         return previewView.getBitmap();
+    }
+
+    private boolean openSettings(){
+        Context context = requireContext();
+        Intent i = new Intent();
+        i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        i.addCategory(Intent.CATEGORY_DEFAULT);
+        i.setData(Uri.parse("package:" + context.getPackageName()));
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+        context.startActivity(i);
+        return true;
     }
 }

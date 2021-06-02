@@ -102,7 +102,7 @@ public class SettingsMapActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
         // Display loading bar
-        downloadButton.setVisibility(View.GONE);
+        downloadButton.setVisibility(View.INVISIBLE);
         loadingView.bringToFront();
 
         loadingView.setVisibility(View.VISIBLE);

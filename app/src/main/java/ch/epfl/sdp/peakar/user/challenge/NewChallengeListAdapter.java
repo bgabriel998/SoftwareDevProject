@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -248,10 +249,20 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
             item.getRemotePointsChallenge().join();
             v.setVisibility(View.INVISIBLE);
 
+
+
+            Toast toast = new Toast(mContext);
+            toast.setText("You successfully joined the challenge " + item.getName() + ", good hike and stay safe!");
+            toast.show();
+            Activity activity = (Activity) mContext;
+            activity.finish();
         }
 
         /**
          * Show an error message when the DB is not online.
+         * show an errot maessag ehwnd the Sdb idis
+         * hsdk online dfkdfej . djfdl dfidi jfsldf fd
+         *
          */
         private void showErrorMessage() {
             Snackbar snackbar = Snackbar.make(((Activity)mContext).findViewById(android.R.id.content), ProfileOutcome.FAIL.getMessage(), Snackbar.LENGTH_LONG);

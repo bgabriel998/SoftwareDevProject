@@ -33,7 +33,7 @@ public final class UserPoint extends Point {
 
     private static UserPoint single_instance = null; // singleton instance
   
-    private final GPSTracker gpsTracker;
+    private GPSTracker gpsTracker;
 
     private double accuracy;
 
@@ -75,6 +75,10 @@ public final class UserPoint extends Point {
      */
     public static UserPoint getInstance(Context mContext) {
         return single_instance == null ? new UserPoint(mContext) : single_instance;
+    }
+
+    public void updateGPSTracker(Context mContext){
+        gpsTracker = new GPSTracker(mContext, this);
     }
 
     /**

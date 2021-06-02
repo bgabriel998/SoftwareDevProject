@@ -1,7 +1,6 @@
 package ch.epfl.sdp.peakar.general;
 
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
@@ -11,20 +10,21 @@ import java.util.Objects;
 import java.util.Stack;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.points.UserPoint;
 import ch.epfl.sdp.peakar.utils.MenuBarHandlerFragments;
 import ch.epfl.sdp.peakar.utils.MyPagerAdapter;
 
 import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.CAMERA_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.PermissionUtilities.hasLocationPermission;
 
+/**
+ * MainsActivity displays displays all the different pages with the ViewPager2 and the menu-bar
+ */
 public class MainActivity extends AppCompatActivity {
 
-    private static final int SCREEN_MARGIN_EDGE = 100;
     private ViewPager2 viewPager;
     public static Stack<Integer> lastFragmentIndex;
-    private boolean intercept = false;
-    private double slideBorder = 0.1;
-    private double width;
-
+    private boolean locationPermission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +39,6 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setCurrentItem(CAMERA_FRAGMENT_INDEX);
 
         MenuBarHandlerFragments.setup(this, viewPager);
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        width = displayMetrics.widthPixels;
     }
 
     @Override
@@ -58,25 +54,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // true if we intercep MOVE events in order to prevent the view pager to swipe views
-    private boolean intercepMove = false;
+    @Override
+    protected void onPause() {
+        super.onPause();
+        locationPermission = hasLocationPermission(this);
+    }
 
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event) {
-//        // Prevent the ViewPager to swipe instead of scrolling
-//        // See https://stackoverflow.com/questions/8594361/horizontal-scroll-view-inside-viewpager
-//        // Touching the borders allow the view pager to swipe
-//        switch (event.getAction()) {
-//            case MotionEvent.ACTION_DOWN:
-//                // See if we touch the screen borders
-//                intercepMove = 100 * event.getX() > 5 * width && 100 * event.getX() < 95 * width;
-//                break;
-//            case MotionEvent.ACTION_MOVE:
-//                intercepMove = 100 * event.getX() > 5 * width && 100 * event.getX() < 95 * width;
-//                if (intercepMove && getParent() != null) {
-//                    viewPager.requestDisallowInterceptTouchEvent(true);
-//                }
-//        }
-//        return false;
-//    }
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if(!locationPermission && hasLocationPermission(this)){
+            UserPoint userPoint = UserPoint.getInstance(this);
+            userPoint.updateGPSTracker(this);
+            userPoint.update();
+        }
+    }
 }
