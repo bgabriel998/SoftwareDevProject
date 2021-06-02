@@ -1,7 +1,6 @@
 package ch.epfl.sdp.peakar.points;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.core.util.Pair;
 
