@@ -3,6 +3,7 @@ package ch.epfl.sdp.peakar.social;
 import android.view.View;
 import android.widget.ListView;
 
+import androidx.lifecycle.Lifecycle;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
@@ -28,6 +29,7 @@ import java.util.List;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.database.DatabaseReference;
+import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
@@ -57,6 +59,9 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
 @RunWith(AndroidJUnit4.class)
 public class SocialActivityTest {
@@ -249,12 +254,13 @@ public class SocialActivityTest {
     /* Test that friends are correctly displayed */
     @Test
     public void friendsDisplayedTest() {
-        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
         removeAuthUser();
         registerAuthUser();
         testRule.getScenario().recreate();
         onView(ViewMatchers.withId(R.id.top_bar_switch_button)).perform(click());
+
         AuthService.getInstance().getAuthAccount().addFriend(user2);
+        
         try {
             Thread.sleep(LONG_SLEEP_TIME);
         } catch (InterruptedException e) {

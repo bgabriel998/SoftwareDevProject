@@ -160,6 +160,8 @@ public class SocialListAdapter extends ArrayAdapter<SocialItem> implements Filte
         }
         else {
             for (SocialItem socialItem: originalList) {
+                Log.d("SocialListAdapter", "filter: social size = " + originalList.size());
+                Log.d("SocialListAdapter", "filter: filter text = " + charText);
                 if (socialItem.getUsername().toLowerCase(Locale.getDefault()).contains(filteredText)) {
                     filteredList.add(socialItem);
                 }
