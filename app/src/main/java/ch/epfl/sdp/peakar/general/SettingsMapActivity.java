@@ -137,8 +137,14 @@ public class SettingsMapActivity extends AppCompatActivity {
             @Override
             public void onResponseReceived(Pair<int[][], Double> topography) {
                 super.onResponseReceived(topography);
-                saveObject.topography = topography;
-                addPOIsToContainer(saveObject, selectedPoint);
+                if (topography == null) {
+                    downloadRunning = false;
+                    Toast.makeText(thisActivity, thisActivity.getResources().getString(R.string.download_error_toast), Toast.LENGTH_SHORT).show();
+                    onBackPressed();
+                } else {
+                    saveObject.topography = topography;
+                    addPOIsToContainer(saveObject, selectedPoint);
+                }
             }
         }.execute(selectedPoint);
     }
