@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -14,6 +15,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ch.epfl.sdp.peakar.R;
@@ -109,7 +112,17 @@ public class GalleryFragment extends Fragment {
             container.findViewById(R.id.gallery_empty).setVisibility(View.GONE);
         }
 
-        GalleryAdapter galleryAdapter = new GalleryAdapter(getContext(), imagePaths, imagePath -> {
+        GalleryAdapter galleryAdapter = new GalleryAdapter(getContext(), imagePaths, (imagePath) -> {
+//            Bundle bundle = new Bundle();
+//            bundle.putSerializable("images", new ArrayList<>(imagePaths));
+//            bundle.putInt("position", position);
+//
+//            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//            SlideshowFragment newFragment = SlideshowFragment.newInstance();
+//            newFragment.setArguments(bundle);
+//            newFragment.show(ft, "slideshow");
+
+
             Intent intent = new Intent(getContext(), ImageActivity.class);
             intent.putExtra(ImageActivity.IMAGE_PATH_INTENT, imagePath);
             startActivity(intent);

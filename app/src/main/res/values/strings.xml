@@ -212,4 +212,7 @@
     <string name="toolbar_rankings">Rankings</string>
     <string name="toolbar_gallery">Gallery</string>
     <string name="internet_connection_needed_social">You are in offline mode. Please disable offline mode to be able to use the social section of PeakAR!</string>
+    <string name="image_content_description">Item that corresponds to image in the gallery</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
