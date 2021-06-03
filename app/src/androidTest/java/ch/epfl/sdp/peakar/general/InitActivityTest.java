@@ -13,8 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.sdp.peakar.camera.CameraActivity;
-
 import static androidx.test.espresso.intent.Intents.intended;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.THREAD_SLEEP_10MS;
 

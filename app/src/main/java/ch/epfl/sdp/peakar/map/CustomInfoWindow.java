@@ -54,10 +54,7 @@ public class CustomInfoWindow extends InfoWindow {
         //Set peak height in meters
         txtDescription.setText(context.getResources().getString(R.string.marker_altitude,peakHeight));
 
-        layout.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-            }
-        });
+        layout.setOnClickListener(v -> {});
 
         //Handle hide and show Info window
         toggleWindowVisibility(layout);

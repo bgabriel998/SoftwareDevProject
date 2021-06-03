@@ -35,7 +35,6 @@ import ch.epfl.sdp.peakar.collection.NewCollectedItem;
 import ch.epfl.sdp.peakar.collection.NewCollectionListAdapter;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.POIPoint;
-import ch.epfl.sdp.peakar.social.SocialActivity;
 import ch.epfl.sdp.peakar.user.challenge.NewChallengeItem;
 import ch.epfl.sdp.peakar.user.challenge.NewChallengeListAdapter;
 import ch.epfl.sdp.peakar.user.challenge.goal.RemotePointsChallenge;

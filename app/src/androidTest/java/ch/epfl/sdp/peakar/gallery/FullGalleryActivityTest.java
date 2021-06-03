@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.general.MainActivity;
 import ch.epfl.sdp.peakar.utils.UITestHelper;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
 
@@ -26,6 +27,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.GALLERY_FRAGMENT_INDEX;
 import static org.hamcrest.Matchers.allOf;
 
 /**
@@ -34,7 +36,7 @@ import static org.hamcrest.Matchers.allOf;
 @RunWith(AndroidJUnit4.class)
 public class FullGalleryActivityTest {
     @Rule
-    public ActivityScenarioRule<GalleryActivity> testRule = new ActivityScenarioRule<>(GalleryActivity.class);
+    public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
 
     /* Fill gallery with images */
     @BeforeClass
@@ -54,6 +56,7 @@ public class FullGalleryActivityTest {
     @Before
     public void setup(){
         Intents.init();
+        testRule.getScenario().onActivity(activity -> activity.setCurrentPagerItem(GALLERY_FRAGMENT_INDEX));
     }
 
     /* Release Intent */

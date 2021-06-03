@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,14 +14,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.gallery.GalleryAdapter;
 import ch.epfl.sdp.peakar.gallery.ImageActivity;
-import ch.epfl.sdp.peakar.utils.OnSwipeTouchListener;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
 
 import static ch.epfl.sdp.peakar.general.MainActivity.lastFragmentIndex;
@@ -139,7 +135,5 @@ public class GalleryFragment extends Fragment {
         setupDots(this, v -> {
             // TODO Sort images
         });
-
-        container.findViewById(R.id.gallery_recyclerview).setOnTouchListener(new OnSwipeTouchListener(getContext()));
     }
 }

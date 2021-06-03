@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import br.com.goncalves.pugnotification.notification.PugNotification;
-import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.database.DatabaseReference;
 import ch.epfl.sdp.peakar.user.challenge.Challenge;

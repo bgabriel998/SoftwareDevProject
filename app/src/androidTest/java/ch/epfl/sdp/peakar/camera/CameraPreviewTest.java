@@ -34,10 +34,12 @@ import androidx.test.rule.GrantPermissionRule;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.ExecutionException;
@@ -47,6 +49,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import ch.epfl.sdp.peakar.R;
+import ch.epfl.sdp.peakar.fragments.CameraFragment;
+import ch.epfl.sdp.peakar.general.MainActivity;
+import ch.epfl.sdp.peakar.utils.UITestHelper;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -54,6 +59,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.*;
+import static ch.epfl.sdp.peakar.utils.UITestHelper.getGalleryFiles;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -63,7 +69,7 @@ import static org.junit.Assert.assertTrue;
 public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAvailableListener, Consumer<SurfaceRequest.Result> {
 
     @Rule
-    public ActivityScenarioRule<CameraActivity> testRule = new ActivityScenarioRule<>(CameraActivity.class);
+    public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
     @Rule
     public GrantPermissionRule grantCameraPermissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
 
@@ -259,29 +265,12 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
      * Test that toast is displayed with correct text after taking a picture in portrait and landscape mode
      */
     @Test
-    public void takePictureTest() throws NoSuchMethodException, InterruptedException {
+    public void takePictureTest() throws InterruptedException {
+        UITestHelper.ClearGallery();
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
-        String pictureTakenCorrectly = context.getResources().getString(R.string.pictureTakenToast);
 
-        //Method to get the last displayed toast
-        Method getLastToast = CameraActivity.class.getDeclaredMethod("getLastToast");
-        getLastToast.setAccessible(true);
-
-        //Method to get the last displayed toast
-        Method setLastToast = CameraActivity.class.getDeclaredMethod("setLastToast", String.class);
-        getLastToast.setAccessible(true);
-
-        testRule.getScenario().onActivity(activity -> {
-            try {
-                //Check that last displayed toast is null
-                assertNull(getLastToast.invoke(activity));
-                //Set orientation to portrait
-                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            } catch (InvocationTargetException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        });
+        testRule.getScenario().onActivity(activity -> activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE));
 
         //Wait for the view to be correctly displayed
         Thread.sleep(THREAD_SLEEP_6S);
@@ -291,22 +280,10 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
 
         Thread.sleep(THREAD_SLEEP_1S);
 
-        testRule.getScenario().onActivity(activity -> {
-            try {
-                //Check that correct toast was displayed
-                assertEquals(pictureTakenCorrectly, getLastToast.invoke(activity));
-                //Reset toast
-                setLastToast.invoke(activity, (Object) null);
-                //Check that last toast was reset
-                assertNull(getLastToast.invoke(activity));
-                //Rotate screen back to portrait
-                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                //Wait for orientation changes
+        File[] files = getGalleryFiles();
+        assertEquals(2, files.length);
 
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        });
+        testRule.getScenario().onActivity(activity -> activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT));
 
         //Wait for orientation changes
         Thread.sleep(THREAD_SLEEP_6S);
@@ -316,13 +293,9 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
 
         Thread.sleep(THREAD_SLEEP_1S);
 
-        testRule.getScenario().onActivity(activity -> {
-            try {
-                //Check that correct toast was displayed
-                assertEquals(pictureTakenCorrectly, getLastToast.invoke(activity));
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        });
+        files = getGalleryFiles();
+        assertEquals(4, files.length);
+
+        UITestHelper.ClearGallery();
     }
 }

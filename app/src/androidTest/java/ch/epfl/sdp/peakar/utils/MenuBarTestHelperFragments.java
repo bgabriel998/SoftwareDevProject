@@ -1,27 +1,15 @@
 package ch.epfl.sdp.peakar.utils;
 
-import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 
 import java.util.HashMap;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.camera.CameraActivity;
-import ch.epfl.sdp.peakar.fragments.CameraFragment;
-import ch.epfl.sdp.peakar.fragments.GalleryFragment;
-import ch.epfl.sdp.peakar.fragments.MapFragment;
-import ch.epfl.sdp.peakar.fragments.SettingsFragment;
-import ch.epfl.sdp.peakar.fragments.SocialFragment;
-import ch.epfl.sdp.peakar.gallery.GalleryActivity;
-import ch.epfl.sdp.peakar.general.SettingsActivity;
-import ch.epfl.sdp.peakar.map.MapActivity;
-import ch.epfl.sdp.peakar.social.SocialActivity;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
-import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 
 /**

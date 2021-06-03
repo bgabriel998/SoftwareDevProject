@@ -25,10 +25,6 @@
         <activity android:name=".general.MainActivity"
             android:resizeableActivity="false"/>
         <activity
-            android:name=".social.SocialActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".user.profile.ProfileLauncherActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
@@ -42,28 +38,11 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".gallery.GalleryActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-        <activity android:name=".camera.CameraActivity" />
-        <activity
-            android:name=".collection.MountainActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".collection.CollectionActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
             android:name=".rankings.RankingsActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".map.MapActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".general.SettingsActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity

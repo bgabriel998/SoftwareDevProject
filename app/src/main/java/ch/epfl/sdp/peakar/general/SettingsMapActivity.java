@@ -197,8 +197,6 @@ public class SettingsMapActivity extends AppCompatActivity {
                      .putBoolean(this.getResources().getString(R.string.offline_mode_key), false)
                      .apply();
 
-             Intent intent = new Intent(this, SettingsActivity.class);
-             startActivity(intent);
              this.finish();
          }
     }

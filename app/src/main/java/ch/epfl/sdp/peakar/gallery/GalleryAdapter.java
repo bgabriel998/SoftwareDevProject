@@ -1,7 +1,6 @@
 package ch.epfl.sdp.peakar.gallery;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +16,6 @@ import java.io.File;
 import java.util.List;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.utils.ImageHandler;
-import ch.epfl.sdp.peakar.utils.OnSwipeTouchListener;
 
 /**
  * Adapter for gallery to show all images
@@ -62,23 +59,13 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        //String imagePath = imagePaths.get(position);
-        //Bitmap imageBitmap = ImageHandler.getBitmapUpwards(imagePath);
-
-
         String path = imagePaths.get(position);
         Glide.with(mContext).load(new File(path))
                 .thumbnail(0.5f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.image);
 
-        holder.itemView.setOnTouchListener(new OnSwipeTouchListener(mContext){
-            @Override
-            public void onClick() {
-                super.onClick();
-                photoListener.onPhotoClick(path);
-            }
-        });
+        holder.itemView.setOnClickListener(v -> photoListener.onPhotoClick(path));
     }
 
     /**

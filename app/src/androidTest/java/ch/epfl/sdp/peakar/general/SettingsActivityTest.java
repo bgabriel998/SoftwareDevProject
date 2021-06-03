@@ -24,7 +24,6 @@ import org.junit.runner.RunWith;
 import java.util.concurrent.atomic.AtomicReference;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.utils.MenuBarTestHelper;
 import ch.epfl.sdp.peakar.database.Database;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -34,6 +33,7 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.SETTINGS_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.THREAD_SLEEP_1S;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -43,7 +43,7 @@ import static org.junit.Assert.assertThat;
 public class SettingsActivityTest{
 
     @Rule
-    public ActivityScenarioRule<SettingsActivity> testRule = new ActivityScenarioRule<>(SettingsActivity.class);
+    public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
     private Activity activity;
 
     private static Context context = null;
@@ -80,6 +80,7 @@ public class SettingsActivityTest{
     @Before
     public void setup() throws InterruptedException {
         Intents.init();
+        testRule.getScenario().onActivity(activity -> activity.setCurrentPagerItem(SETTINGS_FRAGMENT_INDEX));
         Thread.sleep(2000);
     }
 
@@ -88,30 +89,6 @@ public class SettingsActivityTest{
     public void cleanUp(){
         Intents.release();
         Database.getInstance().setOnlineMode();
-    }
-
-    /* Test that menu bars settings icon works as intended */
-    @Test
-    public void TestMenuBarSettings(){
-        MenuBarTestHelper.TestSelectedIconButton(R.id.menu_bar_settings);
-    }
-
-    /* Test that menu bars gallery icon works as intended */
-    @Test
-    public void TestMenuBarGallery(){
-        MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_gallery);
-    }
-
-    /* Test that menu bars map icon works as intended */
-    @Test
-    public void TestMenuBarMap(){
-        MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_map);
-    }
-
-    /* Test that menu bars social icon works as intended */
-    @Test
-    public void TestMenuBarSocial(){
-        MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_social);
     }
 
     /*Test discovery distance button*/

@@ -31,6 +31,8 @@ import java.util.List;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
+import ch.epfl.sdp.peakar.fragments.MapFragment;
+import ch.epfl.sdp.peakar.general.MainActivity;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.user.score.UserScore;
 import ch.epfl.sdp.peakar.user.services.AuthService;
@@ -39,6 +41,8 @@ import ch.epfl.sdp.peakar.user.services.FirebaseAuthService;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.GALLERY_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.MAP_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.*;
 import static ch.epfl.sdp.peakar.utils.UserTestHelper.registerAuthUser;
 import static ch.epfl.sdp.peakar.utils.UserTestHelper.removeAuthUser;
@@ -55,7 +59,7 @@ public class OSMMapTest {
     private OSMMap osmMap;
 
     @Rule
-    public ActivityScenarioRule<MapActivity> testRule = new ActivityScenarioRule<>(MapActivity.class);
+    public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
 
     /* Set up the environment */
     @BeforeClass
@@ -76,6 +80,8 @@ public class OSMMapTest {
     /* Make sure that an account is signed in and as new before each test */
     @Before
     public void createTestUser() {
+        testRule.getScenario().onActivity(activity -> activity.setCurrentPagerItem(MAP_FRAGMENT_INDEX));
+
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
             registerAuthUser();
@@ -164,7 +170,9 @@ public class OSMMapTest {
         //Init map
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
-        testRule.getScenario().onActivity(activity -> osmMap = activity.getOsmMap());
+        MapFragment fragment = MapFragment.newInstance();
+        osmMap = fragment.getOsmMap();
+        //testRule.getScenario().onActivity(activity -> osmMap = activity.getOsmMap());
 
 
         //The following lines initializes a handler and a looper

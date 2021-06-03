@@ -62,7 +62,6 @@ public class SocialListAdapter extends ArrayAdapter<SocialItem> implements Filte
             convertView = ListAdapterInflater.createLayout(resourceLayout, mContext,parent);
         }
         SocialItem item = getItem(position);
-        setupItem(convertView, item, SocialActivity.getGlobalRank(item));
         setupItem(convertView, item, SocialFragment.getGlobalRank(item));
 
         return convertView;

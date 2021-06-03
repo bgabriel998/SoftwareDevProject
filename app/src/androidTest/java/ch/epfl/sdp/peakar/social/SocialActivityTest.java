@@ -28,11 +28,11 @@ import java.util.List;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.database.DatabaseReference;
+import ch.epfl.sdp.peakar.general.MainActivity;
 import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.services.FirebaseAuthService;
-import ch.epfl.sdp.peakar.utils.MenuBarTestHelper;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -48,6 +48,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.peakar.database.DatabaseTest.databaseRefRoot;
+import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.SOCIAL_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.UserTestHelper.registerAuthUser;
 import static ch.epfl.sdp.peakar.utils.UserTestHelper.removeAuthUser;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.BASIC_USERNAME;
@@ -118,7 +119,7 @@ public class SocialActivityTest {
     }
 
     @Rule
-    public ActivityScenarioRule<SocialActivity> testRule = new ActivityScenarioRule<>(SocialActivity.class);
+    public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
 
     /* Create test user */
     @BeforeClass
@@ -141,6 +142,7 @@ public class SocialActivityTest {
     /* Make sure that an account is signed in and as new before each test */
     @Before
     public void createTestUser() {
+        testRule.getScenario().onActivity(activity -> activity.setCurrentPagerItem(SOCIAL_FRAGMENT_INDEX));
         registerAuthUser();
         removeTestUsers();
         addMockUsers();
@@ -176,31 +178,6 @@ public class SocialActivityTest {
     @After
     public void cleanUp(){
         Intents.release();
-    }
-
-    /* Test that menu bars settings icon works as intended */
-// TODO Fix test.
-    //@Test
-    public void TestMenuBarSettings(){
-        MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_settings);
-    }
-
-    /* Test that menu bars gallery icon works as intended */
-    @Test
-    public void TestMenuBarGallery(){
-        MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_gallery);
-    }
-
-    /* Test that menu bars map icon works as intended */
-    @Test
-    public void TestMenuBarMap(){
-        MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_map);
-    }
-
-    /* Test that menu bars social icon works as intended */
-    @Test
-    public void TestMenuBarSocial(){
-        MenuBarTestHelper.TestSelectedIconButton(R.id.menu_bar_social);
     }
 
     /* Test that the top bar color is correct */
