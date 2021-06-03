@@ -21,6 +21,8 @@ public class TestingConstants {
     public static final String POINTE_DE_LAPAZ_NAME = "Pointe de Lapaz";
     public static final String AIGUILLE_DU_PLAN_NAME = "Aiguille du Plan";
     //Constants POI coordinates
+    public static final double MOUNT_EVEREST_ALT = 8849;
+
     public static final double MONT_BLANC_LAT = 45.8325;
     public static final double MONT_BLANC_LONG = 6.8641666666667;
     public static final double MONT_BLANC_ALT = 4810;
@@ -36,6 +38,14 @@ public class TestingConstants {
     public static final double POINTE_DE_LAPAZ_LAT = 45.920774986207014;
     public static final double POINTE_DE_LAPAZ_LONG = 6.812914656881065;
     public static final double POINTE_DE_LAPAZ_ALT = 3660;
+
+    public static final double NEAR_MONT_BLANC_ONE_LAT = 45.802537;
+    public static final double NEAR_MONT_BLANC_ONE_LON = 6.850328;
+
+    public static final double NEAR_MONT_BLANC_TWO_LAT = 45.8326;
+    public static final double NEAR_MONT_BLANC_TWO_LON = 6.8652;
+    public static final double NEAR_MONT_BLANC_TWO_ALT = 4808;
+
 
     //Geonames Handler testing constants
     public static final int MILLI_SEC_TO_SEC = 1000;

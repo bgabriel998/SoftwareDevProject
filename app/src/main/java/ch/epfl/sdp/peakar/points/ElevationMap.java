@@ -49,6 +49,7 @@ public class ElevationMap {
         this.boundingBoxCenter = new POIPoint(this.boundingBox.getCenterWithDateLine());
         topographyMap = topography.first;
         mapCellSize = topography.second;
+        this.context = context;
     }
 
     /**
