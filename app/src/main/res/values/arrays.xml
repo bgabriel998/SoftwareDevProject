@@ -31,6 +31,7 @@
     <string-array name="language_entries">
         <item>English</item>
         <item>Français</item>
+        <item>Italiano</item>
         <item>Deutsch</item>
         <item>Svenska</item>
     </string-array>
@@ -38,6 +39,7 @@
     <string-array name="language_values">
         <item>english</item>
         <item>french</item>
+        <item>italian</item>
         <item>german</item>
         <item>swedish</item>
     </string-array>
