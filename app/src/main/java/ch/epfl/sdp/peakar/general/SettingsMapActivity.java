@@ -92,7 +92,6 @@ public class SettingsMapActivity extends AppCompatActivity {
     /**
      * Downloads and saves the POIs and elevation map around the selectedPoint.
      */
-    // TODO handle disconnected from server (discuss with others)
     public void saveToJson() {
 
         downloadRunning = true;

@@ -5,7 +5,6 @@
     android:layout_gravity="center"
     android:background="@drawable/button_light_green">
 
-    <!-- TODO Remove extra layout if no test for color is needed -->
     <!-- Container -->
     <LinearLayout
         android:layout_width="match_parent"

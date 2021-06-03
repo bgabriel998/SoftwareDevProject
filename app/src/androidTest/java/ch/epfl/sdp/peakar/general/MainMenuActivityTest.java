@@ -26,7 +26,6 @@ import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.collection.CollectionActivity;
 import ch.epfl.sdp.peakar.gallery.GalleryActivity;
-import ch.epfl.sdp.peakar.rankings.RankingsActivity;
 import ch.epfl.sdp.peakar.social.SocialActivity;
 import ch.epfl.sdp.peakar.user.profile.ProfileLauncherActivity;
 
@@ -79,16 +78,6 @@ public class MainMenuActivityTest {
         intended(IntentMatchers.hasComponent(ProfileLauncherActivity.class.getName()));
     }
 
-    /* Test that pressing the settings button changes view to SettingsActivity */
-     // TODO Fix test.
-    //@Test
-    public void TestSettingsButton() throws InterruptedException {
-        ViewInteraction button = onView(withId(R.id.settingsButton));
-        button.perform(click());
-        Thread.sleep((500));
-        // Catch intent
-        intended(IntentMatchers.hasComponent(SettingsActivity.class.getName()));
-    }
 
     /* Test that pressing the camera button changes view to CameraActivity */
     @Test

@@ -1,7 +1,6 @@
 package ch.epfl.sdp.peakar.general;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -91,8 +90,6 @@ public class InitActivity extends AppCompatActivity {
 
     /**
      * Launches the application if the camera permission is granted
-     * TODO replace activity with CameraActivity if permission is given
-     * TODO replace activity with another activity then CameraActivity if permission is given
      */
     public void launchApp(){
         if(hasCameraPermission()){

@@ -167,7 +167,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     /**
      * Fill list view.
-     * TODO show correct date and correct country
      */
     private void fillCollectedListView() {
         findViewById(R.id.add_challenge).setVisibility(View.GONE);
