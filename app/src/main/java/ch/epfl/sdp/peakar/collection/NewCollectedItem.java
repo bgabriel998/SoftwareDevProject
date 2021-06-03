@@ -1,17 +1,9 @@
 package ch.epfl.sdp.peakar.collection;
 
-import android.content.Context;
-
-import java.util.Locale;
-
-import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.utils.UIUtils;
-
 /**
  * Item holding all information regarding a collected peak.
- * TODO Rename to remove New part
  */
-public class NewCollectedItem implements Comparable< NewCollectedItem >{
+public class CollectedItem implements Comparable<CollectedItem>{
     private final String name;
     private final int points;
     private final int height;
@@ -32,8 +24,8 @@ public class NewCollectedItem implements Comparable< NewCollectedItem >{
      * @param date item got collected.
      * @param country of collected.
      */
-    public NewCollectedItem(String name,int points, int height, boolean topInCountry,
-                            float longitude, float latitude, String date, String country) {
+    public CollectedItem(String name, int points, int height, boolean topInCountry,
+                         float longitude, float latitude, String date, String country) {
         this.name = name;
         this.points = points;
         this.height = height;
@@ -106,7 +98,7 @@ public class NewCollectedItem implements Comparable< NewCollectedItem >{
      * @return collected item with highest number of points
      */
     @Override
-    public int compareTo(NewCollectedItem c){
+    public int compareTo(CollectedItem c){
         return this.getPoints().compareTo(c.getPoints());
     }
 }
