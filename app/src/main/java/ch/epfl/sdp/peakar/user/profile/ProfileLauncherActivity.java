@@ -54,11 +54,7 @@ public class ProfileLauncherActivity extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(ProfileOutcome.FAIL.getMessage())
                     .setCancelable(false)
-                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            finish();
-                        }
-                    });
+                    .setPositiveButton("Ok", (dialog, id) -> finish());
             AlertDialog alert = builder.create();
             alert.show();
         } else {
