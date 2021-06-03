@@ -93,4 +93,11 @@
     <string name="enter_challenge_name">Inserisci il nome della sfida</string>
     <string name="cancel_button">Annulla</string>
     <string name="ok_button">OK</string>
+    <string-array name="challenge_duration">
+        <item>1 giorno</item>
+        <item>2 giorni</item>
+        <item>5 giorni</item>
+        <item>7 giorni</item>
+        <item>14 giorni</item>
+    </string-array>
 </resources>
