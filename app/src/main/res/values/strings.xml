@@ -108,9 +108,9 @@
 
     <!-- PROFILE TEXT -->
     <string name="score_display" translatable="true">Score: %s</string>
-    <string name="empty_collection" translatable="false">Empty Collection</string>
-    <string name="empty_collection_not_registered" translatable="false">Please, set your username</string>
-    <string name="loading_message" translatable="false">Loading...</string>
+    <string name="empty_collection">Empty Collection</string>
+    <string name="empty_collection_not_registered">Please, set your username</string>
+    <string name="loading_message">Loading...</string>
 
     <!-- COLLECTED TEXT -->
     <string name="height_display" translatable="false">%s m</string>
