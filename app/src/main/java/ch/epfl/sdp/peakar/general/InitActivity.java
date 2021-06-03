@@ -36,17 +36,15 @@ import ch.epfl.sdp.peakar.utils.SettingsUtilities;
  * - Requests location, read and write and camera permissions
  * - Initialises firebase
  * - Computes the POIPoints
+ * - Downloads the user's data if a user is already authenticated
  */
 public class InitActivity extends AppCompatActivity {
 
     private MultiplePermissionsListener allPermissionsListener;
-    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mContext = this;
 
         setContentView(R.layout.activity_init);
 
