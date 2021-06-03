@@ -32,7 +32,7 @@ import ch.epfl.sdp.peakar.utils.ListAdapterInflater;
 
 import static android.os.Looper.getMainLooper;
 
-public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
+public class ChallengeListAdapter extends ArrayAdapter<ChallengeItem> {
     private final int resourceLayout;
     private final Context mContext;
 
@@ -42,7 +42,7 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
      * @param resource resource
      * @param items list of challenges items
      */
-    public NewChallengeListAdapter(@NonNull Context context, int resource, @NonNull List<NewChallengeItem> items) {
+    public ChallengeListAdapter(@NonNull Context context, int resource, @NonNull List<ChallengeItem> items) {
         super(context, resource, items);
         resourceLayout = resource;
         mContext = context;
@@ -69,7 +69,7 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
      * @param view the view to place text on.
      * @param item the item to base text off.
      */
-    private void setupItemView(View view, NewChallengeItem item) {
+    private void setupItemView(View view, ChallengeItem item) {
         if (item != null) {
             TextView nameText = view.findViewById(R.id.challenge_name);
             TextView enrolledUserSize = view.findViewById(R.id.challenge_enrolled_user_size);
@@ -101,7 +101,7 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
      * @param item the item to base text off.
      */
     @SuppressLint("NewApi")
-    private void addRemainingTimeHandler(View view, NewChallengeItem item){
+    private void addRemainingTimeHandler(View view, ChallengeItem item){
         TextView remainingTime = view.findViewById(R.id.challenge_remaining_time);
         if(Duration.between(LocalDateTime.now(),item.getEndDateTime()).isNegative()){
             remainingTime.setText(mContext.getString(R.string.challenge_finished));
@@ -151,7 +151,7 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
      * @param item the item to base text off.
      */
     @SuppressLint("SetTextI18n")
-    private void displayPodium(View view, NewChallengeItem item){
+    private void displayPodium(View view, ChallengeItem item){
         TextView rankingFirstUser = view.findViewById(R.id.challenge_first_user_txt);
         TextView rankingSecondUser = view.findViewById(R.id.challenge_second_user_txt);
         TextView rankingThirdUser = view.findViewById(R.id.challenge_third_user_txt);
@@ -202,7 +202,7 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
      * @param view view to setup
      * @param item started challenge
      */
-    private void setupOngoingChallenge(View view, NewChallengeItem item){
+    private void setupOngoingChallenge(View view, ChallengeItem item){
         TextView startTimeText = view.findViewById(R.id.challenge_start_time);
         TextView finishTimeText = view.findViewById(R.id.challenge_stop_time);
         TextView pointsAchieved = view.findViewById(R.id.points_achieved);
@@ -230,12 +230,12 @@ public class NewChallengeListAdapter extends ArrayAdapter<NewChallengeItem> {
 
     /**
      * Extended OnClickListener
-     * Used to pass correct NewChallengeItem item to the listener
+     * Used to pass correct ChallengeItem item to the listener
      * This onClickListener is used only for join button on challenges items
      */
     private class JoinOnClickListenerClass implements View.OnClickListener{
-        private final NewChallengeItem item;
-        public JoinOnClickListenerClass(NewChallengeItem item){
+        private final ChallengeItem item;
+        public JoinOnClickListenerClass(ChallengeItem item){
             this.item = item;
         }
         @Override

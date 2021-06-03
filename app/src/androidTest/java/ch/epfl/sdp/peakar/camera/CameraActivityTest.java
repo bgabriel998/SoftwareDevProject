@@ -25,7 +25,7 @@ import org.junit.runner.RunWith;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
-import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
+import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
 import ch.epfl.sdp.peakar.user.profile.ProfileLauncherActivity;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.MenuBarTestHelper;
@@ -147,7 +147,7 @@ public class CameraActivityTest {
         ViewInteraction button = Espresso.onView(withId(R.id.top_bar_profile_button));
         button.perform(ViewActions.click());
 
-        intended(IntentMatchers.hasComponent(NewProfileActivity.class.getName()));
+        intended(IntentMatchers.hasComponent(ProfileActivity.class.getName()));
     }
 
     public void createTestUser() {
