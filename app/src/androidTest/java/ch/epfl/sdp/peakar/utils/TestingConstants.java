@@ -21,6 +21,8 @@ public class TestingConstants {
     public static final String POINTE_DE_LAPAZ_NAME = "Pointe de Lapaz";
     public static final String AIGUILLE_DU_PLAN_NAME = "Aiguille du Plan";
     //Constants POI coordinates
+    public static final double MOUNT_EVEREST_ALT = 8849;
+
     public static final double MONT_BLANC_LAT = 45.8325;
     public static final double MONT_BLANC_LONG = 6.8641666666667;
     public static final double MONT_BLANC_ALT = 4810;

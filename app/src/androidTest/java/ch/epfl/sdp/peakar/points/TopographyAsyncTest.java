@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import ch.epfl.sdp.peakar.utils.SettingsUtilities;
+import ch.epfl.sdp.peakar.utils.TestingConstants;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TopographyAsyncTest {
@@ -198,12 +199,12 @@ public class TopographyAsyncTest {
         Assert.assertNotNull(indexes);
         Assert.assertNotNull(indexes.first);
         Assert.assertNotNull(indexes.second);
-        Assert.assertEquals(8849, elevationMap.getAltitudeAtLocation(indexes.first, indexes.second), 200);
+        Assert.assertEquals(TestingConstants.MOUNT_EVEREST_ALT, elevationMap.getAltitudeAtLocation(indexes.first, indexes.second), 200);
 
         int[][] oldTopographyMap = topographyPair.first;
 
         // set location near the Mont Blanc
-        userPoint.setLocation(45.802537, 6.850328, 0, 0);
+        userPoint.setLocation(TestingConstants.MONT_BLANC_LAT, TestingConstants.MONT_BLANC_LONG, 0, 0);
         elevationMap.updateElevationMatrix();
 
         //Wait for the map to be updated
@@ -220,9 +221,9 @@ public class TopographyAsyncTest {
         Assert.assertNotNull(indexes);
         Assert.assertNotNull(indexes.first);
         Assert.assertNotNull(indexes.second);
-        Assert.assertEquals(4808, elevationMap.getAltitudeAtLocation(indexes.first, indexes.second), 200);
+        Assert.assertEquals(TestingConstants.MONT_BLANC_ALT, elevationMap.getAltitudeAtLocation(indexes.first, indexes.second), 200);
         // check the altitude around the Mont Blanc Peak using coordinates
-        Assert.assertEquals(4808, elevationMap.getAltitudeAtLocation(45.8326, 6.8652), 200);
+        Assert.assertEquals(TestingConstants.MONT_BLANC_ALT, elevationMap.getAltitudeAtLocation(45.8326, 6.8652), 200);
     }
 
 }
