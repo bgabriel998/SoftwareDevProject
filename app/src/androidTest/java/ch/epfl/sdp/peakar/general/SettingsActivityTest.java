@@ -6,8 +6,6 @@ import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
 import androidx.test.core.app.ApplicationProvider;
-import androidx.test.espresso.Espresso;
-import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.matcher.IntentMatchers;
@@ -24,12 +22,11 @@ import org.junit.runner.RunWith;
 import java.util.concurrent.atomic.AtomicReference;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.utils.MenuBarTestHelper;
 import ch.epfl.sdp.peakar.database.Database;
+import ch.epfl.sdp.peakar.utils.MenuBarTestHelper;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -184,29 +181,6 @@ public class SettingsActivityTest{
         assertThat(startString, not(is(endString)));
     }
 
-    /*Test measuring system menu*/
-    @Test
-    public void TestMeasuringSystemButton() throws InterruptedException {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        activity = getActivity(testRule);
-        //Get selected value
-        String startString = prefs.getString(activity.getResources().getString(R.string.measSys_key), "");
-
-        //Open selector window
-        onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(activity.getResources().getString(R.string.measSys_title))),
-                        click()));
-        Thread.sleep(1000);
-        //Select the opposite preference
-        if(startString.equals(activity.getResources().getStringArray(R.array.measSys_values)[1]))
-            onView(withText(activity.getResources().getStringArray(R.array.measSys_entries)[0])).perform(click());
-        else
-            onView(withText(activity.getResources().getStringArray(R.array.measSys_entries)[1])).perform(click());
-
-        //Check that the selection happened
-        String endString = prefs.getString(activity.getResources().getString(R.string.measSys_key), "");
-        assertThat(startString, not(is(endString)));
-    }
 
     /*Test night mode button click */
     @Test
@@ -303,12 +277,6 @@ public class SettingsActivityTest{
         //select first option
         onView(withText(activity.getResources().getStringArray(R.array.language_entries)[0])).perform(click());
         //Let context retrieves stability point
-    }
-
-    public void TestToolbarTitle(){
-        String TOOLBAR_TITLE = "Settings";
-        ViewInteraction greetingText = Espresso.onView(withId(R.id.toolbarTitle));
-        greetingText.check(matches(withText(TOOLBAR_TITLE)));
     }
 
     /*Test preference allow caching button click*/
