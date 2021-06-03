@@ -44,9 +44,9 @@
 
     <!-- camera display POIs Preference -->
     <string-array name="displayPOIs_entries">
-        <item>Display all mountains</item>
-        <item>Only display mountains in line of sight</item>
-        <item>Only display mountains out line of sight</item>
+        <item>Visa alla berg</item>
+        <item>Visa bara bergen i din vy</item>
+        <item>Visa bara bergen utanför din vy</item>
     </string-array>
 
     <string-array name="displayPOIs_values">
