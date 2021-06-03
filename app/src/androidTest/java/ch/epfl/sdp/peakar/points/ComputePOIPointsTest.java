@@ -24,6 +24,7 @@ import ch.epfl.sdp.peakar.utils.OfflineContentContainer;
 import ch.epfl.sdp.peakar.utils.SettingsUtilities;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
 
+import static ch.epfl.sdp.peakar.utils.TestingConstants.THREAD_SLEEP_1S;
 import static java.lang.Double.NaN;
 import static org.junit.Assert.assertEquals;
 
@@ -143,10 +144,15 @@ public class ComputePOIPointsTest {
 
         loadedPOIPoints =  computePOIPointsInstance.getPOIs();
 
+        try {
+            Thread.sleep(THREAD_SLEEP_1S);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         Assert.assertTrue(loadedPOIPoints.isEmpty());
 
         // Reset location
         userPoint.setLocation(45.802537, 6.850328, 4809, 0);
-
     }
 }
