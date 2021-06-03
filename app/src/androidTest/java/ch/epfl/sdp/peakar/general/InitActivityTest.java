@@ -41,6 +41,6 @@ public class InitActivityTest {
         ActivityScenario.launch(intent);
         Thread.sleep(THREAD_SLEEP_10MS);
         //Check that MainMenuActivity gets called
-        intended(IntentMatchers.hasComponent(CameraActivity.class.getName()));
+        intended(IntentMatchers.hasComponent(MainActivity.class.getName()));
     }
 }
