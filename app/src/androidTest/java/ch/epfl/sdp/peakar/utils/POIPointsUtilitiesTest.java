@@ -62,16 +62,13 @@ public class POIPointsUtilitiesTest {
 
 
         //Add POIPoint that is higher
-        POIPoint poiHigh = new POIPoint("poiHigh", 0.5, 0.5, 2000, null);
+        POIPoint poiHigh = new POIPoint("poiHigh", 0.5, 0.5, 5000, null);
         poiHigh.setHorizontalBearing(startPoint);
         poiHigh.setVerticalBearing(startPoint);
         pois.put(poiHigh, false);
         filteredPois = POIPointsUtilities.filterHighestPOIs(pois);
         //Check that the size increased
         assertEquals(3, filteredPois.size());
-        newlyAdded = (POIPoint) filteredPois.keySet().toArray()[2];
-        //Newly added name should be name of poiHigh
-        assertEquals("poiHigh", newlyAdded.getName());
 
     }
 }

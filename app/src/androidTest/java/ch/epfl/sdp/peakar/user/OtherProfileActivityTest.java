@@ -1,5 +1,6 @@
 package ch.epfl.sdp.peakar.user;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 
@@ -64,6 +65,7 @@ import static ch.epfl.sdp.peakar.utils.TestingConstants.POINTE_DE_LAPAZ_LONG;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.POINTE_DE_LAPAZ_NAME;
 import static ch.epfl.sdp.peakar.utils.UITestHelper.withDrawable;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.assertSame;
 
 public class OtherProfileActivityTest {
     private static String user2;
@@ -157,7 +159,7 @@ public class OtherProfileActivityTest {
     }
 
     @Rule
-    public ActivityScenarioRule testRule = new ActivityScenarioRule<>(getOtherIntent());
+    public ActivityScenarioRule<NewProfileActivity> testRule = new ActivityScenarioRule<>(getOtherIntent());
 
     /* Test that when another account profile is loaded with but no user is authenticated, the display is correct */
     @Test
@@ -278,13 +280,6 @@ public class OtherProfileActivityTest {
     public void socialActivityButtonTest() {
         onView(withId(R.id.profile_friend)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.profile_friend)).perform(click());
-
-        try {
-            Thread.sleep(LONG_SLEEP_TIME);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        intended(IntentMatchers.hasComponent(SocialActivity.class.getName()));
+        assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
     }
 }
