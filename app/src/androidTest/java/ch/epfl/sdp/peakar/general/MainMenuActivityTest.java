@@ -26,7 +26,6 @@ import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.collection.CollectionActivity;
 import ch.epfl.sdp.peakar.gallery.GalleryActivity;
-import ch.epfl.sdp.peakar.rankings.RankingsActivity;
 import ch.epfl.sdp.peakar.social.SocialActivity;
 import ch.epfl.sdp.peakar.user.profile.ProfileLauncherActivity;
 
@@ -37,7 +36,7 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.peakar.user.AuthAccountTest.removeAuthUser;
+import static ch.epfl.sdp.peakar.utils.UserTestHelper.removeAuthUser;
 
 @RunWith(AndroidJUnit4.class)
 public class MainMenuActivityTest {

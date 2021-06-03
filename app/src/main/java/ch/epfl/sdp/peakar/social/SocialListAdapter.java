@@ -12,8 +12,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -162,6 +160,8 @@ public class SocialListAdapter extends ArrayAdapter<SocialItem> implements Filte
         }
         else {
             for (SocialItem socialItem: originalList) {
+                Log.d("SocialListAdapter", "filter: social size = " + originalList.size());
+                Log.d("SocialListAdapter", "filter: filter text = " + charText);
                 if (socialItem.getUsername().toLowerCase(Locale.getDefault()).contains(filteredText)) {
                     filteredList.add(socialItem);
                 }

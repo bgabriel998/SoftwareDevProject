@@ -1,10 +1,15 @@
 package ch.epfl.sdp.peakar.general;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+<<<<<<< HEAD
 import android.os.StrictMode;
+=======
+import android.util.Log;
+>>>>>>> 1341ca980bbc377b877ca525fd1d3a2b3fd31d18
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -36,6 +41,7 @@ import static ch.epfl.sdp.peakar.utils.PermissionUtilities.hasLocationPermission
  * - Requests location, read and write and camera permissions
  * - Initialises firebase
  * - Computes the POIPoints
+ * - Downloads the user's data if a user is already authenticated
  */
 public class InitActivity extends AppCompatActivity {
 
@@ -44,6 +50,7 @@ public class InitActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+<<<<<<< HEAD
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
@@ -53,6 +60,16 @@ public class InitActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             SettingsUtilities.checkForLanguage(this);
         }
+=======
+
+        setContentView(R.layout.activity_init);
+
+        FirebaseApp.initializeApp(this);
+
+        Database.init(this);
+
+        Log.d("InitActivity", "onCreate: online ? " + Database.getInstance().isOnline());
+>>>>>>> 1341ca980bbc377b877ca525fd1d3a2b3fd31d18
 
         createPermissionListener();
 
@@ -65,10 +82,6 @@ public class InitActivity extends AppCompatActivity {
                 ).withListener(allPermissionsListener)
                 .check();
 
-        FirebaseApp.initializeApp(this);
-
-        Database.init(this);
-
         ProgressBar progressBar = findViewById(R.id.progressBarInitActivity);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -79,11 +92,42 @@ public class InitActivity extends AppCompatActivity {
      * Init application global stuff before opening the main menu
      */
     private synchronized void initApp(){
+<<<<<<< HEAD
         new Thread(() -> {
             if (AuthService.getInstance().getAuthAccount() != null) {
                 AuthService.getInstance().getAuthAccount().init();
             }
         }).start();
+=======
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            SettingsUtilities.checkForLanguage(this);
+        }
+    }
+
+    /**
+     * Download the authenticated account data, if present
+     */
+    private void loadAccount() {
+        if (AuthService.getInstance().getAuthAccount() != null) {
+            AuthService.getInstance().getAuthAccount().init();
+        }
+    }
+
+    /**
+     * Launches the application if the camera permission is granted
+     * TODO replace activity with CameraActivity if permission is given
+     * TODO replace activity with another activity then CameraActivity if permission is given
+     */
+    public void launchApp(){
+        if(hasCameraPermission()){
+            Intent intent = new Intent(this, CameraActivity.class);
+            startActivity(intent);
+        }
+        else{
+            Intent intent = new Intent(this, SocialActivity.class);
+            startActivity(intent);
+        }
+>>>>>>> 1341ca980bbc377b877ca525fd1d3a2b3fd31d18
     }
 
     /**
@@ -94,11 +138,36 @@ public class InitActivity extends AppCompatActivity {
         allPermissionsListener = new MultiplePermissionsListener() {
             @Override
             public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+<<<<<<< HEAD
                 if(hasLocationPermission(getApplicationContext())){
                     ComputePOIPoints.getInstance(getApplicationContext());
                 }
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
+=======
+                ComputePOIPoints.getInstance(getApplicationContext());
+                new Thread(() -> {
+                    Log.d("InitActivity", "onPermissionsChecked: online ? " + Database.getInstance().isOnline());
+                    // If user is online, retrieve data
+                    if(Database.getInstance().isOnline()) {
+                        Log.d("InitActivity", ": loading account");
+                        loadAccount();
+                    }
+                    else {  // Otherwise, try to download data but in another non blocking thread
+                        Log.d("InitActivity", ": user offline");
+                        new Thread(() -> {
+                            try {
+                                loadAccount();
+                                Log.d("InitActivity", ": successful download of data");
+                            } catch(Exception e) {
+                                Log.d("InitActivity", ": failed download of data");
+                            }
+
+                        }).start();
+                    }
+                    runOnUiThread(() -> launchApp());
+                }).start();
+>>>>>>> 1341ca980bbc377b877ca525fd1d3a2b3fd31d18
             }
 
             @Override

@@ -20,8 +20,8 @@ import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.services.OtherAccount;
 
 import static ch.epfl.sdp.peakar.utils.TestingConstants.BASIC_USERNAME;
-import static ch.epfl.sdp.peakar.user.AuthAccountTest.registerAuthUser;
-import static ch.epfl.sdp.peakar.user.AuthAccountTest.removeAuthUser;
+import static ch.epfl.sdp.peakar.utils.UserTestHelper.registerAuthUser;
+import static ch.epfl.sdp.peakar.utils.UserTestHelper.removeAuthUser;
 
 public class OtherAccountTest {
     private static String user2;
