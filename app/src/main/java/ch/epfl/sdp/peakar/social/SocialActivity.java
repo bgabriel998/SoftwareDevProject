@@ -1,7 +1,9 @@
 package ch.epfl.sdp.peakar.social;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -23,6 +25,7 @@ import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
 import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.user.services.OtherAccount;
 import ch.epfl.sdp.peakar.utils.MenuBarHandler;
 import ch.epfl.sdp.peakar.utils.OnSwipeTouchListener;
 
@@ -38,6 +41,7 @@ public class SocialActivity extends AppCompatActivity {
     private SocialListAdapter globalAdapter;
     private SocialListAdapter friendsAdapter;
     private View emptyFriendsView;
+    private String authUserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +91,21 @@ public class SocialActivity extends AppCompatActivity {
         findViewById(R.id.social_list).setOnTouchListener(new OnSwipeTouchListener(this));
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // If the user is not the same, reload the friends list
+        if(AuthService.getInstance().getID() == null || !AuthService.getInstance().getID().equals(authUserID)) {
+            SocialListAdapter oldFriendAdapter = friendsAdapter;
+            authUserID = AuthService.getInstance().getID();
+            friendsAdapter = setupFriendsListAdapter();
+
+            // If the list that is shown is the list of friends, immediately update the view
+            if(listView.getAdapter().equals(oldFriendAdapter)) setFriendsView();
+        }
+    }
+
     /**
      * Sets up the global list adapter, by syncing the database with a static list
      * @return a list adapter synced with the database displaying all users.
@@ -106,12 +125,16 @@ public class SocialActivity extends AppCompatActivity {
      * @return a list adapter synced with the database displaying all friends.
      */
     private SocialListAdapter setupFriendsListAdapter() {
+        friendSocialItems.clear();
         SocialListAdapter friendsAdapter = new SocialListAdapter(this,
                 R.layout.social_profile_item,
                 friendSocialItems,
                 Collections.synchronizedList(new ArrayList<>()));
         friendsAdapter.setNotifyOnChange(false);
-        if(AuthService.getInstance().getAuthAccount() != null) RemoteSocialList.synchronizeFriends(friendSocialItems, friendsAdapter);
+        if(AuthService.getInstance().getAuthAccount() != null) {
+            authUserID = AuthService.getInstance().getID();
+            RemoteSocialList.synchronizeFriends(friendSocialItems, friendsAdapter);
+        }
         return friendsAdapter;
     }
 
@@ -153,9 +176,26 @@ public class SocialActivity extends AppCompatActivity {
             snackbar.show();
             return;
         }
-        Intent intent = new Intent(this, NewProfileActivity.class);
-        fillIntent(intent, item);
-        startActivity(intent);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(R.layout.progress);
+        Dialog loadingDialog = builder.create();
+        loadingDialog.show();
+        loadingDialog.setCanceledOnTouchOutside(false);
+        loadingDialog.setCancelable(false);
+
+        new Thread(() -> {
+            // Load the account
+            OtherAccount.getInstance(item.getUid());
+
+            runOnUiThread(() -> {
+                loadingDialog.dismiss();
+
+                Intent intent = new Intent(this, NewProfileActivity.class);
+                fillIntent(intent, item);
+                startActivity(intent);
+            });
+        }).start();
+
     }
 
     /**

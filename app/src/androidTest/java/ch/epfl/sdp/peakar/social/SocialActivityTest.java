@@ -48,8 +48,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.peakar.database.DatabaseTest.databaseRefRoot;
-import static ch.epfl.sdp.peakar.user.AuthAccountTest.registerAuthUser;
-import static ch.epfl.sdp.peakar.user.AuthAccountTest.removeAuthUser;
+import static ch.epfl.sdp.peakar.utils.UserTestHelper.registerAuthUser;
+import static ch.epfl.sdp.peakar.utils.UserTestHelper.removeAuthUser;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.BASIC_USERNAME;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.LONG_SLEEP_TIME;
 import static ch.epfl.sdp.peakar.utils.UITestHelper.withBackgroundColor;
@@ -249,12 +249,13 @@ public class SocialActivityTest {
     /* Test that friends are correctly displayed */
     @Test
     public void friendsDisplayedTest() {
-        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
         removeAuthUser();
         registerAuthUser();
         testRule.getScenario().recreate();
         onView(ViewMatchers.withId(R.id.top_bar_switch_button)).perform(click());
+
         AuthService.getInstance().getAuthAccount().addFriend(user2);
+
         try {
             Thread.sleep(LONG_SLEEP_TIME);
         } catch (InterruptedException e) {

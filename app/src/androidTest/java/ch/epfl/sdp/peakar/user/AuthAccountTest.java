@@ -5,10 +5,7 @@ import android.net.Uri;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -33,6 +30,8 @@ import ch.epfl.sdp.peakar.user.services.FirebaseAuthService;
 import static ch.epfl.sdp.peakar.database.DatabaseTest.databaseRefRoot;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.SHORT_SLEEP_TIME;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.USER_SCORE;
+import static ch.epfl.sdp.peakar.utils.UserTestHelper.registerAuthUser;
+import static ch.epfl.sdp.peakar.utils.UserTestHelper.removeAuthUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -43,35 +42,6 @@ import static org.junit.Assert.assertTrue;
 public class AuthAccountTest {
     private static String user1;
     private static String user2;
-
-    // Helper method, register a new test user using a certain random offset given as input
-    public static void registerAuthUser() {
-        // Generate user or force retrieve data if a user is already here.
-        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-            AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
-            AuthService.getInstance().authAnonymously();
-
-        }
-        else {
-            FirebaseAuthService.getInstance().forceRetrieveData();
-        }
-    }
-
-    // Helper method, delete the current user
-    public static void removeAuthUser() {
-        databaseRefRoot.child(Database.CHILD_USERS).child(AuthService.getInstance().getID()).removeValue();
-        Task<Void> fbTask = null;
-        FirebaseUser oldUser = FirebaseAuth.getInstance().getCurrentUser();
-        AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
-        if(oldUser != null) fbTask = oldUser.delete();
-        try {
-            if(oldUser!=null) {
-                Tasks.await(fbTask);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     /* Set up the environment */
     @BeforeClass

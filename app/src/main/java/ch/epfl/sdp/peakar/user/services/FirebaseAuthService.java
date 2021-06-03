@@ -34,7 +34,6 @@ public class FirebaseAuthService implements AuthService {
             instance = new FirebaseAuthService();
             // On class initialization, retrieve any previously logged account and, if necessary, the account data
             authAccount = FirebaseAuth.getInstance().getCurrentUser() != null ? RemoteAuthAccount.getInstance(FirebaseAuth.getInstance().getCurrentUser().getUid()) : null;
-            if(authAccount != null) new Thread (() -> authAccount.retrieveData()).start();
         }
         return instance;
     }
@@ -130,7 +129,7 @@ public class FirebaseAuthService implements AuthService {
                 // Wait for the sign out to finish
                 Tasks.await(signOutTask);
             } catch (Exception e) {
-                Log.d("AUTH", "signOut: failed");
+                Log.d("FirebaseAuthService", "signOut: failed");
             }
         }
     }
