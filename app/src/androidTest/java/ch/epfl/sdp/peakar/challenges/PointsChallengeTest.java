@@ -20,8 +20,8 @@ import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.services.FirebaseAuthService;
 import ch.epfl.sdp.peakar.utils.TestingConstants;
 
-import static ch.epfl.sdp.peakar.user.AuthAccountTest.registerAuthUser;
-import static ch.epfl.sdp.peakar.user.AuthAccountTest.removeAuthUser;
+import static ch.epfl.sdp.peakar.utils.UserTestHelper.registerAuthUser;
+import static ch.epfl.sdp.peakar.utils.UserTestHelper.removeAuthUser;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.BASIC_USERNAME;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.CHALLENGE_DURATION_DAYS;
 import static org.junit.Assert.assertEquals;
