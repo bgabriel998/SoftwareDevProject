@@ -30,13 +30,13 @@
     <string name='insert_username_button'>Insert your username here</string>
     <string name='change_username_button'>Change username</string>
     <string name='submit_username_button'>Change</string>
-    <string name='registered_username' translatable="false">Welcome to PeakAR community!</string>
-    <string name='database_fail' translatable="false">Oops, an error occurred. Make sure you are online!</string>
+    <string name='registered_username'>Welcome to PeakAR community!</string>
+    <string name='database_fail'>Oops, an error occurred. Make sure you are online!</string>
 
     <!-- FRIENDS SYSTEM -->
     <string name='add_friend_button'>Add a friend</string>
     <string name='friends_button'>Friends</string>
-    <string name='insert_friend_button' translatable="false">Insert here</string>
+    <string name='insert_friend_button'>Insert here</string>
     <string name='submit_friend_button'>Add</string>
     <string name='add_current_username'>You can\'t add yourself to your friends!</string>
     <string name='friend_already_added'>The user is already your friend.</string>
