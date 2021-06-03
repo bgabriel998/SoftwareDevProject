@@ -265,8 +265,6 @@ public class SettingsActivityTest{
 
         //Check that the selection happened
         String endString = prefs.getString(activity.getResources().getString(R.string.language_key), "");
-        Intents.release();
-        Intents.init();
         assertThat(startString, not(is(endString)));
 
         startString = endString;

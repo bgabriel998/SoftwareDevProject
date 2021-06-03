@@ -16,6 +16,7 @@ import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.points.POICache;
 import ch.epfl.sdp.peakar.utils.MenuBarHandler;
 import ch.epfl.sdp.peakar.utils.OnSwipeTouchListener;
+import ch.epfl.sdp.peakar.utils.SettingsUtilities;
 
 import static ch.epfl.sdp.peakar.utils.SettingsUtilities.updateLanguage;
 import static ch.epfl.sdp.peakar.utils.StatusBarHandler.StatusBarLightGrey;
@@ -55,7 +56,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
                 break;
             case "language_preference":
                 updateLanguage(this);
-                sendBroadcast(new Intent("Language.changed"));
+                SettingsUtilities.restartActivity(this);
                 break;
             case "offline_mode_preference":
                 offlineModeChanged();
