@@ -4,10 +4,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
@@ -25,6 +30,8 @@ import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setVisibilityTopBa
 
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
+    private static final int NOTIFICATION_BAR_DP = 24;
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
@@ -32,6 +39,20 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Set top padding for the settings
+        final RecyclerView rv = getListView();
+        int marginInPx = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                NOTIFICATION_BAR_DP,
+                getResources().getDisplayMetrics()
+        );
+        rv.setPadding(0, marginInPx, 0, 0);
     }
 
     @Override

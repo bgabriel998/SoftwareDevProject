@@ -72,4 +72,5 @@
     <string name="switch_all">All</string>
     <string name="switch_friends">Friends</string>
     <string name="empty_friends">No Friends</string>
+    <string name="internet_connection_needed_social">You are in offline mode. Please disable offline mode to access to the social section of PeakAR!</string>
 </resources>

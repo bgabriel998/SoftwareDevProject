@@ -52,6 +52,7 @@ import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.camera.CameraUiView;
 import ch.epfl.sdp.peakar.camera.Compass;
 import ch.epfl.sdp.peakar.camera.CompassListener;
+import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.points.UserPoint;
 import ch.epfl.sdp.peakar.user.score.UserScore;
@@ -271,7 +272,7 @@ public class CameraFragment extends Fragment{
         List<POIPoint> discoveredPOIPoints = cameraUiView.getDiscoveredPOIPoints();
         AuthService service = AuthService.getInstance();
         AuthAccount acc = service.getAuthAccount();
-        if(acc != null && !discoveredPOIPoints.isEmpty()){
+        if(acc != null && !discoveredPOIPoints.isEmpty() && Database.getInstance().isOnline()){
             if(!acc.getUsername().equals(Account.USERNAME_BEFORE_REGISTRATION)){
                 UserScore userScore = new UserScore(getContext());
                 userScore.updateUserScoreAndDiscoveredPeaks((ArrayList<POIPoint>) discoveredPOIPoints);

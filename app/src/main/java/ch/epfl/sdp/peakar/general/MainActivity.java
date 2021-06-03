@@ -41,6 +41,17 @@ public class MainActivity extends AppCompatActivity {
         MenuBarHandlerFragments.setup(this, viewPager);
     }
 
+    /**
+     * Sets the viewPager to a certain item, used to change the item from the fragments directly
+     *
+     * @param position new item to be displayed
+     */
+    public void setCurrentPagerItem(int position){
+        if(viewPager!=null){
+            viewPager.setCurrentItem(position);
+        }
+    }
+
     @Override
     public void onBackPressed() {
         //Remove duplicates

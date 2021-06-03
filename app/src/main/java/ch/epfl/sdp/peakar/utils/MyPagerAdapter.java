@@ -24,7 +24,6 @@ public class MyPagerAdapter extends FragmentStateAdapter {
         super(fa);
     }
 
-
     @NonNull
     @Override
     public Fragment createFragment(int position) {

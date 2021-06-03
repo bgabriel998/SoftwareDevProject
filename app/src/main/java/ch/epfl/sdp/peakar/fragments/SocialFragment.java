@@ -1,6 +1,7 @@
 package ch.epfl.sdp.peakar.fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
@@ -8,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -27,6 +30,7 @@ import java.util.Optional;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
+import ch.epfl.sdp.peakar.general.MainActivity;
 import ch.epfl.sdp.peakar.social.RemoteSocialList;
 import ch.epfl.sdp.peakar.social.SocialItem;
 import ch.epfl.sdp.peakar.social.SocialListAdapter;
@@ -35,6 +39,7 @@ import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 
 import static ch.epfl.sdp.peakar.general.MainActivity.lastFragmentIndex;
+import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.SETTINGS_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.SOCIAL_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.MenuBarHandlerFragments.updateSelectedIcon;
 import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarLightGrey;
@@ -56,6 +61,7 @@ public class SocialFragment extends Fragment {
     private SocialListAdapter friendsAdapter;
     private View emptyFriendsView;
     private ConstraintLayout container;
+    private SharedPreferences sharedPreferences;
 
     public SocialFragment() {
         // Required empty public constructor
@@ -88,6 +94,7 @@ public class SocialFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         container = (ConstraintLayout) view;
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
     }
 
     @Override
@@ -117,6 +124,16 @@ public class SocialFragment extends Fragment {
                     else setGlobalView();
                 });
 
+        if(sharedPreferences.getBoolean(getString(R.string.offline_mode_key), false)){
+            Snackbar snackbar = Snackbar.make(container.findViewById(R.id.social_list),
+                    getString(R.string.internet_connection_needed_social), Snackbar.LENGTH_LONG);
+            snackbar.setAction("Settings", v -> {
+                MainActivity activity = (MainActivity) getActivity();
+                activity.setCurrentPagerItem(SETTINGS_FRAGMENT_INDEX);
+            });
+            snackbar.setActionTextColor(requireContext().getColor(R.color.BabyBlue));
+            snackbar.show();
+        }
     }
 
     private void initFragment() {
@@ -218,7 +235,7 @@ public class SocialFragment extends Fragment {
      */
     public void switchToProfileActivity(SocialItem item) {
         if(!Database.getInstance().isOnline()) {
-            Snackbar snackbar = Snackbar.make(container.findViewById(android.R.id.content), ProfileOutcome.FAIL.getMessage(), Snackbar.LENGTH_LONG);
+            Snackbar snackbar = Snackbar.make(container.findViewById(R.id.social_list), ProfileOutcome.FAIL.getMessage(), Snackbar.LENGTH_LONG);
             snackbar.show();
             return;
         }
