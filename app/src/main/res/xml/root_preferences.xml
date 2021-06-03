@@ -11,21 +11,6 @@
             android:dialogIcon="@drawable/ic_baseline_distance_24"
             android:icon="@drawable/ic_baseline_distance_24"
             android:defaultValue="third_range"/>
-        <ListPreference
-            android:defaultValue="siSystem"
-            android:entries="@array/measSys_entries"
-            android:entryValues="@array/measSys_values"
-            android:key="@string/measSys_key"
-            android:title="@string/measSys_title"
-            app:useSimpleSummaryProvider="true"
-            android:dialogIcon="@drawable/ic_baseline_moving_24"
-            android:icon="@drawable/ic_baseline_moving_24"/>
-
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/night_mode_key"
-            android:title="@string/night_mode_title"
-            android:icon="@drawable/ic_baseline_nightlight_24"/>
 
         <SwitchPreference
             android:defaultValue="false"

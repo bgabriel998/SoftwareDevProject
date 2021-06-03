@@ -17,7 +17,7 @@ import ch.epfl.sdp.peakar.utils.UIUtils;
  * List adapter for collected items to set correct text for each collected item.
  * TODO Rename to remove New part
  */
-public class NewCollectionListAdapter extends ArrayAdapter<NewCollectedItem> {
+public class CollectionListAdapter extends ArrayAdapter<CollectedItem> {
 
     private final int resourceLayout;
     private final Context mContext;
@@ -28,7 +28,7 @@ public class NewCollectionListAdapter extends ArrayAdapter<NewCollectedItem> {
      * @param resource the resource layout to create list items of
      * @param items list items.
      */
-    public NewCollectionListAdapter(Context context, int resource, List<NewCollectedItem> items) {
+    public CollectionListAdapter(Context context, int resource, List<CollectedItem> items) {
         super(context, resource, items);
         resourceLayout = resource;
         mContext = context;
@@ -57,7 +57,7 @@ public class NewCollectionListAdapter extends ArrayAdapter<NewCollectedItem> {
      * @param view the view to place text on.
      * @param item the item to base text off.
      */
-    private void setupItemView(View view, NewCollectedItem item) {
+    private void setupItemView(View view, CollectedItem item) {
         if (item != null) {
             TextView nameText = view.findViewById(R.id.collected_name);
             TextView heightText = view.findViewById(R.id.collected_height);
