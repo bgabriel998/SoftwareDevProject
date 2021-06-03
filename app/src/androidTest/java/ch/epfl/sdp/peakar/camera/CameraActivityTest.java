@@ -85,13 +85,6 @@ public class CameraActivityTest {
         Intents.release();
     }
 
-    /* Test that menu bars settings icon works as intended */
-// TODO Fix test.
-    //@Test
-    public void TestMenuBarSettings(){
-        MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_settings);
-    }
-
     /* Test that menu bars gallery icon works as intended */
     @Test
     public void TestMenuBarGallery(){

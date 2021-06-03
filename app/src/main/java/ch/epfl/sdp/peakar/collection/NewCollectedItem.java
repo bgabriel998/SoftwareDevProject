@@ -3,7 +3,7 @@ package ch.epfl.sdp.peakar.collection;
 /**
  * Item holding all information regarding a collected peak.
  */
-public class CollectedItem implements Comparable<CollectedItem>{
+public class NewCollectedItem implements Comparable< NewCollectedItem >{
     private final String name;
     private final int points;
     private final int height;
@@ -24,8 +24,8 @@ public class CollectedItem implements Comparable<CollectedItem>{
      * @param date item got collected.
      * @param country of collected.
      */
-    public CollectedItem(String name, int points, int height, boolean topInCountry,
-                         float longitude, float latitude, String date, String country) {
+    public NewCollectedItem(String name,int points, int height, boolean topInCountry,
+                            float longitude, float latitude, String date, String country) {
         this.name = name;
         this.points = points;
         this.height = height;
@@ -98,7 +98,7 @@ public class CollectedItem implements Comparable<CollectedItem>{
      * @return collected item with highest number of points
      */
     @Override
-    public int compareTo(CollectedItem c){
+    public int compareTo(NewCollectedItem c){
         return this.getPoints().compareTo(c.getPoints());
     }
 }

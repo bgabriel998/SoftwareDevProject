@@ -6,11 +6,9 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.matcher.IntentMatchers;
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 
 import ch.epfl.sdp.peakar.R;
@@ -86,7 +84,6 @@ public class OnSwipeTouchListenerTest {
     }
 
     //TODO Fix swipes on map
-
     /* Tests that a swipe from right to left on the MapActivity opens the SocialActivity */
     //@Test
     public void TestSwipleRightToLeftMap(){
