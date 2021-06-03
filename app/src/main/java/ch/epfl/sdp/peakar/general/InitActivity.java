@@ -1,15 +1,11 @@
 package ch.epfl.sdp.peakar.general;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-<<<<<<< HEAD
 import android.os.StrictMode;
-=======
 import android.util.Log;
->>>>>>> 1341ca980bbc377b877ca525fd1d3a2b3fd31d18
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -50,7 +46,6 @@ public class InitActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-<<<<<<< HEAD
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
@@ -60,16 +55,12 @@ public class InitActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             SettingsUtilities.checkForLanguage(this);
         }
-=======
-
-        setContentView(R.layout.activity_init);
 
         FirebaseApp.initializeApp(this);
 
         Database.init(this);
 
         Log.d("InitActivity", "onCreate: online ? " + Database.getInstance().isOnline());
->>>>>>> 1341ca980bbc377b877ca525fd1d3a2b3fd31d18
 
         createPermissionListener();
 
@@ -85,23 +76,6 @@ public class InitActivity extends AppCompatActivity {
         ProgressBar progressBar = findViewById(R.id.progressBarInitActivity);
         progressBar.setVisibility(View.VISIBLE);
 
-        initApp();
-    }
-
-    /**
-     * Init application global stuff before opening the main menu
-     */
-    private synchronized void initApp(){
-<<<<<<< HEAD
-        new Thread(() -> {
-            if (AuthService.getInstance().getAuthAccount() != null) {
-                AuthService.getInstance().getAuthAccount().init();
-            }
-        }).start();
-=======
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            SettingsUtilities.checkForLanguage(this);
-        }
     }
 
     /**
@@ -114,20 +88,11 @@ public class InitActivity extends AppCompatActivity {
     }
 
     /**
-     * Launches the application if the camera permission is granted
-     * TODO replace activity with CameraActivity if permission is given
-     * TODO replace activity with another activity then CameraActivity if permission is given
+     * Launches the application
      */
     public void launchApp(){
-        if(hasCameraPermission()){
-            Intent intent = new Intent(this, CameraActivity.class);
-            startActivity(intent);
-        }
-        else{
-            Intent intent = new Intent(this, SocialActivity.class);
-            startActivity(intent);
-        }
->>>>>>> 1341ca980bbc377b877ca525fd1d3a2b3fd31d18
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
 
     /**
@@ -138,14 +103,9 @@ public class InitActivity extends AppCompatActivity {
         allPermissionsListener = new MultiplePermissionsListener() {
             @Override
             public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
-<<<<<<< HEAD
                 if(hasLocationPermission(getApplicationContext())){
                     ComputePOIPoints.getInstance(getApplicationContext());
                 }
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-=======
-                ComputePOIPoints.getInstance(getApplicationContext());
                 new Thread(() -> {
                     Log.d("InitActivity", "onPermissionsChecked: online ? " + Database.getInstance().isOnline());
                     // If user is online, retrieve data
@@ -167,7 +127,6 @@ public class InitActivity extends AppCompatActivity {
                     }
                     runOnUiThread(() -> launchApp());
                 }).start();
->>>>>>> 1341ca980bbc377b877ca525fd1d3a2b3fd31d18
             }
 
             @Override
