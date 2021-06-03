@@ -39,6 +39,14 @@ public class TestingConstants {
     public static final double POINTE_DE_LAPAZ_LONG = 6.812914656881065;
     public static final double POINTE_DE_LAPAZ_ALT = 3660;
 
+    public static final double NEAR_MONT_BLANC_ONE_LAT = 45.802537;
+    public static final double NEAR_MONT_BLANC_ONE_LON = 6.850328;
+
+    public static final double NEAR_MONT_BLANC_TWO_LAT = 45.8326;
+    public static final double NEAR_MONT_BLANC_TWO_LON = 6.8652;
+    public static final double NEAR_MONT_BLANC_TWO_ALT = 4808;
+
+
     //Geonames Handler testing constants
     public static final int MILLI_SEC_TO_SEC = 1000;
     public static final int DEFAULT_QUERY_MAX_RESULT = 300;

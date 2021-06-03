@@ -204,26 +204,26 @@ public class TopographyAsyncTest {
         int[][] oldTopographyMap = topographyPair.first;
 
         // set location near the Mont Blanc
-        userPoint.setLocation(TestingConstants.MONT_BLANC_LAT, TestingConstants.MONT_BLANC_LONG, 0, 0);
+        userPoint.setLocation(TestingConstants.NEAR_MONT_BLANC_ONE_LAT, TestingConstants.NEAR_MONT_BLANC_ONE_LON, 0, 0);
         elevationMap.updateElevationMatrix();
 
         //Wait for the map to be updated
         int counter=0;
         while(elevationMap.getTopographyMap()==oldTopographyMap && counter<50){
-            Thread.sleep(1000);
+            Thread.sleep(TestingConstants.THREAD_SLEEP_1S);
             counter++;
         }
 
         // check the altitude around the Mont Blanc Peak using indexes
-        indexes = elevationMap.getIndexesFromCoordinates(45.8326, 6.8652);
+        indexes = elevationMap.getIndexesFromCoordinates(TestingConstants.NEAR_MONT_BLANC_TWO_LAT, TestingConstants.NEAR_MONT_BLANC_TWO_LON);
         // check the indexes around the Mont Blanc Peak
         Assert.assertEquals(new Pair<>(502, 790), indexes);
         Assert.assertNotNull(indexes);
         Assert.assertNotNull(indexes.first);
         Assert.assertNotNull(indexes.second);
-        Assert.assertEquals(TestingConstants.MONT_BLANC_ALT, elevationMap.getAltitudeAtLocation(indexes.first, indexes.second), 200);
+        Assert.assertEquals(TestingConstants.NEAR_MONT_BLANC_TWO_ALT, elevationMap.getAltitudeAtLocation(indexes.first, indexes.second), 200);
         // check the altitude around the Mont Blanc Peak using coordinates
-        Assert.assertEquals(TestingConstants.MONT_BLANC_ALT, elevationMap.getAltitudeAtLocation(45.8326, 6.8652), 200);
+        Assert.assertEquals(TestingConstants.NEAR_MONT_BLANC_TWO_ALT, elevationMap.getAltitudeAtLocation(TestingConstants.NEAR_MONT_BLANC_TWO_LAT, TestingConstants.NEAR_MONT_BLANC_TWO_LON), 200);
     }
 
 }
