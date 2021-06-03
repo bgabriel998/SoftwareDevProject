@@ -92,7 +92,6 @@ public class SettingsMapActivity extends AppCompatActivity {
     /**
      * Downloads and saves the POIs and elevation map around the selectedPoint.
      */
-    // TODO handle disconnected from server (discuss with others)
     public void saveToJson() {
 
         downloadRunning = true;
@@ -138,8 +137,14 @@ public class SettingsMapActivity extends AppCompatActivity {
             @Override
             public void onResponseReceived(Pair<int[][], Double> topography) {
                 super.onResponseReceived(topography);
-                saveObject.topography = topography;
-                addPOIsToContainer(saveObject, selectedPoint);
+                if (topography == null) {
+                    downloadRunning = false;
+                    Toast.makeText(thisActivity, thisActivity.getResources().getString(R.string.download_error_toast), Toast.LENGTH_SHORT).show();
+                    onBackPressed();
+                } else {
+                    saveObject.topography = topography;
+                    addPOIsToContainer(saveObject, selectedPoint);
+                }
             }
         }.execute(selectedPoint);
     }
