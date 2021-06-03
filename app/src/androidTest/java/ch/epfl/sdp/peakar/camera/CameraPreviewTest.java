@@ -34,14 +34,11 @@ import androidx.test.rule.GrantPermissionRule;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -49,7 +46,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.fragments.CameraFragment;
 import ch.epfl.sdp.peakar.general.MainActivity;
 import ch.epfl.sdp.peakar.utils.UITestHelper;
 
@@ -58,11 +54,15 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static ch.epfl.sdp.peakar.utils.TestingConstants.*;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.DISPLAY_ALL_POIS;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.DISPLAY_POIS_IN_SIGHT;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.DISPLAY_POIS_OUT_OF_SIGHT;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.SHORT_SLEEP_TIME;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.THREAD_SLEEP_1S;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.THREAD_SLEEP_6S;
 import static ch.epfl.sdp.peakar.utils.UITestHelper.getGalleryFiles;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -90,8 +90,10 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
     @UiThreadTest
     @After
     public void teardown() {
-        provider.unbindAll();
-        executor.shutdown();
+        if(provider!=null)
+            provider.unbindAll();
+        if(executor!=null)
+            executor.shutdown();
     }
 
     /**

@@ -60,7 +60,7 @@ import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
-public class SocialActivityTest {
+public class SocialFragmentTest {
     private static String user1;
     private static String user2;
     private static final int user2score = 100;

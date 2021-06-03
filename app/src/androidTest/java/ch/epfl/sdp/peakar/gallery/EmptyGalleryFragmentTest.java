@@ -23,13 +23,14 @@ import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibilit
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.GALLERY_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.THREAD_SLEEP_1S;
 import static ch.epfl.sdp.peakar.utils.UITestHelper.withBackgroundColor;
 
 /**
  * Tests for a gallery activity when the gallery is empty
  */
 @RunWith(AndroidJUnit4.class)
-public class EmptyGalleryActivityTest {
+public class EmptyGalleryFragmentTest {
     @Rule
     public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
 
@@ -40,9 +41,10 @@ public class EmptyGalleryActivityTest {
 
     /* Create Intent */
     @Before
-    public void setup(){
+    public void setup() throws InterruptedException {
         Intents.init();
         testRule.getScenario().onActivity(activity -> activity.setCurrentPagerItem(GALLERY_FRAGMENT_INDEX));
+        Thread.sleep(THREAD_SLEEP_1S);
     }
 
     /* Release Intent */

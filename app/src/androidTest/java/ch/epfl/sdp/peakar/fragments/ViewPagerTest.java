@@ -44,7 +44,8 @@ public class ViewPagerTest {
      * Test that CameraFragment is displayed at startup
      */
     @Test
-    public void CameraFragmentTest(){
+    public void CameraFragmentTest() throws InterruptedException {
+        Thread.sleep(THREAD_SLEEP_1S);
         onView(withId(R.id.cameraFragmentLayout)).check(matches(isCompletelyDisplayed()));
     }
 

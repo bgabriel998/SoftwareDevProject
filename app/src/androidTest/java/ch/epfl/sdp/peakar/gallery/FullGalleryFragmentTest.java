@@ -34,7 +34,7 @@ import static org.hamcrest.Matchers.allOf;
  * Tests for a gallery activity with images
  */
 @RunWith(AndroidJUnit4.class)
-public class FullGalleryActivityTest {
+public class FullGalleryFragmentTest {
     @Rule
     public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
 

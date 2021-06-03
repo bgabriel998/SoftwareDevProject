@@ -451,11 +451,15 @@ public class CameraFragment extends Fragment{
     public void onDestroy() {
         super.onDestroy();
         //Unbind use-cases before exiting
-        cameraProvider.unbindAll();
+        if(cameraProvider!=null)
+            cameraProvider.unbindAll();
         // Shut down our background executor
-        cameraExecutor.shutdown();
-        compass.stop();
-        displayManager.unregisterDisplayListener(displayListener);
+        if(cameraExecutor!=null)
+            cameraExecutor.shutdown();
+        if(compass!=null)
+            compass.stop();
+        if(displayManager!=null)
+            displayManager.unregisterDisplayListener(displayListener);
     }
 
     /**

@@ -104,7 +104,10 @@ public class GalleryFragment extends Fragment {
      */
     private void setupGallery(){
         List<String> imagePaths = StorageHandler.getImagePaths(getContext());
-        if (!imagePaths.isEmpty()) {
+        if (imagePaths.isEmpty()) {
+            container.findViewById(R.id.gallery_empty).setVisibility(View.VISIBLE);
+        }
+        else {
             container.findViewById(R.id.gallery_empty).setVisibility(View.GONE);
         }
 

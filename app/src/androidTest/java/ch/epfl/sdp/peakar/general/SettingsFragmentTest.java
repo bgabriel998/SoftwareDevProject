@@ -40,7 +40,7 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
-public class SettingsActivityTest{
+public class SettingsFragmentTest {
 
     @Rule
     public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
@@ -278,12 +278,6 @@ public class SettingsActivityTest{
         //select first option
         onView(withText(activity.getResources().getStringArray(R.array.language_entries)[0])).perform(click());
         //Let context retrieves stability point
-    }
-
-    public void TestToolbarTitle(){
-        String TOOLBAR_TITLE = "Settings";
-        ViewInteraction greetingText = Espresso.onView(withId(R.id.toolbarTitle));
-        greetingText.check(matches(withText(TOOLBAR_TITLE)));
     }
 
     /*Test preference allow caching button click*/
