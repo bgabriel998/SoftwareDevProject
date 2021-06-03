@@ -100,4 +100,7 @@
         <item>7 giorni</item>
         <item>14 giorni</item>
     </string-array>
+    <string name="database_fail">Ops, si è verificato un errore. Assicurati di essere online!</string>
+    <string name="registered_username">Benvenuto nella comunità di PeakAR!</string>
+    <string name="insert_friend_button">Inserire qui</string>
 </resources>

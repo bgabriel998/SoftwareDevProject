@@ -74,4 +74,7 @@
     <string name="switch_all">Alle</string>
     <string name="switch_friends">Freunde</string>
     <string name="empty_friends">Keine Freunde</string>
+    <string name="insert_friend_button">Hier einfügen</string>
+    <string name="database_fail">Upsi Upsala, ein Fehler ist aufgetreten. Überprüfen Sie ob Sie online sind!</string>
+    <string name="registered_username">Wilkommen in PeakAR community!</string>
 </resources>

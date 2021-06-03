@@ -94,4 +94,7 @@
     <string name="enter_challenge_name">Entrer un nom de challenge</string>
     <string name="cancel_button">Annuler</string>
     <string name="ok_button">OK</string>
+    <string name="insert_friend_button">Ajouter ici</string>
+    <string name="database_fail">Oups, une erreur est survenue, veuillez verifier que vous êtes en ligne!</string>
+    <string name="registered_username">Bienvene dans PeakAR community!</string>
 </resources>
