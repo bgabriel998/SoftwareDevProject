@@ -52,6 +52,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Gets the viewPager current item
+     *
+     * @return position of current item
+     */
+    public int getCurrentPagerItem(){
+        return viewPager.getCurrentItem();
+    }
+
     @Override
     public void onBackPressed() {
         //Remove duplicates
