@@ -1,16 +1,11 @@
 package ch.epfl.sdp.peakar.fragments;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
-import androidx.preference.PreferenceManager;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -19,7 +14,12 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.google.android.material.snackbar.BaseTransientBottomBar;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
+
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -37,14 +37,15 @@ import ch.epfl.sdp.peakar.social.SocialListAdapter;
 import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
 import ch.epfl.sdp.peakar.user.services.AuthService;
+import ch.epfl.sdp.peakar.user.services.OtherAccount;
 
 import static ch.epfl.sdp.peakar.general.MainActivity.lastFragmentIndex;
+import static ch.epfl.sdp.peakar.utils.MenuBarHandlerFragments.updateSelectedIcon;
 import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.SETTINGS_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.SOCIAL_FRAGMENT_INDEX;
-import static ch.epfl.sdp.peakar.utils.MenuBarHandlerFragments.updateSelectedIcon;
 import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarLightGrey;
-import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupSwitch;
 import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupGreyTopBar;
+import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupSwitch;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,6 +63,7 @@ public class SocialFragment extends Fragment {
     private View emptyFriendsView;
     private ConstraintLayout container;
     private SharedPreferences sharedPreferences;
+    private String authUserID;
 
     public SocialFragment() {
         // Required empty public constructor
@@ -101,13 +103,23 @@ public class SocialFragment extends Fragment {
     public void onResume() {
         super.onResume();
         requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        updateSelectedIcon(this);
         if(lastFragmentIndex.contains(SOCIAL_FRAGMENT_INDEX)) {
             lastFragmentIndex.remove((Object)SOCIAL_FRAGMENT_INDEX);
         }
         lastFragmentIndex.push(SOCIAL_FRAGMENT_INDEX);
         if(returnToFragment){
             reloadFragment();
+            // If the user is not the same, reload the friends list
+            if(AuthService.getInstance().getID() == null || !AuthService.getInstance().getID().equals(authUserID)) {
+                SocialListAdapter oldFriendAdapter = friendsAdapter;
+                authUserID = AuthService.getInstance().getID();
+                friendsAdapter = setupFriendsListAdapter();
+
+                // If the list that is shown is the list of friends, immediately update the view
+                if(listView.getAdapter().equals(oldFriendAdapter)){
+                    setFriendsView();
+                }
+            }
         }
         else{
             initFragment();
@@ -116,6 +128,7 @@ public class SocialFragment extends Fragment {
     }
 
     private void reloadFragment() {
+        updateSelectedIcon(this);
         StatusBarLightGrey(this);
         setupGreyTopBar(this);
         setupSwitch(this, getString(R.string.switch_all), getString(R.string.switch_friends),
@@ -192,12 +205,16 @@ public class SocialFragment extends Fragment {
      * @return a list adapter synced with the database displaying all friends.
      */
     private SocialListAdapter setupFriendsListAdapter() {
+        friendSocialItems.clear();
         SocialListAdapter friendsAdapter = new SocialListAdapter(getContext(),
                 R.layout.social_profile_item,
                 friendSocialItems,
                 Collections.synchronizedList(new ArrayList<>()));
         friendsAdapter.setNotifyOnChange(false);
-        if(AuthService.getInstance().getAuthAccount() != null) RemoteSocialList.synchronizeFriends(friendSocialItems, friendsAdapter);
+        if(AuthService.getInstance().getAuthAccount() != null) {
+            authUserID = AuthService.getInstance().getID();
+            RemoteSocialList.synchronizeFriends(friendSocialItems, friendsAdapter);
+        }
         return friendsAdapter;
     }
 
@@ -239,9 +256,25 @@ public class SocialFragment extends Fragment {
             snackbar.show();
             return;
         }
-        Intent intent = new Intent(getContext(), NewProfileActivity.class);
-        fillIntent(intent, item);
-        startActivity(intent);
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setView(R.layout.progress);
+        Dialog loadingDialog = builder.create();
+        loadingDialog.show();
+        loadingDialog.setCanceledOnTouchOutside(false);
+        loadingDialog.setCancelable(false);
+
+        new Thread(() -> {
+            // Load the account
+            OtherAccount.getInstance(item.getUid());
+
+            requireActivity().runOnUiThread(() -> {
+                loadingDialog.dismiss();
+
+                Intent intent = new Intent(requireContext(), NewProfileActivity.class);
+                fillIntent(intent, item);
+                startActivity(intent);
+            });
+        }).start();
     }
 
     /**
