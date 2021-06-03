@@ -15,8 +15,7 @@
         <item>fourth_range</item>
         <item>fifth_range</item>
     </string-array>
-
-
+    
     <!-- language Preference -->
     <string-array name="language_entries">
         <item>English</item>
@@ -36,9 +35,9 @@
 
     <!-- camera display POIs Preference -->
     <string-array name="displayPOIs_entries">
-        <item>Display all mountains</item>
-        <item>Only display mountains in line of sight</item>
-        <item>Only display mountains out line of sight</item>
+        <item>Alle Berge anzeigen</item>
+        <item>Nur Berge in der Sichtlinie anzeigen</item>
+        <item>Nur Berge außerhalb der Sichtlinie anzeigen</item>
     </string-array>
 
     <string-array name="displayPOIs_values">
