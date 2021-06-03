@@ -2,6 +2,7 @@
 package ch.epfl.sdp.peakar.points;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -148,7 +149,9 @@ public class ComputePOIPoints extends Observable implements Observer{
                 }
                 applyFilteringLabeledPOIs(topography);
             } else {
-                Toast.makeText(context, context.getResources().getString(R.string.outsideOfDownloadedBox), Toast.LENGTH_LONG).show();
+                if(context instanceof Activity){
+                    Toast.makeText(context, context.getResources().getString(R.string.outsideOfDownloadedBox), Toast.LENGTH_LONG).show();
+                }
                 resetPOIs();
                 Log.d("computePOIPointsInstance", "Distance is > " + MAX_LOADING_DISTANCE);
             }

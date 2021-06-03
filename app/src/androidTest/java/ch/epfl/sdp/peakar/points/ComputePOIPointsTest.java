@@ -1,6 +1,5 @@
 package ch.epfl.sdp.peakar.points;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -8,13 +7,11 @@ import androidx.core.util.Pair;
 import androidx.preference.PreferenceManager;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.intent.Intents;
-import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
 import org.osmdroid.util.BoundingBox;
 
@@ -34,8 +31,6 @@ public class ComputePOIPointsTest {
 
     private static ComputePOIPoints computePOIPointsInstance;
 
-    @Rule
-    public GrantPermissionRule grantCameraPermissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
     private static UserPoint userPoint;
     private static Context mContext;
 
