@@ -21,6 +21,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.SETTINGS_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.SHORT_SLEEP_TIME;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.THREAD_SLEEP_1S;
 import static junit.framework.TestCase.assertEquals;
 
@@ -76,6 +77,7 @@ public class ViewPagerTest {
     @Test
     public void SettingsFragmentTest() throws InterruptedException {
         onView(withId(R.id.viewPager)).perform(swipeRight());
+        Thread.sleep(SHORT_SLEEP_TIME);
         onView(withId(R.id.viewPager)).perform(swipeRight());
         Thread.sleep(THREAD_SLEEP_1S);
         testRule.getScenario().onActivity(activity -> assertEquals(SETTINGS_FRAGMENT_INDEX, activity.getCurrentPagerItem()));
@@ -87,6 +89,7 @@ public class ViewPagerTest {
     @Test
     public void SocialFragmentTest() throws InterruptedException {
         onView(withId(R.id.viewPager)).perform(swipeLeft());
+        Thread.sleep(SHORT_SLEEP_TIME);
         onView(withId(R.id.viewPager)).perform(swipeLeft());
         Thread.sleep(THREAD_SLEEP_1S);
         onView(ViewMatchers.withId(R.id.socialFragmentLayout)).check(matches(isCompletelyDisplayed()));
