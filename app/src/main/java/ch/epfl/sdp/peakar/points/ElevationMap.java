@@ -49,7 +49,7 @@ public class ElevationMap {
         this.boundingBoxCenter = new POIPoint(this.boundingBox.getCenterWithDateLine());
         topographyMap = topography.first;
         mapCellSize = topography.second;
-        this.context = context;
+        ElevationMap.context = context;
     }
 
     /**
@@ -155,8 +155,8 @@ public class ElevationMap {
         if (topographyMap != null) {
             double distanceFromCenterRow = latitude - boundingBox.getCenterLatitude();
             double distanceFromCenterCol = longitude - boundingBox.getCenterLongitude();
-            int row = (int) (topographyMap.length / 2 - distanceFromCenterRow / this.mapCellSize);
-            int col = (int) (topographyMap[0].length / 2 + distanceFromCenterCol / this.mapCellSize);
+            int row = (int) (topographyMap.length / 2 - distanceFromCenterRow / mapCellSize);
+            int col = (int) (topographyMap[0].length / 2 + distanceFromCenterCol / mapCellSize);
             return new Pair<>(
                     Math.max(0, Math.min(topographyMap.length-1, row)),
                     Math.max(0, Math.min(topographyMap[0].length-1, col)));

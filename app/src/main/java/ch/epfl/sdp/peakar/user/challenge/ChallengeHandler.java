@@ -31,7 +31,7 @@ public class ChallengeHandler {
     @SuppressLint("NewApi")
     public static void init(){
         userAccount = AuthService.getInstance().getAuthAccount();
-        challengeExpirationList = new ArrayList<Timer>();
+        challengeExpirationList = new ArrayList<>();
 
         // Replace the account and stop the old timers
         userAccount = AuthService.getInstance().getAuthAccount();
@@ -90,10 +90,7 @@ public class ChallengeHandler {
             //Get the reward that currently logged user has retrieved
             int reward = challenge.endChallenge();
 
-            //TODO --> DISPLAY POP UP TO SHOW
-            // THAT CHALLENGE IS FINISHED ->
-            // use reward to show to the user how many points he gained
-            // if the user loses the challenge reward = 0
+            // Add here actions if something should be displayed when the challenge has finished
 
             //Clean up ChallengeTimerTask
             challengeExpirationList.remove(timer);

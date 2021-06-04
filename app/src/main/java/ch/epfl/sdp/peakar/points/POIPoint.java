@@ -3,7 +3,6 @@ package ch.epfl.sdp.peakar.points;
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.util.GeoPoint;
 
-import java.util.Date;
 import java.util.Objects;
 
 /**

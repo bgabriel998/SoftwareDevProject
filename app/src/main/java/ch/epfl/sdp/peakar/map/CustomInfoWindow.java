@@ -38,9 +38,9 @@ public class CustomInfoWindow extends InfoWindow {
      */
     public void onOpen(Object arg0) {
         //retrieve views
-        LinearLayout layout = (LinearLayout) mView.findViewById(R.id.bubble_layout);
-        TextView txtTitle = (TextView) mView.findViewById(R.id.bubble_title);
-        TextView txtDescription = (TextView) mView.findViewById(R.id.bubble_description);
+        LinearLayout layout = mView.findViewById(R.id.bubble_layout);
+        TextView txtTitle = mView.findViewById(R.id.bubble_title);
+        TextView txtDescription = mView.findViewById(R.id.bubble_description);
 
         //Text information are passed to this class using the arg0 marker input
         //The title field of the marker is used to transfer the string

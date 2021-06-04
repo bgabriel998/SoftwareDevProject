@@ -2,8 +2,6 @@ package ch.epfl.sdp.peakar.camera;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Handler;
-import android.os.Looper;
 
 import androidx.preference.PreferenceManager;
 import androidx.test.core.app.ApplicationProvider;
@@ -25,7 +23,6 @@ import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.general.MainActivity;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 
-import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.SHORT_SLEEP_TIME;
 import static org.junit.Assert.assertTrue;

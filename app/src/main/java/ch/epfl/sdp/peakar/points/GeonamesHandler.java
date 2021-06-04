@@ -54,7 +54,7 @@ public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>
             throw new IllegalArgumentException("UserPoint user location can't be null");
         this.userLocation = userLocation;
         this.poiProvider = new OverpassAPIProvider();
-        this.POIs = new ArrayList<POI>();
+        this.POIs = new ArrayList<>();
 
         //Retrieve the range from the shared preferences
         this.rangeInKm = SettingsUtilities.getSelectedRange(context);
@@ -88,7 +88,7 @@ public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>
         this.queryMaxResults = queryMaxResults;
         this.queryTimeout = queryTimeout;
         this.poiProvider = new OverpassAPIProvider();
-        this.POIs = new ArrayList<POI>();
+        this.POIs = new ArrayList<>();
         this.retryNbr = 0;
     }
 
@@ -112,7 +112,7 @@ public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>
         super.onPostExecute(pois);
         if(pois != null) {
             //Filter out POI where the name or altitude is null
-            POIs = ((ArrayList<POI>) pois).stream().filter(point -> point.mType != null && point.mLocation.getAltitude() != 0).collect(Collectors.toCollection(ArrayList::new));
+            POIs = pois.stream().filter(point -> point.mType != null && point.mLocation.getAltitude() != 0).collect(Collectors.toCollection(ArrayList::new));
             onResponseReceived(POIs);
         }
         else onResponseReceived(null);
@@ -160,7 +160,7 @@ public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>
             JsonElement json = JsonParser.parseString(jString);
             JsonObject jResult = json.getAsJsonObject();
             JsonArray jElements = jResult.get("elements").getAsJsonArray();
-            ArrayList<POI> pois = new ArrayList<POI>(jElements.size());
+            ArrayList<POI> pois = new ArrayList<>(jElements.size());
             for (JsonElement j:jElements){
                 JsonObject jo = j.getAsJsonObject();
                 POI poi = new POI(POI.POI_SERVICE_OVERPASS_API);
