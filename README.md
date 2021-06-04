@@ -1,4 +1,4 @@
-# CS-306 Software Development Project 
+# PeakAR
 ___
 ## Badges
 [![Build Status](https://api.cirrus-ci.com/github/bgabriel998/SoftwareDevProject.svg)](https://cirrus-ci.com/github/bgabriel998/SoftwareDevProject)
@@ -50,14 +50,14 @@ Requirements matching:
 
 ___
 
-## Useful links
-[Software Development Project Moodle](https://moodle.epfl.ch/course/view.php?id=16172)
+## Project info
 
-[Software Development Piazza](https://piazza.com/class/klgt5iozma44iy#)
-
-[Java Documentation](https://docs.oracle.com/en/java/)
-
-[Android Studio Documentation](https://developer.android.com/docs)
+This app was developed as part of the CS-306 Software Development Project at EPFL. You can find further information at the following links:
+* [CS-306 Software Development Project](https://edu.epfl.ch/coursebook/en/software-development-project-CS-306-1)
+* [Software Development Project Moodle](https://moodle.epfl.ch/course/view.php?id=16172)
+* [Software Development Piazza](https://piazza.com/class/klgt5iozma44iy#)
+* [Java Documentation](https://docs.oracle.com/en/java/)
+* [Android Studio Documentation](https://developer.android.com/docs)
 
 ___
 
