@@ -144,8 +144,8 @@ public class GalleryFragment extends Fragment {
     private void initFragment() {
         reloadFragment();
 
-//        setupDots(this, v -> {
-//            // TODO Sort images
-//        });
+        setupDots(this, v -> {
+            // TODO Sort images
+        });
     }
 }
