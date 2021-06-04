@@ -11,21 +11,6 @@
             android:key="@string/range_key"
             android:title="@string/range_title"
             app:useSimpleSummaryProvider="true" />
-        <ListPreference
-            android:defaultValue="siSystem"
-            android:dialogIcon="@drawable/ic_baseline_moving_24"
-            android:entries="@array/measSys_entries"
-            android:entryValues="@array/measSys_values"
-            android:icon="@drawable/ic_baseline_moving_24"
-            android:key="@string/measSys_key"
-            android:title="@string/measSys_title"
-            app:useSimpleSummaryProvider="true" />
-
-        <SwitchPreference
-            android:defaultValue="false"
-            android:icon="@drawable/ic_baseline_nightlight_24"
-            android:key="@string/night_mode_key"
-            android:title="@string/night_mode_title" />
 
         <SwitchPreference
             android:defaultValue="false"
@@ -33,7 +18,6 @@
             android:key="@string/offline_mode_key"
             android:summary="@string/offline_mode_summary"
             android:title="@string/offline_mode_title" />
-        android:icon="@drawable/ic_baseline_signal_cellular_off_24"/>
 
         <SwitchPreference
             android:defaultValue="false"

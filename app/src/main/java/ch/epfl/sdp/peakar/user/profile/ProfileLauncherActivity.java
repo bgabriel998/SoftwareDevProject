@@ -133,8 +133,8 @@ public class ProfileLauncherActivity extends AppCompatActivity {
      * Launches the Profile Activity, if the user is online. Otherwise, force a sign out
      */
     private void launchProfileActivity(){
-        Intent intent = new Intent(this, NewProfileActivity.class);
-        intent.putExtra(NewProfileActivity.AUTH_INTENT, true);
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra(ProfileActivity.AUTH_INTENT, true);
         startActivity(intent);
         finish();
     }

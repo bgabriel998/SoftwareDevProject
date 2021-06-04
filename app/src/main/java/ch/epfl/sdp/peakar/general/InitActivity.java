@@ -88,7 +88,11 @@ public class InitActivity extends AppCompatActivity {
     }
 
     /**
+<<<<<<< HEAD
      * Launches the application
+=======
+     * Launches the application if the camera permission is granted
+>>>>>>> b0c68852dfefa9f6d64cb68a6f72f8e049fd1334
      */
     public void launchApp(){
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);

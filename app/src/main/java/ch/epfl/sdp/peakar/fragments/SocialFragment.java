@@ -35,7 +35,7 @@ import ch.epfl.sdp.peakar.social.RemoteSocialList;
 import ch.epfl.sdp.peakar.social.SocialItem;
 import ch.epfl.sdp.peakar.social.SocialListAdapter;
 import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
-import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
+import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.services.OtherAccount;
 
@@ -278,7 +278,7 @@ public class SocialFragment extends Fragment {
             requireActivity().runOnUiThread(() -> {
                 loadingDialog.dismiss();
 
-                Intent intent = new Intent(requireContext(), NewProfileActivity.class);
+                Intent intent = new Intent(requireContext(), ProfileActivity.class);
                 fillIntent(intent, item);
                 startActivity(intent);
             });
@@ -292,10 +292,10 @@ public class SocialFragment extends Fragment {
      */
     private void fillIntent(Intent intent, SocialItem item) {
         if(AuthService.getInstance().getAuthAccount() != null && AuthService.getInstance().getID().equals(item.getUid())) {
-            intent.putExtra(NewProfileActivity.AUTH_INTENT, true);
+            intent.putExtra(ProfileActivity.AUTH_INTENT, true);
         } else {
-            intent.putExtra(NewProfileActivity.AUTH_INTENT, false);
-            intent.putExtra(NewProfileActivity.OTHER_INTENT, item.getUid());
+            intent.putExtra(ProfileActivity.AUTH_INTENT, false);
+            intent.putExtra(ProfileActivity.OTHER_INTENT, item.getUid());
         }
     }
 

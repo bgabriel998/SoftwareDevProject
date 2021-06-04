@@ -53,6 +53,28 @@ public class EmptyGalleryFragmentTest {
         Intents.release();
     }
 
+<<<<<<< HEAD:app/src/androidTest/java/ch/epfl/sdp/peakar/gallery/EmptyGalleryFragmentTest.java
+=======
+
+    /* Test that menu bars gallery icon works as intended */
+    @Test
+    public void TestMenuBarGallery(){
+        MenuBarTestHelper.TestSelectedIconButton(R.id.menu_bar_gallery);
+    }
+
+    /* Test that menu bars map icon works as intended */
+    @Test
+    public void TestMenuBarMap(){
+        MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_map);
+    }
+
+    /* Test that menu bars social icon works as intended */
+    @Test
+    public void TestMenuBarSocial(){
+        MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_social);
+    }
+
+>>>>>>> b0c68852dfefa9f6d64cb68a6f72f8e049fd1334:app/src/androidTest/java/ch/epfl/sdp/peakar/gallery/EmptyGalleryActivityTest.java
     /* Test that the top bar color is correct */
     @Test
     public void TestTopBarColor() {

@@ -30,14 +30,12 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent" />
-        <activity
-            android:name=".user.profile.NewProfileActivity"
+        <activity android:name=".user.profile.ProfileActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".gallery.ImageActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".gallery.ImageActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".general.SettingsMapActivity"
             android:configChanges="orientation"

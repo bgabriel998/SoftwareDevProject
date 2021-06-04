@@ -30,13 +30,13 @@
     <string name='insert_username_button'>Insert your username here</string>
     <string name='change_username_button'>Change username</string>
     <string name='submit_username_button'>Change</string>
-    <string name='registered_username' translatable="false">Welcome to PeakAR community!</string>
-    <string name='database_fail' translatable="false">Oops, an error occurred. Make sure you are online!</string>
+    <string name='registered_username'>Welcome to PeakAR community!</string>
+    <string name='database_fail'>Oops, an error occurred. Make sure you are online!</string>
 
     <!-- FRIENDS SYSTEM -->
     <string name='add_friend_button'>Add a friend</string>
     <string name='friends_button'>Friends</string>
-    <string name='insert_friend_button' translatable="false">Insert here</string>
+    <string name='insert_friend_button'>Insert here</string>
     <string name='submit_friend_button'>Add</string>
     <string name='add_current_username'>You can\'t add yourself to your friends!</string>
     <string name='friend_already_added'>The user is already your friend.</string>
@@ -108,9 +108,9 @@
 
     <!-- PROFILE TEXT -->
     <string name="score_display" translatable="true">Score: %s</string>
-    <string name="empty_collection" translatable="false">Empty Collection</string>
-    <string name="empty_collection_not_registered" translatable="false">Please, set your username</string>
-    <string name="loading_message" translatable="false">Loading...</string>
+    <string name="empty_collection">Empty Collection</string>
+    <string name="empty_collection_not_registered">Please, set your username</string>
+    <string name="loading_message">Loading…</string>
 
     <!-- COLLECTED TEXT -->
     <string name="height_display" translatable="false">%s m</string>
@@ -119,22 +119,22 @@
     <string name="position_display" translatable="true">Position: (1%.2f, 2%.2f) </string>
 
     <!-- CHALLENGE TEXT -->
-    <string name="notStartedStart_display" translatable="false">Start: Waiting for users to join...</string>
-    <string name="notStartedFinish_display" translatable="false">Finish: Waiting for users to join...</string>
-    <string name="startTime_display" translatable="false">Start: %s</string>
-    <string name="finishTime_display" translatable="false">Finish: %s</string>
-    <string name="achieved_points" translatable="false">Achieved: %d pts</string>
-    <string name="remainingTime_display" translatable="false">Remaining: %s</string>
-    <string name="enrolledUser_display" translatable="false">Enrolled users: %d</string>
-    <string name="challenge_join" translatable="false">JOIN</string>
+    <string name="notStartedStart_display">Start: Waiting for users to join…</string>
+    <string name="notStartedFinish_display">Finish: Waiting for users to join…</string>
+    <string name="startTime_display">Start: %s</string>
+    <string name="finishTime_display">Finish: %s</string>
+    <string name="achieved_points">Achieved: %d pts</string>
+    <string name="remainingTime_display">Remaining: %s</string>
+    <string name="enrolledUser_display">Enrolled users: %d</string>
+    <string name="challenge_join">JOIN</string>
 
-    <string name="choose_challenge_duration" translatable="false">Choose challenge duration</string>
-    <string name="challenge_points" translatable="false">pts</string>
-    <string name="challenge_finished" translatable="false">Finished!</string>
-    <string name="toast_challenge_name" translatable="false">Challenge name must contain between 3 and 25 characters</string>
-    <string name="enter_challenge_name" translatable="false">Enter challenge name</string>
-    <string name="cancel_button" translatable="false">Cancel</string>
-    <string name="ok_button" translatable="false">OK</string>
+    <string name="choose_challenge_duration">Choose challenge duration</string>
+    <string name="challenge_points">pts</string>
+    <string name="challenge_finished">Finished!</string>
+    <string name="toast_challenge_name">Challenge name must contain between 3 and 25 characters</string>
+    <string name="enter_challenge_name">Enter challenge name</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="ok_button">OK</string>
     <string-array name="challenge_duration">
         <item>1 day</item>
         <item>2 days</item>

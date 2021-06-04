@@ -27,7 +27,12 @@ import ch.epfl.sdp.peakar.collection.NewCollectedItem;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.database.DatabaseReference;
 import ch.epfl.sdp.peakar.points.POIPoint;
+<<<<<<< HEAD
 import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
+=======
+import ch.epfl.sdp.peakar.social.SocialActivity;
+import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
+>>>>>>> b0c68852dfefa9f6d64cb68a6f72f8e049fd1334
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.services.FirebaseAuthService;
@@ -74,9 +79,9 @@ public class OtherProfileActivityTest {
         DatabaseReference dbRef2 = Database.getInstance().getReference().child(Database.CHILD_USERS).child(user2);
         dbRef2.child(Database.CHILD_USERNAME).setValue(user2);
         dbRef2.child(Database.CHILD_SCORE).setValue(user2score);
-        Intent intent = new Intent(InstrumentationRegistry.getInstrumentation().getTargetContext(), NewProfileActivity.class);
-        intent.putExtra(NewProfileActivity.AUTH_INTENT, false);
-        intent.putExtra(NewProfileActivity.OTHER_INTENT, user2);
+        Intent intent = new Intent(InstrumentationRegistry.getInstrumentation().getTargetContext(), ProfileActivity.class);
+        intent.putExtra(ProfileActivity.AUTH_INTENT, false);
+        intent.putExtra(ProfileActivity.OTHER_INTENT, user2);
 
         // Prepare the account
         GeoPoint geoPoint_1 = new GeoPoint(MONT_BLANC_LAT,MONT_BLANC_LONG,MONT_BLANC_ALT);
