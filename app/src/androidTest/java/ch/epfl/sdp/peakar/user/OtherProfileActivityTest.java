@@ -27,12 +27,7 @@ import ch.epfl.sdp.peakar.collection.NewCollectedItem;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.database.DatabaseReference;
 import ch.epfl.sdp.peakar.points.POIPoint;
-<<<<<<< HEAD
-import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
-=======
-import ch.epfl.sdp.peakar.social.SocialActivity;
 import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
->>>>>>> b0c68852dfefa9f6d64cb68a6f72f8e049fd1334
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.services.FirebaseAuthService;
@@ -162,7 +157,7 @@ public class OtherProfileActivityTest {
     }
 
     @Rule
-    public ActivityScenarioRule<NewProfileActivity> testRule = new ActivityScenarioRule<>(getOtherIntent());
+    public ActivityScenarioRule<ProfileActivity> testRule = new ActivityScenarioRule<>(getOtherIntent());
 
     /* Test that when another account profile is loaded with but no user is authenticated, the display is correct */
     @Test
