@@ -42,14 +42,13 @@
         <item>Only display mountains out line of sight</item>
     </string-array>
 
+    <!--0. display all, 1. display only in line of sight, 2. display only out of line of sight -->
     <string-array name="displayPOIs_values">
-        <!-- Display all mountains -->
         <item>0</item>
-        <!-- Only display mountains in line of sight -->
         <item>1</item>
-        <!-- Only display mountains out line of sight -->
         <item>2</item>
     </string-array>
+
     <!-- Reply Preference -->
     <string-array name="reply_entries">
         <item>Reply</item>

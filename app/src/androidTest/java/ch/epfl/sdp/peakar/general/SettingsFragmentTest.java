@@ -31,6 +31,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.SETTINGS_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.DISPLAY_ALL_POIS;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.THREAD_SLEEP_1S;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -290,7 +291,7 @@ public class SettingsFragmentTest {
 
         String displayPOIsKey = context.getResources().getString(R.string.displayPOIs_key);
         //Get selected value
-        String startString = prefs.getString(displayPOIsKey, "");
+        String startString = prefs.getString(displayPOIsKey, DISPLAY_ALL_POIS);
 
         //Open selector window
         onView(withId(androidx.preference.R.id.recycler_view))
@@ -305,8 +306,11 @@ public class SettingsFragmentTest {
             onView(withText(entries[1])).perform(click());
 
         //Check that the selection happened
-        String endString = prefs.getString(displayPOIsKey, "");
+        String endString = prefs.getString(displayPOIsKey, DISPLAY_ALL_POIS);
         assertThat(startString, not(is(endString)));
+
+        //Reset setting to display all pois
+        prefs.edit().putString(displayPOIsKey, DISPLAY_ALL_POIS).apply();
     }
 
 

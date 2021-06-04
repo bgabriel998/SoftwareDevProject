@@ -44,26 +44,6 @@ public final class PermissionUtilities {
     }
 
     /**
-     * Checks if the write permission was already granted
-     */
-    public static boolean hasWritePermission(Context context) {
-        return ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    /**
-     * Checks if the read permission was already granted
-     */
-    public static boolean hasReadPermission(Context context) {
-        return ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    /**
      * Creates the permission listener for the requested permissions.
      * After checking the permissions it computes the POIPoints and launches the application
      */

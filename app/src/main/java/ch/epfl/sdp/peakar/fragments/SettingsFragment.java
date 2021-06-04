@@ -66,6 +66,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 getResources().getDisplayMetrics()
         );
         rv.setPadding(0, marginInPx, 0, 0);
+
+        PreferenceManager.getDefaultSharedPreferences(requireContext()).
+                registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -79,14 +82,17 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         updateSelectedIcon(this);
         setVisibilityTopBar(this, false);
         StatusBarLightGrey(this);
-        PreferenceManager.getDefaultSharedPreferences(requireContext()).
-                registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         setVisibilityTopBar(this, true);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         PreferenceManager.getDefaultSharedPreferences(requireContext()).
                 unregisterOnSharedPreferenceChangeListener(this);
     }
@@ -107,6 +113,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             case "offline_mode_preference":
                 offlineModeChanged();
         }
+        setPreferencesFromResource(R.xml.root_preferences, null);
     }
 
     /**

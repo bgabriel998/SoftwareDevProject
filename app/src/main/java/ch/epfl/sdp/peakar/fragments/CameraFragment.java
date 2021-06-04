@@ -375,6 +375,7 @@ public class CameraFragment extends Fragment{
             startCompass();
             showDevOptions = sharedPref.getBoolean(getResources().getString(R.string.devOptions_key), false);
             displayDeveloperOptions(showDevOptions);
+            setUpUI();
         }
         else{
             initFragment();
