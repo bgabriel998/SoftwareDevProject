@@ -50,13 +50,9 @@ public class SettingsActivityTest{
     @BeforeClass
     public static void setupClass(){
         context = ApplicationProvider.getApplicationContext();
-        SharedPreferences preferences = context.getSharedPreferences("measSys_preference",
+        SharedPreferences preferences = context.getSharedPreferences("range_preference",
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.clear().commit();
-        preferences = context.getSharedPreferences("range_preference",
-                Context.MODE_PRIVATE);
-        editor = preferences.edit();
         editor.clear().commit();
         preferences = context.getSharedPreferences("language_preference",
                 Context.MODE_PRIVATE);
@@ -181,7 +177,7 @@ public class SettingsActivityTest{
         assertThat(startString, not(is(endString)));
     }
 
-    
+
 
     /*Test offline mode button click*/
     @Test
