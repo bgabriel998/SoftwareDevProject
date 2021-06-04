@@ -356,7 +356,6 @@ public class CameraFragment extends Fragment{
     public void switchDisplayCompass(View view) {
         String displayCompassString = getResources().getString(R.string.displayCompass_key);
         boolean displayCompass = sharedPref.getBoolean(displayCompassString, false);
-
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(displayCompassString, !displayCompass);
         editor.apply();
