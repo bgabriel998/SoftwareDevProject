@@ -140,6 +140,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
         if (offlineModeValue) {
             Intent setIntent = new Intent(requireContext(), SettingsMapActivity.class);
+            restartActivity(requireActivity());
             startActivity(setIntent);
         } else {
             // Connect to the DB again
