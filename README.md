@@ -7,12 +7,13 @@ ___
 
 [![Test Coverage](https://api.codeclimate.com/v1/badges/7d9f8d866811a3ea3fa1/test_coverage)](https://codeclimate.com/github/bgabriel998/SoftwareDevProject/test_coverage)
 
+___
+
 ## The app
 
 PeakAR is an app that will guide you through your hikes, using augmented reality to display in your phone's camera the names and some information on the peaks that surround you. Watch our trailer:
 
 [![PeakAR trailer](https://img.youtube.com/vi/Eddwj1j-FQM/0.jpg)](https://www.youtube.com/watch?v=Eddwj1j-FQM)
-
 
 ### Features
 
@@ -44,7 +45,9 @@ Requirements matching:
   * Display the data that is still stored in the cache
   * Be able to see which mountains the user discovered and the pictures taken by the user
   * Let the user download an area in advance (Similar to the offline mode of google maps) so that he can use the application even if he has no internet connection   
-    
+
+___
+
 ## Useful links
 [Software Development Project Moodle](https://moodle.epfl.ch/course/view.php?id=16172)
 
@@ -54,6 +57,7 @@ Requirements matching:
 
 [Android Studio Documentation](https://developer.android.com/docs)
 
+___
 
 ## Devs
 - [Gangloff Maximilian](https://github.com/magangloff)
