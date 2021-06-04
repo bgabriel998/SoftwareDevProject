@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
+import ch.epfl.sdp.peakar.general.MainActivity;
 import ch.epfl.sdp.peakar.general.SettingsMapActivity;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.points.POICache;

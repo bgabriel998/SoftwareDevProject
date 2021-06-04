@@ -165,7 +165,6 @@ public class CameraFragment extends Fragment{
         //Wait for the view to be properly laid out
         previewView.post(() -> {
             previewDisplayId = previewView.getDisplay().getDisplayId();
-            initFragment();
             setUpCamera();
             setUpUI();
             Dexter.withContext(requireContext())
@@ -375,6 +374,7 @@ public class CameraFragment extends Fragment{
             displayDeveloperOptions(showDevOptions);
         }
         else{
+            initFragment();
             returnToFragment = true;
         }
     }

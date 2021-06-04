@@ -2,10 +2,12 @@ package ch.epfl.sdp.peakar.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
+import android.os.Bundle;
 import android.util.DisplayMetrics;
 
 import androidx.annotation.RequiresApi;
@@ -15,6 +17,8 @@ import java.util.Locale;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.points.GeonamesHandler;
+
+import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.SETTINGS_FRAGMENT_INDEX;
 
 /**
  *  Utility class for the Settings Activity, contains utility methods for the settings like the language
@@ -83,7 +87,11 @@ public final class SettingsUtilities {
         activity.finish();
         //Override transition and restart activity
         activity.overridePendingTransition(0, 0);
-        activity.startActivity(activity.getIntent());
+        Intent intent = activity.getIntent();
+        Bundle b = new Bundle();
+        b.putInt(activity.getString(R.string.setPagerOnRestart), SETTINGS_FRAGMENT_INDEX);
+        intent.putExtras(b);
+        activity.startActivity(intent);
         activity.overridePendingTransition(0, 0);
     }
 

@@ -36,7 +36,9 @@ public class MainActivity extends AppCompatActivity {
         FragmentStateAdapter adapterViewPager = new MainPagerAdapter(this);
         viewPager.setAdapter(adapterViewPager);
         viewPager.setOffscreenPageLimit(Objects.requireNonNull(viewPager.getAdapter()).getItemCount());
-        viewPager.setCurrentItem(CAMERA_FRAGMENT_INDEX);
+
+        Bundle b = getIntent().getExtras();
+        viewPager.setCurrentItem(b != null ? b.getInt(getString(R.string.setPagerOnRestart)) : CAMERA_FRAGMENT_INDEX);
 
         MenuBarHandlerFragments.setup(this, viewPager);
     }

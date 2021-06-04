@@ -108,27 +108,6 @@ public class MenuBarHandlerFragments {
     }
 
     /**
-     * Gets the class from the viewPager index
-     * @param index class that is started
-     * @return Index of the page
-     */
-    private static Class<?> getClassFromIndex(int index){
-        switch(index){
-            case SETTINGS_FRAGMENT_INDEX:
-                return SettingsFragment.class;
-            case GALLERY_FRAGMENT_INDEX:
-                return GalleryFragment.class;
-            case MAP_FRAGMENT_INDEX:
-                return MapFragment.class;
-            case SOCIAL_FRAGMENT_INDEX:
-                return SocialFragment.class;
-            case CAMERA_FRAGMENT_INDEX:
-            default:
-                return CameraFragment.class;
-        }
-    }
-
-    /**
      * Given an id to an icon make it appear selected.
      * @param activity given activity.
      * @param viewId id to icon to "select".

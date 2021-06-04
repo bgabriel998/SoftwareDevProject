@@ -214,4 +214,5 @@
     <string name="internet_connection_needed_social">You are in offline mode. Please disable offline mode to be able to use the social section of PeakAR!</string>
     <string name="image_content_description" translatable="false">Item that corresponds to image in the gallery</string>
     <string name="download_error_toast" translatable="false">An error occurred while downloading offline content</string>
+    <string name="setPagerOnRestart" translatable="false">SetPager</string>
 </resources>
