@@ -9,13 +9,11 @@
 ___
 
 ## PeakAR
-
 PeakAR is an app that will guide you through your hikes, using augmented reality to display in your phone's camera the names and some information on the peaks that surround you. Watch our trailer:
 
 [![PeakAR trailer](https://img.youtube.com/vi/Eddwj1j-FQM/0.jpg)](https://www.youtube.com/watch?v=Eddwj1j-FQM)
 
 ### Features
-
 The app provides the user with the following features:
 
 * **Augmented reality**: show the information (name, distance and height) of the peaks that sorround the user
@@ -50,7 +48,6 @@ Requirements matching:
 ___
 
 ## Project info
-
 This app was developed as part of the CS-306 Software Development Project at EPFL. You can find further information at the following links:
 * [CS-306 Software Development Project](https://edu.epfl.ch/coursebook/en/software-development-project-CS-306-1)
 * [Software Development Project Moodle](https://moodle.epfl.ch/course/view.php?id=16172)
