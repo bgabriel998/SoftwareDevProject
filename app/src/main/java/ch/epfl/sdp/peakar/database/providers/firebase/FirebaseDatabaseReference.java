@@ -25,7 +25,8 @@ public class FirebaseDatabaseReference implements DatabaseReference {
     private final com.google.firebase.database.DatabaseReference firebaseReference;
 
     /**
-     * Constructor of a reference pointing to the root of the database.m
+     * Constructor of a reference pointing to the root of the database.
+
      */
     public FirebaseDatabaseReference(){
         firebaseReference = FirebaseDatabase.getInstance(DATABASE_ADDRESS).getReference();
