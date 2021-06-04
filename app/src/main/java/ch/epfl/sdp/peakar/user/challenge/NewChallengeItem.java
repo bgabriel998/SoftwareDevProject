@@ -11,7 +11,7 @@ import ch.epfl.sdp.peakar.user.services.AuthService;
 /**
  * Item holding all information regarding challenge
  */
-public class ChallengeItem {
+public class NewChallengeItem {
     private final boolean isAuthAccountFounder;
     private final RemotePointsChallenge remotePointsChallenge;
     private final boolean isAuthAccount;
@@ -22,7 +22,7 @@ public class ChallengeItem {
      * @param isAuthAccountFounder boolean that tells if the auth account user is the founder of the challenge
      * @param isAuthAccount boolean that tells if the auth account is not null
      */
-    public ChallengeItem(RemotePointsChallenge remotePointsChallenge, boolean isAuthAccountFounder, boolean isAuthAccount) {
+    public NewChallengeItem(RemotePointsChallenge remotePointsChallenge, boolean isAuthAccountFounder, boolean isAuthAccount) {
         this.isAuthAccountFounder = isAuthAccountFounder;
         this.remotePointsChallenge = remotePointsChallenge;
         this.isAuthAccount = isAuthAccount;

@@ -30,7 +30,7 @@
             android:theme="@style/Theme.AppCompat.Translucent"
             android:configChanges="orientation"
             android:screenOrientation="portrait"/>
-        <activity android:name=".user.profile.ProfileActivity"
+        <activity android:name=".user.profile.NewProfileActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"/>
         <activity android:name=".gallery.ImageActivity"
@@ -40,6 +40,15 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait"/>
         <activity android:name=".camera.CameraActivity"/>
+        <activity android:name=".collection.MountainActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".collection.CollectionActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".rankings.RankingsActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <activity android:name=".map.MapActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"/>
@@ -47,6 +56,9 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait"/>
         <activity android:name=".general.SettingsMapActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".general.MainMenuActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"/>
         <activity

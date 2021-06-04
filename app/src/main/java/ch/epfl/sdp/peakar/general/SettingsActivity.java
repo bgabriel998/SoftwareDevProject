@@ -47,6 +47,9 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         switch (key){
+            case "measSys_preference":
+                measurementSystemChanged();
+                break;
             case "range_preference":
                 rangeChanged();
                 break;
@@ -83,6 +86,13 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         }
     }
 
+    /**
+     * Change measurement system
+     */
+    private void measurementSystemChanged(){
+        //TODO : Implement -> wait new UI to see if the settings should be impl or removed
+        Toast.makeText(this,"Setting not implemented yet !", Toast.LENGTH_SHORT).show();
+    }
 
     /**
      * Change measurement system callback

@@ -7,7 +7,7 @@
         <item>30 km</item>
         <item>50 km</item>
     </string-array>
-    <!--DO NOT TRANSLATE-->
+
     <string-array name="range_values">
         <item>first_range</item>
         <item>sec_range</item>
@@ -16,21 +16,28 @@
         <item>fifth_range</item>
     </string-array>
 
+    <!-- range Preference -->
+    <string-array name="measSys_entries">
+        <item>Mètres/Kilomètres</item>
+        <item>Feet/Miles</item>
+    </string-array>
 
+    <string-array name="measSys_values">
+        <item>siSystem</item>
+        <item>usSystem</item>
+    </string-array>
 
     <!-- language Preference -->
     <string-array name="language_entries">
         <item>English</item>
         <item>Français</item>
-        <item>Italian</item>
         <item>Deutsch</item>
         <item>Svenska</item>
     </string-array>
-    <!-- language Preference  DO NOT TRANSLATE-->
+
     <string-array name="language_values">
         <item>english</item>
         <item>french</item>
-        <item>italian</item>
         <item>german</item>
         <item>swedish</item>
     </string-array>

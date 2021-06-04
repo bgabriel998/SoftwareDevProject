@@ -2,8 +2,11 @@ package ch.epfl.sdp.peakar.points;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import androidx.preference.PreferenceManager;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -11,6 +14,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
+import org.apache.http.HttpException;
 import org.osmdroid.bonuspack.location.OverpassAPIProvider;
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
@@ -20,6 +24,7 @@ import org.osmdroid.util.GeoPoint;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.utils.SettingsUtilities;
 
 
@@ -131,7 +136,7 @@ public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>
             try {
                 resList = getPOIsFromUrl(queryUrl);
                 break;
-            } catch (Exception e) {
+            } catch (HttpException e) {
                 //If the HTTP request fails retry (at most DEFAULT_NUMBER_OF_RETRY times)
                 this.retryNbr++;
             }
@@ -148,12 +153,12 @@ public abstract class GeonamesHandler extends AsyncTask<Void,Void,ArrayList<POI>
      * - ways and relations must contain the "center" element. <br>
      * @return elements as a list of POI
      */
-    private ArrayList<POI> getPOIsFromUrl(String url) throws Exception {
+    private ArrayList<POI> getPOIsFromUrl(String url) throws HttpException {
         Log.d(BonusPackHelper.LOG_TAG, "OverpassAPIProvider:getPOIsFromUrl:"+url);
         String jString = BonusPackHelper.requestStringFromUrl(url);
         if (jString == null) {
             Log.e(BonusPackHelper.LOG_TAG, "OverpassAPIProvider: request failed.");
-            throw new Exception("OverpassAPIProvider: request failed. --> requestStringFromUrl");
+            throw new HttpException("OverpassAPIProvider: request failed. --> requestStringFromUrl");
         }
         try {
             //parse JSON and build POIs

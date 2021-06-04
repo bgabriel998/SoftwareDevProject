@@ -28,9 +28,9 @@ import ch.epfl.sdp.peakar.collection.NewCollectedItem;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.user.challenge.Challenge;
-import ch.epfl.sdp.peakar.user.challenge.ChallengeItem;
+import ch.epfl.sdp.peakar.user.challenge.NewChallengeItem;
 import ch.epfl.sdp.peakar.user.challenge.goal.RemotePointsChallenge;
-import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
+import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
 import ch.epfl.sdp.peakar.user.score.UserScore;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
@@ -78,8 +78,8 @@ public class AuthProfileActivityTest {
 
     private static Intent getAuthIntent() {
         registerAuthUser();
-        Intent intent = new Intent(InstrumentationRegistry.getInstrumentation().getTargetContext(), ProfileActivity.class);
-        intent.putExtra(ProfileActivity.AUTH_INTENT, true);
+        Intent intent = new Intent(InstrumentationRegistry.getInstrumentation().getTargetContext(), NewProfileActivity.class);
+        intent.putExtra(NewProfileActivity.AUTH_INTENT, true);
         return intent;
     }
 
@@ -316,7 +316,7 @@ public class AuthProfileActivityTest {
 
         //Click on challenge button
         onView(withId(R.id.challenge_button)).perform(click());
-        DataInteraction interaction = onData(instanceOf(ChallengeItem.class));
+        DataInteraction interaction = onData(instanceOf(NewChallengeItem.class));
 
         //Check two added challenges
         interaction.atPosition(0).onChildView(withId(R.id.challenge_name)).check(matches(withText("Test_Challenge_1")));

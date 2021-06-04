@@ -3,7 +3,7 @@
     <string name="start_button">Démarrer Peak AR</string>
     <string name="collection_button">Collection</string>
     <string name="ranking_button">Classement</string>
-    <string name="gallery_button">Gallerie</string>
+    <string name="gallery_button">Galerie</string>
     <string name="map_button">Carte</string>
     <string name="sign_in_button">Connexion</string>
     <string name="sign_out_button">Déconnexion</string>
@@ -76,25 +76,4 @@
     <string name="switch_all">All</string>
     <string name="switch_friends">Friends</string>
     <string name="empty_friends">No Friends</string>
-    <string name="empty_collection">Collection vide</string>
-    <string name="empty_collection_not_registered">Choisissez un nom d\'utilisateur svp</string>
-    <string name="loading_message">Chargement…</string>
-    <string name="notStartedStart_display">Début: en attente d\'autres utilisateurs</string>
-    <string name="notStartedFinish_display">Fin: en attente d\'autres utilisateurs</string>
-    <string name="startTime_display">Début: %s</string>
-    <string name="finishTime_display">Fin: %s</string>
-    <string name="achieved_points">Acquis: %d pts</string>
-    <string name="remainingTime_display">Restant: %s</string>
-    <string name="enrolledUser_display">Participants: %d</string>
-    <string name="challenge_join">JOINDRE</string>
-    <string name="choose_challenge_duration">Selectionnez une durée</string>
-    <string name="challenge_points">pts</string>
-    <string name="challenge_finished">Terminé!</string>
-    <string name="toast_challenge_name">Le nom du challenge doit contenir entre 3 et 25 caractères</string>
-    <string name="enter_challenge_name">Entrer un nom de challenge</string>
-    <string name="cancel_button">Annuler</string>
-    <string name="ok_button">OK</string>
-    <string name="insert_friend_button">Ajouter ici</string>
-    <string name="database_fail">Oups, une erreur est survenue, veuillez verifier que vous êtes en ligne!</string>
-    <string name="registered_username">Bienvene dans PeakAR community!</string>
 </resources>

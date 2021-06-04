@@ -36,8 +36,8 @@ import ch.epfl.sdp.peakar.collection.NewCollectionListAdapter;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.social.SocialActivity;
-import ch.epfl.sdp.peakar.user.challenge.ChallengeItem;
-import ch.epfl.sdp.peakar.user.challenge.ChallengeListAdapter;
+import ch.epfl.sdp.peakar.user.challenge.NewChallengeItem;
+import ch.epfl.sdp.peakar.user.challenge.NewChallengeListAdapter;
 import ch.epfl.sdp.peakar.user.challenge.goal.RemotePointsChallenge;
 import ch.epfl.sdp.peakar.user.outcome.ProfileOutcome;
 import ch.epfl.sdp.peakar.user.score.ScoringConstants;
@@ -50,8 +50,10 @@ import ch.epfl.sdp.peakar.utils.UIUtils;
 import static ch.epfl.sdp.peakar.utils.POIPointsUtilities.getCountryFromCoordinates;
 import static ch.epfl.sdp.peakar.utils.UIUtils.setTintColor;
 
-
-public class ProfileActivity extends AppCompatActivity {
+/**
+ * TODO Rename to remove new part.
+ */
+public class NewProfileActivity extends AppCompatActivity {
     public final static String AUTH_INTENT = "isAuth";
     public final static String OTHER_INTENT = "otherId";
 
@@ -72,7 +74,7 @@ public class ProfileActivity extends AppCompatActivity {
             new Thread(() -> {
                 displayedAccount = OtherAccount.getInstance(otherId);
                 runOnUiThread(() -> {
-                    setContentView(R.layout.activity_profile);
+                    setContentView(R.layout.activity_new_profile);
 
                     // Enable swipe gesture
                     SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_refresh);
@@ -99,7 +101,7 @@ public class ProfileActivity extends AppCompatActivity {
                 });
             }).start();
         } else {
-            setContentView(R.layout.activity_profile);
+            setContentView(R.layout.activity_new_profile);
 
             // Disable swipe gesture
             SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_refresh);
@@ -167,6 +169,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     /**
      * Fill list view.
+     * TODO show correct date and correct country
      */
     private void fillCollectedListView() {
         findViewById(R.id.add_challenge).setVisibility(View.GONE);
@@ -221,24 +224,24 @@ public class ProfileActivity extends AppCompatActivity {
 
         ((TextView)findViewById(R.id.profile_empty_text)).setText(R.string.empty_collection);
 
-        ArrayList<ChallengeItem> items = new ArrayList<>();
+        ArrayList<NewChallengeItem> items = new ArrayList<>();
         List<RemotePointsChallenge> challengeList  =
                 displayedAccount.getChallenges().stream().map( c -> (RemotePointsChallenge) c).collect(Collectors.toList());
 
         for(RemotePointsChallenge enrolledChallenge: challengeList) {
-            ChallengeItem challengeItem;
+            NewChallengeItem newChallengeItem;
 
-            challengeItem = new ChallengeItem(
+            newChallengeItem = new NewChallengeItem(
                     enrolledChallenge,
                     enrolledChallenge.getFounderID().equals(otherId),
                     AuthService.getInstance().getAuthAccount() != null
             );
 
-            items.add(challengeItem);
+            items.add(newChallengeItem);
         }
 
         ListView challengeListView = findViewById(R.id.profile_collection);
-        ChallengeListAdapter listAdapter = new ChallengeListAdapter(this,
+        NewChallengeListAdapter listAdapter = new NewChallengeListAdapter(this,
                 R.layout.profile_challenge_item,
                 items);
         challengeListView.setAdapter(listAdapter);
@@ -250,7 +253,7 @@ public class ProfileActivity extends AppCompatActivity {
      * Then it shrinks it.
      */
     private final AdapterView.OnItemClickListener challengeClicked = (parent, view, position, id) -> {
-        ChallengeItem item = (ChallengeItem)parent.getItemAtPosition(position);
+        NewChallengeItem item = (NewChallengeItem)parent.getItemAtPosition(position);
         expandSelectedChallenge(false,item.getNumberOfParticipants());
         if (view == selectedCollected) {
             selectedCollected = null;
@@ -406,7 +409,7 @@ public class ProfileActivity extends AppCompatActivity {
      * Method to hide the keyboard
      */
     private void hideKeyboard() {
-        Log.d("ProfileActivity", "hideKeyboard: triggered");
+        Log.d("NewProfileActivity", "hideKeyboard: triggered");
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
     }
