@@ -1,5 +1,4 @@
 # PeakAR
-___
 ## Badges
 [![Build Status](https://api.cirrus-ci.com/github/bgabriel998/SoftwareDevProject.svg)](https://cirrus-ci.com/github/bgabriel998/SoftwareDevProject)
 
