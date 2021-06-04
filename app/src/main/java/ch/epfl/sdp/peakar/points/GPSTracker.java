@@ -10,7 +10,9 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
@@ -147,7 +149,6 @@ public class GPSTracker extends Service implements LocationListener {
                     selectedProvider,
                     MIN_TIME_BW_UPDATES,
                     MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-            // set new location
             if (locationManager != null) {
                 location = locationManager.getLastKnownLocation(selectedProvider);
             }

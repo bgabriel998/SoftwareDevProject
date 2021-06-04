@@ -2,6 +2,8 @@ package ch.epfl.sdp.peakar.camera;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.preference.PreferenceManager;
 import androidx.test.core.app.ApplicationProvider;
@@ -40,7 +42,7 @@ public class CameraFragmentTest {
 
     /* Setup environment */
     @BeforeClass
-    public static void computePOIPoints(){
+    public static void computePOIPoints() {
         context = ApplicationProvider.getApplicationContext();
         ComputePOIPoints.getInstance(context);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);

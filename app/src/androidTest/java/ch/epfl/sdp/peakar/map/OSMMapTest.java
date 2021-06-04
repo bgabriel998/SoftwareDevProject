@@ -160,7 +160,7 @@ public class OSMMapTest {
         POIPoint point_4 = new POIPoint(geoPoint_4);
         point_4.setName(POINTE_DE_LAPAZ_NAME);
 
-        ArrayList<POIPoint> inputArrayList = new ArrayList<POIPoint>();
+        ArrayList<POIPoint> inputArrayList = new ArrayList<>();
         inputArrayList.add(point_2);
         inputArrayList.add(point_1);
         inputArrayList.add(point_3);
@@ -177,7 +177,6 @@ public class OSMMapTest {
             List<Fragment> fragments = activity.getSupportFragmentManager().getFragments();
             fragment = (MapFragment) fragments.get(MAP_FRAGMENT_INDEX);
         });
-
 
         osmMap = fragment.getOsmMap();
 
