@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
-import ch.epfl.sdp.peakar.general.MainActivity;
 import ch.epfl.sdp.peakar.general.SettingsMapActivity;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.points.POICache;
@@ -114,7 +113,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
      * Change measurement system
      */
     private void measurementSystemChanged(){
-        //TODO : Implement -> wait new UI to see if the settings should be impl or removed
         Toast.makeText(requireContext(),"Setting not implemented yet !", Toast.LENGTH_SHORT).show();
     }
 

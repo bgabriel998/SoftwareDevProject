@@ -17,8 +17,6 @@ import java.util.stream.IntStream;
 
 import ch.epfl.sdp.peakar.utils.SettingsUtilities;
 
-import static android.app.PendingIntent.getActivity;
-
 /**
  * Class to request the topography map of the bounding box around a point.
  * The Elevation map is retrieved using the OpenTopography API as an AAIGrid and then converted into

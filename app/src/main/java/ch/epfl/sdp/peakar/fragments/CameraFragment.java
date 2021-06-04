@@ -292,7 +292,7 @@ public class CameraFragment extends Fragment{
         //Take a picture with the camera without the UI
         takePicture();
         //Create a bitmap of the camera preview
-        Bitmap cameraBitmap = previewView.getBitmap();;
+        Bitmap cameraBitmap = previewView.getBitmap();
         //Create a bitmap of the compass-view
         Bitmap compassBitmap = cameraUiView.getBitmap();
         //Combine the two bitmaps
