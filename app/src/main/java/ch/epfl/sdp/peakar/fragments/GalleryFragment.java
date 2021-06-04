@@ -22,14 +22,13 @@ import ch.epfl.sdp.peakar.gallery.ImageActivity;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
 
 import static ch.epfl.sdp.peakar.general.MainActivity.lastFragmentIndex;
-import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.GALLERY_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.MenuBarHandlerFragments.updateSelectedIcon;
+import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.GALLERY_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarLightGrey;
-import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupDots;
 import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupGreyTopBar;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A simple {@link Fragment} subclass that represents the gallery
  * Use the {@link GalleryFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
@@ -39,17 +38,19 @@ public class GalleryFragment extends Fragment {
     private ConstraintLayout container;
     private static final int COLUMNS = 3;
 
+    /**
+     * Constructor for the CameraPreview
+     * Is required to be empty for the fragments
+     */
     public GalleryFragment() {
-        // Required empty public constructor
     }
 
     /**
      * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
+     * this fragment.
      *
      * @return A new instance of fragment GalleryFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static GalleryFragment newInstance() {
         return new GalleryFragment();
     }
@@ -86,11 +87,13 @@ public class GalleryFragment extends Fragment {
             reloadFragment();
         }
         else{
-            initFragment();
             returnToFragment = true;
         }
     }
 
+    /**
+     * Reloads the fragment: Sets the status bar, top bar and reloads the gallery
+     */
     private void reloadFragment() {
         requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         StatusBarLightGrey(this);
@@ -130,13 +133,5 @@ public class GalleryFragment extends Fragment {
         RecyclerView recyclerView = container.findViewById(R.id.gallery_recyclerview);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), COLUMNS));
         recyclerView.setAdapter(galleryAdapter);
-    }
-
-    private void initFragment() {
-        reloadFragment();
-
-        setupDots(this, v -> {
-            // TODO Sort images
-        });
     }
 }

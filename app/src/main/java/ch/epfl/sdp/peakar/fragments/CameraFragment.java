@@ -126,7 +126,7 @@ public class CameraFragment extends Fragment{
 
     /**
      * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
+     * this fragment.
      *
      * @return A new instance of fragment CameraPreview.
      */
@@ -179,6 +179,9 @@ public class CameraFragment extends Fragment{
         });
     }
 
+    /**
+     * Initialises the listeners for the camera fragment
+     */
     private void initialiseListeners() {
         //Register display listener
         displayManager.registerDisplayListener(displayListener, null);
@@ -190,6 +193,9 @@ public class CameraFragment extends Fragment{
         allPermissionsListener = createAllPermissionListener(requireContext(), container);
     }
 
+    /**
+     * Sets up the UI for the camera fragment and starts the compass
+     */
     private void setUpUI() {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(requireContext());
 
@@ -379,6 +385,9 @@ public class CameraFragment extends Fragment{
         addDiscoveredPOIsToDatabase();
     }
 
+    /**
+     * Initialises the fragment
+     */
     private void initFragment() {
         requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         updateSelectedIcon(this);
@@ -388,10 +397,6 @@ public class CameraFragment extends Fragment{
         container.findViewById(R.id.permissionRequestLayout).setVisibility(!hasCameraPermission(requireContext()) ? View.VISIBLE : View.GONE);
     }
 
-    /**
-     * Create listeners after that the Fragment was attached and has a context
-     * @param context context
-     */
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -414,9 +419,6 @@ public class CameraFragment extends Fragment{
         };
     }
 
-    /**
-     *  Unbind and shutdown camera before exiting camera
-     */
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -481,10 +483,6 @@ public class CameraFragment extends Fragment{
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
     }
 
-    /**
-     * Redraws the camera preview when configuration gets changed
-     * @param newConfig new configuration
-     */
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -515,6 +513,10 @@ public class CameraFragment extends Fragment{
         });
     }
 
+    /**
+     * Opens the settings in android of the application
+     * @return true if succesfull
+     */
     private boolean openSettings(){
         Context context = requireContext();
         Intent i = new Intent();
