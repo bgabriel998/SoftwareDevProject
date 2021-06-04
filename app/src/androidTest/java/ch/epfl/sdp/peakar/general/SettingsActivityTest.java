@@ -181,17 +181,7 @@ public class SettingsActivityTest{
         assertThat(startString, not(is(endString)));
     }
 
-
-    /*Test night mode button click */
-    @Test
-    public void TestNightModeButton(){
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        //Get selected value
-        Boolean startVal = prefs.getBoolean(context.getResources().getString(R.string.night_mode_key), false);
-        onView(withText(context.getResources().getString(R.string.night_mode_title))).perform(click());
-        Boolean endVal = prefs.getBoolean(context.getResources().getString(R.string.night_mode_key), false);
-        assertThat(startVal, not(is(endVal)));
-    }
+    
 
     /*Test offline mode button click*/
     @Test
