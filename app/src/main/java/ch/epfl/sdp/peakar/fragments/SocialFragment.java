@@ -143,10 +143,11 @@ public class SocialFragment extends Fragment {
                 });
 
         if(sharedPreferences.getBoolean(getString(R.string.offline_mode_key), false)){
-            Snackbar snackbar = Snackbar.make(container.findViewById(R.id.social_list),
+            Snackbar snackbar = Snackbar.make(container.findViewById(R.id.socialFragmentLayout),
                     getString(R.string.internet_connection_needed_social), Snackbar.LENGTH_LONG);
             snackbar.setAction("Settings", v -> {
                 MainActivity activity = (MainActivity) getActivity();
+                assert activity != null;
                 activity.setCurrentPagerItem(SETTINGS_FRAGMENT_INDEX);
             });
             snackbar.setActionTextColor(requireContext().getColor(R.color.BabyBlue));

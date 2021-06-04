@@ -1,8 +1,12 @@
 package ch.epfl.sdp.peakar.social;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.ListView;
 
+import androidx.preference.PreferenceManager;
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
@@ -130,6 +134,10 @@ public class SocialFragmentTest {
         registerAuthUser();
 
         user2 = (BASIC_USERNAME + AuthService.getInstance().getID()).substring(0, AuthAccount.NAME_MAX_LENGTH - 2);
+
+        Context context = ApplicationProvider.getApplicationContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        sharedPreferences.edit().putBoolean(context.getResources().getString(R.string.offline_mode_key), false).commit();
     }
 
     /* Remove test user */
