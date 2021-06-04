@@ -266,6 +266,8 @@ public class CameraFragment extends Fragment{
      * Gets the currently logged in user account and adds the mountains to the discovered Peaks
      */
     private void addDiscoveredPOIsToDatabase(){
+        if(cameraUiView==null) return;
+
         List<POIPoint> discoveredPOIPoints = cameraUiView.getDiscoveredPOIPoints();
         AuthService service = AuthService.getInstance();
         AuthAccount acc = service.getAuthAccount();
@@ -294,6 +296,7 @@ public class CameraFragment extends Fragment{
         //Create a bitmap of the compass-view
         Bitmap compassBitmap = cameraUiView.getBitmap();
         //Combine the two bitmaps
+        assert cameraBitmap != null;
         Bitmap bitmap = CameraUtilities.combineBitmaps(cameraBitmap, compassBitmap);
         //Store the bitmap on the user device
         try {
