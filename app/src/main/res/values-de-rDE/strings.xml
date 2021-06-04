@@ -77,4 +77,22 @@
     <string name="insert_friend_button">Hier einfügen</string>
     <string name="database_fail">Upsi Upsala, ein Fehler ist aufgetreten. Überprüfen Sie ob Sie online sind!</string>
     <string name="registered_username">Wilkommen in PeakAR community!</string>
+    <string name="ok_button">OK</string>
+    <string name="enter_challenge_name">Challenge Name eingebeb</string>
+    <string name="toast_challenge_name">Challengename muss zwischen 3 und 25 Ziffern beinhalten</string>
+    <string name="challenge_finished">Fertig!</string>
+    <string name="challenge_points">pkt</string>
+    <string name="choose_challenge_duration">Bitte Dauern auswählen</string>
+    <string name="challenge_join">BEITRETEN</string>
+    <string name="enrolledUser_display">Teilnehmer</string>
+    <string name="remainingTime_display">Restzeit: %s</string>
+    <string name="achieved_points">Erreicht: %d pkt</string>
+    <string name="startTime_display">Start: %s</string>
+    <string name="finishTime_display">Ende: %S</string>
+    <string name="empty_collection">Leehre Kollektion</string>
+    <string name="empty_collection_not_registered">Wählen Sie bitte einen Benutzernamen</string>
+    <string name="loading_message">Loading...</string>
+    <string name="notStartedStart_display">Start: Warten auf den Beitritt von Benutzern...</string>
+    <string name="notStartedFinish_display">Ende: Warten auf den Beitritt von Benutzern...</string>
+    <string name="cancel_button">Abbrechen</string>
 </resources>

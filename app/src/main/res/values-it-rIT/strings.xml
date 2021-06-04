@@ -72,9 +72,6 @@
     <string name="switch_all">Tutti</string>
     <string name="switch_friends">Amici</string>
     <string name="empty_friends">Nessun amico</string>
-    <string name="database_fail">Oops, si è verificato un errore. Assicurati di essere online!</string>
-    <string name="registered_username">Benvenuto nella community di PeakAR!</string>
-    <string name="insert_friend_button">Inserisci qui</string>
     <string name="empty_collection">Collezione vuota</string>
     <string name="empty_collection_not_registered">Per favore, imposta il tuo nome utente</string>
     <string name="challenge_join">UNISCITI</string>

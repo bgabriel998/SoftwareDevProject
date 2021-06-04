@@ -83,7 +83,7 @@
     <string name="notStartedFinish_display">Fin: en attente d\'autres utilisateurs</string>
     <string name="startTime_display">Début: %s</string>
     <string name="finishTime_display">Fin: %s</string>
-    <string name="achieved_points">Aquis: %d pts</string>
+    <string name="achieved_points">Acquis: %d pts</string>
     <string name="remainingTime_display">Restant: %s</string>
     <string name="enrolledUser_display">Participants: %d</string>
     <string name="challenge_join">JOINDRE</string>
