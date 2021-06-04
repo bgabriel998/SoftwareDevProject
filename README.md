@@ -9,7 +9,7 @@ ___
 
 ___
 
-## The app
+## PeakAR
 
 PeakAR is an app that will guide you through your hikes, using augmented reality to display in your phone's camera the names and some information on the peaks that surround you. Watch our trailer:
 
