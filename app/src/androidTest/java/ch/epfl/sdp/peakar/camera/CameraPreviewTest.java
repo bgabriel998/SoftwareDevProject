@@ -237,6 +237,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
      */
     @Test
     public void displayModesPOIs() throws InterruptedException {
+        Thread.sleep(THREAD_SLEEP_1S);
         Context context = ApplicationProvider.getApplicationContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPreferences.edit();

@@ -16,7 +16,6 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -84,15 +83,11 @@ public class CameraFragment extends Fragment{
     private ExecutorService cameraExecutor;
     private Context context;
 
-    private final int FILE_LENGTH = 27;
-
     private int previewDisplayId = -1;
 
     private DisplayManager displayManager;
 
     private DisplayManager.DisplayListener displayListener;
-
-    String lastToast = null;
 
     private boolean returnToFragment;
 
@@ -176,8 +171,8 @@ public class CameraFragment extends Fragment{
             Dexter.withContext(requireContext())
                     .withPermissions(
                             Manifest.permission.ACCESS_FINE_LOCATION,
-                    //        Manifest.permission.READ_EXTERNAL_STORAGE,
-                    //        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
                             Manifest.permission.CAMERA
                     ).withListener(allPermissionsListener)
                     .check();
@@ -188,12 +183,9 @@ public class CameraFragment extends Fragment{
         //Register display listener
         displayManager.registerDisplayListener(displayListener, null);
 
-        ImageButton takePicture = container.findViewById(R.id.takePicture);
-        takePicture.setOnClickListener(this::takePictureListener);
-        ImageButton changeCompass = container.findViewById(R.id.compassMiniature);
-        changeCompass.setOnClickListener(this::switchDisplayCompass);
-        ImageButton changeDisplayedPOIs = container.findViewById(R.id.switchDisplayPOIs);
-        changeDisplayedPOIs.setOnClickListener(this::switchDisplayPOIMode);
+        container.findViewById(R.id.takePicture).setOnClickListener(this::takePictureListener);
+        container.findViewById(R.id.compassMiniature).setOnClickListener(this::switchDisplayCompass);
+        container.findViewById(R.id.switchDisplayPOIs).setOnClickListener(this::switchDisplayPOIMode);
         container.findViewById(R.id.openSettingsButton).setOnTouchListener((v, event) -> openSettings());
         allPermissionsListener = createAllPermissionListener(requireContext(), container);
     }
@@ -293,7 +285,7 @@ public class CameraFragment extends Fragment{
         //Take a picture with the camera without the UI
         takePicture();
         //Create a bitmap of the camera preview
-        Bitmap cameraBitmap = getBitmap();
+        Bitmap cameraBitmap = previewView.getBitmap();;
         //Create a bitmap of the compass-view
         Bitmap compassBitmap = cameraUiView.getBitmap();
         //Combine the two bitmaps
@@ -362,22 +354,6 @@ public class CameraFragment extends Fragment{
         editor.apply();
     }
 
-    /**
-     * Used for testing, gets the last displayed toast
-     * @return Returns the last displayed toast
-     */
-    public String getLastToast(){
-        return lastToast;
-    }
-
-    /**
-     * Used for testing, sets the last displayed toast
-     * @param lastToast String that was displayed
-     */
-    public void setLastToast(String lastToast){
-        this.lastToast = lastToast;
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -409,13 +385,7 @@ public class CameraFragment extends Fragment{
         StatusBarTransparentBlack(this);
         setupTransparentTopBar(this, R.color.White);
 
-
-        if(!hasCameraPermission(requireContext())) {
-            container.findViewById(R.id.permissionRequestLayout).setVisibility(View.VISIBLE);
-        }
-        else{
-            container.findViewById(R.id.permissionRequestLayout).setVisibility(View.GONE);
-        }
+        container.findViewById(R.id.permissionRequestLayout).setVisibility(!hasCameraPermission(requireContext()) ? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -451,15 +421,11 @@ public class CameraFragment extends Fragment{
     public void onDestroy() {
         super.onDestroy();
         //Unbind use-cases before exiting
-        if(cameraProvider!=null)
-            cameraProvider.unbindAll();
+        if(cameraProvider!=null) cameraProvider.unbindAll();
         // Shut down our background executor
-        if(cameraExecutor!=null)
-            cameraExecutor.shutdown();
-        if(compass!=null)
-            compass.stop();
-        if(displayManager!=null)
-            displayManager.unregisterDisplayListener(displayListener);
+        if(cameraExecutor!=null) cameraExecutor.shutdown();
+        if(compass!=null) compass.stop();
+        if(displayManager!=null) displayManager.unregisterDisplayListener(displayListener);
     }
 
     /**
@@ -490,34 +456,20 @@ public class CameraFragment extends Fragment{
         previewView.getDisplay().getRealMetrics(displayMetrics);
 
         //Calculate aspectRatio
-        int screenAspectRatio = CameraUtilities.aspectRatio(displayMetrics.widthPixels,
-                displayMetrics.heightPixels);
+        int screenAspectRatio = CameraUtilities.aspectRatio(displayMetrics.widthPixels, displayMetrics.heightPixels);
 
         //Get screen rotation
         int rotation = previewView.getDisplay().getRotation();
 
         //CameraSelector
-        CameraSelector cameraSelector = new CameraSelector.Builder()
-                //Only use back facing camera
-                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                .build();
+        CameraSelector cameraSelector = new CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build();
 
         //preview
-        Preview preview = new Preview.Builder()
-                //Set aspect ratio but not resolution, resolution is optimized by CameraX
-                .setTargetAspectRatio(screenAspectRatio)
-                //Set initial rotation
-                .setTargetRotation(rotation)
-                .build();
+        Preview preview = new Preview.Builder().setTargetAspectRatio(screenAspectRatio).setTargetRotation(rotation).build();
 
         // ImageCapture
-        imageCapture = new ImageCapture.Builder()
-                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-                // Set aspect ratio, let cameraX handle the resolution
-                .setTargetAspectRatio(screenAspectRatio)
-                // Set rotation
-                .setTargetRotation(rotation)
-                .build();
+        imageCapture = new ImageCapture.Builder().setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY).
+                setTargetAspectRatio(screenAspectRatio).setTargetRotation(rotation).build();
 
         //Unbind use-cases before rebinding
         cameraProvider.unbindAll();
@@ -543,7 +495,7 @@ public class CameraFragment extends Fragment{
     /**
      * Takes a picture of the camera-preview without the canvas drawn
      */
-    public void takePicture(){
+    public void takePicture() {
         //Create the file
         File photoFile = StorageHandler.createPhotoFile(context);
 
@@ -552,37 +504,15 @@ public class CameraFragment extends Fragment{
                 photoFile).build();
 
         //Take the picture
-        imageCapture.takePicture(outputOptions, cameraExecutor, onImageSavedCallback(photoFile));
-    }
-
-    /**
-     * Creates the onImageSavedCallback for when a picture is saved
-     * @param photoFile File that is saved
-     * @return ImageCapture.onImageSavedCallback
-     */
-    private ImageCapture.OnImageSavedCallback onImageSavedCallback(File photoFile){
-        return new ImageCapture.OnImageSavedCallback() {
+        imageCapture.takePicture(outputOptions, cameraExecutor, new ImageCapture.OnImageSavedCallback() {
             @Override
             public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                //Get the Uri of the saved picture
-                Uri savedUri = outputFileResults.getSavedUri() != null ? outputFileResults.getSavedUri() : Uri.fromFile(photoFile);
-                lastToast = getResources().getString(R.string.pictureSavedSuccessfully) + " " +
-                        savedUri.toString().substring(0, savedUri.toString().length() - FILE_LENGTH);
             }
 
             @Override
             public void onError(@NonNull ImageCaptureException exception) {
-                lastToast = getResources().getString(R.string.pictureSavedFailed) + " " + exception;
             }
-        };
-    }
-
-    /**
-     * Get the camera-preview as a bitmap
-     * @return a bitmap of the camera-preview
-     */
-    public Bitmap getBitmap(){
-        return previewView.getBitmap();
+        });
     }
 
     private boolean openSettings(){
