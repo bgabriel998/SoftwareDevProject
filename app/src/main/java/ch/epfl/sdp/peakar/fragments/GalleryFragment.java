@@ -73,7 +73,6 @@ public class GalleryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         container = (ConstraintLayout) view;
-        initFragment();
     }
 
     @Override
@@ -90,6 +89,7 @@ public class GalleryFragment extends Fragment {
         }
         else{
             returnToFragment = true;
+            initFragment();
         }
     }
 
@@ -98,10 +98,11 @@ public class GalleryFragment extends Fragment {
      */
     private void reloadFragment() {
         requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        StatusBarLightGrey(this);
-        setupGreyTopBar(this);
 
         setupGallery();
+
+        StatusBarLightGrey(this);
+        setupGreyTopBar(this);
     }
 
     /**
@@ -143,8 +144,8 @@ public class GalleryFragment extends Fragment {
     private void initFragment() {
         reloadFragment();
 
-        setupDots(this, v -> {
-            // TODO Sort images
-        });
+//        setupDots(this, v -> {
+//            // TODO Sort images
+//        });
     }
 }

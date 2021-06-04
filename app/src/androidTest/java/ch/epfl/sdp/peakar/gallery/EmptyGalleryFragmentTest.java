@@ -27,7 +27,7 @@ import static ch.epfl.sdp.peakar.utils.TestingConstants.THREAD_SLEEP_1S;
 import static ch.epfl.sdp.peakar.utils.UITestHelper.withBackgroundColor;
 
 /**
- * Tests for a gallery activity when the gallery is empty
+ * Tests for a gallery fragment when the gallery is empty
  */
 @RunWith(AndroidJUnit4.class)
 public class EmptyGalleryFragmentTest {
