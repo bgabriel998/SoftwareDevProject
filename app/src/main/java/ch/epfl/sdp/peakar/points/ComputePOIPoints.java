@@ -39,7 +39,6 @@ import static ch.epfl.sdp.peakar.utils.POIPointsUtilities.filterHighestPOIs;
  *
  * This class can be observed, it will notify observers when new POIPoints are computed
  *
- * TODO handle the updates more efficiently
  */
 public class ComputePOIPoints extends Observable implements Observer{
 

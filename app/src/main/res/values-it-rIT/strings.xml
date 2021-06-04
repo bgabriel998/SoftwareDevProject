@@ -62,14 +62,42 @@
     <string name="camera_request_body">Permessi della fotocamera richiesti per utilizzare la fotocamera.</string>
     <string name="permission_rationale_message">"I permessi della fotocamera sono richiesti per aprire la fotocamera,         I permessi della posizione sono richiesti per mostrare le vette che ti circondano, il permesso per scrivere e leggere dall’archiviazione         è richiesto per salvare e caricare le montagne salvate e le foto scattate, per favore abilitalo! "</string>
     <string name="setUsername">Prima di vedere le vette che hai scoperto imposta un nome utente!</string>
-    <string name="outsideOfDownloadedBox">You are in offline mode and outside of your downloaded area. Please turn off the offline mode on the settings to use the application.</string>
-    <string name="search_username_hint">Search Username</string>
+    <string name="outsideOfDownloadedBox">Stai utilizzando la modalità offline fuori dall\'area scaricata. Per favore, disabilità la modalità offline dalle impostazioni per utilizzare l\'applicazione.</string>
+    <string name="search_username_hint">Cerca utente</string>
     <string name="rank_display">Rank: %s</string>
-    <string name="toolbar_settings">Settings</string>
-    <string name="toolbar_collections">Collections</string>
-    <string name="toolbar_rankings">Rankings</string>
-    <string name="toolbar_gallery">Gallery</string>
-    <string name="switch_all">All</string>
-    <string name="switch_friends">Friends</string>
-    <string name="empty_friends">No Friends</string>
+    <string name="toolbar_settings">Impostazioni</string>
+    <string name="toolbar_collections">Collezione</string>
+    <string name="toolbar_rankings">Classifica</string>
+    <string name="toolbar_gallery">Galleria</string>
+    <string name="switch_all">Tutti</string>
+    <string name="switch_friends">Amici</string>
+    <string name="empty_friends">Nessun amico</string>
+    <string name="empty_collection">Collezione vuota</string>
+    <string name="empty_collection_not_registered">Per favore, imposta il tuo nome utente</string>
+    <string name="challenge_join">UNISCITI</string>
+    <string name="enrolledUser_display">Partecipanti: %d</string>
+    <string name="remainingTime_display">Tempo rimanente: %s</string>
+    <string name="achieved_points">Guadagnati: %d punti</string>
+    <string name="startTime_display">Inizio: %s</string>
+    <string name="finishTime_display">Fine: %s</string>
+    <string name="notStartedStart_display">Inizio: in attesa che qualcuno si unisca…</string>
+    <string name="notStartedFinish_display">Fine: in attesa che qualcuno si unisca…</string>
+    <string name="loading_message">Caricamento…</string>
+    <string name="choose_challenge_duration">Scegli la durata della sfida</string>
+    <string name="challenge_points">punti</string>
+    <string name="challenge_finished">Sfida terminata!</string>
+    <string name="toast_challenge_name">Il nome della sfida deve contenere tra 3 e 25 caratteri</string>
+    <string name="enter_challenge_name">Inserisci il nome della sfida</string>
+    <string name="cancel_button">Annulla</string>
+    <string name="ok_button">OK</string>
+    <string-array name="challenge_duration">
+        <item>1 giorno</item>
+        <item>2 giorni</item>
+        <item>5 giorni</item>
+        <item>7 giorni</item>
+        <item>14 giorni</item>
+    </string-array>
+    <string name="database_fail">Ops, si è verificato un errore. Assicurati di essere online!</string>
+    <string name="registered_username">Benvenuto nella comunità di PeakAR!</string>
+    <string name="insert_friend_button">Inserire qui</string>
 </resources>

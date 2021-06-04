@@ -1,15 +1,7 @@
 package ch.epfl.sdp.peakar.collection;
 
-import android.content.Context;
-
-import java.util.Locale;
-
-import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.utils.UIUtils;
-
 /**
  * Item holding all information regarding a collected peak.
- * TODO Rename to remove New part
  */
 public class NewCollectedItem implements Comparable< NewCollectedItem >{
     private final String name;
