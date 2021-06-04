@@ -80,9 +80,9 @@
     <string name="achieved_points">Guadagnati: %d punti</string>
     <string name="startTime_display">Inizio: %s</string>
     <string name="finishTime_display">Fine: %s</string>
-    <string name="notStartedStart_display">Inizio: in attesa che qualcuno si unisca...</string>
-    <string name="notStartedFinish_display">Fine: in attesa che qualcuno si unisca...</string>
-    <string name="loading_message">Caricamento...</string>
+    <string name="notStartedStart_display">Inizio: in attesa che qualcuno si unisca…</string>
+    <string name="notStartedFinish_display">Fine: in attesa che qualcuno si unisca…</string>
+    <string name="loading_message">Caricamento…</string>
     <string name="choose_challenge_duration">Scegli la durata della sfida</string>
     <string name="challenge_points">punti</string>
     <string name="challenge_finished">Sfida terminata!</string>

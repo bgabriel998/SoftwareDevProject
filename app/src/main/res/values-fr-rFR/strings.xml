@@ -78,7 +78,7 @@
     <string name="empty_friends">No Friends</string>
     <string name="empty_collection">Collection vide</string>
     <string name="empty_collection_not_registered">Choisissez un nom d\'utilisateur svp</string>
-    <string name="loading_message">Chargement...</string>
+    <string name="loading_message">Chargement…</string>
     <string name="notStartedStart_display">Début: en attente d\'autres utilisateurs</string>
     <string name="notStartedFinish_display">Fin: en attente d\'autres utilisateurs</string>
     <string name="startTime_display">Début: %s</string>

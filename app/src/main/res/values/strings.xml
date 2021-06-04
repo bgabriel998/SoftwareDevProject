@@ -110,7 +110,7 @@
     <string name="score_display" translatable="true">Score: %s</string>
     <string name="empty_collection">Empty Collection</string>
     <string name="empty_collection_not_registered">Please, set your username</string>
-    <string name="loading_message">Loading...</string>
+    <string name="loading_message">Loading…</string>
 
     <!-- COLLECTED TEXT -->
     <string name="height_display" translatable="false">%s m</string>
@@ -119,8 +119,8 @@
     <string name="position_display" translatable="true">Position: (1%.2f, 2%.2f) </string>
 
     <!-- CHALLENGE TEXT -->
-    <string name="notStartedStart_display">Start: Waiting for users to join...</string>
-    <string name="notStartedFinish_display">Finish: Waiting for users to join...</string>
+    <string name="notStartedStart_display">Start: Waiting for users to join…</string>
+    <string name="notStartedFinish_display">Finish: Waiting for users to join…</string>
     <string name="startTime_display">Start: %s</string>
     <string name="finishTime_display">Finish: %s</string>
     <string name="achieved_points">Achieved: %d pts</string>

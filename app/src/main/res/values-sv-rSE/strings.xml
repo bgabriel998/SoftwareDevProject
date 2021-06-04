@@ -77,9 +77,9 @@
     <string name="insert_friend_button">Skriv in här</string>
     <string name="empty_collection">Tom samling</string>
     <string name="empty_collection_not_registered">Var god och bestäm användarnamn</string>
-    <string name="loading_message">Laddar...</string>
-    <string name="notStartedStart_display">Start: Väntar på att användare går med...</string>
-    <string name="notStartedFinish_display">Slut: Väntar på att användare går med...</string>
+    <string name="loading_message">Laddar…</string>
+    <string name="notStartedStart_display">Start: Väntar på att användare går med…</string>
+    <string name="notStartedFinish_display">Slut: Väntar på att användare går med…</string>
     <string name="startTime_display">Start: %s</string>
     <string name="finishTime_display">Slut: %s</string>
     <string name="achieved_points">Vinst: %d poäng</string>

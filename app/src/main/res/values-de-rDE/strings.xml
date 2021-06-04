@@ -91,8 +91,8 @@
     <string name="finishTime_display">Ende: %S</string>
     <string name="empty_collection">Leehre Kollektion</string>
     <string name="empty_collection_not_registered">Wählen Sie bitte einen Benutzernamen</string>
-    <string name="loading_message">Loading...</string>
-    <string name="notStartedStart_display">Start: Warten auf den Beitritt von Benutzern...</string>
-    <string name="notStartedFinish_display">Ende: Warten auf den Beitritt von Benutzern...</string>
+    <string name="loading_message">Loading…</string>
+    <string name="notStartedStart_display">Start: Warten auf den Beitritt von Benutzern…</string>
+    <string name="notStartedFinish_display">Ende: Warten auf den Beitritt von Benutzern…</string>
     <string name="cancel_button">Abbrechen</string>
 </resources>
