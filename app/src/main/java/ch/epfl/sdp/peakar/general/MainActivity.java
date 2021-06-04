@@ -12,9 +12,9 @@ import java.util.Stack;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.points.UserPoint;
 import ch.epfl.sdp.peakar.utils.MenuBarHandlerFragments;
-import ch.epfl.sdp.peakar.utils.MyPagerAdapter;
+import ch.epfl.sdp.peakar.utils.MainPagerAdapter;
 
-import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.CAMERA_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.CAMERA_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.PermissionUtilities.hasLocationPermission;
 
 /**
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         lastFragmentIndex = new Stack<>();
 
         viewPager = findViewById(R.id.viewPager);
-        FragmentStateAdapter adapterViewPager = new MyPagerAdapter(this);
+        FragmentStateAdapter adapterViewPager = new MainPagerAdapter(this);
         viewPager.setAdapter(adapterViewPager);
         viewPager.setOffscreenPageLimit(Objects.requireNonNull(viewPager.getAdapter()).getItemCount());
         viewPager.setCurrentItem(CAMERA_FRAGMENT_INDEX);

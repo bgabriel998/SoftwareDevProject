@@ -22,7 +22,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.GALLERY_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.GALLERY_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.THREAD_SLEEP_1S;
 import static ch.epfl.sdp.peakar.utils.UITestHelper.withBackgroundColor;
 

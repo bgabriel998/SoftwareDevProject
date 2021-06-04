@@ -41,14 +41,14 @@ import ch.epfl.sdp.peakar.user.services.OtherAccount;
 
 import static ch.epfl.sdp.peakar.general.MainActivity.lastFragmentIndex;
 import static ch.epfl.sdp.peakar.utils.MenuBarHandlerFragments.updateSelectedIcon;
-import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.SETTINGS_FRAGMENT_INDEX;
-import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.SOCIAL_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.SETTINGS_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.SOCIAL_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarLightGrey;
 import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupGreyTopBar;
 import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupSwitch;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A simple {@link Fragment} subclass that represents the social section.
  * Use the {@link SocialFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
@@ -65,13 +65,15 @@ public class SocialFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private String authUserID;
 
-    public SocialFragment() {
-        // Required empty public constructor
-    }
+    /**
+     * Constructor for the CameraPreview
+     * Is required to be empty for the fragments
+     */
+    public SocialFragment() {}
 
     /**
      * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
+     * this fragment.
      *
      * @return A new instance of fragment SocialFragment.
      */
@@ -127,6 +129,9 @@ public class SocialFragment extends Fragment {
         }
     }
 
+    /**
+     * Reloads the fragment
+     */
     private void reloadFragment() {
         updateSelectedIcon(this);
         StatusBarLightGrey(this);
@@ -149,6 +154,9 @@ public class SocialFragment extends Fragment {
         }
     }
 
+    /**
+     * Initialises the fragment
+     */
     private void initFragment() {
 
         listView = container.findViewById(R.id.social_list);

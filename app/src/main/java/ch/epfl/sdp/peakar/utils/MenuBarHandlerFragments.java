@@ -16,11 +16,11 @@ import ch.epfl.sdp.peakar.fragments.MapFragment;
 import ch.epfl.sdp.peakar.fragments.SettingsFragment;
 import ch.epfl.sdp.peakar.fragments.SocialFragment;
 
-import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.CAMERA_FRAGMENT_INDEX;
-import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.GALLERY_FRAGMENT_INDEX;
-import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.MAP_FRAGMENT_INDEX;
-import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.SETTINGS_FRAGMENT_INDEX;
-import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.SOCIAL_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.CAMERA_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.GALLERY_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.MAP_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.SETTINGS_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.SOCIAL_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.UIUtils.setTintColor;
 
 /**

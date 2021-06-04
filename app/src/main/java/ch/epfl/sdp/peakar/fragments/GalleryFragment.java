@@ -23,8 +23,9 @@ import ch.epfl.sdp.peakar.utils.StorageHandler;
 
 import static ch.epfl.sdp.peakar.general.MainActivity.lastFragmentIndex;
 import static ch.epfl.sdp.peakar.utils.MenuBarHandlerFragments.updateSelectedIcon;
-import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.GALLERY_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.GALLERY_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarLightGrey;
+import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupDots;
 import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupGreyTopBar;
 
 /**
@@ -72,6 +73,7 @@ public class GalleryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         container = (ConstraintLayout) view;
+        initFragment();
     }
 
     @Override
@@ -133,5 +135,16 @@ public class GalleryFragment extends Fragment {
         RecyclerView recyclerView = container.findViewById(R.id.gallery_recyclerview);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), COLUMNS));
         recyclerView.setAdapter(galleryAdapter);
+    }
+
+    /**
+     * Initialises the fragment
+     */
+    private void initFragment() {
+        reloadFragment();
+
+        setupDots(this, v -> {
+            // TODO Sort images
+        });
     }
 }

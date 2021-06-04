@@ -17,13 +17,13 @@ import ch.epfl.sdp.peakar.map.OSMMap;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 
 import static ch.epfl.sdp.peakar.general.MainActivity.lastFragmentIndex;
-import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.MAP_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.MAP_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.MenuBarHandlerFragments.updateSelectedIcon;
 import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarTransparentBlack;
 import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setupTransparentTopBar;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A simple {@link Fragment} subclass that represents the map.
  * Use the {@link MapFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
@@ -35,13 +35,15 @@ public class MapFragment extends Fragment {
     private ConstraintLayout container;
     private boolean returnToFragment;
 
-    public MapFragment() {
-        // Required empty public constructor
-    }
+    /**
+     * Constructor for the CameraPreview
+     * Is required to be empty for the fragments
+     */
+    public MapFragment() {}
 
     /**
      * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
+     * this fragment.
      *
      * @return A new instance of fragment MapFragment.
      */
@@ -66,11 +68,12 @@ public class MapFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         container = (ConstraintLayout) view;
-
-        //initMapFragment(container);
     }
 
-    private void initMapFragment(ConstraintLayout container){
+    /**
+     * Initialises the map fragment when the fragment is created the first time
+     */
+    private void initMapFragment(){
         StatusBarTransparentBlack(this);
         setupTransparentTopBar(this, R.color.Black);
 
@@ -103,10 +106,13 @@ public class MapFragment extends Fragment {
         }
         else {
             returnToFragment = true;
-            initMapFragment(container);
+            initMapFragment();
         }
     }
 
+    /**
+     * Reloads the fragment
+     */
     private void reloadFragment() {
         StatusBarTransparentBlack(this);
         setupTransparentTopBar(this, R.color.Black);

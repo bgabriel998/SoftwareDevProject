@@ -48,7 +48,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.peakar.database.DatabaseTest.databaseRefRoot;
-import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.SOCIAL_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.SOCIAL_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.UserTestHelper.registerAuthUser;
 import static ch.epfl.sdp.peakar.utils.UserTestHelper.removeAuthUser;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.BASIC_USERNAME;

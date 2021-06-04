@@ -32,7 +32,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.SETTINGS_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.SETTINGS_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.UserTestHelper.registerAuthUser;
 import static ch.epfl.sdp.peakar.utils.UserTestHelper.removeAuthUser;
 import static org.junit.Assert.assertEquals;

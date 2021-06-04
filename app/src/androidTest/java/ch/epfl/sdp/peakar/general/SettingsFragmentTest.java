@@ -6,8 +6,6 @@ import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
 import androidx.test.core.app.ApplicationProvider;
-import androidx.test.espresso.Espresso;
-import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.matcher.IntentMatchers;
@@ -28,12 +26,11 @@ import ch.epfl.sdp.peakar.database.Database;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.SETTINGS_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.SETTINGS_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.THREAD_SLEEP_1S;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;

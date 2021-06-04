@@ -5,13 +5,12 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,13 +22,19 @@ import ch.epfl.sdp.peakar.points.ComputePOIPoints;
 import ch.epfl.sdp.peakar.points.POICache;
 
 import static ch.epfl.sdp.peakar.general.MainActivity.lastFragmentIndex;
-import static ch.epfl.sdp.peakar.utils.MyPagerAdapter.SETTINGS_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.SETTINGS_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.MenuBarHandlerFragments.updateSelectedIcon;
 import static ch.epfl.sdp.peakar.utils.SettingsUtilities.restartActivity;
 import static ch.epfl.sdp.peakar.utils.SettingsUtilities.updateLanguage;
 import static ch.epfl.sdp.peakar.utils.StatusBarHandlerFragments.StatusBarLightGrey;
 import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setVisibilityTopBar;
 
+/**
+ * A simple {@link Fragment} subclass that represents the settings.
+ * Use the {@link SettingsFragment#newInstance} factory method to
+ * create an instance of this fragment. This fragment does not have
+ * a layout file as it represents the root_preferences
+ */
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final int NOTIFICATION_BAR_DP = 24;
@@ -39,6 +44,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
     }
 
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment.
+     *
+     * @return A new instance of fragment SettingsFragment.
+     */
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
     }

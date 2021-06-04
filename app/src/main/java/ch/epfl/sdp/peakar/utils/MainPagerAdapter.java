@@ -11,7 +11,10 @@ import ch.epfl.sdp.peakar.fragments.MapFragment;
 import ch.epfl.sdp.peakar.fragments.SettingsFragment;
 import ch.epfl.sdp.peakar.fragments.SocialFragment;
 
-public class MyPagerAdapter extends FragmentStateAdapter {
+/**
+ * Adapter that handles the displaying of the different main fragments of the application
+ */
+public class MainPagerAdapter extends FragmentStateAdapter {
 
     public static final int CAMERA_FRAGMENT_INDEX = 2;
     public static final int MAP_FRAGMENT_INDEX = 3;
@@ -20,7 +23,11 @@ public class MyPagerAdapter extends FragmentStateAdapter {
     public static final int GALLERY_FRAGMENT_INDEX = 1;
     public static final int NUM_FRAGMENTS = 5;
 
-    public MyPagerAdapter(FragmentActivity fa) {
+    /**
+     * Constructor of the MainPagerAdapter
+     * @param fa FragmentActivity that contains the fragments
+     */
+    public MainPagerAdapter(FragmentActivity fa) {
         super(fa);
     }
 
