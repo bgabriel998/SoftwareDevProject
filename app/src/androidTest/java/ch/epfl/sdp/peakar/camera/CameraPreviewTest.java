@@ -31,8 +31,6 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 
-import junit.framework.TestCase;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -56,11 +54,8 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.CAMERA_FRAGMENT_INDEX;
-import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.SETTINGS_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.DISPLAY_ALL_POIS;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.DISPLAY_POIS_IN_SIGHT;
-import static ch.epfl.sdp.peakar.utils.TestingConstants.DISPLAY_POIS_OUT_OF_SIGHT;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.SHORT_SLEEP_TIME;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.THREAD_SLEEP_1S;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.THREAD_SLEEP_6S;

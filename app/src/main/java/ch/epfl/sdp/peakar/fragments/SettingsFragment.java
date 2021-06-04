@@ -38,6 +38,7 @@ import static ch.epfl.sdp.peakar.utils.TopBarHandlerFragments.setVisibilityTopBa
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final int NOTIFICATION_BAR_DP = 24;
+    private boolean returnToFragment = false;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -82,6 +83,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         updateSelectedIcon(this);
         setVisibilityTopBar(this, false);
         StatusBarLightGrey(this);
+        if(returnToFragment){
+            setPreferencesFromResource(R.xml.root_preferences, null);
+        }
+        else{
+            returnToFragment = true;
+        }
     }
 
     @Override
@@ -114,7 +121,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             case "offline_mode_preference":
                 offlineModeChanged();
         }
-        setPreferencesFromResource(R.xml.root_preferences, null);
     }
 
     /**
