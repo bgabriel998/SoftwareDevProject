@@ -27,6 +27,8 @@ The app provides the user with the following features:
 * **Photo gallery**: take pictures directly in the app to a
 * **Multi language**: the app is available in Deutsch, English, Français, Italiano and Svenska
 
+___
+
 ### Requirements matching
 Requirements matching:
 * **Split app model**:
