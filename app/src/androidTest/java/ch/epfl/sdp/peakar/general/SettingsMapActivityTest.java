@@ -1,10 +1,7 @@
 package ch.epfl.sdp.peakar.general;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 
-import androidx.preference.PreferenceManager;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
@@ -158,7 +155,7 @@ public class SettingsMapActivityTest {
         MapTileProviderBase tileProviderBase = mapView.getTileProvider();
         assertEquals("Mapnik", tileProviderBase.getTileSource().name());
         //Click on button
-        ViewInteraction button = onView(withId(R.id.changeMapTile));
+        ViewInteraction button = onView(withId(R.id.changeMapTileFragment));
         button.perform(click());
         //Check that the provider has changed
         tileProviderBase = mapView.getTileProvider();

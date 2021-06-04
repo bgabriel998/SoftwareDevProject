@@ -88,7 +88,7 @@ public class MapFragment extends Fragment {
         zoomOnUserLocationButton = container.findViewById(R.id.zoomOnUserLocation);
         zoomOnUserLocationButton.setOnClickListener(v -> osmMap.zoomOnUserLocation());
 
-        changeMapTileSourceButton = container.findViewById(R.id.changeMapTile);
+        changeMapTileSourceButton = container.findViewById(R.id.changeMapTileFragment);
         changeMapTileSourceButton.setOnClickListener(v -> osmMap.changeMapTileSource(zoomOnUserLocationButton,changeMapTileSourceButton ));
     }
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.fragment.app.Fragment;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.Intents;
@@ -56,6 +57,8 @@ public class OSMMapTest {
 
     private MapView mapView;
     private OSMMap osmMap;
+    private MapFragment fragment;
+
 
     @Rule
     public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
@@ -79,8 +82,6 @@ public class OSMMapTest {
     /* Make sure that an account is signed in and as new before each test */
     @Before
     public void createTestUser() {
-        testRule.getScenario().onActivity(activity -> activity.setCurrentPagerItem(MAP_FRAGMENT_INDEX));
-
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             AuthService.getInstance().signOut(InstrumentationRegistry.getInstrumentation().getTargetContext());
             registerAuthUser();
@@ -99,7 +100,9 @@ public class OSMMapTest {
 
     /* Create Intent */
     @Before
-    public void setup(){
+    public void setup() throws InterruptedException {
+        testRule.getScenario().onActivity(activity -> activity.setCurrentPagerItem(MAP_FRAGMENT_INDEX));
+        Thread.sleep(SHORT_SLEEP_TIME);
         Intents.init();
     }
 
@@ -116,7 +119,7 @@ public class OSMMapTest {
         Assert.assertNotNull(context);
         testRule.getScenario().onActivity(activity -> mapView = activity.findViewById(R.id.map));
         //Check map initialization
-        assertEquals(TILE_SCALING_FACTOR, mapView.getTilesScaleFactor(),0.0f);
+        assertEquals(TILE_SCALING_FACTOR, mapView.getTilesScaleFactor(),0.5f);
     }
 
 
@@ -169,10 +172,14 @@ public class OSMMapTest {
         //Init map
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
-        MapFragment fragment = MapFragment.newInstance();
-        osmMap = fragment.getOsmMap();
-        //testRule.getScenario().onActivity(activity -> osmMap = activity.getOsmMap());
 
+        testRule.getScenario().onActivity(activity ->{
+            List<Fragment> fragments = activity.getSupportFragmentManager().getFragments();
+            fragment = (MapFragment) fragments.get(MAP_FRAGMENT_INDEX);
+        });
+
+
+        osmMap = fragment.getOsmMap();
 
         //The following lines initializes a handler and a looper
         //Those are needed here to handle the zooming animation caused by
@@ -230,7 +237,7 @@ public class OSMMapTest {
         MapTileProviderBase tileProviderBase = mapView.getTileProvider();
         assertEquals("Mapnik", tileProviderBase.getTileSource().name());
         //Click on button
-        ViewInteraction button = onView(withId(R.id.changeMapTile));
+        ViewInteraction button = onView(withId(R.id.changeMapTileFragment));
         button.perform(click());
         //Check that the provider has changed
         tileProviderBase = mapView.getTileProvider();
