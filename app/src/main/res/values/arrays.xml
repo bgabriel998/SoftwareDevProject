@@ -17,7 +17,6 @@
         <item>fifth_range</item>
     </string-array>
 
-
     <!-- language Preference -->
     <string-array name="language_entries">
         <item>English</item>

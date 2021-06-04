@@ -99,6 +99,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key==null) return;
         switch (key){
             case "measSys_preference":
                 measurementSystemChanged();

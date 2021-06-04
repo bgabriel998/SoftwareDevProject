@@ -207,10 +207,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         String devOptionsKey = context.getResources().getString(R.string.devOptions_key);
 
         boolean isEnabled = sharedPreferences.getBoolean(devOptionsKey, false);
-        Thread.sleep(SHORT_SLEEP_TIME);
         assertFalse(isEnabled);
-        testRule.getScenario().recreate();
-        Thread.sleep(SHORT_SLEEP_TIME);
         onView(ViewMatchers.withId(R.id.headingHorizontal)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
         onView(ViewMatchers.withId(R.id.headingVertical)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
         onView(ViewMatchers.withId(R.id.fovHorVer)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
@@ -221,9 +218,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         editor.commit();
 
         isEnabled = sharedPreferences.getBoolean(devOptionsKey, false);
-        Thread.sleep(SHORT_SLEEP_TIME);
         assertTrue(isEnabled);
-        testRule.getScenario().recreate();
         Thread.sleep(SHORT_SLEEP_TIME);
         onView(ViewMatchers.withId(R.id.headingHorizontal)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(ViewMatchers.withId(R.id.headingVertical)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));

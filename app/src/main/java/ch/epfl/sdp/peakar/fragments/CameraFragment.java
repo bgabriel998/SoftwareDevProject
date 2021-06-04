@@ -199,7 +199,8 @@ public class CameraFragment extends Fragment{
         sharedPref = PreferenceManager.getDefaultSharedPreferences(requireContext());
 
         displayModeText = container.findViewById(R.id.textDisplayPOImode);
-        displayModeText.setText(sharedPref.getString(getResources().getString(R.string.displayPOIs_key), DISPLAY_ALL_POIS));
+        String mode = sharedPref.getString(getResources().getString(R.string.displayPOIs_key), DISPLAY_ALL_POIS);
+        displayModeText.setText(mode);
 
         showDevOptions = sharedPref.getBoolean(getResources().getString(R.string.devOptions_key), false);
         displayDeveloperOptions(showDevOptions);
