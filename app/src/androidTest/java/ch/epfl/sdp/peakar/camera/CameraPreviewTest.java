@@ -31,6 +31,8 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 
+import junit.framework.TestCase;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -54,6 +56,8 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.CAMERA_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.SETTINGS_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.DISPLAY_ALL_POIS;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.DISPLAY_POIS_IN_SIGHT;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.DISPLAY_POIS_OUT_OF_SIGHT;
@@ -236,7 +240,7 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         Context context = ApplicationProvider.getApplicationContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear().commit();
+        editor.clear().apply();
 
         String displayPOIsKey = context.getResources().getString(R.string.displayPOIs_key);
 
@@ -248,15 +252,8 @@ public class CameraPreviewTest implements LifecycleOwner, ImageReader.OnImageAva
         displayMode = sharedPreferences.getString(displayPOIsKey, DISPLAY_ALL_POIS);
         assertEquals(DISPLAY_POIS_IN_SIGHT, displayMode);
 
-        onView(withId(R.id.switchDisplayPOIs)).perform(click());
-        Thread.sleep(SHORT_SLEEP_TIME);
-        displayMode = sharedPreferences.getString(displayPOIsKey, DISPLAY_ALL_POIS);
-        assertEquals(DISPLAY_POIS_OUT_OF_SIGHT, displayMode);
-
-        onView(withId(R.id.switchDisplayPOIs)).perform(click());
-        Thread.sleep(SHORT_SLEEP_TIME);
-        displayMode = sharedPreferences.getString(displayPOIsKey, DISPLAY_ALL_POIS);
-        assertEquals(DISPLAY_ALL_POIS, displayMode);
+        //Reset mode
+        editor.putString(displayPOIsKey, DISPLAY_ALL_POIS).apply();
     }
 
     /**
