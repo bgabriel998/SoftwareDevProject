@@ -28,7 +28,7 @@ import java.util.List;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.database.DatabaseReference;
-import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
+import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.services.FirebaseAuthService;
@@ -178,12 +178,6 @@ public class SocialActivityTest {
         Intents.release();
     }
 
-    /* Test that menu bars settings icon works as intended */
-// TODO Fix test.
-    //@Test
-    public void TestMenuBarSettings(){
-        MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_settings);
-    }
 
     /* Test that menu bars gallery icon works as intended */
     @Test
@@ -285,9 +279,9 @@ public class SocialActivityTest {
             e.printStackTrace();
         }
         // Capture the intent
-        intended(allOf(IntentMatchers.hasComponent(NewProfileActivity.class.getName()),
-                IntentMatchers.hasExtra(NewProfileActivity.AUTH_INTENT, false),
-                IntentMatchers.hasExtra(NewProfileActivity.OTHER_INTENT, user2)));
+        intended(allOf(IntentMatchers.hasComponent(ProfileActivity.class.getName()),
+                IntentMatchers.hasExtra(ProfileActivity.AUTH_INTENT, false),
+                IntentMatchers.hasExtra(ProfileActivity.OTHER_INTENT, user2)));
     }
 
     /* Test that if a auth user item is clicked, an intent to its profile is started */
@@ -308,8 +302,8 @@ public class SocialActivityTest {
             e.printStackTrace();
         }
         // Capture the intent
-        intended(allOf(IntentMatchers.hasComponent(NewProfileActivity.class.getName()),
-                IntentMatchers.hasExtra(NewProfileActivity.AUTH_INTENT, true)));
+        intended(allOf(IntentMatchers.hasComponent(ProfileActivity.class.getName()),
+                IntentMatchers.hasExtra(ProfileActivity.AUTH_INTENT, true)));
     }
 
     /* Test the search bar works */

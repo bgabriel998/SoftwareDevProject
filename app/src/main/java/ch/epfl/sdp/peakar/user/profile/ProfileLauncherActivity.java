@@ -4,25 +4,16 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.ContentFrameLayout;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.material.snackbar.Snackbar;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
@@ -142,8 +133,8 @@ public class ProfileLauncherActivity extends AppCompatActivity {
      * Launches the Profile Activity, if the user is online. Otherwise, force a sign out
      */
     private void launchProfileActivity(){
-        Intent intent = new Intent(this, NewProfileActivity.class);
-        intent.putExtra(NewProfileActivity.AUTH_INTENT, true);
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra(ProfileActivity.AUTH_INTENT, true);
         startActivity(intent);
         finish();
     }

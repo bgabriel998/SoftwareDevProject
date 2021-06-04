@@ -33,7 +33,6 @@ public class GalleryActivity extends AppCompatActivity {
         MenuBarHandler.setup(this);
 
         setupDots(this, v -> {
-            // TODO Sort images
         });
 
         setupGallery();
