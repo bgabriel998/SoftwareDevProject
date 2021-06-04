@@ -3,7 +3,6 @@ package ch.epfl.sdp.peakar.general;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -85,7 +84,7 @@ public class SettingsMapActivity extends AppCompatActivity {
         ImageButton zoomOnUserLocationButton = findViewById(R.id.zoomOnUserLocation);
         zoomOnUserLocationButton.setOnClickListener(v -> osmMap.zoomOnUserLocation());
 
-        ImageButton changeMapTileSourceButton = findViewById(R.id.changeMapTile);
+        ImageButton changeMapTileSourceButton = findViewById(R.id.changeMapTileFragment);
         changeMapTileSourceButton.setOnClickListener(v -> osmMap.changeMapTileSource(zoomOnUserLocationButton,changeMapTileSourceButton ));
     }
 
@@ -101,7 +100,7 @@ public class SettingsMapActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
         // Display loading bar
-        downloadButton.setVisibility(View.GONE);
+        downloadButton.setVisibility(View.INVISIBLE);
         loadingView.bringToFront();
 
         loadingView.setVisibility(View.VISIBLE);
@@ -197,8 +196,6 @@ public class SettingsMapActivity extends AppCompatActivity {
                      .putBoolean(this.getResources().getString(R.string.offline_mode_key), false)
                      .apply();
 
-             Intent intent = new Intent(this, SettingsActivity.class);
-             startActivity(intent);
              this.finish();
          }
     }

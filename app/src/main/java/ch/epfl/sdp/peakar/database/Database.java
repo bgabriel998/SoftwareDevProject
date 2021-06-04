@@ -1,6 +1,5 @@
 package ch.epfl.sdp.peakar.database;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;

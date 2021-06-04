@@ -209,12 +209,19 @@ public class UITestHelper {
      */
     public static void ClearGallery(){
         File[] imgFiles = StorageHandler.getOutputDirectoryMedia(ApplicationProvider.getApplicationContext()).listFiles();
-        if (imgFiles != null)
-        {
+        if (imgFiles != null) {
             for (File imgFile : imgFiles) {
                 imgFile.delete();
             }
         }
+    }
+
+    /**
+     * Gets the stored files
+     * @return A array of files
+     */
+    public static File[] getGalleryFiles(){
+        return StorageHandler.getOutputDirectoryMedia(ApplicationProvider.getApplicationContext()).listFiles();
     }
 
     /**

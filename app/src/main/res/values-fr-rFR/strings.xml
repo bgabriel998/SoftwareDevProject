@@ -76,6 +76,7 @@
     <string name="switch_all">All</string>
     <string name="switch_friends">Friends</string>
     <string name="empty_friends">No Friends</string>
+    <string name="internet_connection_needed_social">Vous êtes en mode hors ligne. Veuillez désactiver le mode hors ligne pour accéder à la section sociale de PeakAR!</string>
     <string name="empty_collection">Collection vide</string>
     <string name="empty_collection_not_registered">Choisissez un nom d\'utilisateur svp</string>
     <string name="loading_message">Chargement…</string>

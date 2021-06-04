@@ -1,6 +1,5 @@
 package ch.epfl.sdp.peakar.points;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -8,13 +7,11 @@ import androidx.core.util.Pair;
 import androidx.preference.PreferenceManager;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.intent.Intents;
-import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
 import org.osmdroid.util.BoundingBox;
 
@@ -27,6 +24,7 @@ import ch.epfl.sdp.peakar.utils.OfflineContentContainer;
 import ch.epfl.sdp.peakar.utils.SettingsUtilities;
 import ch.epfl.sdp.peakar.utils.StorageHandler;
 
+import static ch.epfl.sdp.peakar.utils.TestingConstants.THREAD_SLEEP_1S;
 import static java.lang.Double.NaN;
 import static org.junit.Assert.assertEquals;
 
@@ -34,8 +32,6 @@ public class ComputePOIPointsTest {
 
     private static ComputePOIPoints computePOIPointsInstance;
 
-    @Rule
-    public GrantPermissionRule grantCameraPermissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
     private static UserPoint userPoint;
     private static Context mContext;
 
@@ -148,10 +144,15 @@ public class ComputePOIPointsTest {
 
         loadedPOIPoints =  computePOIPointsInstance.getPOIs();
 
+        try {
+            Thread.sleep(THREAD_SLEEP_1S);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         Assert.assertTrue(loadedPOIPoints.isEmpty());
 
         // Reset location
         userPoint.setLocation(45.802537, 6.850328, 4809, 0);
-
     }
 }

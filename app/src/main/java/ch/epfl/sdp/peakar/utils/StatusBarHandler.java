@@ -35,16 +35,4 @@ public class StatusBarHandler {
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         window.setStatusBarColor(activity.getColor(R.color.Black_Transparent));
     }
-
-    /**
-     * Set status bar to light grey with dark icons.
-     * @param activity given activity.
-     */
-    public static void StatusBarLightGrey(Activity activity){
-        Window window = activity.getWindow();
-        window.getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        window.setStatusBarColor(activity.getColor(R.color.LightGrey));
-    }
 }

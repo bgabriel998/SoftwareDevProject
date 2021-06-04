@@ -35,7 +35,6 @@ import ch.epfl.sdp.peakar.collection.NewCollectedItem;
 import ch.epfl.sdp.peakar.collection.NewCollectionListAdapter;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.POIPoint;
-import ch.epfl.sdp.peakar.social.SocialActivity;
 import ch.epfl.sdp.peakar.user.challenge.ChallengeItem;
 import ch.epfl.sdp.peakar.user.challenge.ChallengeListAdapter;
 import ch.epfl.sdp.peakar.user.challenge.goal.RemotePointsChallenge;
@@ -609,8 +608,7 @@ public class ProfileActivity extends AppCompatActivity {
      * On social activity button click
      */
     public void socialActivityButton(View view) {
-        Intent intent = new Intent(this, SocialActivity.class);
-        startActivity(intent);
+        finish();
     }
 
     /**

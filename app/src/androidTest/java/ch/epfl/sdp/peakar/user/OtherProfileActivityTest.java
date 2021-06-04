@@ -1,5 +1,6 @@
 package ch.epfl.sdp.peakar.user;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 
@@ -7,7 +8,6 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.intent.Intents;
-import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -27,7 +27,6 @@ import ch.epfl.sdp.peakar.collection.NewCollectedItem;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.database.DatabaseReference;
 import ch.epfl.sdp.peakar.points.POIPoint;
-import ch.epfl.sdp.peakar.social.SocialActivity;
 import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
@@ -37,7 +36,6 @@ import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -64,6 +62,7 @@ import static ch.epfl.sdp.peakar.utils.TestingConstants.POINTE_DE_LAPAZ_LONG;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.POINTE_DE_LAPAZ_NAME;
 import static ch.epfl.sdp.peakar.utils.UITestHelper.withDrawable;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.assertSame;
 
 public class OtherProfileActivityTest {
     private static String user2;
@@ -157,7 +156,7 @@ public class OtherProfileActivityTest {
     }
 
     @Rule
-    public ActivityScenarioRule testRule = new ActivityScenarioRule<>(getOtherIntent());
+    public ActivityScenarioRule<ProfileActivity> testRule = new ActivityScenarioRule<>(getOtherIntent());
 
     /* Test that when another account profile is loaded with but no user is authenticated, the display is correct */
     @Test
@@ -278,13 +277,6 @@ public class OtherProfileActivityTest {
     public void socialActivityButtonTest() {
         onView(withId(R.id.profile_friend)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.profile_friend)).perform(click());
-
-        try {
-            Thread.sleep(LONG_SLEEP_TIME);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        intended(IntentMatchers.hasComponent(SocialActivity.class.getName()));
+        assertSame(testRule.getScenario().getResult().getResultCode(), Activity.RESULT_CANCELED);
     }
 }

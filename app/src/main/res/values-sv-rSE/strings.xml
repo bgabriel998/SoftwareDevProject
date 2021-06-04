@@ -72,6 +72,10 @@
     <string name="switch_all">Alla</string>
     <string name="switch_friends">Vänner</string>
     <string name="empty_friends">Inga Vänner</string>
+    <string name="internet_connection_needed_social">
+        Du är i offline-läge. Inaktivera offlineläget för att få tillgång till den sociala delen av PeakAR!
+        Sei in modalità offline. Si prega di disattivare la modalità offline per accedere alla sezione sociale di PeakAR!
+    </string>
     <string name="registered_username">Välkommen till PeakAR gemenskapen!</string>
     <string name="database_fail">Ojdå, ett fel uppstod. Se till att du är online!</string>
     <string name="insert_friend_button">Skriv in här</string>

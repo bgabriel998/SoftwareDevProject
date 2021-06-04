@@ -71,6 +71,7 @@
     <string name="toolbar_collections">Kollektion</string>
     <string name="toolbar_rankings">Rang</string>
     <string name="toolbar_gallery">Galerie</string>
+    <string name="internet_connection_needed_social">Sie sind im Oflline modus. Bitte gehen Sie wieder in den Online modus!</string>
     <string name="switch_all">Alle</string>
     <string name="switch_friends">Freunde</string>
     <string name="empty_friends">Keine Freunde</string>

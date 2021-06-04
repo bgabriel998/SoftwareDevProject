@@ -19,6 +19,7 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.MapTileIndex;
+import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.Projection;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
@@ -37,13 +38,15 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.points.GeonamesHandler;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.points.Point;
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.SettingsUtilities;
 
+/**
+ * Class used to create an OSMMap
+ */
 public class OSMMap {
 
     /*Constants for map creation and initialization*/
@@ -59,6 +62,8 @@ public class OSMMap {
     private final Context context;
     private MyLocationNewOverlay locationOverlay = null;
     private boolean isSatellite = false;
+    private final List<Marker> markers;
+    private HashSet<POIPoint> discoveredPeaks;
 
     /**
      * Class constructor
@@ -67,9 +72,11 @@ public class OSMMap {
      */
     public OSMMap(Context context, MapView view){
         this.context = context;
+        markers = new ArrayList<>();
+        discoveredPeaks = new HashSet<>();
         Context applicationContext = context.getApplicationContext();
         Configuration.getInstance().load(applicationContext, PreferenceManager.getDefaultSharedPreferences(applicationContext));
-        mapView = (MapView) view;
+        mapView = view;
         initMapView();
     }
 
@@ -90,7 +97,7 @@ public class OSMMap {
         mapView.setTilesScaleFactor(TILE_SCALING_FACTOR);
         IMapController mapController  = mapView.getController();
         mapController.setZoom(DEFAULT_ZOOM_FACTOR);
-        mapView.setBuiltInZoomControls(false);
+        mapView.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
         mapView.setMultiTouchControls(true);
         mapView.setHorizontalMapRepetitionEnabled(true);
         mapView.setVerticalMapRepetitionEnabled(false);
@@ -118,8 +125,8 @@ public class OSMMap {
 
     /**
      * Zoom on user Location
-     * @param zoomOnUserLocationButton
-     * @param changeMapTileSourceButton
+     * @param zoomOnUserLocationButton button used to zoom on user location
+     * @param changeMapTileSourceButton button used to change the map tiles
      */
     @SuppressLint("UseCompatLoadingForDrawables")
     public void changeMapTileSource(ImageButton zoomOnUserLocationButton, ImageButton changeMapTileSourceButton){
@@ -153,26 +160,9 @@ public class OSMMap {
      */
     public void setMarkersForDiscoveredPeaks(boolean isSignedIn){
         if(isSignedIn) {
-            HashSet<POIPoint> discoveredPeaks = AuthService.getInstance().getAuthAccount().getDiscoveredPeaks();
+            discoveredPeaks = AuthService.getInstance().getAuthAccount().getDiscoveredPeaks();
             List<String> countryHighPointsName = AuthService.getInstance().getAuthAccount().getDiscoveredCountryHighPointNames();
-            //iterate over all POI
-            for (POIPoint poi : discoveredPeaks) {
-                GeoPoint startPoint = new GeoPoint(poi.getLatitude(), poi.getLongitude());
-                Marker startMarker = new Marker(mapView);
-
-                //Set marker icon
-                startMarker.setIcon(getCustomMarkerIcon(poi, countryHighPointsName));
-
-                startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-                startMarker.setPosition(startPoint);
-                startMarker.setTitle(poi.getName() + "\n" + ((long) poi.getAltitude()));
-
-                //Set info window
-                InfoWindow infoWindow = new CustomInfoWindow(R.layout.bonuspack_bubble, mapView, context);
-                startMarker.setInfoWindow(infoWindow);
-                infoWindow.onOpen(startMarker);
-                mapView.getOverlays().add(startMarker);
-            }
+            drawMarkersOnMap(countryHighPointsName, discoveredPeaks);
             mapView.invalidate();
             setZoomBoundingBox(AuthService.getInstance().getAuthAccount());
         }
@@ -340,6 +330,47 @@ public class OSMMap {
 
         return boundingBoxPolygon;
 
+    }
+
+    public void updateMarkers(boolean isSignedIn){
+        if(isSignedIn) {
+            //Gets the discovered peaks from the database
+            HashSet<POIPoint> newDiscoveredPeaks = AuthService.getInstance().getAuthAccount().getDiscoveredPeaks();
+            //Holds only the ones that are not already drawn
+            newDiscoveredPeaks.removeAll(discoveredPeaks);
+            //Adds the one that were not drawn before
+            discoveredPeaks.addAll(newDiscoveredPeaks);
+            List<String> countryHighPointsName = AuthService.getInstance().getAuthAccount().getDiscoveredCountryHighPointNames();
+            //iterate over all new POIs
+            drawMarkersOnMap(countryHighPointsName, newDiscoveredPeaks);
+        }
+        else{
+            Toast toast = Toast.makeText(context,context.getString(R.string.toast_no_account),Toast.LENGTH_LONG);
+            toast.show();
+            mapView.getOverlays().removeAll(markers);
+            discoveredPeaks.clear();
+        }
+        mapView.invalidate();
+    }
+
+    private void drawMarkersOnMap(List<String> countryHighPointsName, HashSet<POIPoint> discoveredPeaks) {
+        for(POIPoint poi : discoveredPeaks){
+            GeoPoint startPoint = new GeoPoint(poi.getLatitude(), poi.getLongitude());
+            Marker startMarker = new Marker(mapView);
+            //Set marker icon
+            startMarker.setIcon(getCustomMarkerIcon(poi, countryHighPointsName));
+
+            startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            startMarker.setPosition(startPoint);
+            startMarker.setTitle(poi.getName() + "\n" + ((long) poi.getAltitude()));
+
+            //Set info window
+            InfoWindow infoWindow = new CustomInfoWindow(R.layout.bonuspack_bubble, mapView, context);
+            startMarker.setInfoWindow(infoWindow);
+            infoWindow.onOpen(startMarker);
+            mapView.getOverlays().add(startMarker);
+            markers.add(startMarker);
+        }
     }
 
 }

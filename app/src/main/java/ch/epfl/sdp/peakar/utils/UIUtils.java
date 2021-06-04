@@ -56,7 +56,7 @@ public class UIUtils {
     /**
      * Sets text on a text view.
      * @param v text view
-     * @param newText
+     * @param newText test to set
      */
     public static void setText(TextView v, String newText) {
         v.setText(newText);

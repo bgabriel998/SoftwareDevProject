@@ -21,8 +21,8 @@ import ch.epfl.sdp.peakar.points.POIPoint;
  * such as the filtering of the POIPoints
  */
 public final class POIPointsUtilities {
-    private static final int HALF_MARKER_SIZE_WIDTH = 3;
-    private static final int HALF_MARKER_SIZE_HEIGHT = 5;
+    private static final int HALF_MARKER_SIZE_WIDTH = 5;
+    private static final int HALF_MARKER_SIZE_HEIGHT = 7;
 
     /**
      * Filters the labeled POIPoints and takes only the highest s.t. there are no other markers

@@ -41,11 +41,8 @@
     </string-array>
 
     <string-array name="displayPOIs_values">
-        <!-- Display all mountains -->
         <item>0</item>
-        <!-- Only display mountains in line of sight -->
         <item>1</item>
-        <!-- Only display mountains out line of sight -->
         <item>2</item>
     </string-array>
 </resources>

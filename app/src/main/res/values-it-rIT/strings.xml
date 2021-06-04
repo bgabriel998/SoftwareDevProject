@@ -65,6 +65,7 @@
     <string name="outsideOfDownloadedBox">Stai utilizzando la modalità offline fuori dall\'area scaricata. Per favore, disabilità la modalità offline dalle impostazioni per utilizzare l\'applicazione.</string>
     <string name="search_username_hint">Cerca utente</string>
     <string name="rank_display">Rank: %s</string>
+    <string name="internet_connection_needed_social">Sei in modalità offline. Si prega di disattivare la modalità offline per accedere alla sezione sociale di PeakAR!</string>
     <string name="toolbar_settings">Impostazioni</string>
     <string name="toolbar_collections">Collezione</string>
     <string name="toolbar_rankings">Classifica</string>

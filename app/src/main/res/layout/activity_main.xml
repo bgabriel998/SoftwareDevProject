@@ -6,9 +6,27 @@
     android:layout_height="match_parent"
     tools:context=".general.MainActivity">
 
+    <!-- Menu bar -->
+    <include layout="@layout/menu_bar"/>
+
     <androidx.viewpager2.widget.ViewPager2
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="50dp"
         android:id="@+id/viewPager"/>
+
+    <!-- Top bar container for transparent status bar -->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/top_bar_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:fitsSystemWindows="true">
+        <!-- Top bar -->
+        <include layout="@layout/top_bar"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

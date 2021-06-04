@@ -3,14 +3,14 @@
 
     <PreferenceCategory app:title="@string/general_header">
         <ListPreference
+            android:defaultValue="third_range"
+            android:dialogIcon="@drawable/ic_baseline_distance_24"
             android:entries="@array/range_entries"
             android:entryValues="@array/range_values"
+            android:icon="@drawable/ic_baseline_distance_24"
             android:key="@string/range_key"
             android:title="@string/range_title"
-            app:useSimpleSummaryProvider="true"
-            android:dialogIcon="@drawable/ic_baseline_distance_24"
-            android:icon="@drawable/ic_baseline_distance_24"
-            android:defaultValue="third_range"/>
+            app:useSimpleSummaryProvider="true" />
 
         <SwitchPreference
             android:defaultValue="false"
@@ -18,37 +18,36 @@
             android:key="@string/offline_mode_key"
             android:summary="@string/offline_mode_summary"
             android:title="@string/offline_mode_title" />
-            android:icon="@drawable/ic_baseline_signal_cellular_off_24"/>
 
         <SwitchPreference
             android:defaultValue="false"
+            android:icon="@drawable/ic_developer_options"
             android:key="@string/devOptions_key"
-            android:title="@string/display_dev_options"
-            android:icon="@drawable/ic_developer_options"/>
+            android:title="@string/display_dev_options" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/camera_header">
         <ListPreference
             android:defaultValue="0"
+            android:dialogIcon="@drawable/ic_line_of_sight_camera"
             android:entries="@array/displayPOIs_entries"
             android:entryValues="@array/displayPOIs_values"
+            android:icon="@drawable/ic_line_of_sight_camera"
             android:key="@string/displayPOIs_key"
             android:title="@string/display_pois_title"
-            app:useSimpleSummaryProvider="true"
-            android:dialogIcon="@drawable/ic_line_of_sight_camera"
-            android:icon="@drawable/ic_line_of_sight_camera"/>
+            app:useSimpleSummaryProvider="true" />
 
         <SwitchPreference
             android:defaultValue="true"
+            android:icon="@drawable/ic_filter_pois_camera"
             android:key="@string/filterPOIs_key"
-            android:title="@string/filter_pois_title"
-            android:icon="@drawable/ic_filter_pois_camera"/>
+            android:title="@string/filter_pois_title" />
 
         <SwitchPreference
             android:defaultValue="false"
+            android:icon="@drawable/ic_compass_settings"
             android:key="@string/displayCompass_key"
-            android:title="@string/displayCompass_title"
-            android:icon="@drawable/ic_compass_settings"/>
+            android:title="@string/displayCompass_title" />
 
     </PreferenceCategory>
 
@@ -56,23 +55,23 @@
 
         <ListPreference
             android:defaultValue="english"
+            android:dialogIcon="@drawable/ic_baseline_language_24"
             android:entries="@array/language_entries"
             android:entryValues="@array/language_values"
+            android:icon="@drawable/ic_baseline_language_24"
             android:key="@string/language_key"
             android:title="@string/language_title"
-            app:useSimpleSummaryProvider="true"
-            android:dialogIcon="@drawable/ic_baseline_language_24"
-            android:icon="@drawable/ic_baseline_language_24"/>
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/storage_header">
 
         <SwitchPreference
             android:defaultValue="true"
+            android:icon="@drawable/ic_baseline_storage_24"
             android:key="@string/disable_caching_key"
-            android:title="@string/caching_title"
             android:summary="@string/caching_summary"
-            android:icon="@drawable/ic_baseline_storage_24"/>
+            android:title="@string/caching_title" />
     </PreferenceCategory>
 
 </PreferenceScreen>

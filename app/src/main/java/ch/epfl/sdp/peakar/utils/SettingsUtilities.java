@@ -2,10 +2,12 @@ package ch.epfl.sdp.peakar.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
+import android.os.Bundle;
 import android.util.DisplayMetrics;
 
 import androidx.annotation.RequiresApi;
@@ -15,6 +17,8 @@ import java.util.Locale;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.points.GeonamesHandler;
+
+import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.SETTINGS_FRAGMENT_INDEX;
 
 /**
  *  Utility class for the Settings Activity, contains utility methods for the settings like the language
@@ -72,11 +76,22 @@ public final class SettingsUtilities {
         conf.setLocale(myLocale);
         //update locale configuration with new language
         res.updateConfiguration(conf, dm);
-        Activity activity = (Activity) context;
+    }
+
+    /**
+     * Restarts the activity, needs to be called when the activity needs to be reloaded after changing
+     * the language
+     * @param activity activity to reload
+     */
+    public static void restartActivity(Activity activity){
         activity.finish();
         //Override transition and restart activity
         activity.overridePendingTransition(0, 0);
-        activity.startActivity(activity.getIntent());
+        Intent intent = activity.getIntent();
+        Bundle b = new Bundle();
+        b.putInt(activity.getString(R.string.setPagerOnRestart), SETTINGS_FRAGMENT_INDEX);
+        intent.putExtras(b);
+        activity.startActivity(intent);
         activity.overridePendingTransition(0, 0);
     }
 
@@ -97,15 +112,18 @@ public final class SettingsUtilities {
      * activity if the current locale is not equal to the locale in the settings
      *
      * @param context context of application
+     * @return True if the language does not need to be changed, false otherwise
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static void checkForLanguage(Context context){
+    public static boolean checkForLanguage(Context context){
         //Only check the first two letters to only check for the language
         String localeSettings = getSetLocale(context).stripExtensions().toString().substring(0, 2);
         String currentLocale = context.getResources().getConfiguration().getLocales().get(0).toString().substring(0, 2);
         if(!localeSettings.equals(currentLocale)){
             updateLanguage(context);
+            return false;
         }
+        return true;
     }
 
     /**

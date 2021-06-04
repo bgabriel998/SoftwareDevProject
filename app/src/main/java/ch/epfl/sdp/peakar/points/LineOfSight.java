@@ -30,7 +30,7 @@ public class LineOfSight {
     private double boundingBoxNorthLat;
     private double boundingBoxWestLon;
 
-    private Context context;
+    private final Context context;
 
     /**
      * Constructor for the LineOfSight class.

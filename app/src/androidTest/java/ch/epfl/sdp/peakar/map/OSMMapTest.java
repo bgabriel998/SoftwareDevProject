@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.fragment.app.Fragment;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.Intents;
@@ -31,6 +32,8 @@ import java.util.List;
 
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
+import ch.epfl.sdp.peakar.fragments.MapFragment;
+import ch.epfl.sdp.peakar.general.MainActivity;
 import ch.epfl.sdp.peakar.points.POIPoint;
 import ch.epfl.sdp.peakar.user.score.UserScore;
 import ch.epfl.sdp.peakar.user.services.AuthService;
@@ -39,6 +42,7 @@ import ch.epfl.sdp.peakar.user.services.FirebaseAuthService;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.MAP_FRAGMENT_INDEX;
 import static ch.epfl.sdp.peakar.utils.TestingConstants.*;
 import static ch.epfl.sdp.peakar.utils.UserTestHelper.registerAuthUser;
 import static ch.epfl.sdp.peakar.utils.UserTestHelper.removeAuthUser;
@@ -53,9 +57,11 @@ public class OSMMapTest {
 
     private MapView mapView;
     private OSMMap osmMap;
+    private MapFragment fragment;
+
 
     @Rule
-    public ActivityScenarioRule<MapActivity> testRule = new ActivityScenarioRule<>(MapActivity.class);
+    public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
 
     /* Set up the environment */
     @BeforeClass
@@ -94,7 +100,9 @@ public class OSMMapTest {
 
     /* Create Intent */
     @Before
-    public void setup(){
+    public void setup() throws InterruptedException {
+        testRule.getScenario().onActivity(activity -> activity.setCurrentPagerItem(MAP_FRAGMENT_INDEX));
+        Thread.sleep(SHORT_SLEEP_TIME);
         Intents.init();
     }
 
@@ -111,7 +119,7 @@ public class OSMMapTest {
         Assert.assertNotNull(context);
         testRule.getScenario().onActivity(activity -> mapView = activity.findViewById(R.id.map));
         //Check map initialization
-        assertEquals(TILE_SCALING_FACTOR, mapView.getTilesScaleFactor(),0.0f);
+        assertEquals(TILE_SCALING_FACTOR, mapView.getTilesScaleFactor(),0.5f);
     }
 
 
@@ -152,7 +160,7 @@ public class OSMMapTest {
         POIPoint point_4 = new POIPoint(geoPoint_4);
         point_4.setName(POINTE_DE_LAPAZ_NAME);
 
-        ArrayList<POIPoint> inputArrayList = new ArrayList<POIPoint>();
+        ArrayList<POIPoint> inputArrayList = new ArrayList<>();
         inputArrayList.add(point_2);
         inputArrayList.add(point_1);
         inputArrayList.add(point_3);
@@ -164,8 +172,13 @@ public class OSMMapTest {
         //Init map
         Context context = ApplicationProvider.getApplicationContext();
         Assert.assertNotNull(context);
-        testRule.getScenario().onActivity(activity -> osmMap = activity.getOsmMap());
 
+        testRule.getScenario().onActivity(activity ->{
+            List<Fragment> fragments = activity.getSupportFragmentManager().getFragments();
+            fragment = (MapFragment) fragments.get(MAP_FRAGMENT_INDEX);
+        });
+
+        osmMap = fragment.getOsmMap();
 
         //The following lines initializes a handler and a looper
         //Those are needed here to handle the zooming animation caused by
@@ -223,7 +236,7 @@ public class OSMMapTest {
         MapTileProviderBase tileProviderBase = mapView.getTileProvider();
         assertEquals("Mapnik", tileProviderBase.getTileSource().name());
         //Click on button
-        ViewInteraction button = onView(withId(R.id.changeMapTile));
+        ViewInteraction button = onView(withId(R.id.changeMapTileFragment));
         button.perform(click());
         //Check that the provider has changed
         tileProviderBase = mapView.getTileProvider();

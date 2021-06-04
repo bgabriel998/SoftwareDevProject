@@ -15,7 +15,6 @@ import ch.epfl.sdp.peakar.utils.UIUtils;
 
 /**
  * List adapter for collected items to set correct text for each collected item.
- * TODO Rename to remove New part
  */
 public class NewCollectionListAdapter extends ArrayAdapter<NewCollectedItem> {
 

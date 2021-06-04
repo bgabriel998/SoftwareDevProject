@@ -2,16 +2,16 @@ package ch.epfl.sdp.peakar.general;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import com.google.firebase.FirebaseApp;
 import com.karumi.dexter.Dexter;
@@ -20,15 +20,17 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
+import org.osmdroid.config.Configuration;
+
 import java.util.List;
 
 import ch.epfl.sdp.peakar.R;
-import ch.epfl.sdp.peakar.camera.CameraActivity;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.points.ComputePOIPoints;
-import ch.epfl.sdp.peakar.social.SocialActivity;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.utils.SettingsUtilities;
+
+import static ch.epfl.sdp.peakar.utils.PermissionUtilities.hasLocationPermission;
 
 /**
  * Initialises the application:
@@ -44,8 +46,15 @@ public class InitActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
 
         setContentView(R.layout.activity_init);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            SettingsUtilities.checkForLanguage(this);
+        }
 
         FirebaseApp.initializeApp(this);
 
@@ -67,16 +76,6 @@ public class InitActivity extends AppCompatActivity {
         ProgressBar progressBar = findViewById(R.id.progressBarInitActivity);
         progressBar.setVisibility(View.VISIBLE);
 
-        initApp();
-    }
-
-    /**
-     * Init application global stuff before opening the main menu
-     */
-    private synchronized void initApp(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            SettingsUtilities.checkForLanguage(this);
-        }
     }
 
     /**
@@ -89,17 +88,15 @@ public class InitActivity extends AppCompatActivity {
     }
 
     /**
+<<<<<<< HEAD
+     * Launches the application
+=======
      * Launches the application if the camera permission is granted
+>>>>>>> b0c68852dfefa9f6d64cb68a6f72f8e049fd1334
      */
     public void launchApp(){
-        if(hasCameraPermission()){
-            Intent intent = new Intent(this, CameraActivity.class);
-            startActivity(intent);
-        }
-        else{
-            Intent intent = new Intent(this, SocialActivity.class);
-            startActivity(intent);
-        }
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
 
     /**
@@ -110,7 +107,9 @@ public class InitActivity extends AppCompatActivity {
         allPermissionsListener = new MultiplePermissionsListener() {
             @Override
             public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
-                ComputePOIPoints.getInstance(getApplicationContext());
+                if(hasLocationPermission(getApplicationContext())){
+                    ComputePOIPoints.getInstance(getApplicationContext());
+                }
                 new Thread(() -> {
                     Log.d("InitActivity", "onPermissionsChecked: online ? " + Database.getInstance().isOnline());
                     // If user is online, retrieve data
@@ -158,15 +157,5 @@ public class InitActivity extends AppCompatActivity {
                 })
                 .setOnDismissListener(dialog -> permissionToken.cancelPermissionRequest())
                 .show();
-    }
-
-    /**
-     * Checks if the camera permission was already granted
-     */
-    private boolean hasCameraPermission() {
-        return ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-        ) == PackageManager.PERMISSION_GRANTED;
     }
 }
