@@ -84,7 +84,7 @@
     <string name="challenge_points">pkt</string>
     <string name="choose_challenge_duration">Bitte Dauern auswählen</string>
     <string name="challenge_join">BEITRETEN</string>
-    <string name="enrolledUser_display">Teilnehmer</string>
+    <string name="enrolledUser_display">Teilnehmer: %d</string>
     <string name="remainingTime_display">Restzeit: %s</string>
     <string name="achieved_points">Erreicht: %d pkt</string>
     <string name="startTime_display">Start: %s</string>
