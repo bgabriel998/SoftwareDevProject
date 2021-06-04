@@ -28,12 +28,8 @@ import java.util.List;
 import ch.epfl.sdp.peakar.R;
 import ch.epfl.sdp.peakar.database.Database;
 import ch.epfl.sdp.peakar.database.DatabaseReference;
-<<<<<<< HEAD:app/src/androidTest/java/ch/epfl/sdp/peakar/social/SocialFragmentTest.java
 import ch.epfl.sdp.peakar.general.MainActivity;
-import ch.epfl.sdp.peakar.user.profile.NewProfileActivity;
-=======
 import ch.epfl.sdp.peakar.user.profile.ProfileActivity;
->>>>>>> b0c68852dfefa9f6d64cb68a6f72f8e049fd1334:app/src/androidTest/java/ch/epfl/sdp/peakar/social/SocialActivityTest.java
 import ch.epfl.sdp.peakar.user.services.AuthAccount;
 import ch.epfl.sdp.peakar.user.services.AuthService;
 import ch.epfl.sdp.peakar.user.services.FirebaseAuthService;
@@ -184,28 +180,6 @@ public class SocialFragmentTest {
         Intents.release();
     }
 
-<<<<<<< HEAD:app/src/androidTest/java/ch/epfl/sdp/peakar/social/SocialFragmentTest.java
-=======
-
-    /* Test that menu bars gallery icon works as intended */
-    @Test
-    public void TestMenuBarGallery(){
-        MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_gallery);
-    }
-
-    /* Test that menu bars map icon works as intended */
-    @Test
-    public void TestMenuBarMap(){
-        MenuBarTestHelper.TestClickableIconButton(R.id.menu_bar_map);
-    }
-
-    /* Test that menu bars social icon works as intended */
-    @Test
-    public void TestMenuBarSocial(){
-        MenuBarTestHelper.TestSelectedIconButton(R.id.menu_bar_social);
-    }
-
->>>>>>> b0c68852dfefa9f6d64cb68a6f72f8e049fd1334:app/src/androidTest/java/ch/epfl/sdp/peakar/social/SocialActivityTest.java
     /* Test that the top bar color is correct */
     @Test
     public void TestTopBarColor() {
