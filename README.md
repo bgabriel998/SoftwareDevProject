@@ -24,7 +24,7 @@ The app provides the user with the following features:
 * **Rankings**: based on the points collected by scanning peaks (the higher the peak scanned, the higher the points archieved)
 * **Challenges**: open challenges against other users and compete to archieve the most points in a given time window
 * **Offline mode**: pre-download the peaks around a location to be able to use the app without any internet connection
-* **Photo gallery**: take pictures directly in the app to a
+* **Photo gallery**: take pictures directly in the app
 * **Multi language**: the app is available in Deutsch, English, Français, Italiano and Svenska
 
 ___
