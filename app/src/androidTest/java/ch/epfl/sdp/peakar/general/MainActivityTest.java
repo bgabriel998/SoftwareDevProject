@@ -33,6 +33,7 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sdp.peakar.utils.MainPagerAdapter.SETTINGS_FRAGMENT_INDEX;
+import static ch.epfl.sdp.peakar.utils.TestingConstants.SHORT_SLEEP_TIME;
 import static ch.epfl.sdp.peakar.utils.UserTestHelper.registerAuthUser;
 import static ch.epfl.sdp.peakar.utils.UserTestHelper.removeAuthUser;
 import static org.junit.Assert.assertEquals;
@@ -66,8 +67,9 @@ public class MainActivityTest {
 
     /* Create Intent */
     @Before
-    public void setup(){
+    public void setup() throws InterruptedException {
         Intents.init();
+        Thread.sleep(SHORT_SLEEP_TIME);
     }
 
     /* Release Intent */
@@ -86,8 +88,10 @@ public class MainActivityTest {
 
     /* Test that menu bars gallery icon works as intended */
     @Test
-    public void TestMenuBarGallery(){
+    public void TestMenuBarGallery() throws InterruptedException {
         int id = MenuBarTestHelperFragments.TestClickableIconButton(R.id.menu_bar_gallery);
+        Thread.sleep(SHORT_SLEEP_TIME);
+        onView(ViewMatchers.withId(id)).check(matches(isCompletelyDisplayed()));
     }
 
     /* Test that menu bars gallery icon works as intended */
@@ -98,23 +102,26 @@ public class MainActivityTest {
 
     /* Test that menu bars map icon works as intended */
     @Test
-    public void TestMenuBarMap(){
+    public void TestMenuBarMap() throws InterruptedException {
         int id = MenuBarTestHelperFragments.TestClickableIconButton(R.id.menu_bar_map);
+        Thread.sleep(SHORT_SLEEP_TIME);
         onView(ViewMatchers.withId(id)).check(matches(isCompletelyDisplayed()));
     }
 
     /* Test that menu bars social icon works as intended */
     @Test
-    public void TestMenuBarSocial(){
+    public void TestMenuBarSocial() throws InterruptedException {
         int id = MenuBarTestHelperFragments.TestClickableIconButton(R.id.menu_bar_social);
+        Thread.sleep(SHORT_SLEEP_TIME);
         onView(ViewMatchers.withId(id)).check(matches(isCompletelyDisplayed()));
     }
 
     /* Test that pressing the profile button when signed-out launches the ProfileLaunchActivity */
     @Test
-    public void TestProfileButtonNotSignedIn(){
+    public void TestProfileButtonNotSignedIn() throws InterruptedException {
         ViewInteraction button = Espresso.onView(withId(R.id.top_bar_profile_button));
         button.perform(ViewActions.click());
+        Thread.sleep(SHORT_SLEEP_TIME);
         intended(IntentMatchers.hasComponent(ProfileLauncherActivity.class.getName()));
     }
 
